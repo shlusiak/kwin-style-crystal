@@ -1395,9 +1395,9 @@ void CrystalClient::closeButtonPressed()
 	switch (button[ButtonClose]->lastMousePress()) {
 		case Qt::RightButton:
 		{
-			Window frame,wrapper,client;
+			Window client;
 			char param[20];
-			ClientWindows(&frame,&wrapper,&client);
+			client = windowId();
 			if (client != 0) {
 				KProcess *proc = new KProcess;
 
@@ -1450,10 +1450,9 @@ void CrystalClient::menuButtonPressed()
 
 void CrystalClient::menuPopUp()
 {
-	QPoint p(button[ButtonMenu]->rect().bottomLeft().x(),
-                 button[ButtonMenu]->rect().bottomLeft().y()+2);
 	KDecorationFactory* f = factory();
-	showWindowMenu(button[ButtonMenu]->mapToGlobal(p));
+	showWindowMenu(QRect(button[ButtonMenu]->mapToGlobal(
+	  button[ButtonMenu]->rect().topLeft()), button[ButtonMenu]->mapToGlobal(button[ButtonMenu]->rect().bottomRight())));
 	if (!f->exists(this)) return; // decoration was destroyed
 	button[ButtonMenu]->setDown(false);
 }

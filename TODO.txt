@@ -1,2 +1,3 @@
 - Fix scrollwheel task scrolling
-??? - Fix Tooltips
+- Fix Tooltips (?)
+- Add transparency support back
