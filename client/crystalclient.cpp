@@ -109,7 +109,8 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 {
 	switch(mode)
 	{
-		case 0:	break;
+		case 0:	cfg->overlay = QPixmap();
+			break;
 		case 1:{
 			QImage img=QImage((uchar*)lighting_overlay_data,1,60,QImage::Format_ARGB32);
 			cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
