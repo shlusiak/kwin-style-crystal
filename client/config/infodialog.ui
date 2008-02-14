@@ -9,7 +9,7 @@
     <x>0</x>
     <y>0</y>
     <width>498</width>
-    <height>339</height>
+    <height>359</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -59,13 +59,23 @@ You may look for the most recent version at kde-look.org:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="KUrlLabel" name="kURLLabel1" >
+      <item row="2" column="0" >
+       <widget class="KUrlLabel" name="URL_Crystal_1" >
         <property name="text" >
-         <string>www.kde-look.org/content/show.php?content=13969</string>
+         <string>KDE 3: www.kde-look.org/content/show.php?content=13969</string>
         </property>
         <property name="url" >
          <string>http://www.kde-look.org/content/show.php?content=13969</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="KUrlLabel" name="URL_Crystal_2" >
+        <property name="text" >
+         <string>KDE 4: www.kde-look.org/content/show.php?content=75140</string>
+        </property>
+        <property name="url" >
+         <string>http://www.kde-look.org/content/show.php/Crystal?content=75140</string>
         </property>
        </widget>
       </item>
@@ -140,6 +150,7 @@ You may look for the most recent version at kde-look.org:</string>
  <includes>
   <include location="local" >kurllabel.h</include>
  </includes>
+ <resources/>
  <connections>
   <connection>
    <sender>pushButton1</sender>

@@ -256,7 +256,8 @@ void CrystalConfig::save(KConfigGroup&)
 void CrystalConfig::infoDialog()
 {
 	InfoDialog d(dialog_);
-	connect((QLabel*)(d.kURLLabel1),SIGNAL(leftClickedUrl(const QString&)),KToolInvocation::self(),SLOT(invokeBrowser(const QString &)));
+	connect((QLabel*)(d.URL_Crystal_1),SIGNAL(leftClickedUrl(const QString&)),KToolInvocation::self(),SLOT(invokeBrowser(const QString &)));
+	connect((QLabel*)(d.URL_Crystal_2),SIGNAL(leftClickedUrl(const QString&)),KToolInvocation::self(),SLOT(invokeBrowser(const QString &)));
 	d.exec();
 }
 
