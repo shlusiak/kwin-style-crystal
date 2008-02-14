@@ -1,4 +1,5 @@
 project(KWIN_CRYSTAL)
+set(VERSION 2.0.1)
 
 find_package(KDE4 REQUIRED)
 
@@ -42,7 +43,7 @@ macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
 
 ########### global ###############
 
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1 -DVERSION=\\"${VERSION}\\")
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
 include_directories(

@@ -659,8 +659,7 @@ void CrystalClient::init()
 	if (isPreview()) {
 		char c[512];
 		QLabel *label;
-#define		VERSION "KWIN4-pre1"
-		sprintf(c,"<center><b>Crystal %s Preview</b><br>Built: %s</center>",VERSION,__DATE__);
+		sprintf(c,"<center><b>Crystal %s Preview</b><br>Built: %s</center>",VERSION, __DATE__);
 		mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
 		mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
 		label = new QLabel(i18n(c), widget());
