@@ -31,7 +31,8 @@
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qimage.h>
-// #include <kwin.h>
+#include <kwindowsystem.h>
+#include <kwindowinfo.h>
 #include <kprocess.h>
 
 #include "crystalclient.h"
@@ -1025,43 +1026,6 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 	return false;
 }
 
-void CrystalClient::ClientWindows(Window* v_frame,Window* v_wrapper,Window *v_client)
-{
-// 	Window root=0,frame=0,wrapper=0,client=0,parent=0,*children=NULL;
-// 	uint numc;
-	if (v_frame) *v_frame=0;
-	if (v_wrapper) *v_wrapper=0;
-	if (v_client) *v_client=0;
-	// Our Deco is the child of a frame, get our parent
-	/* FIXME: Fix this!!! */
-/*
-	if (XQueryTree(qt_xdisplay(),widget()->winId(),&root,&frame,&children,&numc) == 0)
-		return;
-	if (children!=NULL)XFree(children);
-	children=NULL;
-	
-	// frame has two children, us and a wrapper, get the wrapper
-	if (XQueryTree(qt_xdisplay(),frame,&root,&parent,&children,&numc)==0)
-		return;
-
-	for (uint i=0;i<numc;i++)
-	{
-		if (children[i]!=widget()->winId())wrapper=children[i];
-	}
-	if (children!=NULL)XFree(children);
-	children=NULL;
-	
-	// wrapper has only one child, which is the client. We want this!!
-	if (XQueryTree(qt_xdisplay(),wrapper,&root,&parent,&children,&numc)==0)
-		return;
-	if (numc==1)client=children[0];	
-	if (children!=NULL)XFree(children);
-	children=NULL;
-	if (v_client) *v_client=client;
-	if (v_wrapper) *v_wrapper=wrapper;
-	if (v_frame) *v_frame=frame; */
-}
-
 void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 {
 	if (/*(titlebar_->geometry().contains(e->pos()))&&*/(e->button()==Qt::LeftButton)) titlebarDblClickOperation();
@@ -1073,37 +1037,48 @@ void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 
 void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 {
-	/* FIXME: Scrolling */
-/*	if (::factory->wheelTask)
+	if (::factory->wheelTask)
 	{
 		QList <CrystalClient*> *l=&(::factory->clients);
-		
-		if (l->current()==NULL) for (unsigned int i=0;i<l->count();i++) if ((l->at(i))->isActive()) break;
-		
-		CrystalClient *n=this;
-		Window client,frame,wrapper;
+		QList<CrystalClient*>::iterator i = l->begin(), activeOne;
+		Window client;
+		if (l->begin() == l->end()) return;
+		activeOne = l->begin();
+		while (i < l->end())
+		{
+		    if (*i == NULL) return;
+		    if ((*i)->isActive()) activeOne = i;
+		    i++;
+		}
+		i = activeOne;
+
 		do
 		{
 			if(e->delta()>0)
 			{
-				n=l->next();
-				if (n==NULL)n=l->first();
+				i++;
+				if (i >= l->end()) i = l->begin();
 			}else{
-				n=l->prev();
-				if (n==NULL)n=l->last();
+				i--;
+				if (i < l->begin()) i = l->end()-1;
+			}
+			if (*i == NULL) {
+				printf("*i == NULL\n");
+				return;
 			}
 			
-			n->ClientWindows(&frame,&wrapper,&client);
+			client = (*i)->windowId();
 			if (client == 0) { // FALLBACK
 				titlebarMouseWheelOperation(e->delta());
 				return;
 			}
-			KWin::WindowInfo info=KWin::windowInfo(client);
-			if ((n->desktop()==desktop()) && !info.isMinimized())break;
-		}while(n!=this);
+			KWindowInfo info=KWindowSystem::windowInfo(client, NET::WMState|NET::XAWMState);
+			if (((*i)->desktop()==desktop()) && !info.isMinimized())break;
+		}while(i != activeOne);
 			
-		KWin::activateWindow(client);
-	}else*/{
+		if (client)
+			KWindowSystem::forceActiveWindow(client);
+	}else{
 		titlebarMouseWheelOperation(e->delta());
 	}
 }

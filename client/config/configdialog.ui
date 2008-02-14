@@ -280,9 +280,6 @@
        </item>
        <item row="5" column="0" >
         <widget class="QCheckBox" name="wheelTask" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
          <property name="sizePolicy" >
           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
            <horstretch>0</horstretch>

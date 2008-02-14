@@ -152,7 +152,6 @@ public:
 	virtual QSize minimumSize() const;
 	virtual Position mousePosition(const QPoint &point) const;
 	
-	void ClientWindows(Window* frame,Window* wrapper,Window* client);
 private:
 	CrystalButton* addButtons(QBoxLayout* layout, const QString& buttons);
 	void updateMask();
