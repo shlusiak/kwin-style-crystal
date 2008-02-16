@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Sascha Hlusiak                                  *
+ *   Copyright (C) 2006-2008 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -32,7 +32,6 @@
 #include <kurlrequester.h>
 #include <kurllabel.h>
 #include <klocale.h>
-#include <kglobal.h>
 
 #include "ui_configdialog.h"
 #include "ui_infodialog.h"

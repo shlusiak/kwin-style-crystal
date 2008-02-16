@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006-2008 by Sascha Hlusiak                                  *
+ *   Copyright (C) 2006-2008 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -20,15 +20,12 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kglobal.h>
-#include <kglobalsettings.h>
 #include <klocale.h>
 #include <kdebug.h>
 
 #include <qbitmap.h>
 #include <qlabel.h>
 #include <qpainter.h>
-#include <qtooltip.h>
 #include <qapplication.h>
 #include <qimage.h>
 #include <kwindowsystem.h>

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006-2008 by Sascha Hlusiak                                  *
+ *   Copyright (C) 2006-2008 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,7 +22,6 @@
 #include <ktoolinvocation.h>
 
 #include "crystalconfig.h"
-#include "ui_infodialog.h"
 
 
 CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
