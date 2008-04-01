@@ -44,7 +44,7 @@ macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
 ########### global ###############
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1 -DVERSION=\\"${VERSION}\\")
-include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
+include_directories (${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/lib
