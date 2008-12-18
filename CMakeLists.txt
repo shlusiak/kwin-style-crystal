@@ -1,5 +1,5 @@
 project(KWIN_CRYSTAL)
-set(VERSION 2.0.1)
+set(VERSION 2.0.2)
 
 find_package(KDE4 REQUIRED)
 
