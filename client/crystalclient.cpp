@@ -681,6 +681,7 @@ void CrystalClient::init()
 	connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
 	connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 	
+	widget()->setToolTip(caption());
 	updateLayout();
 }
 
