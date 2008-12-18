@@ -54,4 +54,5 @@ include_directories(
     )
 
 
+add_subdirectory( pics )
 add_subdirectory( client )

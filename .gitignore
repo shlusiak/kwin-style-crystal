@@ -12,3 +12,4 @@ CMakeTmp
 EnabledFeatures.txt
 *.cmake
 install_manifest.txt
+build/
