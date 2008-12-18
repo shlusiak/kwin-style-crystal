@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>426</width>
-    <height>301</height>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -106,7 +106,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Expanding</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
               <height>20</height>
@@ -151,7 +151,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Preferred</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>10</width>
               <height>20</height>
@@ -196,7 +196,7 @@
             <property name="sizeType" >
              <enum>QSizePolicy::Preferred</enum>
             </property>
-            <property name="sizeHint" >
+            <property name="sizeHint" stdset="0" >
              <size>
               <width>10</width>
               <height>20</height>
@@ -362,7 +362,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>16</height>
@@ -426,7 +426,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>20</height>
@@ -455,10 +455,7 @@
           <number>0</number>
          </property>
          <layout class="QGridLayout" >
-          <property name="horizontalSpacing" >
-           <number>0</number>
-          </property>
-          <property name="verticalSpacing" >
+          <property name="spacing" >
            <number>0</number>
           </property>
           <item row="2" column="1" >
@@ -861,45 +858,81 @@
           <property name="text" >
            <string>Crystal Default</string>
           </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/default/crystal_close.png</normaloff>:/buttons/pics/default/crystal_close.png</iconset>
+          </property>
          </item>
          <item>
           <property name="text" >
            <string>Crystal Aqua</string>
+          </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/aqua/aqua_close.png</normaloff>:/buttons/pics/aqua/aqua_close.png</iconset>
           </property>
          </item>
          <item>
           <property name="text" >
            <string>Crystal Knifty</string>
           </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/knifty/knifty_close.png</normaloff>:/buttons/pics/knifty/knifty_close.png</iconset>
+          </property>
          </item>
          <item>
           <property name="text" >
            <string>Handpainted</string>
+          </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/handpainted/handpainted_close.png</normaloff>:/buttons/pics/handpainted/handpainted_close.png</iconset>
           </property>
          </item>
          <item>
           <property name="text" >
            <string>SVG</string>
           </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/svg/svg_close.png</normaloff>:/buttons/pics/svg/svg_close.png</iconset>
+          </property>
          </item>
          <item>
           <property name="text" >
            <string>Vista</string>
+          </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/vista/vista_close.png</normaloff>:/buttons/pics/vista/vista_close.png</iconset>
           </property>
          </item>
          <item>
           <property name="text" >
            <string>Kubuntu Dapper</string>
           </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/kubuntu-dapper/dapper_close.png</normaloff>:/buttons/pics/kubuntu-dapper/dapper_close.png</iconset>
+          </property>
          </item>
          <item>
           <property name="text" >
            <string>Kubuntu Edgy</string>
           </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/kubuntu-edgy/edgy_close.png</normaloff>:/buttons/pics/kubuntu-edgy/edgy_close.png</iconset>
+          </property>
          </item>
          <item>
           <property name="text" >
            <string>Kubuntu Feisty</string>
+          </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/kubuntu-feisty/feisty_close.png</normaloff>:/buttons/pics/kubuntu-feisty/feisty_close.png</iconset>
           </property>
          </item>
         </widget>
@@ -930,7 +963,7 @@
        <item row="1" column="0" colspan="2" >
         <widget class="QTabWidget" name="tabWidget4" >
          <property name="currentIndex" >
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab" >
           <attribute name="title" >
@@ -1028,7 +1061,7 @@
              <property name="orientation" >
               <enum>Qt::Vertical</enum>
              </property>
-             <property name="sizeHint" >
+             <property name="sizeHint" stdset="0" >
               <size>
                <width>20</width>
                <height>40</height>
@@ -1134,7 +1167,7 @@
              <property name="orientation" >
               <enum>Qt::Vertical</enum>
              </property>
-             <property name="sizeHint" >
+             <property name="sizeHint" stdset="0" >
               <size>
                <width>20</width>
                <height>40</height>
@@ -1291,7 +1324,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>30</height>
@@ -1416,7 +1449,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>40</height>
@@ -1580,7 +1613,9 @@
   <include location="local" >klineedit.h</include>
   <include location="local" >kpushbutton.h</include>
  </includes>
- <resources/>
+ <resources>
+  <include location="configdialog.qrc" />
+ </resources>
  <connections>
   <connection>
    <sender>hover</sender>

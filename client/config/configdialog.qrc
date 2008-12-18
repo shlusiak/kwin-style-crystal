@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="buttons" >
+    <file>../../pics/default/crystal_close.png</file>
+    <file>../../pics/aqua/aqua_close.png</file>
+    <file>../../pics/handpainted/handpainted_close.png</file>
+    <file>../../pics/knifty/knifty_close.png</file>
+    <file>../../pics/kubuntu-dapper/dapper_close.png</file>
+    <file>../../pics/kubuntu-edgy/edgy_close.png</file>
+    <file>../../pics/kubuntu-feisty/feisty_close.png</file>
+    <file>../../pics/svg/svg_close.png</file>
+    <file>../../pics/vista/vista_close.png</file>
+  </qresource>
+</RCC>

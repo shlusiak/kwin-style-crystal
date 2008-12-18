@@ -7,7 +7,7 @@ set(kwin_crystal_config_PART_SRCS crystalconfig.cpp )
 
 
 kde4_add_ui_files(kwin_crystal_config_PART_SRCS configdialog.ui infodialog.ui)
-
+qt4_add_resources(kwin_crystal_config_PART_SRCS configdialog.qrc)
 kde4_add_plugin(kwin_crystal_config ${kwin_crystal_config_PART_SRCS})
 
 
