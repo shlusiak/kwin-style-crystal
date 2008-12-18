@@ -1,7 +1,7 @@
 add_subdirectory( config )
 
 
-# Geneates tiles.h from button images
+##### Geneates tiles.h from button images. List subfolders of $top/pics/ that contain *.png files you want to include
 set (PICS
 	default
 	aqua
@@ -12,6 +12,11 @@ set (PICS
 	kubuntu-feisty
 	svg
 	vista
+    )
+set (OVERLAYS
+	glass_overlay
+	lighting_overlay
+	steel_overlay
     )
 
 set (PICS_SOURCES)
@@ -25,9 +30,9 @@ add_custom_command (
    DEPENDS ${PICS_SOURCES}
    )
 
-# Geneates overlays.h from button images
+##### Geneates overlays.h from button images. List files in $top/pics that are to be used as overlay
 set (OVERLAY_SOURCES)
-foreach(file glass_overlay lighting_overlay steel_overlay)
+foreach(file ${OVERLAYS})
    set (OVERLAY_SOURCES ${OVERLAY_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/../pics/${file}.png)
 endforeach(file)
 
@@ -38,7 +43,7 @@ add_custom_command (
    )
 
 
-# Target
+##### Target #####
 set(kwin3_crystal_PART_SRCS
    buttonimage.cpp
    crystalbutton.cpp

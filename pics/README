@@ -1,20 +1,19 @@
 These are the button themes for Crystal.
 
-1) embedtool: Tool wich converts the png files into C-source code. The source code is then compiled into the decoration.
+1) embedtool: Tool wich converts the png files into C-source code. The source files are then included in the decoration source.
 Use with 'embedtool file1 file2 > tiles.h', or 'embedtool foo/*.png > bar.h'.
 
 
-2) The button themes are handled by automake now, this means a simple 'make' in the top directory should build embedtool, create the neccessary headers and copy the resulting tiles.h to ../client/tiles.h. After changing a png file, a simple make should take care of it all. 
+2) The button themes are handled by cmake. Please see file $top_src/client/CMakeLists.txt. A simple 'make' in the build directory should build embedtool, and create the necessary headers. After changing a png file, a simple make should take care of it all again.
 
 
 3) A new button theme is much more work:
-- Add a directory, populate it with png images. List this directory in the ${themes} variable of the Makefile.am
-- In the top directory run: make -f Makefile.cvs. Now make should include your png images in the tiles.h, which gets included in the crystal source.
-- You have to add some logic to the ../client/crystalclient.cc and ../client/config/configdialog.ui file, to really make your button theme available.
+- Add a directory, populate it with png images. List this directory in $top_src/client/CMakeLists.txt.
+- You have to add some logic to the ../client/crystalclient.cpp and ../client/config/configdialog.ui file, to really make your button theme available.
 
 
 
-If you made a button theme out of an existing one, please mail it to me (at spam84@gmx.de), and I'll take care of the proper implementation.
+If you made a button theme out of an existing one, please mail it to me (at spam84@nurfuerspam.de), and I'll take care of the proper implementation.
 
-Sascha Hlusiak, 13.03.2006
+Sascha Hlusiak, 18.12.2008
 [spam84@nurfuerspam.de]

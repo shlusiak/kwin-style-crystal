@@ -1,2 +1,1 @@
-- Fix Tooltips (?)
 - Add transparency support back
