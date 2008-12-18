@@ -248,32 +248,33 @@ void CrystalButton::drawButton(QPainter *painter)
 			img=image->pressed;
 		}
 	
-		if (img)
-		if (dx<image->hSpace/2 || dy<0)
-		{	// Deco size is smaller than image, we need to stretch it
-			int w,h;
+		if (img) {
+			if (dx<image->hSpace/2 || dy<0)
+			{	// Deco size is smaller than image, we need to stretch it
+				int w,h;
 
-			if (rect().width()-image->hSpace<rect().height())
-			{
-				w=rect().width()-image->hSpace;
-				h=(int)((float)w*(float)image->image_height/(float)image->image_width);
+				if (rect().width()-image->hSpace<rect().height())
+				{
+					w=rect().width()-image->hSpace;
+					h=(int)((float)w*(float)image->image_height/(float)image->image_width);
+				}else{
+					h=rect().height();
+					w=(int)((float)h*(float)image->image_width/(float)image->image_height);
+				}
+
+				QRect r((rect().width()-w)/2,(rect().height()-h)/2,w,h);
+
+				pufferPainter.drawImage(r,*img);
+				if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, r);
 			}else{
-				h=rect().height();
-				w=(int)((float)h*(float)image->image_width/(float)image->image_height);
+				// Otherwise we just paint it
+				if (image->drawMode==1)dy=0;
+				pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
+
+				if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, 
+					QRect((int)dx,(int)dy,image->image_width,image->image_height));
 			}
-
-			QRect r((rect().width()-w)/2,(rect().height()-h)/2,w,h);
-
-			pufferPainter.drawImage(r,*img);
-			if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, r);
-		}else{
-			// Otherwise we just paint it
-			if (image->drawMode==1)dy=0;
-			pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
-
-			if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, 
-				QRect((int)dx,(int)dy,image->image_width,image->image_height));
-	    }
+		}
 	}
 	
 	pufferPainter.end();
