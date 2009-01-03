@@ -171,10 +171,47 @@ void CrystalButton::drawButton(QPainter *painter)
 	QColor color = client_->options()->color(KDecoration::ColorTitleBar, client_->isActive());
 	pufferPainter.fillRect(rect(), color);
 
-	if (!wndcfg->overlay.isNull())
-	{
+// .......................................................
+// CQ 20090101
+	if (wndcfg->stretch_overlay == false)
+		//pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
 		pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
+	else
+	{
+		QPixmap pm = QPixmap ();
+		int     tw;
+		
+		if (client_->isActive())
+		{
+			if (::factory->stretch_active)
+				tw = client_->width();
+			else if (::factory->fwidth_active)
+				tw = ::factory->fwvalue_active;
+			else
+				tw = ::factory->acustbg.width();
+			
+			pm = QPixmap::fromImage(::factory->acustbg.scaled (tw,::factory->titlesize), 0);
+		}
+		else
+		{
+			if (::factory->stretch_inactive)
+				tw = client_->width();
+			else if (::factory->fwidth_inactive)
+				tw = ::factory->fwvalue_inactive;
+			else
+				tw = ::factory->icustbg.width();
+
+			pm = QPixmap::fromImage(::factory->icustbg.scaled (tw,::factory->titlesize), 0);
+		}
+		//pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,pm);
+		pufferPainter.drawTiledPixmap(rect(),pm,QPoint(x(),y()));
 	}
+// .......................................................
+
+//	if (!wndcfg->overlay.isNull())
+//	{
+//		pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
+//	}
 
 	dm=0;
 	if (image && (image->drawMode==1))dm=1;
