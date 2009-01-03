@@ -233,7 +233,7 @@ bool CrystalFactory::readConfig()
 
 	logoEnabled=cg.readEntry("LogoAlignment",1);
 	logoStretch=cg.readEntry("LogoStretch",0);
-	logoActive=cg.readEntry("LogoActive",0);
+	logoActive=cg.readEntry("LogoActive",false);
 	logoDistance=cg.readEntry("LogoDistance",0);
 	QString filename=cg.readEntry("LogoFile","");
 	if (!filename.isNull() && logoEnabled!=1)
