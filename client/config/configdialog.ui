@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>426</width>
-    <height>264</height>
+    <width>522</width>
+    <height>325</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,7 +19,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex" >
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
@@ -1289,7 +1289,7 @@
           <string>Little preview</string>
          </property>
          <property name="frameShape" >
-          <enum>QFrame::Panel</enum>
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow" >
           <enum>QFrame::Sunken</enum>
@@ -1403,7 +1403,7 @@
        <string>&amp;Overlay</string>
       </attribute>
       <layout class="QGridLayout" >
-       <item row="0" column="0" colspan="2" >
+       <item row="1" column="0" colspan="2" >
         <widget class="QLabel" name="textLabel2" >
          <property name="sizePolicy" >
           <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
@@ -1422,131 +1422,258 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0" colspan="2" >
-        <widget class="QLabel" name="textLabel4" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text" >
-          <string>User defined should be a transparent png file, i.e. 1x64px</string>
-         </property>
-         <property name="alignment" >
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="wordWrap" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0" >
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="0" >
-        <widget class="QLabel" name="textLabel1_7" >
-         <property name="text" >
-          <string>Overlay for active window:</string>
-         </property>
-         <property name="wordWrap" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" >
-        <widget class="QLabel" name="textLabel1_7_2" >
-         <property name="text" >
-          <string>Overlay for inactive window:</string>
-         </property>
-         <property name="wordWrap" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" >
-        <widget class="QComboBox" name="overlay_active" >
-         <item>
-          <property name="text" >
-           <string>Disabled</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Simple Lighting</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Glass</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Steel</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Custom</string>
-          </property>
-         </item>
-        </widget>
-       </item>
        <item row="3" column="0" >
-        <widget class="KUrlRequester" name="overlay_active_file" >
-         <property name="enabled" >
-          <bool>false</bool>
+        <widget class="QTabWidget" name="tabWidget" >
+         <property name="currentIndex" >
+          <number>0</number>
          </property>
-        </widget>
-       </item>
-       <item row="3" column="1" >
-        <widget class="KUrlRequester" name="overlay_inactive_file" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" >
-        <widget class="QComboBox" name="overlay_inactive" >
-         <item>
-          <property name="text" >
-           <string>Disabled</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Simple Lighting</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Glass</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Steel</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Custom</string>
-          </property>
-         </item>
+         <widget class="QWidget" name="tab_2" >
+          <attribute name="title" >
+           <string>A&amp;ctive Window</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout" >
+           <item row="0" column="0" colspan="2" >
+            <widget class="QComboBox" name="overlay_active" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text" >
+               <string>Disabled</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Simple Lighting</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Glass</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Steel</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Custom</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2" >
+            <widget class="KUrlRequester" name="overlay_active_file" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2" >
+            <widget class="QRadioButton" name="stretch_active" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip" >
+              <string>Stretches the user defined overlay for the
+active window horizontaly</string>
+             </property>
+             <property name="text" >
+              <string>&amp;Stretch</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" >
+            <widget class="QRadioButton" name="fwidth_active" >
+             <property name="toolTip" >
+              <string>Stretches the user defined overlay for the
+active window horizontaly to the chosen
+value</string>
+             </property>
+             <property name="text" >
+              <string>&amp;Fixed width / tile</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1" >
+            <widget class="QSpinBox" name="fwvalue_active" >
+             <property name="toolTip" >
+              <string>The fixed width, the user defined
+overlay is stretched</string>
+             </property>
+             <property name="suffix" >
+              <string> px</string>
+             </property>
+             <property name="prefix" >
+              <string/>
+             </property>
+             <property name="minimum" >
+              <number>1</number>
+             </property>
+             <property name="maximum" >
+              <number>1000</number>
+             </property>
+             <property name="value" >
+              <number>256</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="2" >
+            <widget class="QRadioButton" name="nostretch_active" >
+             <property name="toolTip" >
+              <string>Don't stretch user defined overlay
+on active window</string>
+             </property>
+             <property name="text" >
+              <string>&amp;Don't stretch / tile</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="2" >
+            <spacer name="verticalSpacer_3" >
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_3" >
+          <attribute name="title" >
+           <string>Inacti&amp;ve Window</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_2" >
+           <item row="0" column="0" colspan="2" >
+            <widget class="QComboBox" name="overlay_inactive" >
+             <item>
+              <property name="text" >
+               <string>Disabled</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Simple Lighting</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Glass</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Steel</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Custom</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2" >
+            <widget class="KUrlRequester" name="overlay_inactive_file" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="2" >
+            <spacer name="verticalSpacer_2" >
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="0" colspan="2" >
+            <widget class="QRadioButton" name="stretch_inactive" >
+             <property name="toolTip" >
+              <string>Stretches the user defined overlay for the
+inactive window horizontaly</string>
+             </property>
+             <property name="text" >
+              <string>&amp;Stretch</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" >
+            <widget class="QRadioButton" name="fwidth_inactive" >
+             <property name="toolTip" >
+              <string>Stretches the user defined overlay for the
+active window horizontaly to the chosen
+value</string>
+             </property>
+             <property name="text" >
+              <string>&amp;Fixed width / tile</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1" >
+            <widget class="QSpinBox" name="fwvalue_inactive" >
+             <property name="toolTip" >
+              <string>The fixed width, the user defined
+overlay is stretched</string>
+             </property>
+             <property name="suffix" >
+              <string> px</string>
+             </property>
+             <property name="minimum" >
+              <number>1</number>
+             </property>
+             <property name="maximum" >
+              <number>1000</number>
+             </property>
+             <property name="value" >
+              <number>256</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="2" >
+            <widget class="QRadioButton" name="nostretch_inactive" >
+             <property name="toolTip" >
+              <string>Don't stretch user defined overlay
+on active window</string>
+             </property>
+             <property name="text" >
+              <string>&amp;Don't stretch / tile</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -1742,6 +1869,38 @@
     <hint type="destinationlabel" >
      <x>20</x>
      <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fwidth_active</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fwvalue_active</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>138</x>
+     <y>187</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>379</x>
+     <y>187</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fwidth_inactive</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fwvalue_inactive</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>138</x>
+     <y>187</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>379</x>
+     <y>187</y>
     </hint>
    </hints>
   </connection>

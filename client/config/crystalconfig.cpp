@@ -86,6 +86,17 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->overlay_active_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
 	connect(dialog_->overlay_inactive_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
 
+	// -----------------------------------------------------------------------------------------------
+	// CQ 20090101
+	connect(dialog_->stretch_active, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
+	connect(dialog_->stretch_inactive, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
+	connect(dialog_->fwidth_active, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
+	connect(dialog_->fwidth_inactive, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
+	connect(dialog_->nostretch_active, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
+	connect(dialog_->nostretch_inactive, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
+	connect(dialog_->fwvalue_active, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
+	connect(dialog_->fwvalue_inactive, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
+	// -----------------------------------------------------------------------------------------------
 
 	connect(dialog_->logoEnabled, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->logoFile, SIGNAL(textChanged(const QString &)),this, SLOT(logoTextChanged(const QString&)));
@@ -171,15 +182,23 @@ void CrystalConfig::load(KConfigGroup&)
 	
 	dialog_->overlay_active->setCurrentIndex(cg.readEntry("OverlayModeActive",0));
 	dialog_->overlay_active_file->setUrl(cg.readEntry("OverlayFileActive",""));
+	dialog_->stretch_active->setChecked(cg.readEntry("OverlayStretchActive",false));
+	dialog_->fwidth_active->setChecked(cg.readEntry("OverlayFWidthActive",true));
+	dialog_->nostretch_active->setChecked(cg.readEntry("OverlayNoStretchActive",false));
+	dialog_->fwvalue_active->setValue(cg.readEntry("OverlayFWValueActive",256));
 	overlay_active_changed(dialog_->overlay_active->currentIndex());
 
 	dialog_->overlay_inactive->setCurrentIndex(cg.readEntry("OverlayModeInactive",0));
 	dialog_->overlay_inactive_file->setUrl(cg.readEntry("OverlayFileInactive",""));
+	dialog_->stretch_inactive->setChecked(cg.readEntry("OverlayStretchInactive",false));
+	dialog_->fwidth_inactive->setChecked(cg.readEntry("OverlayFWidthInactive",true));
+	dialog_->nostretch_inactive->setChecked(cg.readEntry("OverlayNoStretchInactive",false));
+	dialog_->fwvalue_inactive->setValue(cg.readEntry("OverlayFWValueInactive",256));
 	overlay_inactive_changed(dialog_->overlay_inactive->currentIndex());
 
 	dialog_->logoEnabled->setButton(cg.readEntry("LogoAlignment",1));
 	dialog_->logoFile->setUrl(cg.readEntry("LogoFile",""));
-	dialog_->logoActive->setChecked(cg.readEntry("LogoActive",1));
+	dialog_->logoActive->setChecked(cg.readEntry("LogoActive",true));
 	dialog_->logoStretch->setCurrentIndex(cg.readEntry("LogoStretch",0));
 	dialog_->logoDistance->setValue(cg.readEntry("LogoDistance",0));
 	updateLogo();
@@ -240,8 +259,16 @@ void CrystalConfig::save(KConfigGroup&)
 
 	cg.writeEntry("OverlayModeActive",dialog_->overlay_active->currentIndex());
 	cg.writeEntry("OverlayFileActive",dialog_->overlay_active_file->url().toLocalFile());
+	cg.writeEntry("OverlayStretchActive",dialog_->stretch_active->isChecked());
+	cg.writeEntry("OverlayFWidthActive",dialog_->fwidth_active->isChecked());
+	cg.writeEntry("OverlayNoStretchActive",dialog_->nostretch_active->isChecked());
+	cg.writeEntry("OverlayFWValueActive",dialog_->fwvalue_active->value());
 	cg.writeEntry("OverlayModeInactive",dialog_->overlay_inactive->currentIndex());
 	cg.writeEntry("OverlayFileInactive",dialog_->overlay_inactive_file->url().toLocalFile());
+	cg.writeEntry("OverlayStretchInactive",dialog_->stretch_inactive->isChecked());
+	cg.writeEntry("OverlayNoStretchInactive",dialog_->nostretch_inactive->isChecked());
+	cg.writeEntry("OverlayFWidthInactive",dialog_->fwidth_inactive->isChecked());
+	cg.writeEntry("OverlayFWValueInactive",dialog_->fwvalue_inactive->value());
 
 	cg.writeEntry("LogoAlignment",dialog_->logoEnabled->selectedId());
 	cg.writeEntry("LogoFile",dialog_->logoFile->url().toLocalFile());
@@ -269,12 +296,20 @@ void CrystalConfig::logoTextChanged(const QString&)
 void CrystalConfig::overlay_active_changed(int a)
 {
 	dialog_->overlay_active_file->setEnabled(a==4);
+	dialog_->stretch_active->setEnabled(a==4);
+	dialog_->fwidth_active->setEnabled(a==4);
+	dialog_->nostretch_active->setEnabled(a==4);
+	dialog_->fwvalue_active->setEnabled((a==4) && (dialog_->fwidth_active->isChecked()));
 	emit changed();
 }
 
 void CrystalConfig::overlay_inactive_changed(int a)
 {
 	dialog_->overlay_inactive_file->setEnabled(a==4);
+	dialog_->stretch_inactive->setEnabled(a==4);
+	dialog_->fwidth_inactive->setEnabled(a==4);
+	dialog_->nostretch_inactive->setEnabled(a==4);
+	dialog_->fwvalue_inactive->setEnabled((a==4) && (dialog_->fwidth_inactive->isChecked()));
 	emit changed();
 }
 
