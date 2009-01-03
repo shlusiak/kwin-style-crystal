@@ -55,6 +55,7 @@ struct WND_CONFIG
 	int outlineMode,inlineMode;
 	QColor frameColor,inlineColor;
 	QPixmap overlay;
+	bool stretch_overlay;
 };
 
 
@@ -105,7 +106,7 @@ public:
 public:
 	QPixmap logo;
 	int logoEnabled,logoStretch,logoActive,logoDistance;
-	
+
 	int titlesize;
 	bool hovereffect,tintButtons,animateHover,menuImage,wheelTask;
 

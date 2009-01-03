@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006-2008 by Sascha Hlusiak                             *
+ *   Copyright (C) 2006-2009 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,6 +17,14 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+
+/***************************************************************************
+ *   Contributers include:                                                 *
+ *                                                                         *
+ *     Christian Quante, 2009                                              *
+ ***************************************************************************/
+
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -102,7 +110,7 @@ bool CrystalFactory::supports(Ability ability) const
 	}
 }
 
-void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
+void setupOverlay(WND_CONFIG *cfg,int mode,QString filename, int fwidth)
 {
 	switch(mode)
 	{
@@ -110,16 +118,19 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 			break;
 		case 1:{
 			QImage img=QImage((uchar*)lighting_overlay_data,1,60,QImage::Format_ARGB32);
+			cfg->stretch_overlay = false;
 			cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
 			break;
 		}
 		case 2:{
 			QImage img=QImage((uchar*)glass_overlay_data,20,64,QImage::Format_ARGB32);
+			cfg->stretch_overlay = false;
 			cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
 			break;
 		}
 		case 3:{
 			QImage img=QImage((uchar*)steel_overlay_data,28,64,QImage::Format_ARGB32);
+			cfg->stretch_overlay = false;
 			cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
 			break;
 		}
@@ -127,7 +138,10 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 			QImage img;
 			if (img.load(filename))
 			{
-				cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
+				if (fwidth == 0)
+					cfg->overlay = QPixmap::fromImage(img.scaled(img.width (),::factory->titlesize));
+				else
+					cfg->overlay = QPixmap::fromImage(img.scaled(fwidth ,::factory->titlesize));
 			}
 			break;
 		}
@@ -193,8 +207,29 @@ bool CrystalFactory::readConfig()
 	menuImage=cg.readEntry("MenuImage",true);
 	buttontheme=cg.readEntry("ButtonTheme",8);
 
-	setupOverlay(&active,cg.readEntry("OverlayModeActive",0),cg.readEntry("OverlayFileActive",""));
-	setupOverlay(&inactive,cg.readEntry("OverlayModeInactive",0),cg.readEntry("OverlayFileInactive",""));
+	{
+		QString afname = cg.readEntry("OverlayFileActive","");
+		QString ifname = cg.readEntry("OverlayFileInactive","");
+
+		int aovmode = cg.readEntry("OverlayModeActive",0);
+		int iovmode = cg.readEntry("OverlayModeInactive",0);
+
+		active.stretch_overlay = cg.readEntry("OverlayStretchActive",false);
+		inactive.stretch_overlay = cg.readEntry("OverlayStretchInactive",false);
+
+		bool fwidth_active = cg.readEntry("OverlayFWidthActive",true);
+		bool fwidth_inactive = cg.readEntry("OverlayFWidthInactive",true);
+
+		int fwvalue_active = cg.readEntry("OverlayFWValueActive",256);
+		int fwvalue_inactive = cg.readEntry("OverlayFWValueInactive",256);
+		
+		if (fwidth_active == false) fwvalue_active = 0;
+		if (fwidth_inactive == false) fwvalue_inactive = 0;
+
+		setupOverlay(&active,aovmode,afname,fwvalue_active);
+		setupOverlay(&inactive,iovmode,ifname,fwvalue_inactive);
+	}
+
 
 	logoEnabled=cg.readEntry("LogoAlignment",1);
 	logoStretch=cg.readEntry("LogoStretch",0);
@@ -1105,7 +1140,13 @@ void CrystalClient::paintEvent(QPaintEvent*)
  		pufferPainter.fillRect(widget()->rect(),options()->color(KDecoration::ColorTitleBar, isActive()));
 		if (!wndcfg->overlay.isNull())
 		{
-			pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
+		// -----------------------------------------------------------------------------------------------
+		// Stretching of userdefined overlay
+			if (wndcfg->stretch_overlay == false)
+				pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
+			else
+				pufferPainter.drawPixmap(QRect(0,0,widget()->width(),bt), wndcfg->overlay,wndcfg->overlay.rect());
+		// -----------------------------------------------------------------------------------------------
 		}
 
 		if (::factory->drawcaption)
