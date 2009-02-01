@@ -1167,10 +1167,10 @@ void CrystalClient::paintEvent(QPaintEvent*)
 			int textalign=CrystalFactory::titleAlign();
 			if (textwidth>r.width())
 				textalign=Qt::AlignLeft, textwidth=r.width();			
-			if (::factory->textshadow)
+			if (::factory->textshadow && isActive())
 			{
 				pufferPainter.translate(1,1);
-				pufferPainter.setPen(color.dark(300));
+				pufferPainter.setPen(color.dark(500));
 				pufferPainter.drawText(r,textalign | Qt::AlignVCenter,caption());
 				pufferPainter.translate(-1,-1);
 			}
