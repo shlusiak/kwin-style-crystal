@@ -11,4 +11,7 @@
     <file>../../pics/svg/svg_close.png</file>
     <file>../../pics/vista/vista_close.png</file>
   </qresource>
+  <qresource prefix="info" >
+    <file>photo_80x80.jpg</file>
+  </qresource>
 </RCC>

@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>498</width>
-    <height>359</height>
+    <width>478</width>
+    <height>425</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -33,7 +33,7 @@
      <property name="title" >
       <string>About</string>
      </property>
-     <layout class="QGridLayout" >
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" >
        <widget class="QLabel" name="textLabel1" >
         <property name="sizePolicy" >
@@ -44,7 +44,7 @@
         </property>
         <property name="text" >
          <string>Crystal kwin decoration theme for KDE 4,
-Sascha Hlusiak &lt;spam84@nurfuerspam.de>, 2004-2008.
+Sascha Hlusiak &lt;spam84@nurfuerspam.de>, 2004-2009.
 
 You may look for the most recent version at kde-look.org:</string>
         </property>
@@ -59,7 +59,7 @@ You may look for the most recent version at kde-look.org:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
+      <item row="3" column="0" >
        <widget class="KUrlLabel" name="URL_Crystal_1" >
         <property name="text" >
          <string>KDE 3: www.kde-look.org/content/show.php?content=13969</string>
@@ -69,13 +69,67 @@ You may look for the most recent version at kde-look.org:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
+      <item row="3" column="1" >
+       <spacer name="verticalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="1" >
+       <spacer name="verticalSpacer_2" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0" >
        <widget class="KUrlLabel" name="URL_Crystal_2" >
         <property name="text" >
          <string>KDE 4: www.kde-look.org/content/show.php?content=75140</string>
         </property>
         <property name="url" >
          <string>http://www.kde-look.org/content/show.php/Crystal?content=75140</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QLabel" name="label" >
+        <property name="enabled" >
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="pixmap" >
+         <pixmap resource="configdialog.qrc" >:/info/photo_80x80.jpg</pixmap>
+        </property>
+        <property name="scaledContents" >
+         <bool>false</bool>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+        </property>
+        <property name="openExternalLinks" >
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -150,7 +204,9 @@ You may look for the most recent version at kde-look.org:</string>
  <includes>
   <include location="local" >kurllabel.h</include>
  </includes>
- <resources/>
+ <resources>
+  <include location="configdialog.qrc" />
+ </resources>
  <connections>
   <connection>
    <sender>pushButton1</sender>
