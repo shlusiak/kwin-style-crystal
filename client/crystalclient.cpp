@@ -1317,6 +1317,8 @@ void CrystalClient::resizeEvent(QResizeEvent *e)
 	if (!widget()->isHidden()) 
 	{
 // 			Repaint(); /* FIXME */
+		for (int n=0; n<ButtonTypeCount; n++) /* For streched Overlay */
+			if (button[n]) button[n]->reset();
 	}
 	if (e->size()!=e->oldSize())
 	{
