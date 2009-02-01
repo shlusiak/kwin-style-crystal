@@ -10,6 +10,7 @@ set (PICS
 	kubuntu-dapper
 	kubuntu-edgy
 	kubuntu-feisty
+	kubuntu-hardy
 	svg
 	vista
     )

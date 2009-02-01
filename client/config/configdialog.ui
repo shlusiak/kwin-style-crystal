@@ -935,6 +935,15 @@
             <normaloff>:/buttons/pics/kubuntu-feisty/feisty_close.png</normaloff>:/buttons/pics/kubuntu-feisty/feisty_close.png</iconset>
           </property>
          </item>
+         <item>
+          <property name="text" >
+           <string>Kubuntu Hardy</string>
+          </property>
+          <property name="icon" >
+           <iconset resource="configdialog.qrc" >
+            <normaloff>:/buttons/pics/kubuntu-hardy/hardy_close.png</normaloff>:/buttons/pics/kubuntu-hardy/hardy_close.png</iconset>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="0" column="1" >

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="buttons" >
+    <file>../../pics/kubuntu-hardy/hardy_close.png</file>
     <file>../../pics/default/crystal_close.png</file>
     <file>../../pics/aqua/aqua_close.png</file>
     <file>../../pics/handpainted/handpainted_close.png</file>
