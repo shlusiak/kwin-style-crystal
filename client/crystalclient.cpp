@@ -913,6 +913,7 @@ void CrystalClient::iconChange()
 void CrystalClient::maximizeChange()
 {
 	bool m = (maximizeMode() == MaximizeFull);
+
 	if (button[ButtonMax]) {
 		button[ButtonMax]->setBitmap(::factory->buttonImages[ m ? ButtonImageRestore : ButtonImageMax ]);
 		button[ButtonMax]->setToolTip(m ? i18n("Restore") : i18n("Maximize"));
@@ -968,14 +969,14 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 	
 	if (!options()->moveResizeMaximizedWindows() )
 	{
-		if ( maximizeMode() & MaximizeHorizontal )l=r=1;
-		if ( maximizeMode() & MaximizeVertical )
+/*		if ( maximizeMode() & MaximizeHorizontal )l=r=1; */
+/*		if (( maximizeMode() & MaximizeVertical ) && !isShade())
 		{
-			b=isShade()?0:1;
+			b=1;
 			if (!isShade() && ( maximizeMode() & MaximizeHorizontal ))b=0;
-		}
+		} */
 		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
-			l=r=0;
+			l=r=b=0;
 	}
 }
 
