@@ -155,7 +155,7 @@ bool CrystalFactory::readConfig()
 	KConfigGroup cg(&config, "General");
 	QColor c;
 
-	int value = cg.readEntry("TitleAlignment", 0);
+	int value = cg.readEntry("TitleAlignment", 1);
 	if (value == 0) titlealign_ = Qt::AlignLeft;
 	else if (value == 1) titlealign_ = Qt::AlignHCenter;
 	else if (value == 2) titlealign_ = Qt::AlignRight;
@@ -179,7 +179,7 @@ bool CrystalFactory::readConfig()
 	c=QColor(160,160,160);
 	inactive.inlineColor=cg.readEntry("InlineColor2",c);
 
-	borderwidth=cg.readEntry("Borderwidth",5);
+	borderwidth=cg.readEntry("Borderwidth",6);
 	titlesize=cg.readEntry("Titlebarheight",21);
  
 	buttonColor_normal=QColor(255,255,255);
@@ -205,14 +205,14 @@ bool CrystalFactory::readConfig()
 	animateHover=cg.readEntry("AnimateHover",true);
 	tintButtons=cg.readEntry("TintButtons",false);
 	menuImage=cg.readEntry("MenuImage",true);
-	buttontheme=cg.readEntry("ButtonTheme",8);
+	buttontheme=cg.readEntry("ButtonTheme",9);
 
 	{
 		QString afname = cg.readEntry("OverlayFileActive","");
 		QString ifname = cg.readEntry("OverlayFileInactive","");
 
-		int aovmode = cg.readEntry("OverlayModeActive",0);
-		int iovmode = cg.readEntry("OverlayModeInactive",0);
+		int aovmode = cg.readEntry("OverlayModeActive",2);
+		int iovmode = cg.readEntry("OverlayModeInactive",2);
 
 		active.stretch_overlay = cg.readEntry("OverlayStretchActive",false);
 		inactive.stretch_overlay = cg.readEntry("OverlayStretchInactive",false);

@@ -150,8 +150,8 @@ void CrystalConfig::load(KConfigGroup&)
 	color=QColor(192,192,192);
 	dialog_->inlineColor2->setColor(cg.readEntry("InlineColor2",color));
 
-	dialog_->borderwidth->setValue(cg.readEntry("Borderwidth",5));
-	dialog_->titlebarheight->setValue(cg.readEntry("Titlebarheight",19));
+	dialog_->borderwidth->setValue(cg.readEntry("Borderwidth",6));
+	dialog_->titlebarheight->setValue(cg.readEntry("Titlebarheight",21));
 
 	int cornersFlag = cg.readEntry("RoundCorners",TOP_LEFT & TOP_RIGHT );
 	dialog_->tlc->setChecked( cornersFlag & TOP_LEFT );
@@ -178,9 +178,9 @@ void CrystalConfig::load(KConfigGroup&)
 	dialog_->closeColor3->setColor(cg.readEntry("CloseColor3",color));
 
 	dialog_->tintButtons->setChecked(cg.readEntry("TintButtons",dialog_->buttonColor1->color()!=QColor(255,255,255)));
-	dialog_->buttonTheme->setCurrentIndex(cg.readEntry("ButtonTheme",8));
+	dialog_->buttonTheme->setCurrentIndex(cg.readEntry("ButtonTheme",9));
 	
-	dialog_->overlay_active->setCurrentIndex(cg.readEntry("OverlayModeActive",0));
+	dialog_->overlay_active->setCurrentIndex(cg.readEntry("OverlayModeActive",2));
 	dialog_->overlay_active_file->setUrl(cg.readEntry("OverlayFileActive",""));
 	dialog_->stretch_active->setChecked(cg.readEntry("OverlayStretchActive",false));
 	dialog_->fwidth_active->setChecked(cg.readEntry("OverlayFWidthActive",true));
@@ -188,7 +188,7 @@ void CrystalConfig::load(KConfigGroup&)
 	dialog_->fwvalue_active->setValue(cg.readEntry("OverlayFWValueActive",256));
 	overlay_active_changed(dialog_->overlay_active->currentIndex());
 
-	dialog_->overlay_inactive->setCurrentIndex(cg.readEntry("OverlayModeInactive",0));
+	dialog_->overlay_inactive->setCurrentIndex(cg.readEntry("OverlayModeInactive",2));
 	dialog_->overlay_inactive_file->setUrl(cg.readEntry("OverlayFileInactive",""));
 	dialog_->stretch_inactive->setChecked(cg.readEntry("OverlayStretchInactive",false));
 	dialog_->fwidth_inactive->setChecked(cg.readEntry("OverlayFWidthInactive",true));
