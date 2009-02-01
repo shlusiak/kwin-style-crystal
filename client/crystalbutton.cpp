@@ -18,10 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
+#include <qwidget.h>
 #include <qimage.h>
 #include <qtooltip.h>
 #include <qpainter.h>
+#include <qrect.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
@@ -172,46 +173,21 @@ void CrystalButton::drawButton(QPainter *painter)
 	pufferPainter.fillRect(rect(), color);
 
 // .......................................................
-// CQ 20090101
-	if (wndcfg->stretch_overlay == false)
-		//pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
-		pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
-	else
+	if (!wndcfg->overlay.isNull())
 	{
-		QPixmap pm = QPixmap ();
-		int     tw;
-		
-		if (client_->isActive())
-		{
-			if (::factory->stretch_active)
-				tw = client_->width();
-			else if (::factory->fwidth_active)
-				tw = ::factory->fwvalue_active;
-			else
-				tw = ::factory->acustbg.width();
-			
-			pm = QPixmap::fromImage(::factory->acustbg.scaled (tw,::factory->titlesize), 0);
-		}
+		if (wndcfg->stretch_overlay == false)
+			pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
 		else
 		{
-			if (::factory->stretch_inactive)
-				tw = client_->width();
-			else if (::factory->fwidth_inactive)
-				tw = ::factory->fwvalue_inactive;
-			else
-				tw = ::factory->icustbg.width();
-
-			pm = QPixmap::fromImage(::factory->icustbg.scaled (tw,::factory->titlesize), 0);
+			QRectF src(
+				(float)x() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
+				(float)y(),
+				(float)width() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
+				(float)height()
+			);
+			pufferPainter.drawPixmap(pufferPixmap.rect(), wndcfg->overlay, src);
 		}
-		//pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,pm);
-		pufferPainter.drawTiledPixmap(rect(),pm,QPoint(x(),y()));
 	}
-// .......................................................
-
-//	if (!wndcfg->overlay.isNull())
-//	{
-//		pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
-//	}
 
 	dm=0;
 	if (image && (image->drawMode==1))dm=1;
