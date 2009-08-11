@@ -48,6 +48,9 @@
 // Button themes
 #include "tiles.h"
 
+// Logo
+#include "logos.h"
+
 
 CrystalFactory* factory=NULL;
 
@@ -258,17 +261,55 @@ bool CrystalFactory::readConfig()
 	logoStretch=cg.readEntry("LogoStretch",0);
 	logoActive=cg.readEntry("LogoActive",false);
 	logoDistance=cg.readEntry("LogoDistance",0);
+	
+	int logoIndex=cg.readEntry("LogoIndex", 0);
 	QString filename=cg.readEntry("LogoFile","");
-	if (!filename.isNull() && logoEnabled!=1)
+
+	if (logoEnabled!=1)
 	{
-		if (logo.load(filename))
+		if (logoIndex == 0)
 		{
-			if (logoStretch==0)
+			if (!filename.isNull() && logo.load(filename))
 			{
-				logo=logo.scaled((titlesize*logo.width())/logo.height(),titlesize);
+				
+			}else logoEnabled=1;
+		} else {
+			QImage img;
+			
+			switch (logoIndex)
+			{
+				default:
+				case 1:
+					img=QImage((uchar*)kde_data,26,26,QImage::Format_ARGB32);
+					break;
+				case 2:
+					img=QImage((uchar*)tux_data,31,26,QImage::Format_ARGB32);
+					break;
+				case 3:
+					img=QImage((uchar*)gentoo_data,64,67,QImage::Format_ARGB32);
+					break;
+				case 4:
+					img=QImage((uchar*)kubuntu_data,24,26,QImage::Format_ARGB32);
+					break;
+				case 5:
+					img=QImage((uchar*)ubuntu_data,64,64,QImage::Format_ARGB32);
+					break;
+				case 6:
+					img=QImage((uchar*)opensuse_data,32,26,QImage::Format_ARGB32);
+					break;
+				case 7:
+					img=QImage((uchar*)pclinuxos_data,26,26,QImage::Format_ARGB32);
+					break;
 			}
-		}else logoEnabled=1;
-	}else logo = QPixmap();
+			logo = QPixmap::fromImage(img);
+		}
+		
+		if ((logoEnabled != 1) && (logoStretch==0))
+		{
+			logo=logo.scaled(((titlesize-2)*logo.width())/logo.height(),titlesize-2);
+		}
+	}
+	else logo = QPixmap ();
 	return true;
 }
 
@@ -807,7 +848,7 @@ void CrystalClient::init()
 
 void CrystalClient::updateMask()
 {
-	if ((::factory->roundCorners==0)|| (!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull ) ) 
+	if ((::factory->roundCorners==0) || (!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull ) ) 
 	{
 		setMask(QRegion(widget()->rect()));
 		return;
@@ -816,10 +857,9 @@ void CrystalClient::updateMask()
 	int cornersFlag = ::factory->roundCorners;
 	int r(width());
 	int b(height());
-	QRegion mask;
-
-	mask=QRegion(widget()->rect());
 	
+	QRegion mask(widget()->rect());
+
 	// Remove top-left corner.
 	if(cornersFlag & TOP_LEFT) {
 		mask -= QRegion(0, 0, 5, 1);
@@ -827,6 +867,7 @@ void CrystalClient::updateMask()
 		mask -= QRegion(0, 2, 2, 1);
 		mask -= QRegion(0, 3, 1, 2);
 	}
+	
 	// Remove top-right corner.
 	if(cornersFlag & TOP_RIGHT) {
 		mask -= QRegion(r - 5, 0, 5, 1);
@@ -834,6 +875,7 @@ void CrystalClient::updateMask()
 		mask -= QRegion(r - 2, 2, 2, 1);
 		mask -= QRegion(r - 1, 3, 1, 2);
 	}
+	
 	// Remove bottom-left corner.
 	if(cornersFlag & BOT_LEFT) {
 		mask -= QRegion(0, b - 5, 1, 3);
@@ -841,6 +883,7 @@ void CrystalClient::updateMask()
 		mask -= QRegion(0, b - 2, 3, 1);
 		mask -= QRegion(0, b - 1, 5, 1);
 	}
+	
 	// Remove bottom-right corner.
 	if(cornersFlag & BOT_RIGHT) {
 		mask -= QRegion(r - 5, b - 1, 5, 1);
@@ -1212,7 +1255,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
 	int drawFrame;
-
+	
 	{
 		QRect r;
 		QPoint p=widget()->mapToGlobal(QPoint(0,0));
@@ -1402,7 +1445,7 @@ void CrystalClient::resizeEvent(QResizeEvent *e)
 {
 	if (!widget()->isHidden()) 
 	{
-// 			Repaint(); /* FIXME */
+		//Repaint(); /* FIXME */
 		for (int n=0; n<ButtonTypeCount; n++) /* For streched Overlay */
 			if (button[n]) button[n]->reset();
 	}
