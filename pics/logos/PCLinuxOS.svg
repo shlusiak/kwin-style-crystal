@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docbase="/home/urke/devel/svg/linux"
+   sodipodi:docname="PCLinuxOS.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective82" />
+    <linearGradient
+       id="linearGradient3411">
+      <stop
+         id="stop3413"
+         offset="0"
+         style="stop-color:#faf772;stop-opacity:1;" />
+      <stop
+         id="stop3415"
+         offset="1"
+         style="stop-color:#faf06f;stop-opacity:0" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3382">
+      <stop
+         style="stop-color:#f0580a;stop-opacity:0.23529412;"
+         offset="0"
+         id="stop3384" />
+      <stop
+         style="stop-color:#f0580a;stop-opacity:0;"
+         offset="1"
+         id="stop3386" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3370">
+      <stop
+         style="stop-color:#408709;stop-opacity:0.23529412;"
+         offset="0"
+         id="stop3372" />
+      <stop
+         style="stop-color:#408709;stop-opacity:0;"
+         offset="1"
+         id="stop3374" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3358">
+      <stop
+         style="stop-color:#f1c01a;stop-opacity:0.23529412;"
+         offset="0"
+         id="stop3360" />
+      <stop
+         style="stop-color:#f1c01a;stop-opacity:0;"
+         offset="1"
+         id="stop3362" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3346">
+      <stop
+         style="stop-color:#2127ad;stop-opacity:0.23529412;"
+         offset="0"
+         id="stop3348" />
+      <stop
+         style="stop-color:#2127ad;stop-opacity:0;"
+         offset="1"
+         id="stop3350" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3288">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.66666669;"
+         offset="0"
+         id="stop3290" />
+      <stop
+         style="stop-color:#7f9db1;stop-opacity:0;"
+         offset="1"
+         id="stop3292" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3264">
+      <stop
+         style="stop-color:#e2fa16;stop-opacity:1;"
+         offset="0"
+         id="stop3266" />
+      <stop
+         style="stop-color:#e2fa16;stop-opacity:0;"
+         offset="1"
+         id="stop3268" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3252">
+      <stop
+         style="stop-color:#ffd554;stop-opacity:1;"
+         offset="0"
+         id="stop3254" />
+      <stop
+         style="stop-color:#ffd554;stop-opacity:0;"
+         offset="1"
+         id="stop3256" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3358"
+       id="linearGradient1905"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="301.77396"
+       y1="648.1427"
+       x2="292.08377"
+       y2="557.05487" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3358"
+       id="linearGradient1907"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="309.957"
+       y1="645.23566"
+       x2="278.79437"
+       y2="528.81488" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3346"
+       id="linearGradient1909"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="209.02382"
+       y1="665.30815"
+       x2="317.00025"
+       y2="665.30815" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3346"
+       id="linearGradient1911"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="209.85441"
+       y1="676.26153"
+       x2="304.26457"
+       y2="676.26153" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3382"
+       id="linearGradient1913"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="180.62778"
+       y1="581.14227"
+       x2="203.7614"
+       y2="689.11871" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3382"
+       id="linearGradient1915"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="184.90353"
+       y1="582.38818"
+       x2="198.50102"
+       y2="671.67639" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3370"
+       id="linearGradient1917"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="277.68549"
+       y1="549.02588"
+       x2="173.86198"
+       y2="575.72583" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3370"
+       id="linearGradient1919"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-30,0)"
+       x1="271.04077"
+       y1="553.02307"
+       x2="173.86198"
+       y2="575.72583" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3411"
+       id="radialGradient1921"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.682902,0.425803,-0.350335,1.384635,58.34376,-357.7489)"
+       cx="244.5607"
+       cy="646.547"
+       fx="244.5607"
+       fy="646.547"
+       r="44.85996" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3264"
+       id="radialGradient1923"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.234623,-1.161541,1.089156,1.157684,-723.18,228.1238)"
+       cx="274.54877"
+       cy="604.83984"
+       fx="274.54877"
+       fy="604.83984"
+       r="35.007129" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3252"
+       id="radialGradient1925"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.805512,-0.735032,0.51592,1.267292,-456.9014,-5.051434)"
+       cx="197.23766"
+       cy="575.63367"
+       fx="197.23766"
+       fy="575.63367"
+       r="44.859955" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3288"
+       id="radialGradient1927"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.485784,0.564818,-1.342792,3.532269,763.6113,-1734.268)"
+       cx="197.35512"
+       cy="640.75055"
+       fx="197.35512"
+       fy="640.75055"
+       r="35.007129" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3370"
+       id="linearGradient1952"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="271.04077"
+       y1="553.02307"
+       x2="173.86198"
+       y2="575.72583" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3370"
+       id="linearGradient1955"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="277.68549"
+       y1="549.02588"
+       x2="173.86198"
+       y2="575.72583" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3382"
+       id="linearGradient1958"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="184.90353"
+       y1="582.38818"
+       x2="198.50102"
+       y2="671.67639" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3382"
+       id="linearGradient1961"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="180.62778"
+       y1="581.14227"
+       x2="203.7614"
+       y2="689.11871" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3346"
+       id="linearGradient1964"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="209.85441"
+       y1="676.26153"
+       x2="304.26457"
+       y2="676.26153" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3346"
+       id="linearGradient1967"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="209.02382"
+       y1="665.30815"
+       x2="317.00025"
+       y2="665.30815" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3358"
+       id="linearGradient1970"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="309.957"
+       y1="645.23566"
+       x2="278.79437"
+       y2="528.81488" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3358"
+       id="linearGradient1973"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(128.6929,-97.24628)"
+       x1="301.77396"
+       y1="648.1427"
+       x2="292.08377"
+       y2="557.05487" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.5438635"
+     inkscape:cx="372.04725"
+     inkscape:cy="526.1811"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="808"
+     inkscape:window-height="747"
+     inkscape:window-x="48"
+     inkscape:window-y="32"
+     showgrid="false" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Aleksandar Urosevic</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:title>PCLinuxOS logo</dc:title>
+        <dc:description>Vectorised PCLinuxOS logo</dc:description>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:1;color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+       id="rect3513"
+       width="193.4222"
+       height="197.33763"
+       x="275.33615"
+       y="427.51227"
+       inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <g
+       id="g1976"
+       inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/pclinuxos.png"
+       inkscape:export-xdpi="15.256377"
+       inkscape:export-ydpi="15.256377">
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         style="fill:url(#linearGradient1973);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 436.8347,555.04938 C 458.30674,527.13316 458.19185,468.87427 397.79706,447.07294 C 422.42826,455.89426 436.4609,480.48147 439.34948,504.10409 C 441.05435,518.04635 438.5164,531.65259 432.95862,541.4831 C 438.77841,527.49683 435.18745,511.84914 431.29744,498.29253 C 430.86494,509.81398 430.5114,523.68703 426.31391,531.2392 L 436.8347,555.04938 z "
+         id="path3320"
+         sodipodi:nodetypes="ccscccc" />
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         sodipodi:nodetypes="cccccc"
+         id="path3316"
+         d="M 436.00411,554.21878 C 454.7613,526.95178 455.34771,487.07499 420.77666,459.80862 C 441.11873,486.29515 448.48676,516.65776 431.85117,543.14429 C 437.3941,529.158 434.08,516.00209 431.85117,502.72234 C 431.41867,514.2438 431.06513,524.79447 426.86764,532.34665 L 436.00411,554.21878 z "
+         style="fill:url(#linearGradient1970);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         sodipodi:nodetypes="ccscccc"
+         id="path3328"
+         d="M 337.71672,581.07612 C 365.63294,602.54816 423.89182,602.43327 445.69315,542.03848 C 436.87184,566.66968 412.28463,580.70232 388.66201,583.5909 C 374.71975,585.29577 361.1135,582.75782 351.28299,577.20004 C 365.26927,583.01983 380.91695,579.42887 394.47357,575.53886 C 382.95211,575.10636 369.07907,574.75282 361.5269,570.55533 L 337.71672,581.07612 z "
+         style="color:#000000;fill:url(#linearGradient1967);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         style="color:#000000;fill:url(#linearGradient1964);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         d="M 338.54731,580.24553 C 365.81432,599.00272 405.69111,599.58913 432.95747,565.01808 C 406.47094,585.36015 376.10834,592.72818 349.62181,576.09259 C 363.60809,581.63552 376.76401,578.32142 390.04376,576.09259 C 378.5223,575.66009 367.97162,575.30655 360.41945,571.10906 L 338.54731,580.24553 z "
+         id="path3330"
+         sodipodi:nodetypes="cccccc" />
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         style="fill:url(#linearGradient1961);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 307.2598,479.18934 C 285.78776,507.10556 285.90265,565.36444 346.29744,587.16577 C 321.66624,578.34446 307.6336,553.75725 304.74502,530.13463 C 303.04015,516.19237 305.5781,502.58612 311.13588,492.75561 C 305.31609,506.74189 308.90705,522.38957 312.79706,535.94619 C 313.22956,524.42473 313.5831,510.55169 317.78059,502.99952 L 307.2598,479.18934 z "
+         id="path3334"
+         sodipodi:nodetypes="ccscccc" />
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         sodipodi:nodetypes="cccccc"
+         id="path3336"
+         d="M 308.09039,480.01993 C 289.3332,507.28694 288.74679,547.16373 323.31784,574.43009 C 302.97577,547.94356 295.60774,517.58096 312.24333,491.09443 C 306.7004,505.08071 310.0145,518.23663 312.24333,531.51638 C 312.67583,519.99492 313.02937,509.44424 317.22686,501.89207 L 308.09039,480.01993 z "
+         style="fill:url(#linearGradient1958);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         sodipodi:nodetypes="ccscccc"
+         id="path3340"
+         d="M 406.37838,453.71592 C 378.46216,432.24388 320.20328,432.35877 298.40195,492.75356 C 307.22326,468.12236 331.81047,454.08972 355.43309,451.20114 C 369.37535,449.49627 382.9816,452.03422 392.81211,457.592 C 378.82583,451.77221 363.17815,455.36317 349.62153,459.25318 C 361.14299,459.68568 375.01603,460.03922 382.5682,464.23671 L 406.37838,453.71592 z "
+         style="fill:url(#linearGradient1955);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         style="fill:url(#linearGradient1952);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 405.54779,454.54651 C 378.28078,435.78932 338.40399,435.20291 311.13763,469.77396 C 337.62416,449.43189 367.98676,442.06386 394.47329,458.69945 C 380.48701,453.15652 367.33109,456.47062 354.05134,458.69945 C 365.5728,459.13195 376.12348,459.48549 383.67565,463.68298 L 405.54779,454.54651 z "
+         id="path3342"
+         sodipodi:nodetypes="cccccc" />
+      <g
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         transform="translate(128.6929,-97.24628)"
+         id="g3301">
+        <path
+           style="opacity:1;color:#000000;fill:#f1c01a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+           d="M 313.07537,663.54076 C 276.76565,676.75641 236.57113,658.0134 223.35547,621.70368 L 289.13396,597.76227"
+           id="path2333" />
+        <path
+           id="path3272"
+           d="M 313.07538,663.54076 C 276.76565,676.75643 236.57112,658.01341 223.35546,621.70369 L 289.13394,597.76227"
+           style="opacity:1;color:#000000;fill:url(#radialGradient1921);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+        <path
+           sodipodi:nodetypes="ccccc"
+           id="path3244"
+           d="M 292.07172,618.40536 L 308.07877,660.68035 C 265.46756,668.84949 247.56649,648.48862 238.71495,639.13242 C 263.50993,658.40622 280.78321,660.31267 302.74308,657.39685 L 292.07172,618.40536 z "
+           style="fill:#ffffff;fill-opacity:0.15686275;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      </g>
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         d="M 423.52736,448.14164 C 435.40701,484.91017 415.20735,524.39275 378.43883,536.27239 L 356.91774,469.66277"
+         id="path3407" />
+      <g
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         transform="translate(128.6929,-97.24628)"
+         id="g3306">
+        <path
+           id="path3212"
+           d="M 225.99723,567.58649 L 291.77572,543.64508 C 304.99137,579.9548 286.24838,620.14931 249.93864,633.36498"
+           style="opacity:1;color:#000000;fill:#408709;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+        <path
+           style="opacity:1;color:#000000;fill:url(#radialGradient1923);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+           d="M 291.77572,543.64507 C 304.99139,579.9548 286.24837,620.14932 249.93865,633.36498 L 225.99723,567.5865"
+           id="path3260" />
+        <path
+           style="fill:#ffffff;fill-opacity:0.15686275;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="M 247.61938,563.53204 L 289.89437,547.52499 C 298.06351,590.1362 277.70264,608.03727 268.34644,616.88881 C 287.62024,592.09383 289.52669,574.82055 286.61087,552.86068 L 247.61938,563.53204 z "
+           id="path3242"
+           sodipodi:nodetypes="ccccc" />
+      </g>
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+         d="M 391.64149,510.34549 C 380.22308,473.64806 341.27158,452.97626 304.44867,464.17817 L 305.32542,467.09345 C 340.83905,456.23 378.97245,475.12225 391.64149,510.34549 z "
+         id="path3523" />
+      <g
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         transform="translate(128.6929,-97.24628)"
+         id="g3311">
+        <path
+           style="opacity:1;color:#000000;fill:#ef4d04;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
+           d="M 173.08761,565.52512 C 209.39734,552.30945 249.59186,571.05247 262.80752,607.36219 L 197.02903,631.30361"
+           id="path2331" />
+        <path
+           id="path3250"
+           d="M 173.08761,565.52512 C 209.39734,552.30945 249.59186,571.05247 262.80752,607.36219 L 197.02903,631.30361"
+           style="opacity:1;color:#000000;fill:url(#radialGradient1925);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+        <path
+           sodipodi:nodetypes="ccccc"
+           id="path3248"
+           d="M 192.74606,608.80525 L 176.73901,566.53026 C 219.35022,558.36112 237.25129,578.72199 246.10283,588.07819 C 221.30785,568.80439 204.03457,566.89794 182.0747,569.81376 L 192.74606,608.80525 z "
+           style="fill:#ffffff;fill-opacity:0.15686275;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      </g>
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         id="path3525"
+         d="M 365.06645,498.35065 C 328.39666,509.85752 307.81885,548.85876 319.10952,585.65455 L 322.02268,584.77077 C 311.07362,549.28344 329.87386,511.10459 365.06645,498.35065 z "
+         style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+      <g
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         transform="translate(128.6929,-97.24628)"
+         id="g3296">
+        <path
+           id="path2335"
+           d="M 236.25,595.65625 C 199.94027,608.87191 181.19059,649.06528 194.40625,685.375 L 260.125,661.46875 C 243.62493,653.95514 230.02978,640.08846 223.34375,621.71875 L 243.125,614.5 L 236.25,595.65625 z "
+           style="opacity:1;color:#000000;fill:#171aad;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+        <path
+           id="path3284"
+           d="M 236.25,595.65625 C 199.94028,608.8719 181.19058,649.06527 194.40625,685.375 L 260.125,661.46875 C 243.62493,653.95514 230.02978,640.08846 223.34375,621.71875 L 243.125,614.5 L 236.25,595.65625 z "
+           style="opacity:1;color:#000000;fill:url(#radialGradient1927);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+        <path
+           style="fill:#ffffff;fill-opacity:0.15686275;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="M 238.01927,665.73076 L 195.74428,681.73781 C 187.57514,639.1266 207.93601,621.22553 217.29221,612.37399 C 198.01841,637.16897 196.11196,654.44225 199.02778,676.40212 L 238.01927,665.73076 z "
+           id="path3246"
+           sodipodi:nodetypes="ccccc" />
+      </g>
+      <path
+         inkscape:export-ydpi="150"
+         inkscape:export-xdpi="150"
+         inkscape:export-filename="C:\Documents and Settings\urke\My Documents\svg\pclinuxos.png"
+         id="path3402"
+         d="M 352.1929,524.87872 C 363.98265,561.45854 403.14166,581.7345 439.84915,570.15997 L 438.9429,567.25372 C 403.54119,578.47655 365.21828,559.97175 352.1929,524.87872 z "
+         style="color:#000000;fill:#000000;fill-opacity:0.23529412;fill-rule:nonzero;stroke:none;stroke-width:1.08064497;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+    </g>
+    <path
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Myriad Pro SemiExt"
+       d="M 341.95418,607.46741 L 343.04618,607.46741 L 343.04618,604.25141 C 343.32218,604.33541 343.65818,604.34741 344.03018,604.34741 C 345.15818,604.34741 346.09418,604.04741 346.69418,603.47141 C 347.13818,603.03941 347.36618,602.43941 347.36618,601.70741 C 347.36618,600.97541 347.06618,600.39941 346.61018,600.00341 C 346.10618,599.57141 345.30218,599.30741 344.18618,599.30741 C 343.23818,599.30741 342.50618,599.37941 341.95418,599.47541 L 341.95418,607.46741 M 343.04618,600.24341 C 343.25018,600.20741 343.64618,600.15941 344.18618,600.15941 C 345.37418,600.15941 346.27418,600.61541 346.27418,601.75541 C 346.27418,602.85941 345.45818,603.48341 344.07818,603.48341 C 343.67018,603.48341 343.32218,603.45941 343.04618,603.37541 L 343.04618,600.24341 M 354.99804,606.31541 C 354.49404,606.55541 353.73804,606.69941 352.99404,606.69941 C 350.71405,606.69941 349.50204,605.28341 349.50204,603.47141 C 349.50204,601.45541 350.83405,600.12341 353.07804,600.12341 C 353.83404,600.12341 354.51804,600.29141 354.97404,600.50741 L 355.25004,599.64341 C 354.93804,599.48741 354.19404,599.23541 353.03004,599.23541 C 350.11405,599.23541 348.35004,601.16741 348.35004,603.48341 C 348.35004,606.1114 350.25805,607.61141 352.76604,607.61141 C 353.91804,607.61141 354.80604,607.37141 355.22604,607.16741 L 354.99804,606.31541 M 356.64217,607.46741 L 361.58617,607.46741 L 361.58617,606.55541 L 357.73417,606.55541 L 357.73417,599.37941 L 356.64217,599.37941 L 356.64217,607.46741 M 363.90234,607.46741 L 363.90234,601.65941 L 362.81034,601.65941 L 362.81034,607.46741 L 363.90234,607.46741 M 363.35034,600.65141 C 363.78234,600.65141 364.04634,600.33941 364.04634,599.97941 C 364.04634,599.60741 363.77034,599.30741 363.36234,599.30741 C 362.94234,599.30741 362.66634,599.61941 362.66634,599.97941 C 362.66634,600.33941 362.93034,600.65141 363.33834,600.65141 L 363.35034,600.65141 M 365.81034,607.46741 L 366.90234,607.46741 L 366.90234,604.01141 C 366.90234,603.85541 366.93834,603.66341 366.98634,603.53141 C 367.20234,602.95541 367.79034,602.40341 368.58234,602.40341 C 369.67434,602.40341 370.10634,603.21941 370.10634,604.23941 L 370.10634,607.46741 L 371.19834,607.46741 L 371.19834,604.14341 C 371.19834,601.95941 369.73434,601.51541 368.94234,601.51541 C 367.87434,601.51541 367.13034,602.12741 366.83034,602.69141 L 366.79434,602.69141 L 366.73434,601.65941 L 365.76234,601.65941 C 365.79834,602.15141 365.81034,602.66741 365.81034,603.25541 L 365.81034,607.46741 M 378.37447,601.65941 L 377.28247,601.65941 L 377.28247,605.12741 C 377.28247,605.33141 377.23447,605.52341 377.17447,605.67941 C 376.92247,606.21941 376.34647,606.71141 375.59047,606.71141 C 374.52247,606.71141 374.11447,605.93141 374.11447,604.76741 L 374.11447,601.65941 L 373.02247,601.65941 L 373.02247,604.95941 C 373.02247,607.1914 374.34247,607.61141 375.21847,607.61141 C 376.39447,607.61141 377.06647,606.93941 377.36647,606.41141 L 377.39047,606.41141 L 377.45047,607.46741 L 378.42247,607.46741 C 378.38647,606.99941 378.37447,606.47141 378.37447,605.87141 L 378.37447,601.65941 M 379.52635,601.65941 L 381.71035,604.49141 L 379.41835,607.46741 L 380.65435,607.46741 L 381.59035,606.17141 C 381.84235,605.81141 382.07035,605.49941 382.28635,605.15141 L 382.31035,605.15141 C 382.53835,605.48741 382.75435,605.82341 383.00635,606.17141 L 383.96635,607.46741 L 385.22635,607.46741 L 382.97035,604.44341 L 385.15435,601.65941 L 383.93035,601.65941 L 383.03035,602.88341 C 382.80235,603.20741 382.59835,603.49541 382.38235,603.81941 L 382.35835,603.81941 C 382.14235,603.50741 381.93835,603.21941 381.69835,602.90741 L 380.76235,601.65941 L 379.52635,601.65941 M 389.95441,607.61141 C 392.25841,607.61141 394.16641,606.0274 394.16641,603.33941 C 394.16641,600.98741 392.53441,599.23541 390.05041,599.23541 C 387.63841,599.23541 385.85041,600.99941 385.85041,603.51941 C 385.85041,605.8714 387.53041,607.61141 389.94241,607.61141 L 389.95441,607.61141 M 389.99041,606.74741 C 388.14241,606.74741 387.00241,605.23541 387.00241,603.48341 C 387.00241,601.67141 388.04641,600.09941 390.02641,600.09941 C 391.98241,600.09941 393.01441,601.74341 393.01441,603.38741 C 393.01441,605.30741 391.86241,606.74741 390.00241,606.74741 L 389.99041,606.74741 M 395.18628,607.03541 C 395.67828,607.35941 396.62628,607.61141 397.47828,607.61141 C 399.61428,607.61141 400.50228,606.45941 400.50228,605.25941 C 400.50228,603.97541 399.72228,603.35141 398.22228,602.85941 C 396.98628,602.46341 396.47028,602.07941 396.47028,601.33541 C 396.47028,600.79541 396.90228,600.11141 398.12628,600.11141 C 398.95428,600.11141 399.56628,600.37541 399.84228,600.53141 L 400.15428,599.66741 C 399.74628,599.43941 399.08628,599.23541 398.15028,599.23541 C 396.48228,599.23541 395.36628,600.17141 395.36628,601.45541 C 395.36628,602.60741 396.15828,603.29141 397.71828,603.77141 C 398.95428,604.15541 399.39828,604.58741 399.39828,605.34341 C 399.39828,606.15941 398.72628,606.72341 397.58628,606.72341 C 396.75828,606.72341 396.01428,606.47141 395.48628,606.13541 L 395.18628,607.03541"
+       id="text3527" />
+  </g>
+</svg>

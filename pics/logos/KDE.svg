@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   x="0.0000000"
+   y="0.0000000"
+   width="1280.0000"
+   height="960.00000"
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docname="KDE.svg">
+  <metadata
+     id="metadata26">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="749"
+     inkscape:window-width="1378"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="0.42265625"
+     inkscape:cx="-134.15635"
+     inkscape:cy="481.18299"
+     inkscape:window-x="96"
+     inkscape:window-y="96"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs3">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 480 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1280 : 480 : 1"
+       inkscape:persp3d-origin="640 : 320 : 1"
+       id="perspective28" />
+    <linearGradient
+       id="linearGradient4055">
+      <stop
+         style="stop-color:#001040;stop-opacity:0.062745102;"
+         offset="0.0000000"
+         id="stop4056" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.0000000;"
+         offset="1.0000000"
+         id="stop4057" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1531">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stop1532" />
+      <stop
+         style="stop-color:#e1fcff;stop-opacity:1.0000000;"
+         offset="0.37837839"
+         id="stop1701" />
+      <stop
+         style="stop-color:#6cd1fb;stop-opacity:1.0000000;"
+         offset="0.50000000"
+         id="stop1702" />
+      <stop
+         style="stop-color:#0064ab;stop-opacity:1.0000000;"
+         offset="0.69999999"
+         id="stop1703" />
+      <stop
+         style="stop-color:#000000;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop1533" />
+    </linearGradient>
+    <linearGradient
+       x1="0.15131579"
+       y1="0.87248319"
+       x2="0.40789473"
+       y2="0.24832214"
+       id="linearGradient4054"
+       xlink:href="#linearGradient4055"
+       spreadMethod="pad" />
+    <linearGradient
+       x1="464.72235"
+       y1="28.278393"
+       x2="464.72235"
+       y2="1091.5460"
+       id="linearGradient1704"
+       xlink:href="#linearGradient1531"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.154701,0.866025)" />
+    <filter
+       inkscape:collect="always"
+       id="filter3746"
+       x="-0.16764462"
+       width="1.3352892"
+       y="-0.16810731"
+       height="1.3362146">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="12.980789"
+         id="feGaussianBlur3748" />
+    </filter>
+  </defs>
+  <rect
+     style="opacity:1;fill:#00044d;fill-opacity:1;stroke:none;stroke-width:24.39999962;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect2399"
+     width="729.38025"
+     height="840.64124"
+     x="33.123863"
+     y="62.574902" />
+  <g
+     transform="matrix(1.7416784,0,0,1.7416784,-1641.9329,-523.84525)"
+     id="g1610"
+     inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/kde1.png"
+     inkscape:export-xdpi="13.231013"
+     inkscape:export-ydpi="13.231013"
+     style="opacity:0.53664922">
+    <path
+       d="M 1072.5038,376.53444 L 1103.7703,374.23261 L 1103.7703,430.5635 L 1145.8426,374.80808 L 1179.4109,383.31208 L 1136.7631,437.34108 L 1178.8354,495.9738 L 1146.4181,505.6287 L 1103.7703,444.7581 L 1103.7703,500.51352 L 1072.5038,504.47778 L 1072.5038,376.53444 z"
+       style="fill:#ffffff"
+       id="30943800" />
+    <path
+       d="M 1129.0904,491.56196 C 1120.2028,504.47778 1105.3048,512.91782 1088.5526,512.91782 C 1061.4422,512.91782 1039.3191,490.85864 1039.3191,463.74819 C 1039.3191,444.56629 1050.0608,428.06985 1066.0459,419.94948 L 1066.0459,405.94667 C 1065.2148,406.2664 1064.4474,406.58609 1063.6801,406.90581 C 1060.9307,408.12063 1058.2452,409.59126 1055.7516,411.18975 L 1035.6746,397.05908 L 1022.1833,410.03886 L 1036.122,430.81924 C 1032.5414,436.38199 1029.9199,442.58415 1028.3214,449.16991 L 1002.8095,453.9015 L 1002.0422,472.76371 L 1028.0657,477.36732 C 1029.5363,484.01708 1032.1579,490.28317 1035.6106,496.16563 L 1019.9454,518.09694 L 1033.4366,531.84398 L 1056.1353,516.4345 C 1061.4422,519.82331 1067.2607,522.31695 1073.4628,523.91546 C 1074.9335,524.23515 1074.6777,524.29909 1074.9974,525.7697 L 1078.8339,547.06162 C 1079.4732,548.788 1079.5372,551.08983 1081.9029,551.08983 C 1086.8262,551.08983 1091.8135,551.08983 1096.737,551.08983 C 1098.9747,551.08983 1099.1666,548.59618 1099.4862,547.18951 L 1103.1309,525.64182 C 1103.2588,524.10727 1103.1309,523.97939 1104.4737,523.59575 C 1110.7398,521.93332 1116.3664,519.43967 1121.8014,516.11481 L 1143.7326,531.58822 L 1157.2238,517.84117 L 1151.853,510.42417 L 1143.8604,512.85389 L 1129.0904,491.56196 z"
+       style="fill:#ffffff"
+       id="30943888" />
+    <path
+       d="M 1153.7711,450.25693 L 1175.127,453.9015 L 1175.3187,472.76371 L 1169.9478,473.7228 L 1153.7711,450.25693 z"
+       style="fill:#ffffff"
+       id="30943976" />
+  </g>
+  <g
+     transform="matrix(1.7416784,0,0,1.7416784,-1658.842,-129.42997)"
+     id="g2398"
+     inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/kde1.png"
+     inkscape:export-xdpi="13.231013"
+     inkscape:export-ydpi="13.231013"
+     style="opacity:1;fill:#ffffff;fill-opacity:0.37988826999999997;stroke:#ffffff;stroke-opacity:1;stroke-width:8.46424919999999936;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter3746)">
+    <path
+       d="M 1072.5038,376.53444 L 1103.7703,374.23261 L 1103.7703,430.5635 L 1145.8426,374.80808 L 1179.4109,383.31208 L 1136.7631,437.34108 L 1178.8354,495.9738 L 1146.4181,505.6287 L 1103.7703,444.7581 L 1103.7703,500.51352 L 1072.5038,504.47778 L 1072.5038,376.53444 z"
+       style="fill:#ffffff;fill-opacity:0.37988826999999997;stroke:#ffffff;stroke-opacity:1;stroke-width:8.4642492;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path2400" />
+    <path
+       d="M 1129.0904,491.56196 C 1120.2028,504.47778 1105.3048,512.91782 1088.5526,512.91782 C 1061.4422,512.91782 1039.3191,490.85864 1039.3191,463.74819 C 1039.3191,444.56629 1050.0608,428.06985 1066.0459,419.94948 L 1066.0459,405.94667 C 1065.2148,406.2664 1064.4474,406.58609 1063.6801,406.90581 C 1060.9307,408.12063 1058.2452,409.59126 1055.7516,411.18975 L 1035.6746,397.05908 L 1022.1833,410.03886 L 1036.122,430.81924 C 1032.5414,436.38199 1029.9199,442.58415 1028.3214,449.16991 L 1002.8095,453.9015 L 1002.0422,472.76371 L 1028.0657,477.36732 C 1029.5363,484.01708 1032.1579,490.28317 1035.6106,496.16563 L 1019.9454,518.09694 L 1033.4366,531.84398 L 1056.1353,516.4345 C 1061.4422,519.82331 1067.2607,522.31695 1073.4628,523.91546 C 1074.9335,524.23515 1074.6777,524.29909 1074.9974,525.7697 L 1078.8339,547.06162 C 1079.4732,548.788 1079.5372,551.08983 1081.9029,551.08983 C 1086.8262,551.08983 1091.8135,551.08983 1096.737,551.08983 C 1098.9747,551.08983 1099.1666,548.59618 1099.4862,547.18951 L 1103.1309,525.64182 C 1103.2588,524.10727 1103.1309,523.97939 1104.4737,523.59575 C 1110.7398,521.93332 1116.3664,519.43967 1121.8014,516.11481 L 1143.7326,531.58822 L 1157.2238,517.84117 L 1151.853,510.42417 L 1143.8604,512.85389 L 1129.0904,491.56196 z"
+       style="fill:#ffffff;fill-opacity:0.37988826999999997;stroke:#ffffff;stroke-opacity:1;stroke-width:8.4642492;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path2402" />
+  </g>
+  <g
+     transform="matrix(1.7416784,0,0,1.7416784,-1661.2079,-129.42997)"
+     id="g2406"
+     inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/kde1.png"
+     inkscape:export-xdpi="13.231013"
+     inkscape:export-ydpi="13.231013"
+     style="opacity:1;fill:#0016c5;fill-opacity:1">
+    <path
+       d="M 1072.5038,376.53444 L 1103.7703,374.23261 L 1103.7703,430.5635 L 1145.8426,374.80808 L 1179.4109,383.31208 L 1136.7631,437.34108 L 1178.8354,495.9738 L 1146.4181,505.6287 L 1103.7703,444.7581 L 1103.7703,500.51352 L 1072.5038,504.47778 L 1072.5038,376.53444 z"
+       style="fill:#0016c5;fill-opacity:1"
+       id="path2408" />
+    <path
+       d="M 1129.0904,491.56196 C 1120.2028,504.47778 1105.3048,512.91782 1088.5526,512.91782 C 1061.4422,512.91782 1039.3191,490.85864 1039.3191,463.74819 C 1039.3191,444.56629 1050.0608,428.06985 1066.0459,419.94948 L 1066.0459,405.94667 C 1065.2148,406.2664 1064.4474,406.58609 1063.6801,406.90581 C 1060.9307,408.12063 1058.2452,409.59126 1055.7516,411.18975 L 1035.6746,397.05908 L 1022.1833,410.03886 L 1036.122,430.81924 C 1032.5414,436.38199 1029.9199,442.58415 1028.3214,449.16991 L 1002.8095,453.9015 L 1002.0422,472.76371 L 1028.0657,477.36732 C 1029.5363,484.01708 1032.1579,490.28317 1035.6106,496.16563 L 1019.9454,518.09694 L 1033.4366,531.84398 L 1056.1353,516.4345 C 1061.4422,519.82331 1067.2607,522.31695 1073.4628,523.91546 C 1074.9335,524.23515 1074.6777,524.29909 1074.9974,525.7697 L 1078.8339,547.06162 C 1079.4732,548.788 1079.5372,551.08983 1081.9029,551.08983 C 1086.8262,551.08983 1091.8135,551.08983 1096.737,551.08983 C 1098.9747,551.08983 1099.1666,548.59618 1099.4862,547.18951 L 1103.1309,525.64182 C 1103.2588,524.10727 1103.1309,523.97939 1104.4737,523.59575 C 1110.7398,521.93332 1116.3664,519.43967 1121.8014,516.11481 L 1143.7326,531.58822 L 1157.2238,517.84117 L 1151.853,510.42417 L 1143.8604,512.85389 L 1129.0904,491.56196 z"
+       style="fill:#0016c5;fill-opacity:1"
+       id="path2410" />
+  </g>
+</svg>

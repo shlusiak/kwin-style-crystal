@@ -19,6 +19,15 @@ set (OVERLAYS
 	lighting_overlay
 	steel_overlay
     )
+set (LOGOS
+	kde
+	tux
+	gentoo
+	kubuntu
+	ubuntu
+	opensuse
+	pclinuxos
+    )
 
 set (PICS_SOURCES)
 foreach(dir ${PICS})
@@ -43,6 +52,18 @@ add_custom_command (
    DEPENDS ${OVERLAY_SOURCES}
    )
 
+##### Geneates logos.h from logo images. List files in $top/pics/Logos that are to be used as overlay
+set (LOGOS_SOURCES)
+foreach(file ${LOGOS})
+   set (LOGOS_SOURCES ${LOGOS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/../pics/logos/${file}.png)
+endforeach(file)
+
+add_custom_command (
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/logos.h
+   COMMAND embedtool ${LOGOS_SOURCES} > ${CMAKE_CURRENT_BINARY_DIR}/logos.h
+   DEPENDS ${LOGOS_SOURCES}
+   )
+
 
 ##### Target #####
 set(kwin3_crystal_PART_SRCS
@@ -51,6 +72,7 @@ set(kwin3_crystal_PART_SRCS
    crystalclient.cpp
    ${CMAKE_CURRENT_BINARY_DIR}/tiles.h
    ${CMAKE_CURRENT_BINARY_DIR}/overlays.h
+   ${CMAKE_CURRENT_BINARY_DIR}/logos.h
    )
 
 kde4_add_plugin(kwin3_crystal ${kwin3_crystal_PART_SRCS})

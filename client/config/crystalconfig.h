@@ -66,7 +66,6 @@ signals:
 public slots:
 	void load(KConfigGroup&);
 	void save(KConfigGroup&);
-	void defaults();
 	void infoDialog();
 
 protected slots:
@@ -77,6 +76,7 @@ protected slots:
 	void colorChanged(const QColor&) { selectionChanged(0); }
 	void textChanged(const QString&) { selectionChanged(0); }
 	void logoTextChanged(const QString&);
+	void logoIndexChanged(int);
 
 private:
 	KConfig *config_;

@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>ConfigDialog</class>
- <widget class="QWidget" name="ConfigDialog" >
-  <property name="geometry" >
+ <widget class="QWidget" name="ConfigDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,79 +10,79 @@
     <height>325</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Config Dialog</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
-    <widget class="QTabWidget" name="tabWidget2" >
-     <property name="tabShape" >
+  <layout class="QGridLayout">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabWidget2">
+     <property name="tabShape">
       <enum>QTabWidget::Rounded</enum>
      </property>
-     <property name="currentIndex" >
-      <number>0</number>
+     <property name="currentIndex">
+      <number>3</number>
      </property>
-     <widget class="QWidget" name="tab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
        <string>Ge&amp;neral</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="0" column="0" >
-        <widget class="Q3ButtonGroup" name="titlealign" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+      <layout class="QGridLayout">
+       <item row="0" column="0">
+        <widget class="Q3ButtonGroup" name="titlealign">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="toolTip" >
+         <property name="toolTip">
           <string/>
          </property>
-         <property name="whatsThis" >
+         <property name="whatsThis">
           <string>Use these buttons to set the alignment of the window title</string>
          </property>
-         <property name="title" >
+         <property name="title">
           <string>Title &amp;Alignment</string>
          </property>
-         <layout class="QHBoxLayout" >
+         <layout class="QHBoxLayout">
           <item>
-           <widget class="QRadioButton" name="AlignLeft" >
-            <property name="toolTip" >
+           <widget class="QRadioButton" name="AlignLeft">
+            <property name="toolTip">
              <string/>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>&amp;Left</string>
             </property>
-            <property name="shortcut" >
+            <property name="shortcut">
              <string>Alt+L</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="AlignHCenter" >
-            <property name="toolTip" >
+           <widget class="QRadioButton" name="AlignHCenter">
+            <property name="toolTip">
              <string/>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>&amp;Centered</string>
             </property>
-            <property name="shortcut" >
+            <property name="shortcut">
              <string>Alt+C</string>
             </property>
-            <property name="checked" >
+            <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="AlignRight" >
-            <property name="toolTip" >
+           <widget class="QRadioButton" name="AlignRight">
+            <property name="toolTip">
              <string/>
             </property>
-            <property name="text" >
+            <property name="text">
              <string>&amp;Right</string>
             </property>
-            <property name="shortcut" >
+            <property name="shortcut">
              <string>Alt+R</string>
             </property>
            </widget>
@@ -89,24 +90,24 @@
          </layout>
         </widget>
        </item>
-       <item rowspan="3" row="0" column="1" colspan="2" >
-        <widget class="Q3GroupBox" name="roundCorners" >
-         <property name="title" >
+       <item row="0" column="1" rowspan="3" colspan="2">
+        <widget class="Q3GroupBox" name="roundCorners">
+         <property name="title">
           <string>Round &amp;Corners</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignHCenter</set>
          </property>
-         <layout class="QGridLayout" >
-          <item row="1" column="1" >
+         <layout class="QGridLayout">
+          <item row="1" column="1">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
-            <property name="sizeType" >
+            <property name="sizeType">
              <enum>QSizePolicy::Expanding</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
               <height>20</height>
@@ -114,44 +115,44 @@
             </property>
            </spacer>
           </item>
-          <item row="0" column="2" >
-           <widget class="QCheckBox" name="trc" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="trc">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="checked" >
+            <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" >
-           <widget class="QCheckBox" name="blc" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="blc">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
            </widget>
           </item>
-          <item row="2" column="1" >
+          <item row="2" column="1">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeType" >
+            <property name="sizeType">
              <enum>QSizePolicy::Preferred</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>10</width>
               <height>20</height>
@@ -159,44 +160,44 @@
             </property>
            </spacer>
           </item>
-          <item row="2" column="2" >
-           <widget class="QCheckBox" name="brc" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <item row="2" column="2">
+           <widget class="QCheckBox" name="brc">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
            </widget>
           </item>
-          <item row="0" column="0" >
-           <widget class="QCheckBox" name="tlc" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="tlc">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="checked" >
+            <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="1" >
+          <item row="0" column="1">
            <spacer>
-            <property name="orientation" >
+            <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="sizeType" >
+            <property name="sizeType">
              <enum>QSizePolicy::Preferred</enum>
             </property>
-            <property name="sizeHint" stdset="0" >
+            <property name="sizeHint" stdset="0">
              <size>
               <width>10</width>
               <height>20</height>
@@ -207,162 +208,162 @@
          </layout>
         </widget>
        </item>
-       <item row="1" column="0" >
-        <widget class="QCheckBox" name="drawCaption" >
-         <property name="text" >
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="drawCaption">
+         <property name="text">
           <string>&amp;Draw Caption</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+D</string>
          </property>
-         <property name="checked" >
+         <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item rowspan="2" row="2" column="0" >
-        <widget class="QCheckBox" name="textshadow" >
-         <property name="toolTip" >
+       <item row="2" column="0" rowspan="2">
+        <widget class="QCheckBox" name="textshadow">
+         <property name="toolTip">
           <string>Draws a nice shadowed title bar text to improve visibility.</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Use shadowed &amp;text</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+T</string>
          </property>
         </widget>
        </item>
-       <item rowspan="2" row="3" column="1" >
-        <widget class="QLabel" name="textLabel2_2" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <item row="3" column="1" rowspan="2">
+        <widget class="QLabel" name="textLabel2_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Border width:</string>
          </property>
-         <property name="wordWrap" >
+         <property name="wordWrap">
           <bool>false</bool>
          </property>
-         <property name="buddy" >
+         <property name="buddy">
           <cstring>borderwidth</cstring>
          </property>
         </widget>
        </item>
-       <item rowspan="2" row="3" column="2" >
-        <widget class="QSpinBox" name="borderwidth" >
-         <property name="toolTip" >
+       <item row="3" column="2" rowspan="2">
+        <widget class="QSpinBox" name="borderwidth">
+         <property name="toolTip">
           <string>Width of the borders</string>
          </property>
-         <property name="prefix" >
+         <property name="prefix">
           <string/>
          </property>
-         <property name="value" >
+         <property name="value">
           <number>5</number>
          </property>
         </widget>
        </item>
-       <item row="4" column="0" >
-        <widget class="QCheckBox" name="tooltip" >
-         <property name="toolTip" >
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="tooltip">
+         <property name="toolTip">
           <string>Shows a tooltip, if the mouse pointer is over the caption.</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Show tooltip o&amp;ver caption</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+V</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="0" >
-        <widget class="QCheckBox" name="wheelTask" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="wheelTask">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="toolTip" >
+         <property name="toolTip">
           <string>Wheel on titlebar cycles through visible windows. Does NOT work in compiz. Overrides settings in KDE.</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>C&amp;ycle tasks with mouse wheel</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+Y</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1" >
-        <widget class="QLabel" name="textLabel2_2_2" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <item row="5" column="1">
+        <widget class="QLabel" name="textLabel2_2_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Titlebar height:</string>
          </property>
-         <property name="wordWrap" >
+         <property name="wordWrap">
           <bool>false</bool>
          </property>
-         <property name="buddy" >
+         <property name="buddy">
           <cstring>titlebarheight</cstring>
          </property>
         </widget>
        </item>
-       <item row="5" column="2" >
-        <widget class="QSpinBox" name="titlebarheight" >
-         <property name="toolTip" >
+       <item row="5" column="2">
+        <widget class="QSpinBox" name="titlebarheight">
+         <property name="toolTip">
           <string>Height of the title par (independend to border width)</string>
          </property>
-         <property name="prefix" >
+         <property name="prefix">
           <string/>
          </property>
-         <property name="minimum" >
+         <property name="minimum">
           <number>5</number>
          </property>
-         <property name="value" >
+         <property name="value">
           <number>20</number>
          </property>
         </widget>
        </item>
-       <item row="6" column="1" colspan="2" >
-        <widget class="QPushButton" name="infoButton" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+       <item row="6" column="1" colspan="2">
+        <widget class="QPushButton" name="infoButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="minimumSize" >
+         <property name="minimumSize">
           <size>
            <width>80</width>
            <height>0</height>
           </size>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>I&amp;nfo...</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+N</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="1" >
+       <item row="7" column="1">
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeType" >
+         <property name="sizeType">
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>16</height>
@@ -372,61 +373,61 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
        <string>Bu&amp;ttons</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="1" column="1" >
-        <widget class="QCheckBox" name="animateHover" >
-         <property name="enabled" >
+      <layout class="QGridLayout">
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="animateHover">
+         <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="toolTip" >
+         <property name="toolTip">
           <string>Smoothly animate the hover effect of the buttons</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Ani&amp;mate hover</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+M</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0" >
-        <widget class="QCheckBox" name="hover" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="hover">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="toolTip" >
+         <property name="toolTip">
           <string>Provides a mouse-over effect for the title bar buttons.</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Ho&amp;ver effect</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+V</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0" >
+       <item row="3" column="0">
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeType" >
+         <property name="sizeType">
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>20</height>
@@ -434,408 +435,408 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="0" colspan="2" >
-        <widget class="Q3GroupBox" name="tintButtons" >
-         <property name="toolTip" >
+       <item row="2" column="0" colspan="2">
+        <widget class="Q3GroupBox" name="tintButtons">
+         <property name="toolTip">
           <string>Tint some buttons to specific colors</string>
          </property>
-         <property name="title" >
+         <property name="title">
           <string>Tint Buttons</string>
          </property>
-         <property name="flat" >
+         <property name="flat">
           <bool>false</bool>
          </property>
-         <property name="checkable" >
+         <property name="checkable">
           <bool>true</bool>
          </property>
-         <property name="lineWidth" >
+         <property name="lineWidth">
           <number>1</number>
          </property>
-         <property name="midLineWidth" >
+         <property name="midLineWidth">
           <number>0</number>
          </property>
-         <layout class="QGridLayout" >
-          <property name="spacing" >
+         <layout class="QGridLayout">
+          <property name="spacing">
            <number>0</number>
           </property>
-          <item row="2" column="1" >
-           <widget class="KColorButton" name="minColor1" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="2" column="1">
+           <widget class="KColorButton" name="minColor1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" >
-           <widget class="QLabel" name="textLabel1_3" >
-            <property name="text" >
+          <item row="2" column="0">
+           <widget class="QLabel" name="textLabel1_3">
+            <property name="text">
              <string>Minimize Button</string>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="0" >
-           <widget class="QLabel" name="textLabel5" >
-            <property name="text" >
+          <item row="1" column="0">
+           <widget class="QLabel" name="textLabel5">
+            <property name="text">
              <string>Other Buttons</string>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="1" >
-           <widget class="KColorButton" name="buttonColor1" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="1" column="1">
+           <widget class="KColorButton" name="buttonColor1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="3" >
-           <widget class="KColorButton" name="buttonColor3" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="1" column="3">
+           <widget class="KColorButton" name="buttonColor3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="2" >
-           <widget class="KColorButton" name="buttonColor2" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="1" column="2">
+           <widget class="KColorButton" name="buttonColor2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="2" >
-           <widget class="KColorButton" name="minColor2" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="2" column="2">
+           <widget class="KColorButton" name="minColor2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="2" >
-           <widget class="QLabel" name="textLabel3" >
-            <property name="text" >
+          <item row="0" column="2">
+           <widget class="QLabel" name="textLabel3">
+            <property name="text">
              <string>Hovered</string>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="3" >
-           <widget class="QLabel" name="textLabel4_2" >
-            <property name="text" >
+          <item row="0" column="3">
+           <widget class="QLabel" name="textLabel4_2">
+            <property name="text">
              <string>Pressed</string>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="1" >
-           <widget class="QLabel" name="textLabel2_4" >
-            <property name="text" >
+          <item row="0" column="1">
+           <widget class="QLabel" name="textLabel2_4">
+            <property name="text">
              <string>Normal</string>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="3" >
-           <widget class="KColorButton" name="minColor3" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="2" column="3">
+           <widget class="KColorButton" name="minColor3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="3" column="3" >
-           <widget class="KColorButton" name="maxColor3" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="3" column="3">
+           <widget class="KColorButton" name="maxColor3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="3" column="2" >
-           <widget class="KColorButton" name="maxColor2" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="3" column="2">
+           <widget class="KColorButton" name="maxColor2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="3" column="0" >
-           <widget class="QLabel" name="textLabel1_4" >
-            <property name="text" >
+          <item row="3" column="0">
+           <widget class="QLabel" name="textLabel1_4">
+            <property name="text">
              <string>Maximize Button</string>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="3" column="1" >
-           <widget class="KColorButton" name="maxColor1" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="3" column="1">
+           <widget class="KColorButton" name="maxColor1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="4" column="0" >
-           <widget class="QLabel" name="textLabel1" >
-            <property name="text" >
+          <item row="4" column="0">
+           <widget class="QLabel" name="textLabel1">
+            <property name="text">
              <string>Close Button</string>
             </property>
-            <property name="wordWrap" >
+            <property name="wordWrap">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="4" column="1" >
-           <widget class="KColorButton" name="closeColor1" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="4" column="1">
+           <widget class="KColorButton" name="closeColor1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="4" column="2" >
-           <widget class="KColorButton" name="closeColor2" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="4" column="2">
+           <widget class="KColorButton" name="closeColor2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="4" column="3" >
-           <widget class="KColorButton" name="closeColor3" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <item row="4" column="3">
+           <widget class="KColorButton" name="closeColor3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="toolTip" >
+            <property name="toolTip">
              <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
-            <property name="text" >
+            <property name="text">
              <string/>
             </property>
-            <property name="color" >
+            <property name="color">
              <color>
               <red>255</red>
               <green>255</green>
               <blue>255</blue>
              </color>
             </property>
-            <property name="toggleButton" stdset="0" >
+            <property name="toggleButton" stdset="0">
              <bool>false</bool>
             </property>
            </widget>
@@ -843,234 +844,234 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="0" >
-        <widget class="QComboBox" name="buttonTheme" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+       <item row="0" column="0">
+        <widget class="QComboBox" name="buttonTheme">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="toolTip" >
+         <property name="toolTip">
           <string>Select your favourite button theme here</string>
          </property>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Crystal Default</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/default/crystal_close.png</normaloff>:/buttons/pics/default/crystal_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Crystal Aqua</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/aqua/aqua_close.png</normaloff>:/buttons/pics/aqua/aqua_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Crystal Knifty</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/knifty/knifty_close.png</normaloff>:/buttons/pics/knifty/knifty_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Handpainted</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/handpainted/handpainted_close.png</normaloff>:/buttons/pics/handpainted/handpainted_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>SVG</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/svg/svg_close.png</normaloff>:/buttons/pics/svg/svg_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Vista</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/vista/vista_close.png</normaloff>:/buttons/pics/vista/vista_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Kubuntu Dapper</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/kubuntu-dapper/dapper_close.png</normaloff>:/buttons/pics/kubuntu-dapper/dapper_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Kubuntu Edgy</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/kubuntu-edgy/edgy_close.png</normaloff>:/buttons/pics/kubuntu-edgy/edgy_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Kubuntu Feisty</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/kubuntu-feisty/feisty_close.png</normaloff>:/buttons/pics/kubuntu-feisty/feisty_close.png</iconset>
           </property>
          </item>
          <item>
-          <property name="text" >
+          <property name="text">
            <string>Kubuntu Hardy</string>
           </property>
-          <property name="icon" >
-           <iconset resource="configdialog.qrc" >
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
             <normaloff>:/buttons/pics/kubuntu-hardy/hardy_close.png</normaloff>:/buttons/pics/kubuntu-hardy/hardy_close.png</iconset>
           </property>
          </item>
         </widget>
        </item>
-       <item row="0" column="1" >
-        <widget class="QCheckBox" name="menuimage" >
-         <property name="toolTip" >
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="menuimage">
+         <property name="toolTip">
           <string>The window menu is a button, if possible, or just an icon</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Theme &amp;menu button</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+M</string>
          </property>
-         <property name="checked" >
+         <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage">
+      <attribute name="title">
        <string>Bac&amp;kground</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="1" column="0" colspan="2" >
-        <widget class="QTabWidget" name="tabWidget4" >
-         <property name="currentIndex" >
+      <layout class="QGridLayout">
+       <item row="1" column="0" colspan="2">
+        <widget class="QTabWidget" name="tabWidget4">
+         <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="tab" >
-          <attribute name="title" >
+         <widget class="QWidget" name="tab">
+          <attribute name="title">
            <string>A&amp;ctive</string>
           </attribute>
-          <layout class="QGridLayout" >
-           <item row="0" column="0" >
-            <widget class="QComboBox" name="frame1" >
-             <property name="toolTip" >
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QComboBox" name="frame1">
+             <property name="toolTip">
               <string>Draw outline frame</string>
              </property>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>No outline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Simple Outline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Sunken</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Raised</string>
               </property>
              </item>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="KColorButton" name="frameColor1" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+           <item row="0" column="1">
+            <widget class="KColorButton" name="frameColor1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="toolTip" >
+             <property name="toolTip">
               <string>The color of the outline frame</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="1" column="0" >
-            <widget class="QComboBox" name="inline1" >
-             <property name="toolTip" >
+           <item row="1" column="0">
+            <widget class="QComboBox" name="inline1">
+             <property name="toolTip">
               <string>Draw inline frame around the window content</string>
              </property>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>No inline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Simple inline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Sunken</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Raised</string>
               </property>
              </item>
             </widget>
            </item>
-           <item row="1" column="1" >
-            <widget class="KColorButton" name="inlineColor1" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+           <item row="1" column="1">
+            <widget class="KColorButton" name="inlineColor1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="toolTip" >
+             <property name="toolTip">
               <string>The color of the inline frame</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" >
+           <item row="2" column="0">
             <spacer>
-             <property name="orientation" >
+             <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
-             <property name="sizeHint" stdset="0" >
+             <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
                <height>40</height>
@@ -1080,103 +1081,103 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab" >
-          <attribute name="title" >
+         <widget class="QWidget" name="tab">
+          <attribute name="title">
            <string>Inacti&amp;ve</string>
           </attribute>
-          <layout class="QGridLayout" >
-           <item row="0" column="0" >
-            <widget class="QComboBox" name="frame2" >
-             <property name="toolTip" >
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QComboBox" name="frame2">
+             <property name="toolTip">
               <string>Draw outline frame</string>
              </property>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>No outline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Simple Outline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Sunken</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Raised</string>
               </property>
              </item>
             </widget>
            </item>
-           <item row="0" column="1" >
-            <widget class="KColorButton" name="frameColor2" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+           <item row="0" column="1">
+            <widget class="KColorButton" name="frameColor2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="toolTip" >
+             <property name="toolTip">
               <string>The color of the outline frame</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="1" column="0" >
-            <widget class="QComboBox" name="inline2" >
-             <property name="toolTip" >
+           <item row="1" column="0">
+            <widget class="QComboBox" name="inline2">
+             <property name="toolTip">
               <string>Draw inline frame around the window content</string>
              </property>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>No inline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Simple inline</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Sunken</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Raised</string>
               </property>
              </item>
             </widget>
            </item>
-           <item row="1" column="1" >
-            <widget class="KColorButton" name="inlineColor2" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+           <item row="1" column="1">
+            <widget class="KColorButton" name="inlineColor2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="toolTip" >
+             <property name="toolTip">
               <string>Color of the inline frame</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" >
+           <item row="2" column="0">
             <spacer>
-             <property name="orientation" >
+             <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
-             <property name="sizeHint" stdset="0" >
+             <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
                <height>40</height>
@@ -1188,85 +1189,85 @@
          </widget>
         </widget>
        </item>
-       <item row="0" column="0" >
-        <widget class="QCheckBox" name="enableTransparency" >
-         <property name="enabled" >
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="enableTransparency">
+         <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="toolTip" >
+         <property name="toolTip">
           <string>no, noo, nooooooooooo!</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Enable Transparency</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string/>
          </property>
-         <property name="checked" >
+         <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage">
+      <attribute name="title">
        <string>&amp;Logo</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item rowspan="2" row="0" column="0" colspan="2" >
-        <widget class="Q3ButtonGroup" name="logoEnabled" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+      <layout class="QGridLayout">
+       <item row="0" column="0" rowspan="2" colspan="2">
+        <widget class="Q3ButtonGroup" name="logoEnabled">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="title" >
+         <property name="title">
           <string>Draw Logo</string>
          </property>
-         <property name="checkable" >
+         <property name="checkable">
           <bool>false</bool>
          </property>
-         <property name="selectedId" stdset="0" >
+         <property name="selectedId" stdset="0">
           <number>0</number>
          </property>
-         <layout class="QGridLayout" >
-          <item row="0" column="0" >
-           <widget class="QRadioButton" name="radioButton13" >
-            <property name="text" >
+         <layout class="QGridLayout">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="radioButton13">
+            <property name="text">
              <string>Left</string>
             </property>
-            <property name="shortcut" >
+            <property name="shortcut">
              <string/>
             </property>
-            <property name="checked" >
+            <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="1" >
-           <widget class="QRadioButton" name="radioButton14_3" >
-            <property name="text" >
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="radioButton14_3">
+            <property name="text">
              <string>Disable</string>
             </property>
-            <property name="shortcut" >
+            <property name="shortcut">
              <string/>
             </property>
            </widget>
           </item>
-          <item row="0" column="2" >
-           <widget class="QRadioButton" name="radioButton15" >
-            <property name="text" >
+          <item row="0" column="2">
+           <widget class="QRadioButton" name="radioButton15">
+            <property name="text">
              <string>Right</string>
             </property>
-            <property name="shortcut" >
+            <property name="shortcut">
              <string/>
             </property>
            </widget>
@@ -1274,66 +1275,15 @@
          </layout>
         </widget>
        </item>
-       <item row="2" column="0" >
-        <widget class="QLabel" name="logoPreview" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>30</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="maximumSize" >
-          <size>
-           <width>30</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="toolTip" >
-          <string>Little preview</string>
-         </property>
-         <property name="frameShape" >
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow" >
-          <enum>QFrame::Sunken</enum>
-         </property>
-         <property name="scaledContents" >
-          <bool>true</bool>
-         </property>
-         <property name="wordWrap" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3" >
-        <widget class="QComboBox" name="logoStretch" >
-         <item>
-          <property name="text" >
-           <string>Stretch</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Centered</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="3" column="1" >
+       <item row="4" column="1">
         <spacer>
-         <property name="orientation" >
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeType" >
+         <property name="sizeType">
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>30</height>
@@ -1341,226 +1291,384 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="1" colspan="2" >
-        <widget class="KUrlRequester" name="logoFile" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+       <item row="3" column="0" colspan="4">
+        <widget class="KUrlRequester" name="logoFile">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
         </widget>
        </item>
-       <item row="0" column="2" >
-        <widget class="QLabel" name="textLabel1_6" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+       <item row="0" column="2">
+        <widget class="QLabel" name="textLabel1_6">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Distance to the text:</string>
          </property>
-         <property name="wordWrap" >
+         <property name="wordWrap">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="3" >
-        <widget class="QSpinBox" name="logoDistance" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <item row="0" column="3">
+        <widget class="QSpinBox" name="logoDistance">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="suffix" >
+         <property name="suffix">
           <string> px</string>
          </property>
-         <property name="maximum" >
+         <property name="maximum">
           <number>500</number>
          </property>
-         <property name="singleStep" >
+         <property name="singleStep">
           <number>5</number>
          </property>
         </widget>
        </item>
-       <item row="1" column="2" colspan="2" >
-        <widget class="QCheckBox" name="logoActive" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+       <item row="1" column="2" colspan="2">
+        <widget class="QCheckBox" name="logoActive">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="toolTip" >
+         <property name="toolTip">
           <string>Draw logo in the active window only</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Active &amp;window only</string>
          </property>
-         <property name="shortcut" >
+         <property name="shortcut">
           <string>Alt+W</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QComboBox" name="logoList">
+         <item>
+          <property name="text">
+           <string>Custom</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>KDE</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/logos/pics/logos/kde.png</normaloff>:/logos/pics/logos/kde.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Tux</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/logos/pics/logos/tux.png</normaloff>:/logos/pics/logos/tux.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Gentoo</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/logos/pics/logos/gentoo.png</normaloff>:/logos/pics/logos/gentoo.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Kubuntu</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/logos/pics/logos/kubuntu.png</normaloff>:/logos/pics/logos/kubuntu.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Ubuntu</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/logos/pics/logos/ubuntu.png</normaloff>:/logos/pics/logos/ubuntu.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>OpenSuSE</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/logos/pics/logos/opensuse.png</normaloff>:/logos/pics/logos/opensuse.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PClinuxOS</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/logos/pics/logos/pclinuxos.png</normaloff>:/logos/pics/logos/pclinuxos.png</iconset>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QComboBox" name="logoStretch">
+         <item>
+          <property name="text">
+           <string>Stretch</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Centered</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="logoPreview">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Little preview</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
-      <attribute name="title" >
+     <widget class="QWidget" name="TabPage">
+      <attribute name="title">
        <string>&amp;Overlay</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="1" column="0" colspan="2" >
-        <widget class="QLabel" name="textLabel2" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
+      <layout class="QGridLayout">
+       <item row="1" column="0" colspan="2">
+        <widget class="QLabel" name="textLabel2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Lets you put an transparent image on top of the title bar.</string>
          </property>
-         <property name="alignment" >
+         <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
-         <property name="wordWrap" >
+         <property name="wordWrap">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="3" column="0" >
-        <widget class="QTabWidget" name="tabWidget" >
-         <property name="currentIndex" >
+       <item row="3" column="0">
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="tab_2" >
-          <attribute name="title" >
+         <widget class="QWidget" name="tab_2">
+          <attribute name="title">
            <string>A&amp;ctive Window</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout" >
-           <item row="0" column="0" colspan="2" >
-            <widget class="QComboBox" name="overlay_active" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0" colspan="2">
+            <widget class="QComboBox" name="overlay_active">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Disabled</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Simple Lighting</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Glass</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Steel</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
+               <string>Reflective blue</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective red</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective green</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective orange</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective yellow</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective white</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective pink</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Custom</string>
               </property>
              </item>
             </widget>
            </item>
-           <item row="1" column="0" colspan="2" >
-            <widget class="KUrlRequester" name="overlay_active_file" >
-             <property name="enabled" >
+           <item row="1" column="0" colspan="2">
+            <widget class="KUrlRequester" name="overlay_active_file">
+             <property name="enabled">
               <bool>false</bool>
              </property>
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" colspan="2" >
-            <widget class="QRadioButton" name="stretch_active" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+           <item row="2" column="0" colspan="2">
+            <widget class="QRadioButton" name="stretch_active">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="toolTip" >
+             <property name="toolTip">
               <string>Stretches the user defined overlay for the
 active window horizontaly</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string>&amp;Stretch</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0" >
-            <widget class="QRadioButton" name="fwidth_active" >
-             <property name="toolTip" >
+           <item row="3" column="0">
+            <widget class="QRadioButton" name="fwidth_active">
+             <property name="toolTip">
               <string>Stretches the user defined overlay for the
 active window horizontaly to the chosen
 value</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string>&amp;Fixed width / tile</string>
              </property>
-             <property name="checked" >
+             <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="3" column="1" >
-            <widget class="QSpinBox" name="fwvalue_active" >
-             <property name="toolTip" >
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="fwvalue_active">
+             <property name="toolTip">
               <string>The fixed width, the user defined
 overlay is stretched</string>
              </property>
-             <property name="suffix" >
+             <property name="suffix">
               <string> px</string>
              </property>
-             <property name="prefix" >
+             <property name="prefix">
               <string/>
              </property>
-             <property name="minimum" >
+             <property name="minimum">
               <number>1</number>
              </property>
-             <property name="maximum" >
+             <property name="maximum">
               <number>1000</number>
              </property>
-             <property name="value" >
+             <property name="value">
               <number>256</number>
              </property>
             </widget>
            </item>
-           <item row="4" column="0" colspan="2" >
-            <widget class="QRadioButton" name="nostretch_active" >
-             <property name="toolTip" >
+           <item row="4" column="0" colspan="2">
+            <widget class="QRadioButton" name="nostretch_active">
+             <property name="toolTip">
               <string>Don't stretch user defined overlay
 on active window</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string>&amp;Don't stretch / tile</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="2" >
-            <spacer name="verticalSpacer_3" >
-             <property name="orientation" >
+           <item row="5" column="0" colspan="2">
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
-             <property name="sizeHint" stdset="0" >
+             <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
                <height>40</height>
@@ -1570,53 +1678,88 @@ on active window</string>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_3" >
-          <attribute name="title" >
+         <widget class="QWidget" name="tab_3">
+          <attribute name="title">
            <string>Inacti&amp;ve Window</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout_2" >
-           <item row="0" column="0" colspan="2" >
-            <widget class="QComboBox" name="overlay_inactive" >
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0" colspan="2">
+            <widget class="QComboBox" name="overlay_inactive">
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Disabled</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Simple Lighting</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Glass</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>Steel</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
+               <string>Reflective blue</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective red</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective green</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective orange</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective yellow</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective white</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Reflective pink</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Custom</string>
               </property>
              </item>
             </widget>
            </item>
-           <item row="1" column="0" colspan="2" >
-            <widget class="KUrlRequester" name="overlay_inactive_file" >
-             <property name="enabled" >
+           <item row="1" column="0" colspan="2">
+            <widget class="KUrlRequester" name="overlay_inactive_file">
+             <property name="enabled">
               <bool>false</bool>
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="2" >
-            <spacer name="verticalSpacer_2" >
-             <property name="orientation" >
+           <item row="5" column="0" colspan="2">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
-             <property name="sizeHint" stdset="0" >
+             <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
                <height>40</height>
@@ -1624,59 +1767,59 @@ on active window</string>
              </property>
             </spacer>
            </item>
-           <item row="2" column="0" colspan="2" >
-            <widget class="QRadioButton" name="stretch_inactive" >
-             <property name="toolTip" >
+           <item row="2" column="0" colspan="2">
+            <widget class="QRadioButton" name="stretch_inactive">
+             <property name="toolTip">
               <string>Stretches the user defined overlay for the
 inactive window horizontaly</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string>&amp;Stretch</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0" >
-            <widget class="QRadioButton" name="fwidth_inactive" >
-             <property name="toolTip" >
+           <item row="3" column="0">
+            <widget class="QRadioButton" name="fwidth_inactive">
+             <property name="toolTip">
               <string>Stretches the user defined overlay for the
 active window horizontaly to the chosen
 value</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string>&amp;Fixed width / tile</string>
              </property>
-             <property name="checked" >
+             <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="3" column="1" >
-            <widget class="QSpinBox" name="fwvalue_inactive" >
-             <property name="toolTip" >
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="fwvalue_inactive">
+             <property name="toolTip">
               <string>The fixed width, the user defined
 overlay is stretched</string>
              </property>
-             <property name="suffix" >
+             <property name="suffix">
               <string> px</string>
              </property>
-             <property name="minimum" >
+             <property name="minimum">
               <number>1</number>
              </property>
-             <property name="maximum" >
+             <property name="maximum">
               <number>1000</number>
              </property>
-             <property name="value" >
+             <property name="value">
               <number>256</number>
              </property>
             </widget>
            </item>
-           <item row="4" column="0" colspan="2" >
-            <widget class="QRadioButton" name="nostretch_inactive" >
-             <property name="toolTip" >
+           <item row="4" column="0" colspan="2">
+            <widget class="QRadioButton" name="nostretch_inactive">
+             <property name="toolTip">
               <string>Don't stretch user defined overlay
 on active window</string>
              </property>
-             <property name="text" >
+             <property name="text">
               <string>&amp;Don't stretch / tile</string>
              </property>
             </widget>
@@ -1691,7 +1834,7 @@ on active window</string>
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="5" />
+ <layoutdefault spacing="6" margin="5"/>
  <customwidgets>
   <customwidget>
    <class>Q3GroupBox</class>
@@ -1706,51 +1849,51 @@ on active window</string>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KColorButton</class>
-   <extends>QPushButton</extends>
-   <header>kcolorbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>KUrlRequester</class>
    <extends>QFrame</extends>
    <header>kurlrequester.h</header>
   </customwidget>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
  </customwidgets>
  <includes>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kurlrequester.h</include>
-  <include location="local" >klineedit.h</include>
-  <include location="local" >kpushbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kcolorbutton.h</include>
-  <include location="local" >kurlrequester.h</include>
-  <include location="local" >klineedit.h</include>
-  <include location="local" >kpushbutton.h</include>
-  <include location="local" >kurlrequester.h</include>
-  <include location="local" >klineedit.h</include>
-  <include location="local" >kpushbutton.h</include>
-  <include location="local" >kurlrequester.h</include>
-  <include location="local" >klineedit.h</include>
-  <include location="local" >kpushbutton.h</include>
-  <include location="local" >kurlrequester.h</include>
-  <include location="local" >klineedit.h</include>
-  <include location="local" >kpushbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kurlrequester.h</include>
+  <include location="local">klineedit.h</include>
+  <include location="local">kpushbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kcolorbutton.h</include>
+  <include location="local">kurlrequester.h</include>
+  <include location="local">klineedit.h</include>
+  <include location="local">kpushbutton.h</include>
+  <include location="local">kurlrequester.h</include>
+  <include location="local">klineedit.h</include>
+  <include location="local">kpushbutton.h</include>
+  <include location="local">kurlrequester.h</include>
+  <include location="local">klineedit.h</include>
+  <include location="local">kpushbutton.h</include>
+  <include location="local">kurlrequester.h</include>
+  <include location="local">klineedit.h</include>
+  <include location="local">kpushbutton.h</include>
  </includes>
  <resources>
-  <include location="configdialog.qrc" />
+  <include location="configdialog.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -1759,11 +1902,11 @@ on active window</string>
    <receiver>animateHover</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1775,11 +1918,11 @@ on active window</string>
    <receiver>logoDistance</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1791,11 +1934,11 @@ on active window</string>
    <receiver>logoActive</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1807,11 +1950,11 @@ on active window</string>
    <receiver>logoFile</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1823,11 +1966,11 @@ on active window</string>
    <receiver>logoStretch</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1839,11 +1982,11 @@ on active window</string>
    <receiver>textLabel1_6</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1855,11 +1998,11 @@ on active window</string>
    <receiver>titlealign</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1871,11 +2014,11 @@ on active window</string>
    <receiver>textshadow</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
@@ -1887,11 +2030,11 @@ on active window</string>
    <receiver>fwvalue_active</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>138</x>
      <y>187</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>379</x>
      <y>187</y>
     </hint>
@@ -1903,13 +2046,29 @@ on active window</string>
    <receiver>fwvalue_inactive</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>138</x>
      <y>187</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>379</x>
      <y>187</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton14_3</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>logoList</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>124</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>

@@ -11,6 +11,15 @@
     <file>../../pics/svg/svg_close.png</file>
     <file>../../pics/vista/vista_close.png</file>
   </qresource>
+  <qresource prefix="logos" >
+    <file>../../pics/logos/tux.png</file>
+    <file>../../pics/logos/ubuntu.png</file>
+    <file>../../pics/logos/pclinuxos.png</file>
+    <file>../../pics/logos/opensuse.png</file>
+    <file>../../pics/logos/kubuntu.png</file>
+    <file>../../pics/logos/gentoo.png</file>
+    <file>../../pics/logos/kde.png</file>
+  </qresource>
   <qresource prefix="info" >
     <file>photo_80x80.jpg</file>
   </qresource>

@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docbase="C:\Documents and Settings\Timur\Desktop\Artwork\curry"
+   sodipodi:docname="curry.svg"
+   inkscape:export-filename="C:\Documents and Settings\Timur\Desktop\Artwork\curry\curry.png"
+   inkscape:export-xdpi="72.000000"
+   inkscape:export-ydpi="72.000000"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs3">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective68" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient13593">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop13594" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop13595" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient12337">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop12338" />
+      <stop
+         style="stop-color:#eeeeee;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop12339" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient11709">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop11710" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.00000000;"
+         offset="1.0000000"
+         id="stop11711" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient11073">
+      <stop
+         style="stop-color:#e2722f;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop11074" />
+      <stop
+         style="stop-color:#ffd200;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop11075" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient7927">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop7928" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop7929" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3556">
+      <stop
+         style="stop-color:#cccccc;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop3557" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop3558" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1683">
+      <stop
+         style="stop-color:#cccccc;stop-opacity:0.00000000;"
+         offset="0.00000000"
+         id="stop1684" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop1685" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1683"
+       id="linearGradient3559"
+       gradientTransform="scale(1.204416,0.830278)"
+       x1="232.31366"
+       y1="742.07489"
+       x2="232.31366"
+       y2="180.31161"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3556"
+       id="linearGradient6678"
+       gradientTransform="scale(1.021821,0.978645)"
+       x1="156.00227"
+       y1="336.67096"
+       x2="159.17413"
+       y2="697.47107"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3556"
+       id="linearGradient7303"
+       gradientTransform="scale(1.021821,0.978645)"
+       x1="175.33556"
+       y1="343.11383"
+       x2="172.06300"
+       y2="697.47107"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7927"
+       id="linearGradient7930"
+       gradientTransform="scale(1.104315,0.905539)"
+       x1="114.36909"
+       y1="390.33786"
+       x2="114.36909"
+       y2="623.34253"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient7927"
+       id="linearGradient7932"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.104315,0.905539)"
+       x1="114.36909"
+       y1="390.33786"
+       x2="114.36909"
+       y2="623.34253" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient11073"
+       id="linearGradient11072"
+       gradientTransform="scale(1.011253,0.988872)"
+       x1="-522.90363"
+       y1="371.34903"
+       x2="-275.58835"
+       y2="436.25974"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient11709"
+       id="linearGradient11712"
+       gradientTransform="scale(1.021616,0.978841)"
+       x1="154.10971"
+       y1="652.11639"
+       x2="278.15253"
+       y2="726.78906"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient12337"
+       id="linearGradient12340"
+       gradientTransform="scale(1.457035,0.686325)"
+       x1="204.26065"
+       y1="1515.1801"
+       x2="205.63420"
+       y2="1237.7235"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient11073"
+       id="linearGradient12967"
+       gradientTransform="scale(1.160699,0.861550)"
+       x1="-170.42526"
+       y1="1180.1476"
+       x2="160.19975"
+       y2="1180.1476"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient11073"
+       id="linearGradient12969"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.160699,0.861550)"
+       x1="-170.42526"
+       y1="1180.1476"
+       x2="160.19975"
+       y2="1180.1476" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient13593"
+       id="linearGradient13596"
+       gradientTransform="scale(1.126073,0.888042)"
+       x1="10.188615"
+       y1="1080.9004"
+       x2="63.485600"
+       y2="1212.5673"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient13593"
+       id="linearGradient13598"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.126073,0.888042)"
+       x1="-0.94981843"
+       y1="1050.5157"
+       x2="59.348469"
+       y2="1215.9432" />
+    <filter
+       inkscape:collect="always"
+       id="filter3683"
+       x="-0.26134721"
+       width="1.5226944"
+       y="-0.30833083"
+       height="1.6166617">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="129.44181"
+         id="feGaussianBlur3685" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.63191172"
+     inkscape:cx="297.63779"
+     inkscape:cy="354.72745"
+     inkscape:current-layer="layer8"
+     inkscape:window-width="1024"
+     inkscape:window-height="747"
+     inkscape:window-x="144"
+     inkscape:window-y="192"
+     showgrid="false" />
+  <metadata
+     id="metadata4">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer12"
+     inkscape:label="Foots" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer13"
+     inkscape:label="Foots Highlight" />
+  <g
+     inkscape:label="Curry"
+     inkscape:groupmode="layer"
+     id="layer1" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Highlight" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Eyes" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="Eyes Highlight" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="Eyeballs" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer8"
+     inkscape:label="PenguinWings" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer11"
+     inkscape:label="Penguin" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer9"
+     inkscape:label="PenguinMouth" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer10"
+     inkscape:label="PenguinMouthHighlight">
+    <rect
+       style="opacity:1;fill:#00025f;fill-opacity:1;stroke:#ffffff;stroke-width:3.78999995999999983;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3457"
+       width="1887.0076"
+       height="1297.3176"
+       x="-777.82898"
+       y="-39.968071" />
+    <g
+       id="g2477"
+       transform="translate(1.4111707,-3.4896248)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;filter:url(#filter3683)"
+       inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+       inkscape:export-xdpi="2.3144372"
+       inkscape:export-ydpi="2.3144372">
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.879093,0,0,0.919192,129.8387,74.24936)"
+         d="M 185.94369,1016.7559 A 191.87807,142.42496 0 1 1 -197.81244,1016.7559 A 191.87807,142.42496 0 1 1 185.94369,1016.7559 z"
+         sodipodi:ry="142.42496"
+         sodipodi:rx="191.87807"
+         sodipodi:cy="1016.7559"
+         sodipodi:cx="-5.9343734"
+         id="path2479"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.838818,0,0,0.824864,550.9402,138.508)"
+         d="M 185.94369,1016.7559 A 191.87807,142.42496 0 1 1 -197.81244,1016.7559 A 191.87807,142.42496 0 1 1 185.94369,1016.7559 z"
+         sodipodi:ry="142.42496"
+         sodipodi:rx="191.87807"
+         sodipodi:cy="1016.7559"
+         sodipodi:cx="-5.9343734"
+         id="path2481"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(1.195122,0,0,1.082474,42.07133,-85.10013)"
+         d="M 189.89994,1007.8544 A 121.65465,95.939034 0 1 1 -53.409355,1007.8544 A 121.65465,95.939034 0 1 1 189.89994,1007.8544 z"
+         sodipodi:ry="95.939034"
+         sodipodi:rx="121.65465"
+         sodipodi:cy="1007.8544"
+         sodipodi:cx="68.245293"
+         id="path2483"
+         style="opacity:0.40000000000000002;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(1.130081,0,0,1.010309,471.8068,-43.02927)"
+         d="M 189.89994,1007.8544 A 121.65465,95.939034 0 1 1 -53.409355,1007.8544 A 121.65465,95.939034 0 1 1 189.89994,1007.8544 z"
+         sodipodi:ry="95.939034"
+         sodipodi:rx="121.65465"
+         sodipodi:cy="1007.8544"
+         sodipodi:cx="68.245293"
+         id="path2485"
+         style="opacity:0.40000000000000002;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(2.381105,0,0,2.482285,-349.4437,-959.4101)"
+         d="M 446.26573,616.1734 A 182.825,174.18759 0 1 1 80.615738,616.1734 A 182.825,174.18759 0 1 1 446.26573,616.1734 z"
+         sodipodi:ry="174.18759"
+         sodipodi:rx="182.825"
+         sodipodi:cy="616.1734"
+         sodipodi:cx="263.44073"
+         id="path2487"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.974468,0,0,1,-11.04618,-34.54959)"
+         d="M 636.28857,444.86496 A 338.29822,233.20984 0 1 1 -40.307861,444.86496 A 338.29822,233.20984 0 1 1 636.28857,444.86496 z"
+         sodipodi:ry="233.20984"
+         sodipodi:rx="338.29822"
+         sodipodi:cy="444.86496"
+         sodipodi:cx="297.99036"
+         id="path2489"
+         style="opacity:0.55980859000000005;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.887324,0,0,0.916667,-20.50562,33.79296)"
+         d="M 379.79988,512.33423 A 210.67024,201.76869 0 1 1 -41.540604,512.33423 A 210.67024,201.76869 0 1 1 379.79988,512.33423 z"
+         sodipodi:ry="201.76869"
+         sodipodi:rx="210.67024"
+         sodipodi:cy="512.33423"
+         sodipodi:cx="169.12964"
+         id="path2491"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.586854,0,0,0.632353,374.5063,205.1723)"
+         d="M 379.79988,512.33423 A 210.67024,201.76869 0 1 1 -41.540604,512.33423 A 210.67024,201.76869 0 1 1 379.79988,512.33423 z"
+         sodipodi:ry="201.76869"
+         sodipodi:rx="210.67024"
+         sodipodi:cy="512.33423"
+         sodipodi:cx="169.12964"
+         id="path2493"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="translate(5.934373,0)"
+         d="M 269.02492,459.91391 A 148.35933,121.65465 0 1 1 -27.693741,459.91391 A 148.35933,121.65465 0 1 1 269.02492,459.91391 z"
+         sodipodi:ry="121.65465"
+         sodipodi:rx="148.35933"
+         sodipodi:cy="459.91391"
+         sodipodi:cx="120.66559"
+         id="path2495"
+         style="opacity:0.69999999999999996;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.66,0,0,0.707317,392.1435,176.1495)"
+         d="M 269.02492,459.91391 A 148.35933,121.65465 0 1 1 -27.693741,459.91391 A 148.35933,121.65465 0 1 1 269.02492,459.91391 z"
+         sodipodi:ry="121.65465"
+         sodipodi:rx="148.35933"
+         sodipodi:cy="459.91391"
+         sodipodi:cx="120.66559"
+         id="path2497"
+         style="opacity:0.69999999999999996;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.670589,0,0,0.704546,481.1264,174.6594)"
+         d="M -280.89367,524.20294 A 84.07029,87.037476 0 1 1 -449.03425,524.20294 A 84.07029,87.037476 0 1 1 -280.89367,524.20294 z"
+         sodipodi:ry="87.037476"
+         sodipodi:rx="84.07029"
+         sodipodi:cy="524.20294"
+         sodipodi:cx="-364.96396"
+         id="path2499"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.482353,0,0,0.488636,588.4804,282.8945)"
+         d="M -280.89367,524.20294 A 84.07029,87.037476 0 1 1 -449.03425,524.20294 A 84.07029,87.037476 0 1 1 -280.89367,524.20294 z"
+         sodipodi:ry="87.037476"
+         sodipodi:rx="84.07029"
+         sodipodi:cy="524.20294"
+         sodipodi:cx="-364.96396"
+         id="path2501"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.974049,-5.625701e-2,9.663267e-2,0.982056,255.7738,438.7747)"
+         d="M -383.75614,332.3249 L -500.65694,277.17389 L -617.55774,222.02288 L -511.34517,148.35933 L -405.13259,74.695768 L -394.44437,203.51033 L -383.75614,332.3249 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.011611"
+         sodipodi:arg1="0.96441344"
+         sodipodi:r2="74.626694"
+         sodipodi:r1="149.25339"
+         sodipodi:cy="209.68118"
+         sodipodi:cx="-468.81549"
+         sodipodi:sides="3"
+         id="path2503"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.630287,-0.818635,0.675702,0.70246,880.7197,113.7379)"
+         d="M -383.75614,332.3249 L -500.65694,277.17389 L -617.55774,222.02288 L -511.34517,148.35933 L -405.13259,74.695768 L -394.44437,203.51033 L -383.75614,332.3249 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.011611"
+         sodipodi:arg1="0.96441344"
+         sodipodi:r2="74.626694"
+         sodipodi:r1="149.25339"
+         sodipodi:cy="209.68118"
+         sodipodi:cx="-468.81549"
+         sodipodi:sides="3"
+         id="path2505"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.974928,-0.106195,0.112723,1.034863,-96.17817,-86.62601)"
+         d="M 561.78732,947.52161 A 256.16711,120.66559 0 1 1 49.453094,947.52161 A 256.16711,120.66559 0 1 1 561.78732,947.52161 z"
+         sodipodi:ry="120.66559"
+         sodipodi:rx="256.16711"
+         sodipodi:cy="947.52161"
+         sodipodi:cx="305.62021"
+         id="path2507"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         d="M 360.01864,965.32471 A 4.9453111,17.80312 0 1 1 350.12802,965.32471 A 4.9453111,17.80312 0 1 1 360.01864,965.32471 z"
+         sodipodi:ry="17.80312"
+         sodipodi:rx="4.9453111"
+         sodipodi:cy="965.32471"
+         sodipodi:cx="355.07333"
+         id="path2509"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.901344,2.163545e-2,-4.949665e-2,0.744059,681.2938,425.6834)"
+         d="M -348.1499,494.53113 L -438.46901,396.33943 L -528.78814,298.14774 L -398.59207,269.02494 L -268.39601,239.90213 L -308.27296,367.21663 L -348.1499,494.53113 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.3979322"
+         sodipodi:arg1="1.3507346"
+         sodipodi:r2="77.026291"
+         sodipodi:r1="154.0526"
+         sodipodi:cy="344.19366"
+         sodipodi:cx="-381.77802"
+         sodipodi:sides="3"
+         id="path2511"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(1.136741,0,0,0.928107,29.38075,56.89404)"
+         d="M 243.3093,729.92788 L 200.37514,679.5472 L 157.44097,629.16653 L 222.539,617.1748 L 287.63702,605.18305 L 265.47316,667.55547 L 243.3093,729.92788 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.4358256"
+         sodipodi:arg1="1.388628"
+         sodipodi:r2="38.216724"
+         sodipodi:r1="76.433456"
+         sodipodi:cy="654.75916"
+         sodipodi:cx="229.46243"
+         sodipodi:sides="3"
+         id="path2513"
+         style="opacity:0.69999999999999996;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.90241145999999794;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="star" />
+    </g>
+    <g
+       id="g2457"
+       inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+       inkscape:export-xdpi="2.3144372"
+       inkscape:export-ydpi="2.3144372">
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.879093,0,0,0.919192,129.8387,74.24936)"
+         d="M 185.94369 1016.7559 A 191.87807 142.42496 0 1 1  -197.81244,1016.7559 A 191.87807 142.42496 0 1 1  185.94369 1016.7559 z"
+         sodipodi:ry="142.42496"
+         sodipodi:rx="191.87807"
+         sodipodi:cy="1016.7559"
+         sodipodi:cx="-5.9343734"
+         id="path12342"
+         style="fill:url(#linearGradient12967);fill-opacity:1;fill-rule:nonzero;stroke:#ff9b00;stroke-width:8.90241149999999948;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.838818,0,0,0.824864,550.9402,138.508)"
+         d="M 185.94369 1016.7559 A 191.87807 142.42496 0 1 1  -197.81244,1016.7559 A 191.87807 142.42496 0 1 1  185.94369 1016.7559 z"
+         sodipodi:ry="142.42496"
+         sodipodi:rx="191.87807"
+         sodipodi:cy="1016.7559"
+         sodipodi:cx="-5.9343734"
+         id="path12968"
+         style="fill:url(#linearGradient12969);fill-opacity:1;fill-rule:nonzero;stroke:#ff9b00;stroke-width:8.90241149999999948;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(1.195122,0,0,1.082474,42.07133,-85.10013)"
+         d="M 189.89994 1007.8544 A 121.65465 95.939034 0 1 1  -53.409355,1007.8544 A 121.65465 95.939034 0 1 1  189.89994 1007.8544 z"
+         sodipodi:ry="95.939034"
+         sodipodi:rx="121.65465"
+         sodipodi:cy="1007.8544"
+         sodipodi:cx="68.245293"
+         id="path12971"
+         style="opacity:0.40000001000000002;fill:url(#linearGradient13596);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8.90241149999999948;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(1.130081,0,0,1.010309,471.8068,-43.02927)"
+         d="M 189.89994 1007.8544 A 121.65465 95.939034 0 1 1  -53.409355,1007.8544 A 121.65465 95.939034 0 1 1  189.89994 1007.8544 z"
+         sodipodi:ry="95.939034"
+         sodipodi:rx="121.65465"
+         sodipodi:cy="1007.8544"
+         sodipodi:cx="68.245293"
+         id="path13597"
+         style="opacity:0.40000000000000002;fill:url(#linearGradient13598);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8.90241149999999948;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(2.381105,0,0,2.482285,-349.4437,-959.4101)"
+         d="M 446.26573 616.17340 A 182.82500 174.18759 0 1 1  80.615738,616.17340 A 182.82500 174.18759 0 1 1  446.26573 616.17340 z"
+         sodipodi:ry="174.18759"
+         sodipodi:rx="182.82500"
+         sodipodi:cy="616.17340"
+         sodipodi:cx="263.44073"
+         id="path1061"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.974468,0,0,1,-11.04618,-34.54959)"
+         d="M 636.28857 444.86496 A 338.29822 233.20984 0 1 1  -40.307861,444.86496 A 338.29822 233.20984 0 1 1  636.28857 444.86496 z"
+         sodipodi:ry="233.20984"
+         sodipodi:rx="338.29822"
+         sodipodi:cy="444.86496"
+         sodipodi:cx="297.99036"
+         id="path2934"
+         style="fill:url(#linearGradient3559);fill-opacity:1;opacity:0.55980861000000004"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.887324,0,0,0.916667,-20.50562,33.79296)"
+         d="M 379.79988 512.33423 A 210.67024 201.76869 0 1 1  -41.540604,512.33423 A 210.67024 201.76869 0 1 1  379.79988 512.33423 z"
+         sodipodi:ry="201.76869"
+         sodipodi:rx="210.67024"
+         sodipodi:cy="512.33423"
+         sodipodi:cx="169.12964"
+         id="path5431"
+         style="fill:url(#linearGradient6678);fill-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.586854,0,0,0.632353,374.5063,205.1723)"
+         d="M 379.79988 512.33423 A 210.67024 201.76869 0 1 1  -41.540604,512.33423 A 210.67024 201.76869 0 1 1  379.79988 512.33423 z"
+         sodipodi:ry="201.76869"
+         sodipodi:rx="210.67024"
+         sodipodi:cy="512.33423"
+         sodipodi:cx="169.12964"
+         id="path6053"
+         style="fill:url(#linearGradient7303);fill-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="translate(5.934373,0)"
+         d="M 269.02492 459.91391 A 148.35933 121.65465 0 1 1  -27.693741,459.91391 A 148.35933 121.65465 0 1 1  269.02492 459.91391 z"
+         sodipodi:ry="121.65465"
+         sodipodi:rx="148.35933"
+         sodipodi:cy="459.91391"
+         sodipodi:cx="120.66559"
+         id="path7305"
+         style="fill:url(#linearGradient7930);fill-opacity:1;opacity:0.69999999999999996"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.66,0,0,0.707317,392.1435,176.1495)"
+         d="M 269.02492 459.91391 A 148.35933 121.65465 0 1 1  -27.693741,459.91391 A 148.35933 121.65465 0 1 1  269.02492 459.91391 z"
+         sodipodi:ry="121.65465"
+         sodipodi:rx="148.35933"
+         sodipodi:cy="459.91391"
+         sodipodi:cx="120.66559"
+         id="path7931"
+         style="opacity:0.69999999000000002;fill:url(#linearGradient7932);fill-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.670589,0,0,0.704546,481.1264,174.6594)"
+         d="M -280.89367 524.20294 A 84.070290 87.037476 0 1 1  -449.03425,524.20294 A 84.070290 87.037476 0 1 1  -280.89367 524.20294 z"
+         sodipodi:ry="87.037476"
+         sodipodi:rx="84.070290"
+         sodipodi:cy="524.20294"
+         sodipodi:cx="-364.96396"
+         id="path9817"
+         style="fill:#000000;fill-opacity:1;fill-rule:nonzero"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.482353,0,0,0.488636,588.4804,282.8945)"
+         d="M -280.89367 524.20294 A 84.070290 87.037476 0 1 1  -449.03425,524.20294 A 84.070290 87.037476 0 1 1  -280.89367 524.20294 z"
+         sodipodi:ry="87.037476"
+         sodipodi:rx="84.070290"
+         sodipodi:cy="524.20294"
+         sodipodi:cx="-364.96396"
+         id="path10440"
+         style="fill:#000000;fill-opacity:1;fill-rule:nonzero"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.974049,-5.625701e-2,9.663267e-2,0.982056,255.7738,438.7747)"
+         d="M -383.75614,332.32490 L -500.65694,277.17389 L -617.55774,222.02288 L -511.34517,148.35933 L -405.13259,74.695768 L -394.44437,203.51033 L -383.75614,332.32490 z "
+         inkscape:randomized="0.00000000"
+         inkscape:rounded="0.00000000"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.0116110"
+         sodipodi:arg1="0.96441344"
+         sodipodi:r2="74.626694"
+         sodipodi:r1="149.25339"
+         sodipodi:cy="209.68118"
+         sodipodi:cx="-468.81549"
+         sodipodi:sides="3"
+         id="path10441"
+         style="fill:#000000;fill-opacity:1;fill-rule:nonzero"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.630287,-0.818635,0.675702,0.70246,880.7197,113.7379)"
+         d="M -383.75614,332.32490 L -500.65694,277.17389 L -617.55774,222.02288 L -511.34517,148.35933 L -405.13259,74.695768 L -394.44437,203.51033 L -383.75614,332.32490 z "
+         inkscape:randomized="0.00000000"
+         inkscape:rounded="0.00000000"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.0116110"
+         sodipodi:arg1="0.96441344"
+         sodipodi:r2="74.626694"
+         sodipodi:r1="149.25339"
+         sodipodi:cy="209.68118"
+         sodipodi:cx="-468.81549"
+         sodipodi:sides="3"
+         id="path10445"
+         style="fill:#000000;fill-opacity:1;fill-rule:nonzero"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.974928,-0.106195,0.112723,1.034863,-96.17817,-86.62601)"
+         d="M 561.78732 947.52161 A 256.16711 120.66559 0 1 1  49.453094,947.52161 A 256.16711 120.66559 0 1 1  561.78732 947.52161 z"
+         sodipodi:ry="120.66559"
+         sodipodi:rx="256.16711"
+         sodipodi:cy="947.52161"
+         sodipodi:cx="305.62021"
+         id="path11714"
+         style="fill:url(#linearGradient12340);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8.90241149999999948;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         d="M 360.01864 965.32471 A 4.9453111 17.803120 0 1 1  350.12802,965.32471 A 4.9453111 17.803120 0 1 1  360.01864 965.32471 z"
+         sodipodi:ry="17.803120"
+         sodipodi:rx="4.9453111"
+         sodipodi:cy="965.32471"
+         sodipodi:cx="355.07333"
+         id="path11715"
+         style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8.90241149999999948;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(0.901344,2.163545e-2,-4.949665e-2,0.744059,681.2938,425.6834)"
+         d="M -348.14990,494.53113 L -438.46901,396.33943 L -528.78814,298.14774 L -398.59207,269.02494 L -268.39601,239.90213 L -308.27296,367.21663 L -348.14990,494.53113 z "
+         inkscape:randomized="0.00000000"
+         inkscape:rounded="0.00000000"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.3979322"
+         sodipodi:arg1="1.3507346"
+         sodipodi:r2="77.026291"
+         sodipodi:r1="154.05260"
+         sodipodi:cy="344.19366"
+         sodipodi:cx="-381.77802"
+         sodipodi:sides="3"
+         id="path10447"
+         style="fill:url(#linearGradient11072);fill-opacity:1;fill-rule:nonzero;stroke:#d77c00;stroke-width:8.90241149999999948;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+         sodipodi:type="star" />
+      <path
+         inkscape:export-ydpi="2.3224533"
+         inkscape:export-xdpi="2.3224533"
+         inkscape:export-filename="/teutonix/archiv/Dokumente/Chrischaan/SuSE/Crystal KWin/Logos/tux2.png"
+         transform="matrix(1.136741,0.000000,0.000000,0.928107,29.38075,56.89404)"
+         d="M 243.30930,729.92788 L 200.37514,679.54720 L 157.44097,629.16653 L 222.53900,617.17480 L 287.63702,605.18305 L 265.47316,667.55547 L 243.30930,729.92788 z "
+         inkscape:randomized="0.00000000"
+         inkscape:rounded="0.00000000"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.4358256"
+         sodipodi:arg1="1.3886280"
+         sodipodi:r2="38.216724"
+         sodipodi:r1="76.433456"
+         sodipodi:cy="654.75916"
+         sodipodi:cx="229.46243"
+         sodipodi:sides="3"
+         id="path11087"
+         style="opacity:0.69999999;fill:url(#linearGradient11712);fill-opacity:1.0000000;fill-rule:nonzero;stroke:none;stroke-width:8.9024115;stroke-linejoin:round;stroke-miterlimit:4.0000000;stroke-opacity:1.0000000"
+         sodipodi:type="star" />
+    </g>
+  </g>
+</svg>

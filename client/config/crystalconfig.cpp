@@ -23,6 +23,8 @@
 
 #include "crystalconfig.h"
 
+#include "../logos.h"
+
 
 CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
     : QObject(parent), config_(0), dialog_(0)
@@ -103,6 +105,7 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->logoStretch, SIGNAL(activated(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->logoActive, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->logoDistance,SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
+	connect(dialog_->logoList,SIGNAL(activated(int)), this, SLOT(logoIndexChanged(int)));
 
 	load(cg);
 }
@@ -178,7 +181,7 @@ void CrystalConfig::load(KConfigGroup&)
 	dialog_->closeColor3->setColor(cg.readEntry("CloseColor3",color));
 
 	dialog_->tintButtons->setChecked(cg.readEntry("TintButtons",dialog_->buttonColor1->color()!=QColor(255,255,255)));
-	dialog_->buttonTheme->setCurrentIndex(cg.readEntry("ButtonTheme",9));
+	dialog_->buttonTheme->setCurrentIndex(cg.readEntry("ButtonTheme",10));
 	
 	dialog_->overlay_active->setCurrentIndex(cg.readEntry("OverlayModeActive",2));
 	dialog_->overlay_active_file->setUrl(cg.readEntry("OverlayFileActive",""));
@@ -201,6 +204,7 @@ void CrystalConfig::load(KConfigGroup&)
 	dialog_->logoActive->setChecked(cg.readEntry("LogoActive",true));
 	dialog_->logoStretch->setCurrentIndex(cg.readEntry("LogoStretch",0));
 	dialog_->logoDistance->setValue(cg.readEntry("LogoDistance",0));
+	dialog_->logoList->setCurrentIndex(cg.readEntry("LogoIndex", 0));
 	updateLogo();
 }
 
@@ -275,6 +279,7 @@ void CrystalConfig::save(KConfigGroup&)
 	cg.writeEntry("LogoActive",dialog_->logoActive->isChecked());
 	cg.writeEntry("LogoStretch",dialog_->logoStretch->currentIndex());
 	cg.writeEntry("LogoDistance",dialog_->logoDistance->value());
+	cg.writeEntry("LogoIndex",dialog_->logoList->currentIndex());
 
 	config_->sync();
 }
@@ -293,38 +298,51 @@ void CrystalConfig::logoTextChanged(const QString&)
 	emit changed();
 }
 
+void CrystalConfig::logoIndexChanged(int)
+{
+	updateLogo();
+	emit changed();
+}
+
 void CrystalConfig::overlay_active_changed(int a)
 {
-	dialog_->overlay_active_file->setEnabled(a==4);
-	dialog_->stretch_active->setEnabled(a==4);
-	dialog_->fwidth_active->setEnabled(a==4);
-	dialog_->nostretch_active->setEnabled(a==4);
-	dialog_->fwvalue_active->setEnabled((a==4) && (dialog_->fwidth_active->isChecked()));
+	dialog_->overlay_active_file->setEnabled(a==11);
+	dialog_->stretch_active->setEnabled(a==11);
+	dialog_->fwidth_active->setEnabled(a==11);
+	dialog_->nostretch_active->setEnabled(a==11);
+	dialog_->fwvalue_active->setEnabled((a==11) && (dialog_->fwidth_active->isChecked()));
 	emit changed();
 }
 
 void CrystalConfig::overlay_inactive_changed(int a)
 {
-	dialog_->overlay_inactive_file->setEnabled(a==4);
-	dialog_->stretch_inactive->setEnabled(a==4);
-	dialog_->fwidth_inactive->setEnabled(a==4);
-	dialog_->nostretch_inactive->setEnabled(a==4);
-	dialog_->fwvalue_inactive->setEnabled((a==4) && (dialog_->fwidth_inactive->isChecked()));
+	dialog_->overlay_inactive_file->setEnabled(a==11);
+	dialog_->stretch_inactive->setEnabled(a==11);
+	dialog_->fwidth_inactive->setEnabled(a==11);
+	dialog_->nostretch_inactive->setEnabled(a==11);
+	dialog_->fwvalue_inactive->setEnabled((a==11) && (dialog_->fwidth_inactive->isChecked()));
 	emit changed();
 }
 
 void CrystalConfig::updateLogo()
 {
+	QIcon icon;
 	QPixmap pic;
-	KUrl url;
-	url = dialog_->logoFile->url();
-	pic.load(url.toLocalFile());
+	
+	dialog_->logoFile->setEnabled (dialog_->logoList->currentIndex()==0);
+	
+	if (dialog_->logoList->currentIndex() == 0) {
+		KUrl url;
+		url = dialog_->logoFile->url();
+		pic.load(url.toLocalFile());
+	}else{
+		icon = dialog_->logoList->itemIcon(dialog_->logoList->currentIndex());
+
+		if (!icon.isNull()) {
+			pic = icon.pixmap(32);
+		}
+	}
 	dialog_->logoPreview->setPixmap(pic);
-}
-
-void CrystalConfig::defaults()
-{
-
 }
 
 extern "C"
