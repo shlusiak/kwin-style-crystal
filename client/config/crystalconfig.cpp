@@ -309,21 +309,21 @@ void CrystalConfig::logoIndexChanged(int)
 
 void CrystalConfig::overlay_active_changed(int a)
 {
-	dialog_->overlay_active_file->setEnabled(a==11);
-	dialog_->stretch_active->setEnabled(a==11);
-	dialog_->fwidth_active->setEnabled(a==11);
-	dialog_->nostretch_active->setEnabled(a==11);
-	dialog_->fwvalue_active->setEnabled((a==11) && (dialog_->fwidth_active->isChecked()));
+	dialog_->overlay_active_file->setEnabled(a==4);
+	dialog_->stretch_active->setEnabled(a==4);
+	dialog_->fwidth_active->setEnabled(a==4);
+	dialog_->nostretch_active->setEnabled(a==4);
+	dialog_->fwvalue_active->setEnabled((a==4) && (dialog_->fwidth_active->isChecked()));
 	emit changed();
 }
 
 void CrystalConfig::overlay_inactive_changed(int a)
 {
-	dialog_->overlay_inactive_file->setEnabled(a==11);
-	dialog_->stretch_inactive->setEnabled(a==11);
-	dialog_->fwidth_inactive->setEnabled(a==11);
-	dialog_->nostretch_inactive->setEnabled(a==11);
-	dialog_->fwvalue_inactive->setEnabled((a==11) && (dialog_->fwidth_inactive->isChecked()));
+	dialog_->overlay_inactive_file->setEnabled(a==4);
+	dialog_->stretch_inactive->setEnabled(a==4);
+	dialog_->fwidth_inactive->setEnabled(a==4);
+	dialog_->nostretch_inactive->setEnabled(a==4);
+	dialog_->fwvalue_inactive->setEnabled((a==4) && (dialog_->fwidth_inactive->isChecked()));
 	emit changed();
 }
 
@@ -332,7 +332,7 @@ void CrystalConfig::updateLogo()
 	QIcon icon;
 	QPixmap pic;
 	
-	dialog_->logoFile->setEnabled (dialog_->logoList->currentIndex()==0);
+	dialog_->logoFile->setEnabled(dialog_->logoList->currentIndex()==0);
 	
 	if (dialog_->logoList->currentIndex() == 0) {
 		KUrl url;

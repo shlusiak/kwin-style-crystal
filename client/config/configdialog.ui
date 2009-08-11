@@ -20,7 +20,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -2010,6 +2010,22 @@ on active window</string>
     <hint type="destinationlabel">
      <x>124</x>
      <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton14_3</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>logoStretch</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>82</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>285</x>
+     <y>120</y>
     </hint>
    </hints>
   </connection>
