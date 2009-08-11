@@ -101,12 +101,35 @@ bool CrystalFactory::reset(unsigned long /*changed*/)
 }
 
 bool CrystalFactory::supports(Ability ability) const
-{
+{  
 	switch (ability)
 	{
-	case AbilityButtonResize: return false;
-	default:
+	  case AbilityAnnounceButtons:
+	  case AbilityAnnounceColors:
+	  case AbilityButtonMenu:
+	  case AbilityButtonOnAllDesktops:
+	  case AbilityButtonSpacer:
+	  case AbilityButtonHelp:
+	  case AbilityButtonMinimize:
+	  case AbilityButtonMaximize:
+	  case AbilityButtonClose:
+	  case AbilityButtonBelowOthers:
+	  case AbilityButtonAboveOthers:
+	  case AbilityButtonShade:
+// 	  case AbilityButtonResize:
+
+	  case AbilityColorTitleBack:
+	  case AbilityColorTitleFore:	    
+// 	  case AbilityColorTitleBlend:
+// 	  case AbilityColorFrame:
+// 	  case AbilityColorHandle:
+// 	  case AbilityColorButtonBack:
+// 	  case AbilityColorButtonFore:
+// 	  case AbilityProvidesShadow:
+// 	  case AbilityUsesAlphaChannel:
 		return true;
+		
+	  default: return false;
 	}
 }
 
