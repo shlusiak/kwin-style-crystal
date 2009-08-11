@@ -781,6 +781,7 @@ void CrystalClient::init()
 	createMainWidget();
 	widget()->installEventFilter(this);
 
+	widget()->setAttribute( Qt::WA_StaticContents );
 	widget()->setAttribute(Qt::WA_NoSystemBackground);
 	FullMax=false;
 	if (!options()->moveResizeMaximizedWindows())
