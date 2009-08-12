@@ -766,7 +766,7 @@ void CrystalFactory::CreateButtonImages()
 
 
 CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
-: KDecorationUnstable(b,f)
+: KDecoration(b,f)
 {
 	::factory->clients.append(this);
 }
@@ -1260,7 +1260,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 	int drawFrame;
 	QColor color = options()->color(KDecoration::ColorTitleBar, isActive());
-	if (compositingActive())
+	if (KWindowSystem::compositingActive())
 		color.setAlpha((wndcfg->transparency*255)/100);
 
 	{

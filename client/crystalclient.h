@@ -133,7 +133,7 @@ private:
 };
 
 
-class CrystalClient : public KDecorationUnstable
+class CrystalClient : public KDecoration
 {
 	Q_OBJECT
 public:
