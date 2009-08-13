@@ -781,11 +781,15 @@ CrystalClient::~CrystalClient()
 
 void CrystalClient::init()
 {
+// 	KCommonDecoration::init();
 	createMainWidget();
 	widget()->installEventFilter(this);
 
 	widget()->setAttribute( Qt::WA_StaticContents );
-	widget()->setAttribute(Qt::WA_NoSystemBackground);
+	widget()->setAttribute( Qt::WA_OpaquePaintEvent );
+	widget()->setAttribute( Qt::WA_NoSystemBackground );
+	widget()->setAutoFillBackground(false);
+	
 	FullMax=false;
 	if (!options()->moveResizeMaximizedWindows())
 		FullMax=(maximizeMode()==MaximizeFull);
@@ -1260,8 +1264,10 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 	int drawFrame;
 	QColor color = options()->color(KDecoration::ColorTitleBar, isActive());
-	if (KWindowSystem::compositingActive())
+	if (KWindowSystem::compositingActive()) {
 		color.setAlpha((wndcfg->transparency*255)/100);
+	}
+	painter.setClipRegion(widget()->rect());
 
 	{
 		QRect r;
@@ -1455,12 +1461,11 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 void CrystalClient::resizeEvent(QResizeEvent *e)
 {
-	if (!widget()->isHidden()) 
-	{
-		//Repaint(); /* FIXME */
-		for (int n=0; n<ButtonTypeCount; n++) /* For streched Overlay */
-			if (button[n]) button[n]->reset();
-	}
+// 	if (!widget()->isHidden()) 
+// 	{
+// 		for (int n=0; n<ButtonTypeCount; n++) /* For streched Overlay */
+// 			if (button[n]) button[n]->reset();
+// 	}
 	if (e->size()!=e->oldSize())
 	{
 		updateMask();
@@ -1469,13 +1474,13 @@ void CrystalClient::resizeEvent(QResizeEvent *e)
 
 void CrystalClient::moveEvent(QMoveEvent *)
 {
-// 	Repaint(); /* FIXME */
+
 }
 
 void CrystalClient::showEvent(QShowEvent *)
 {
-	if (!widget()->isHidden()) 
-		Repaint();
+// 	if (!widget()->isHidden()) 
+// 		Repaint();
 }
 
 void CrystalClient::Repaint()

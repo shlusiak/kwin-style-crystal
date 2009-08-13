@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006-2008 by Sascha Hlusiak                             *
+ *   Copyright (C) 2006-2009 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -34,6 +34,8 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char */*name*/,
 : QAbstractButton(parent->widget()), client_(parent), type_(type), image(vimage), lastmouse_(0)
 {
 	setAttribute(Qt::WA_NoSystemBackground);
+	setAttribute(Qt::WA_OpaquePaintEvent, false);
+	setAutoFillBackground(false);
 	resetSize(false);
 	setCursor(Qt::ArrowCursor);
 	
@@ -188,6 +190,8 @@ void CrystalButton::drawButton(QPainter *painter)
 // 			painter->drawPixmap(QRect(0,0,width(),height()), wndcfg->overlay, src);
 // 		}
 // 	}
+
+	painter->setClipRect(this->rect());
 
 	dm=0;
 	if (image && (image->drawMode==1))dm=1;
