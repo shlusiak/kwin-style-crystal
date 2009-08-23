@@ -13,6 +13,7 @@ set (PICS
 	kubuntu-hardy
 	svg
 	vista
+	glass-pill
     )
 set (OVERLAYS
 	glass_overlay

@@ -945,6 +945,15 @@
             <normaloff>:/buttons/pics/kubuntu-hardy/hardy_close.png</normaloff>:/buttons/pics/kubuntu-hardy/hardy_close.png</iconset>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Glass Pill</string>
+          </property>
+          <property name="icon">
+           <iconset resource="configdialog.qrc">
+            <normaloff>:/buttons/pics/glass-pill/gp-close-hover.png</normaloff>:/buttons/pics/glass-pill/gp-close-hover.png</iconset>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="0" column="1">
