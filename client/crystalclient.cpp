@@ -286,7 +286,7 @@ bool CrystalFactory::readConfig()
 					img=QImage((uchar*)kde_data,26,26,QImage::Format_ARGB32);
 					break;
 				case 2:
-					img=QImage((uchar*)tux_data,31,26,QImage::Format_ARGB32);
+					img=QImage((uchar*)tux_data,36,26,QImage::Format_ARGB32);
 					break;
 				case 3:
 					img=QImage((uchar*)gentoo_data,64,67,QImage::Format_ARGB32);
@@ -744,6 +744,54 @@ void CrystalFactory::CreateButtonImages()
 		for (int i=0;i<ButtonImageCount;i++)
 		{
 			buttonImages[i]->setSpace(1,0);
+			buttonImages[i]->setDrawMode(0);
+		}
+		buttonImages[ButtonImageMax]->setSpace(0,0);
+		buttonImages[ButtonImageRestore]->setSpace(0,0);
+		buttonImages[ButtonImageMin]->setSpace(0,0);
+		buttonImages[ButtonImageClose]->setSpace(0,0);
+
+		break;
+	case 10: // Glass Pill
+		buttonImages[ButtonImageMenu]->SetNormal(gp_menu_data,44,22);
+		buttonImages[ButtonImageMenu]->SetHovered(gp_menu_hover_data);
+
+		buttonImages[ButtonImageHelp]->SetNormal(gp_help_data,44,22);
+		buttonImages[ButtonImageHelp]->SetHovered(gp_help_hover_data);
+
+		buttonImages[ButtonImageMax]->SetNormal(gp_maximize_data,44,22);
+		buttonImages[ButtonImageMax]->SetHovered(gp_maximize_hover_data);
+		buttonImages[ButtonImageRestore]->SetNormal(gp_restore_data,44,22);
+		buttonImages[ButtonImageRestore]->SetHovered(gp_restore_hover_data);
+		buttonImages[ButtonImageMin]->SetNormal(gp_minimize_data,44,22);
+		buttonImages[ButtonImageMin]->SetHovered(gp_minimize_hover_data);
+		buttonImages[ButtonImageClose]->SetNormal(gp_close_data,44,22);
+		buttonImages[ButtonImageClose]->SetHovered(gp_close_hover_data);
+
+		buttonImages[ButtonImageSticky]->SetNormal(gp_sticky_data,44,22);
+		buttonImages[ButtonImageSticky]->SetHovered(gp_sticky_hover_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(gp_unsticky_data,44,22);
+		buttonImages[ButtonImageUnSticky]->SetHovered(gp_unsticky_hover_data);
+
+		buttonImages[ButtonImageAbove]->SetNormal(gp_above_data,44,22);
+		buttonImages[ButtonImageAbove]->SetHovered(gp_above_hover_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(gp_unabove_data,44,22);
+		buttonImages[ButtonImageUnAbove]->SetHovered(gp_unabove_hover_data);
+
+
+		buttonImages[ButtonImageBelow]->SetNormal(gp_below_data,44,22);
+		buttonImages[ButtonImageBelow]->SetHovered(gp_below_hover_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(gp_unbelow_data,44,22);
+		buttonImages[ButtonImageUnBelow]->SetHovered(gp_unbelow_hover_data);
+
+		buttonImages[ButtonImageShade]->SetNormal(gp_shade_data,44,22);
+		buttonImages[ButtonImageShade]->SetHovered(gp_shade_hover_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(gp_unshade_data,44,22);
+		buttonImages[ButtonImageUnShade]->SetHovered(gp_unshade_hover_data);
+
+		for (int i=0;i<ButtonImageCount;i++)
+		{
+			buttonImages[i]->setSpace(0,0);
 			buttonImages[i]->setDrawMode(0);
 		}
 		buttonImages[ButtonImageMax]->setSpace(0,0);
