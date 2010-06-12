@@ -20,7 +20,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -870,7 +870,7 @@
           </property>
           <property name="icon">
            <iconset resource="configdialog.qrc">
-            <normaloff>:/buttons/pics/aqua/aqua_close.png</normaloff>:/buttons/pics/aqua/aqua_close.png</iconset>
+            <normaloff>:/buttons/pics/aqua/aqua_close_hovered.png</normaloff>:/buttons/pics/aqua/aqua_close_hovered.png</iconset>
           </property>
          </item>
          <item>

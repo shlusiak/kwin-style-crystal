@@ -1,9 +1,9 @@
 <RCC>
-  <qresource prefix="buttons" >
+  <qresource prefix="buttons">
     <file>../../pics/kubuntu-hardy/hardy_close.png</file>
     <file>../../pics/glass-pill/gp-close-hover.png</file>
     <file>../../pics/default/crystal_close.png</file>
-    <file>../../pics/aqua/aqua_close.png</file>
+    <file>../../pics/aqua/aqua_close_hovered.png</file>
     <file>../../pics/handpainted/handpainted_close.png</file>
     <file>../../pics/knifty/knifty_close.png</file>
     <file>../../pics/kubuntu-dapper/dapper_close.png</file>
@@ -12,7 +12,7 @@
     <file>../../pics/svg/svg_close.png</file>
     <file>../../pics/vista/vista_close.png</file>
   </qresource>
-  <qresource prefix="logos" >
+  <qresource prefix="logos">
     <file>../../pics/logos/tux.png</file>
     <file>../../pics/logos/ubuntu.png</file>
     <file>../../pics/logos/pclinuxos.png</file>
@@ -21,7 +21,7 @@
     <file>../../pics/logos/gentoo.png</file>
     <file>../../pics/logos/kde.png</file>
   </qresource>
-  <qresource prefix="info" >
+  <qresource prefix="info">
     <file>photo_80x80.jpg</file>
   </qresource>
 </RCC>

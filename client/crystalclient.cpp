@@ -362,7 +362,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data);
 		break;
 	case 1: // Aqua buttons
-		buttonImages[ButtonImageMenu]->SetNormal(aqua_default_data,16,16);
+// 		buttonImages[ButtonImageMenu]->SetNormal(aqua_default_data,16,16);
 		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,16,16);
 		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,16,16);
 		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,16,16);
@@ -371,23 +371,23 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data,16,16);
 		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data,16,16);
 		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data,16,16);
-		buttonImages[ButtonImageUnShade]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageUnShade]->SetNormal(aqua_default_hovered_data,16,16);
 	
 		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data,16,16);
-		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data,16,16);
+		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_default_hovered_data,16,16);
 		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data,16,16);
-		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data,16,16);
+		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_default_hovered_data,16,16);
 		
-		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data);
-		buttonImages[ButtonImageMax]->SetHovered(aqua_max_data);
-		buttonImages[ButtonImageMin]->SetHovered(aqua_min_data);
-		buttonImages[ButtonImageRestore]->SetHovered(aqua_max_data);
-		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data);
-		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data);
-		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data);
-		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data);
-		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data);
-		buttonImages[ButtonImageUnShade]->SetHovered(aqua_shade_data);
+		buttonImages[ButtonImageClose]->SetHovered(aqua_close_hovered_data);
+		buttonImages[ButtonImageMax]->SetHovered(aqua_max_hovered_data);
+		buttonImages[ButtonImageMin]->SetHovered(aqua_min_hovered_data);
+		buttonImages[ButtonImageRestore]->SetHovered(aqua_max_hovered_data);
+		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_hovered_data);
+		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_hovered_data);
+// 		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_hovered_data);
+// 		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_hovered_data);
+// 		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_hovered_data);
+// 		buttonImages[ButtonImageUnShade]->SetHovered(aqua_shade_hovered_data);
 		break;
 	case 2: // Knifty buttons
 		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data);
