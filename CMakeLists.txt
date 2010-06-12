@@ -1,5 +1,6 @@
+cmake_minimum_required(VERSION 2.6)
 project(KWIN_CRYSTAL)
-set(VERSION 2.0.5)
+set(VERSION 2.0.6)
 
 find_package(KDE4 REQUIRED)
 
