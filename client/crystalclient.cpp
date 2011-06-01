@@ -129,7 +129,8 @@ bool CrystalFactory::supports(Ability ability) const
 // 	  case AbilityColorButtonBack:
 // 	  case AbilityColorButtonFore:
 // 	  case AbilityProvidesShadow:
-// 	  case AbilityUsesAlphaChannel:
+ 	  case AbilityUsesAlphaChannel:
+	  case AbilityUsesBlurBehind:
 		return true;
 		
 	  default: return false;
