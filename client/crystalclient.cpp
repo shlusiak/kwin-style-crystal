@@ -30,6 +30,7 @@
 #include <kconfiggroup.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kdeversion.h>
 
 #include <qbitmap.h>
 #include <qlabel.h>
@@ -130,7 +131,9 @@ bool CrystalFactory::supports(Ability ability) const
 // 	  case AbilityColorButtonFore:
 // 	  case AbilityProvidesShadow:
  	  case AbilityUsesAlphaChannel:
+#if KDE_IS_VERSION(4,6,0)
 	  case AbilityUsesBlurBehind:
+#endif
 		return true;
 		
 	  default: return false;
