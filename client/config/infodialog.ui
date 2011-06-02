@@ -1,80 +1,81 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>InfoDialog</class>
- <widget class="QDialog" name="InfoDialog" >
-  <property name="enabled" >
+ <widget class="QDialog" name="InfoDialog">
+  <property name="enabled">
    <bool>true</bool>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>478</width>
+    <width>480</width>
     <height>425</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Info about Crystal...</string>
   </property>
-  <property name="sizeGripEnabled" >
+  <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
-  <property name="modal" >
+  <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>About</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="textLabel1" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Minimum" >
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="textLabel1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Crystal kwin decoration theme for KDE 4,
-Sascha Hlusiak &lt;spam84@nurfuerspam.de>, 2004-2009.
+Sascha Hlusiak &lt;spam84@nurfuerspam.de&gt;, 2004-2011.
 
 You may look for the most recent version at kde-look.org:</string>
         </property>
-        <property name="textFormat" >
+        <property name="textFormat">
          <enum>Qt::PlainText</enum>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
         </property>
-        <property name="wordWrap" >
+        <property name="wordWrap">
          <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" >
-       <widget class="KUrlLabel" name="URL_Crystal_1" >
-        <property name="text" >
+      <item row="3" column="0">
+       <widget class="KUrlLabel" name="URL_Crystal_1">
+        <property name="text">
          <string>KDE 3: www.kde-look.org/content/show.php?content=13969</string>
         </property>
-        <property name="url" >
+        <property name="url">
          <string>http://www.kde-look.org/content/show.php?content=13969</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1" >
-       <spacer name="verticalSpacer" >
-        <property name="orientation" >
+      <item row="3" column="1">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>40</height>
@@ -82,12 +83,12 @@ You may look for the most recent version at kde-look.org:</string>
         </property>
        </spacer>
       </item>
-      <item row="2" column="1" >
-       <spacer name="verticalSpacer_2" >
-        <property name="orientation" >
+      <item row="2" column="1">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>40</height>
@@ -95,40 +96,40 @@ You may look for the most recent version at kde-look.org:</string>
         </property>
        </spacer>
       </item>
-      <item row="2" column="0" >
-       <widget class="KUrlLabel" name="URL_Crystal_2" >
-        <property name="text" >
+      <item row="2" column="0">
+       <widget class="KUrlLabel" name="URL_Crystal_2">
+        <property name="text">
          <string>KDE 4: www.kde-look.org/content/show.php?content=75140</string>
         </property>
-        <property name="url" >
+        <property name="url">
          <string>http://www.kde-look.org/content/show.php/Crystal?content=75140</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLabel" name="label" >
-        <property name="enabled" >
+      <item row="0" column="1">
+       <widget class="QLabel" name="label">
+        <property name="enabled">
          <bool>true</bool>
         </property>
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string/>
         </property>
-        <property name="pixmap" >
-         <pixmap resource="configdialog.qrc" >:/info/photo_80x80.jpg</pixmap>
+        <property name="pixmap">
+         <pixmap resource="configdialog.qrc">:/info/photo_80x80.jpg</pixmap>
         </property>
-        <property name="scaledContents" >
+        <property name="scaledContents">
          <bool>false</bool>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
         </property>
-        <property name="openExternalLinks" >
+        <property name="openExternalLinks">
          <bool>false</bool>
         </property>
        </widget>
@@ -137,20 +138,20 @@ You may look for the most recent version at kde-look.org:</string>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
       <string>Usage</string>
      </property>
-     <layout class="QVBoxLayout" >
+     <layout class="QVBoxLayout">
       <item>
-       <widget class="QLabel" name="textLabel1_2" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+       <widget class="QLabel" name="textLabel1_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Besides default features of most window decorations:
 - Doubleclick the systemmenu button closes the window.
 - Middleclick on the minimize button to send it below.
@@ -158,13 +159,13 @@ You may look for the most recent version at kde-look.org:</string>
 - Rightclick on close button runs kdocker for this window to dock it to the systemtray. kdocker needs to be installed for this to work.
 - Scroll over the title bar selects next/prev window. If this is disabled, the default behaviour is used.</string>
         </property>
-        <property name="textFormat" >
+        <property name="textFormat">
          <enum>Qt::PlainText</enum>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
-        <property name="wordWrap" >
+        <property name="wordWrap">
          <bool>true</bool>
         </property>
        </widget>
@@ -173,27 +174,27 @@ You may look for the most recent version at kde-look.org:</string>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton1" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+    <widget class="QPushButton" name="pushButton1">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>&amp;Close</string>
      </property>
-     <property name="shortcut" >
+     <property name="shortcut">
       <string>Alt+C</string>
      </property>
-     <property name="default" >
+     <property name="default">
       <bool>true</bool>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
    <class>KUrlLabel</class>
@@ -202,10 +203,10 @@ You may look for the most recent version at kde-look.org:</string>
   </customwidget>
  </customwidgets>
  <includes>
-  <include location="local" >kurllabel.h</include>
+  <include location="local">kurllabel.h</include>
  </includes>
  <resources>
-  <include location="configdialog.qrc" />
+  <include location="configdialog.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -214,11 +215,11 @@ You may look for the most recent version at kde-look.org:</string>
    <receiver>InfoDialog</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>20</x>
      <y>20</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
     </hint>
