@@ -22,7 +22,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tab1">
       <attribute name="title">
        <string>Ge&amp;neral</string>
       </attribute>
@@ -373,7 +373,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tab2">
       <attribute name="title">
        <string>Bu&amp;ttons</string>
       </attribute>
@@ -974,7 +974,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage">
+     <widget class="QWidget" name="tab3">
       <attribute name="title">
        <string>Bac&amp;kground</string>
       </attribute>
@@ -984,7 +984,7 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="tab">
+         <widget class="QWidget" name="tab6">
           <attribute name="title">
            <string>A&amp;ctive</string>
           </attribute>
@@ -1116,7 +1116,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab">
+         <widget class="QWidget" name="tab7">
           <attribute name="title">
            <string>Inacti&amp;ve</string>
           </attribute>
@@ -1252,7 +1252,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage">
+     <widget class="QWidget" name="tab4">
       <attribute name="title">
        <string>&amp;Logo</string>
       </attribute>
@@ -1516,7 +1516,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage">
+     <widget class="QWidget" name="tab5">
       <attribute name="title">
        <string>&amp;Overlay</string>
       </attribute>
@@ -1549,7 +1549,7 @@
           <attribute name="title">
            <string>A&amp;ctive Window</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout">
+          <layout class="QGridLayout" name="gridLayout_8">
            <item row="0" column="0" colspan="2">
             <widget class="QComboBox" name="overlay_active">
              <property name="sizePolicy">
@@ -1598,7 +1598,7 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0" colspan="2">
+           <item row="2" column="0">
             <widget class="QRadioButton" name="stretch_active">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1653,7 +1653,7 @@ overlay is stretched</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0" colspan="2">
+           <item row="4" column="0">
             <widget class="QRadioButton" name="nostretch_active">
              <property name="toolTip">
               <string>Don't stretch user defined overlay
@@ -1664,7 +1664,7 @@ on active window</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="2">
+           <item row="5" column="0">
             <spacer name="verticalSpacer_3">
              <property name="orientation">
               <enum>Qt::Vertical</enum>

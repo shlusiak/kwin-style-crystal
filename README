@@ -1,7 +1,8 @@
 Crystal
 =======
 
-This is the Crystal KDE Windowdecoration Theme. The theme is pretty simple and clean, but has very nice pseudo transparency within the border and the title bar. You can choose of other image effects too.
+This is the Crystal KDE Windowdecoration Theme. The theme is pretty simple and clean, can use KWIN's 
+transparency and blur effects.
 
 It is based on the KDE-WM "Example", which can be found here:
 http://www.kde-look.org/content/show.php?content=6332
