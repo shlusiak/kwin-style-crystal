@@ -24,6 +24,7 @@
 #include <qpainter.h>
 #include <qrect.h>
 
+#include "crystalfactory.h"
 #include "crystalclient.h"
 #include "crystalbutton.h"
 #include "buttonimage.h"
@@ -112,11 +113,11 @@ void CrystalButton::mousePressEvent(QMouseEvent* e)
 		button=Qt::LeftButton;
 		break;
 	case Qt::RightButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu) || (type_ == ButtonClose))
+		if ((type_ == MaxButton) || (type_ == MinButton) || (type_ == MenuButton) || (type_ == CloseButton))
 			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
 	case Qt::MidButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin))
+		if ((type_ == MaxButton) || (type_ == MinButton))
 			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
 
@@ -137,11 +138,11 @@ void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 		button=Qt::LeftButton;
 		break;
 	case Qt::RightButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu) || (type_==ButtonClose))
+		if ((type_ == MaxButton) || (type_ == MinButton) || (type_ == MenuButton) || (type_ == CloseButton))
 			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
 	case Qt::MidButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin))
+		if ((type_ == MaxButton) || (type_ == MinButton))
 			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
 	
@@ -227,7 +228,7 @@ void CrystalButton::drawButton(QPainter *painter)
 	}
 
 
-	if (type_ == ButtonMenu && (!::factory->menuImage || image==NULL || (image!=NULL && !image->initialized()))) {
+	if (type_ == MenuButton && (!::factory->menuImage || image==NULL || (image!=NULL && !image->initialized()))) {
 		// we paint the mini icon (which is 16 pixels high)
 		dx = float(width() - 16) / 2.0;
 		dy = float(height() - 16) / 2.0;
@@ -282,13 +283,13 @@ void CrystalButton::drawButton(QPainter *painter)
 				QRect r((rect().width()-w)/2,(rect().height()-h)/2,w,h);
 
 				painter->drawImage(r,*img);
-				if (type_ == ButtonMenu) drawMenuImage(painter, r);
+				if (type_ == MenuButton) drawMenuImage(painter, r);
 			}else{
 				// Otherwise we just paint it
 				if (image->drawMode==1)dy=0;
 				painter->drawImage(QPoint((int)dx,(int)dy),*img);
 
-				if (type_ == ButtonMenu) drawMenuImage(painter, 
+				if (type_ == MenuButton) drawMenuImage(painter, 
 					QRect((int)dx,(int)dy,image->image_width,image->image_height));
 			}
 		}
@@ -300,7 +301,7 @@ void CrystalButton::drawButton(QPainter *painter)
 
 void CrystalButton::drawMenuImage(QPainter* painter, QRect r)
 {
-	if (type_ != ButtonMenu) return;
+	if (type_ != MenuButton) return;
 	// we paint the mini icon (which is 16 pixels high)
 	r.setTop(r.top()+1);
 	r.setBottom(r.bottom()-1);

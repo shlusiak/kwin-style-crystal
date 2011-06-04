@@ -70,6 +70,7 @@ set(kwin3_crystal_PART_SRCS
    buttonimage.cpp
    crystalbutton.cpp
    crystalclient.cpp
+   crystalfactory.cpp
    ${CMAKE_CURRENT_BINARY_DIR}/tiles.h
    ${CMAKE_CURRENT_BINARY_DIR}/overlays.h
    ${CMAKE_CURRENT_BINARY_DIR}/logos.h

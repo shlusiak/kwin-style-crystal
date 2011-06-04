@@ -22,6 +22,7 @@
 #include <qimage.h>
 #include <math.h>
 
+#include "crystalfactory.h"
 #include "buttonimage.h"
 
 

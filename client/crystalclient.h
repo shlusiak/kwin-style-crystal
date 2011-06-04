@@ -29,10 +29,13 @@
 
 #include <qlayout.h>
 #include <kdecoration.h>
+#include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 #include <qtimer.h>
 #include <qlist.h>
 #include <X11/Xlib.h>
+
+#include "common.h"
 
 
 class QSpacerItem;
@@ -43,94 +46,6 @@ class CrystalFactory;
 class CrystalButton;
 class ButtonImage;
 
-extern CrystalFactory *factory;
-
-#define TOP_LEFT 1
-#define TOP_RIGHT 2
-#define BOT_LEFT 4
-#define BOT_RIGHT 8
-
-struct WND_CONFIG
-{
-	int outlineMode,inlineMode;
-	QColor frameColor,inlineColor;
-	QPixmap overlay;
-	int transparency;
-	bool stretch_overlay;
-};
-
-
-enum ButtonType {
-	ButtonHelp=0,
-	ButtonMax,
-	ButtonMin,
-	ButtonClose, 
-	ButtonMenu,
-	ButtonSticky,
-	ButtonShade,
-	ButtonAbove,
-	ButtonBelow,
-	ButtonTypeCount
-};
-
-
-enum ButtonImageTypes {
-	ButtonImageMenu=0,
-	ButtonImageHelp,
-	ButtonImageMax,
-	ButtonImageRestore,
-	ButtonImageMin,
-	ButtonImageClose, 
-	ButtonImageSticky,
-	ButtonImageUnSticky,
-	ButtonImageShade,
-	ButtonImageUnShade,
-	ButtonImageBelow,
-	ButtonImageUnBelow,
-	ButtonImageAbove,
-	ButtonImageUnAbove,
-	ButtonImageCount
-};
-
-
-class CrystalFactory: public KDecorationFactory
-{
-public:
-	CrystalFactory();
-	virtual ~CrystalFactory();
-	virtual KDecoration *createDecoration(KDecorationBridge *b);
-	virtual bool reset(unsigned long changed);
-	virtual bool supports(Ability ability) const;
-
-	static bool initialized() { return initialized_; }
-	static Qt::Alignment titleAlign() { return titlealign_; }
-public:
-	QPixmap logo;
-	int logoEnabled,logoStretch,logoActive,logoDistance;
-
-	int titlesize;
-	bool hovereffect,tintButtons,animateHover,menuImage,wheelTask;
-
-	QColor buttonColor_normal,buttonColor_hovered,buttonColor_pressed;
-	QColor minColor_normal,minColor_hovered,minColor_pressed;
-	QColor maxColor_normal,maxColor_hovered,maxColor_pressed;
-	QColor closeColor_normal,closeColor_hovered,closeColor_pressed;
-
-	int borderwidth;
-	bool drawcaption,textshadow,captiontooltip;
-	int roundCorners;
-	WND_CONFIG active,inactive;
-	int buttontheme;
-	
-	ButtonImage *buttonImages[ButtonImageCount];
-	QList <CrystalClient*> clients;
-private:
-	bool readConfig();
-	void CreateButtonImages();
-private:
-	static bool initialized_;
-	static Qt::AlignmentFlag titlealign_;
-};
 
 
 class CrystalClient : public KDecoration
@@ -182,7 +97,7 @@ private slots:
 	void keepBelowChange( bool );
 	void menuPopUp();
 private:
-	CrystalButton *button[ButtonTypeCount];
+	CrystalButton *button[NumButtons];
 	QGridLayout *mainlayout;
 	QHBoxLayout *titlelayout;
 public:

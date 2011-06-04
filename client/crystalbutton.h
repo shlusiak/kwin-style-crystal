@@ -36,7 +36,7 @@ class CrystalButton : public QAbstractButton
 public:
 	CrystalButton(CrystalClient *parent=0, const char *name=0,
 			const QString &tip=NULL,
-			ButtonType type=ButtonHelp,
+			ButtonType type=HelpButton,
 			ButtonImage *vimage=NULL);
 	virtual ~CrystalButton();
 
