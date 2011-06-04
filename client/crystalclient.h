@@ -45,7 +45,7 @@ class ButtonImage;
 
 
 
-class CrystalClient : public KDecoration
+class CrystalClient : public KDecorationUnstable
 {
 	Q_OBJECT
 public:
@@ -72,13 +72,22 @@ private:
 	int borderSpacing();
 	void updateLayout();
 	
-	bool eventFilter(QObject *obj, QEvent *e);
+	virtual bool eventFilter(QObject *obj, QEvent *e);
+	bool mousePressEvent(QMouseEvent *e);
+	bool mouseReleaseEvent(QMouseEvent *e);
 	void mouseDoubleClickEvent(QMouseEvent *e);
 	void paintEvent(QPaintEvent *e);
 	void resizeEvent(QResizeEvent *);
 	void moveEvent(QMoveEvent *);
+	bool mouseMoveEvent(QMouseEvent *);
 	void showEvent(QShowEvent *);
 	void mouseWheelEvent(QWheelEvent *e);
+	bool dragMoveEvent( QDragMoveEvent* e );
+	bool dragLeaveEvent( QDragLeaveEvent* e );
+	bool dragEnterEvent( QDragEnterEvent* e );
+	bool dropEvent( QDropEvent* e );
+	void paintTab(QPainter &painter, const QRect &grom, ClientGroupItem *item, bool active);
+	int itemClicked( const QPoint &point, bool between = false );
 	
 private slots:
 	void Repaint();
@@ -93,10 +102,15 @@ private slots:
 	void keepAboveChange( bool );
 	void keepBelowChange( bool );
 	void menuPopUp();
+	
 private:
 	CrystalButton *button[NumButtons];
 	QGridLayout *mainlayout;
 	QHBoxLayout *titlelayout;
+	Qt::MouseButtons mousebutton;
+        int sourceTab, targetTab;
+        bool click_in_progress, drag_in_progress;
+	
 public:
 	bool FullMax;
 	QSpacerItem *titlebar_;

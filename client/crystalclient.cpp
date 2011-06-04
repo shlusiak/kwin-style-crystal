@@ -51,9 +51,13 @@
 
 
 CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
-: KDecoration(b,f)
+: KDecorationUnstable(b,f)
 {
 	::factory->clients.append(this);
+	click_in_progress = false;
+	drag_in_progress = false;
+	sourceTab = -1;
+	targetTab = -1;
 }
 
 CrystalClient::~CrystalClient()
@@ -73,6 +77,8 @@ void CrystalClient::init()
 	widget()->setAttribute( Qt::WA_OpaquePaintEvent );
 	widget()->setAttribute( Qt::WA_NoSystemBackground );
 	widget()->setAutoFillBackground(false);
+	
+	widget()->setAcceptDrops(true);
 	
 	FullMax=false;
 	if (!options()->moveResizeMaximizedWindows())
@@ -378,7 +384,6 @@ void CrystalClient::shadeChange()
 		button[ShadeButton]->setBitmap(::factory->buttonImages[isShade()?ButtonImageUnShade:ButtonImageShade]);
 	}
 	Repaint();
-	return;
 }
 
 void CrystalClient::borders(int &l, int &r, int &t, int &b) const
@@ -449,8 +454,14 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 		mouseDoubleClickEvent(static_cast<QMouseEvent *>(e));
 		return true;
 	case QEvent::MouseButtonPress:
-		processMousePressEvent(static_cast<QMouseEvent *>(e));
+		if (!mousePressEvent(static_cast<QMouseEvent *>(e)))
+			processMousePressEvent(static_cast<QMouseEvent *>(e));
 		return true;
+	case QEvent::MouseButtonRelease:
+		return mouseReleaseEvent(static_cast<QMouseEvent *>(e));
+	case QEvent::MouseMove:
+		return mouseMoveEvent(static_cast<QMouseEvent *>(e));
+		
 	case QEvent::Paint:
 		paintEvent(static_cast<QPaintEvent *>(e));
 		return true;
@@ -468,9 +479,49 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 	case QEvent::Move:
 		moveEvent(static_cast<QMoveEvent *>(e));
 		return true;
+		
+	case QEvent::DragEnter:
+		dragEnterEvent( static_cast<QDragEnterEvent*>( e ));
+		return true;
+	case QEvent::DragMove:
+		dragMoveEvent( static_cast<QDragMoveEvent*>( e ));
+		return true;
+	case QEvent::DragLeave:
+		dragLeaveEvent( static_cast<QDragLeaveEvent*>( e ));
+		return true;
+	case QEvent::Drop:
+		dropEvent( static_cast<QDropEvent*>( e ));
+		return true;			
+		
 	default:return false;
 	}
 
+	return false;
+}
+
+bool CrystalClient::mousePressEvent(QMouseEvent *e)
+{
+	int item = itemClicked( widget()->mapToParent( e->pos() ) );
+	if( item >= 0 && (buttonToWindowOperation( e->button() ) != OperationsOp) )
+	{
+		click_in_progress = true;
+		mousebutton = e->button();
+		return true;
+	}
+	click_in_progress = false;
+	return false;
+}
+
+bool CrystalClient::mouseReleaseEvent(QMouseEvent *e)
+{
+	int item = itemClicked( e->pos() );
+	if( click_in_progress && item >= 0 )
+	{
+		click_in_progress = false;
+		setVisibleClientGroupItem( item );
+		return true;
+	}
+	click_in_progress = false;
 	return false;
 }
 
@@ -531,6 +582,85 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 	}
 }
 
+void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupItem *item, bool active)
+{
+	WND_CONFIG* wndcfg=(active?&::factory->active:&::factory->inactive);
+	QColor color = options()->color(KDecoration::ColorTitleBar, active);
+	if (KWindowSystem::compositingActive()) {
+		color.setAlpha((wndcfg->transparency*255)/100);
+	}
+	
+	/* Draw transparent background */
+	painter.fillRect(rect, color);
+	
+	/* Draw Overlay */
+	if (!wndcfg->overlay.isNull())
+	{
+		if (wndcfg->stretch_overlay == false)
+			painter.drawTiledPixmap(rect,wndcfg->overlay);
+		else
+			painter.drawPixmap(rect, wndcfg->overlay, wndcfg->overlay.rect());
+	}
+		
+		
+		
+	/* Draw caption */
+	if (::factory->drawcaption && item!=NULL)
+	{
+		// draw title text
+		painter.setFont(options()->font(active, false));
+	
+		QColor color=options()->color(KDecoration::ColorFont, active);
+		QRect r=rect;
+		int logowidth=::factory->logo.width()+::factory->logoDistance;
+		if (::factory->logoEnabled!=1 && (active ||!::factory->logoActive))
+		{
+			r.setWidth(r.width()-logowidth);
+			if (::factory->logoEnabled==0)r.moveLeft(r.left()+logowidth);
+		}
+		QFontMetrics metrics(options()->font(active, false));
+		int textwidth=metrics.width(item->title());
+		int textalign=CrystalFactory::titleAlign();
+		if (textwidth>r.width())
+			textalign=Qt::AlignLeft, textwidth=r.width();			
+		if (::factory->textshadow && active)
+		{
+			painter.translate(1,1);
+			painter.setPen(color.dark(500));
+			painter.drawText(r, textalign | Qt::AlignVCenter, item->title());
+			painter.translate(-1,-1);
+		}
+	
+		painter.setPen(color);
+		painter.drawText(r,
+			textalign | Qt::AlignVCenter,
+			item->title());
+
+		/* Draw Logo */
+		if (::factory->logoEnabled!=1 && (active ||!::factory->logoActive))
+		{
+			int x=0;
+			if (::factory->logoEnabled==0 && textalign==Qt::AlignLeft)x=r.left()-logowidth;
+			if (::factory->logoEnabled==2 && textalign==Qt::AlignLeft)x=r.left()+textwidth+::factory->logoDistance;
+
+			if (::factory->logoEnabled==0 && textalign==Qt::AlignRight)x=r.right()-textwidth-logowidth;
+			if (::factory->logoEnabled==2 && textalign==Qt::AlignRight)x=r.right()+::factory->logoDistance;
+
+			if (::factory->logoEnabled==0 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
+			if (::factory->logoEnabled==2 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
+			painter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
+		}
+	}else 
+	  /* Draw Logo without titlebar */
+	  if (::factory->logoEnabled!=1 && (active||!::factory->logoActive)) {
+		int x=0;
+		if (::factory->logoEnabled==0) x=rect.left();
+		if (::factory->logoEnabled==2) x=rect.right()-::factory->logo.width();
+		painter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
+
+	}
+}
+
 void CrystalClient::paintEvent(QPaintEvent*)
 {
 	if (!CrystalFactory::initialized()) return;
@@ -540,116 +670,143 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	// draw the titlebar
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
-	int drawFrame;
+	QRect r;
+	QList< ClientGroupItem > tabList = clientGroupItems();
+	int tabCount = tabList.count();
+	int i;
+	
 	QColor color = options()->color(KDecoration::ColorTitleBar, isActive());
 	if (KWindowSystem::compositingActive()) {
 		color.setAlpha((wndcfg->transparency*255)/100);
 	}
 	painter.setClipRegion(widget()->rect());
-
+	
+	int bl, br, bt, bb;
+	borders(bl, br, bt, bb);
+	
+	QColor c1, c2;
+	c1=QColor(180,180,180,128);
+	c2=QColor(32, 32, 32, 128);
+	QRect allTabs = titlebar_->geometry();
+	allTabs.setTop(0);
+	
+	if (drag_in_progress && sourceTab == -1)
+		tabCount++;
+	
+	if (tabCount>1) {
+		allTabs.setLeft(allTabs.left()+3);
+		allTabs.setRight(allTabs.right()-3);
+		
+	}
+	
+	painter.fillRect(QRect(0,0,allTabs.x(),bt), color);
+	painter.fillRect(QRect(allTabs.x()+allTabs.width(),
+			       0,
+			       widget()->width()-(allTabs.x()+allTabs.width()),
+			       bt), 
+			 color);
+	painter.fillRect(QRect(0,bt,bl,widget()->height()), color);
+	painter.fillRect(QRect(widget()->width()-br,bt,br,widget()->height()), color);
+	painter.fillRect(QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb), color);
+	
+	/* Draw Overlays */
+	if (!wndcfg->overlay.isNull())
 	{
-		QRect r;
-		QPoint p=widget()->mapToGlobal(QPoint(0,0));
-		int bl,br,bt,bb;
-		borders(bl,br,bt,bb);
+		if (wndcfg->stretch_overlay == false) {
+			painter.drawTiledPixmap(QRect(0,0,allTabs.x(),bt), wndcfg->overlay);
+			painter.drawTiledPixmap(QRect(allTabs.x()+allTabs.width(),
+			       0,
+			       widget()->width()-(allTabs.x()+allTabs.width()),
+			       bt), 
+			   wndcfg->overlay);
+		}
+		else {} ; /* NOT IMPLEMENTED YET */
+// 			painter.drawPixmap(rect, wndcfg->overlay, wndcfg->overlay.rect());
+	}
+		
 
-		r=QRect(p.x(),p.y(),widget()->width(),bt);
- 		painter.fillRect(widget()->rect(),color);
+	
+	int tabIndex = 0;
+	
 
-		if (!wndcfg->overlay.isNull())
-		{
-		// ----------------------------------------------------------------------
-		// Stretching of userdefined overlay
-			if (wndcfg->stretch_overlay == false)
-				painter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
-			else
-				painter.drawPixmap(QRect(0,0,widget()->width(),bt), wndcfg->overlay,wndcfg->overlay.rect());
-		// ----------------------------------------------------------------------
+	if (tabCount > 1) {
+		painter.setPen(c1);
+		painter.drawLine(allTabs.left(), 1, allTabs.left(), allTabs.bottom());
+		painter.drawLine(allTabs.right()+1, 1, allTabs.right()+1, allTabs.bottom());
+		painter.setPen(c2);
+		painter.drawLine(allTabs.left()-1, 1, allTabs.left()-1, allTabs.bottom());
+		painter.drawLine(allTabs.right(), 1, allTabs.right(), allTabs.bottom());
+	}
+	
+	for (i=0; i<tabCount; i++) {
+		int tabwidth = allTabs.width() / tabCount;
+		ClientGroupItem *item;
+		bool active = isActive() && visibleClientGroupItem() == i;
+		
+		if (i == targetTab && drag_in_progress) {
+			item = NULL;
+			if (sourceTab != -1) {
+				item = &tabList[sourceTab];
+				tabIndex++;
+			}
+			active = true;
+		}
+		else {
+			item = &tabList[tabIndex];
+			tabIndex++;
+			if (drag_in_progress && targetTab != -1)
+				active = false;
 		}
 
-		if (::factory->drawcaption)
-		{
-			// draw title text
-			painter.setFont(options()->font(isActive(), false));
+		r = QRect(i * tabwidth + allTabs.x(), 0, tabwidth, bt);
+		if( i == tabCount - 1 )
+			r.setWidth( allTabs.width() - r.left() + allTabs.x());
+		paintTab(painter, r, item, active);
 		
-			QColor color=options()->color(KDecoration::ColorFont, isActive());
-			r=titlebar_->geometry();
-			int logowidth=::factory->logo.width()+::factory->logoDistance;
-			if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
-			{
-				r.setWidth(r.width()-logowidth);
-				if (::factory->logoEnabled==0)r.moveLeft(r.left()+logowidth);
-			}
-			QFontMetrics metrics(options()->font(isActive(), false));
-			int textwidth=metrics.width(caption());
-			int textalign=CrystalFactory::titleAlign();
-			if (textwidth>r.width())
-				textalign=Qt::AlignLeft, textwidth=r.width();			
-			if (::factory->textshadow && isActive())
-			{
-				painter.translate(1,1);
-				painter.setPen(color.dark(500));
-				painter.drawText(r,textalign | Qt::AlignVCenter,caption());
-				painter.translate(-1,-1);
-			}
-		
-			painter.setPen(color);
-			painter.drawText(r,
-				textalign | Qt::AlignVCenter,
-				caption());
-
-			if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
-			{
-				int x=0;
-				if (::factory->logoEnabled==0 && textalign==Qt::AlignLeft)x=r.left()-logowidth;
-				if (::factory->logoEnabled==2 && textalign==Qt::AlignLeft)x=r.left()+textwidth+::factory->logoDistance;
-
-				if (::factory->logoEnabled==0 && textalign==Qt::AlignRight)x=r.right()-textwidth-logowidth;
-				if (::factory->logoEnabled==2 && textalign==Qt::AlignRight)x=r.right()+::factory->logoDistance;
-
-				if (::factory->logoEnabled==0 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
-				if (::factory->logoEnabled==2 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
-				painter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
-			}
-		}else if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive)) {
-			int x=0;
-			r=titlebar_->geometry();
-			if (::factory->logoEnabled==0) x=r.left();
-			if (::factory->logoEnabled==2) x=r.right()-::factory->logo.width();
-			painter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
-
+		/* Separators between tabs */
+		if (i > 0) {
+			painter.setPen(c1);
+			painter.drawLine(r.left(), 1, r.left(), r.bottom());
 		}
-
-		drawFrame=0;
-		if (wndcfg->outlineMode && (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
-			drawFrame=1;
-
-		if (!isShade())
-		{
-			if (wndcfg->inlineMode==1) {
-				painter.setPen(wndcfg->inlineColor);
-				painter.drawRect(bl-1,bt-1,widget()->width()-bl-br+2,widget()->height()-bt-bb+2);
-			}
-			if (wndcfg->inlineMode==2) {
-				painter.setPen(wndcfg->inlineColor.dark(150));
-				painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
-				painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
-				painter.setPen(wndcfg->inlineColor.light(150));
-				painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
-				painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
-			}
-			if (wndcfg->inlineMode==3) {
-				painter.setPen(wndcfg->inlineColor.light(150));
-				painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
-				painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
-				painter.setPen(wndcfg->inlineColor.dark(150));
-				painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
-				painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
-			}
+		if (i < tabCount-1) {
+			painter.setPen(c2);
+			painter.drawLine(r.right(), 1, r.right(), r.bottom());
 		}
 	}
 
-	if (drawFrame)
+	/* Draw Inline */
+	if (!isShade() && wndcfg->inlineMode >=1 )
+	{
+		QRect r;
+		int bl,br,bt,bb;
+		borders(bl,br,bt,bb);
+
+		if (wndcfg->inlineMode==1) {
+			painter.setPen(wndcfg->inlineColor);
+			painter.drawRect(bl-1,bt-1,widget()->width()-bl-br+2,widget()->height()-bt-bb+2);
+		}
+		if (wndcfg->inlineMode==2) {
+			painter.setPen(wndcfg->inlineColor.dark(150));
+			painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
+			painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
+			painter.setPen(wndcfg->inlineColor.light(150));
+			painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
+			painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
+		}
+		if (wndcfg->inlineMode==3) {
+			painter.setPen(wndcfg->inlineColor.light(150));
+			painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
+			painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
+			painter.setPen(wndcfg->inlineColor.dark(150));
+			painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
+			painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
+		}
+	}
+
+
+	/* Draw outline frame */
+	if (wndcfg->outlineMode && 
+	    (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
 	{
 		// outline the frame
 		QRect r=widget()->rect();
@@ -725,7 +882,55 @@ void CrystalClient::resizeEvent(QResizeEvent *e)
 
 void CrystalClient::moveEvent(QMoveEvent *)
 {
+  
+}
 
+bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
+{
+	QPoint c = e->pos();
+	int item = itemClicked( c );
+	if( item >= 0 && click_in_progress && buttonToWindowOperation( mousebutton ) == ClientGroupDragOp)
+        {
+		click_in_progress = false;
+		drag_in_progress = true;
+		QDrag *drag = new QDrag( widget() );
+		QMimeData *group_data = new QMimeData();
+		group_data->setData( clientGroupItemDragMimeType(), QString().setNum( itemId( item )).toAscii() );
+		drag->setMimeData( group_data );
+		
+		sourceTab = item;
+
+		// Create draggable tab pixmap
+ 		QList< ClientGroupItem > tabList = clientGroupItems();
+// 		const int tabCount = tabList.count();
+ 		QRect frame( QPoint( 0, 0 ), widget()->frameGeometry().size() );
+// 		QRect titlebar( frame.topLeft(), QSize( frame.width(),
+// 		    layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleHeight ) +
+// 		    layoutMetric( LM_TitleEdgeBottom ) - 1 // Titlebar and main frame overlap by 1px
+// 		    ));
+// 		QRect geom = titleRect().adjusted( -1, -layoutMetric( LM_TitleEdgeTop ), 1, 0 );
+// 		geom.setWidth( geom.width() / tabCount + 1 ); // Split titlebar evenly
+// 		geom.translate( geom.width() * item - item, 0 );
+// 		QPixmap pix( geom.size() );
+// 		QPainter painter( &pix );
+// 		paintTab( painter, QRect( QPoint( 0, 0 ), geom.size() ), tabList[item],
+// 		    isActive() && visibleClientGroupItem() == item );
+// 		drag->setPixmap( pix );
+		// If the cursor is on top of the pixmap then it makes the movement jerky on some systems
+		//drag->setHotSpot( QPoint( c.x() - geom.x(), c.y() - geom.y() ));
+// 		drag->setHotSpot( QPoint( c.x() - geom.x(), -1 ));
+
+		drag->exec( Qt::MoveAction );
+		drag_in_progress = false;
+		if( drag->target() == 0 && tabList.count() > 1 )
+		{ // Remove window from group and move to where the cursor is located
+			QPoint pos = QCursor::pos();
+			frame.moveTo( pos.x() - c.x(), pos.y() - c.y() );
+			removeFromClientGroup( sourceTab, frame );
+		}
+		return true;
+        }
+	return false;
 }
 
 void CrystalClient::showEvent(QShowEvent *)
@@ -868,6 +1073,113 @@ void CrystalClient::menuPopUp()
 	  button[MenuButton]->rect().topLeft()), button[MenuButton]->mapToGlobal(button[MenuButton]->rect().bottomRight())));
 	if (!f->exists(this)) return; // decoration was destroyed
 	button[MenuButton]->setDown(false);
+}
+
+bool CrystalClient::dragEnterEvent( QDragEnterEvent* e )
+{
+	if( e->source() != 0 && e->mimeData()->hasFormat( clientGroupItemDragMimeType() ) )
+	{
+		drag_in_progress = true;
+		e->acceptProposedAction();
+		return true;
+	}
+	return false;
+}
+
+bool CrystalClient::dropEvent( QDropEvent* e )
+{
+	QPoint point = widget()->mapToParent( e->pos() );
+	drag_in_progress = false;
+	int tabClick = itemClicked( point );
+	if( tabClick >= 0 )
+	{
+		const QMimeData *group_data = e->mimeData();
+		if( group_data->hasFormat( clientGroupItemDragMimeType() ) )
+		{
+			if( widget() == e->source() )
+			{
+				int from = sourceTab;
+				int item = itemClicked( point, false );
+				if (from < item)
+					item++;
+				if (item == clientGroupItems().count())
+					item = -1;
+				moveItemInClientGroup( from, item);
+			}
+			else
+			{
+				long source = QString( group_data->data( clientGroupItemDragMimeType() ) ).toLong();
+				moveItemToClientGroup( source, itemClicked( point, true ));
+			}
+			widget()->update();
+			return true;
+		}
+	}
+	return false; 
+}
+
+bool CrystalClient::dragMoveEvent( QDragMoveEvent* e)
+{
+	if( !e->mimeData()->hasFormat( clientGroupItemDragMimeType() ) ) return false;
+	if (!drag_in_progress) return false;
+	
+	QPoint point = widget()->mapToParent( e->pos() );
+
+	if (e->source() == widget()) { /* same window, rearrange tab */
+		if (clientGroupItems().count() <= 1)
+			targetTab = -1;
+		else 
+			targetTab = itemClicked( point, false );
+		
+		if (sourceTab != targetTab && targetTab >= 0 && sourceTab >= 0)
+		{
+			int item = targetTab;
+			if (sourceTab < item)
+				item++;
+			if (item == clientGroupItems().count())
+				item = -1;
+			moveItemInClientGroup( sourceTab, item);
+			sourceTab = targetTab;
+
+		}
+	} else {
+		sourceTab = -1;
+		targetTab = itemClicked( point, true );
+		if (targetTab == -1)
+			targetTab = clientGroupItems().count();
+		widget()->update();
+	}
+
+	
+	return true;
+}
+
+bool CrystalClient::dragLeaveEvent( QDragLeaveEvent* )
+{
+	drag_in_progress = false;
+	widget()->update();
+	return false;
+}
+
+int CrystalClient::itemClicked( const QPoint &point, bool between )
+{
+	QRect frame = widget()->frameGeometry();
+	QRect r = titlebar_->geometry();
+	r.setTop(0);
+	QList< ClientGroupItem > list = clientGroupItems();
+	int tabs = list.count();
+	int tabWidth = r.width()/(between?tabs+1:tabs);
+	int t_x = r.left();
+	int rem = r.width()%tabs;
+	int tab_x = t_x;
+	for( int i = 0; i < tabs; ++i )
+	{
+		QRect tabRect( tab_x, r.y(), i<rem?tabWidth+1:tabWidth, r.height() );
+		if( tabRect.contains( point ) )
+			return i;
+		tab_x += tabRect.width();
+	}
+	return -1;
 }
 
 #include "crystalclient.moc"
