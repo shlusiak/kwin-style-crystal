@@ -1,5 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Sascha Hlusiak                                  *
+ *   buttonimage.cpp                                                       *
+ *   -----------------------                                               *
+ *   Copyright (C) 2006-2011 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,9 +26,6 @@
 
 #include "crystalfactory.h"
 #include "buttonimage.h"
-
-
-
 
 
 ButtonImage::ButtonImage(const QRgb *d_normal,int w,int h)
@@ -59,7 +58,6 @@ QImage ButtonImage::CreateImage(QRgb *data,QColor color)
 {
 	tint(data,color);
 	QImage img=QImage((uchar*)data,image_width,image_height,QImage::Format_ARGB32),img2;
-// 	img.setAlphaBuffer(true);
 	
 	return img;
 }
@@ -160,8 +158,11 @@ void ButtonImage::finish()
 		float faktor=::factory->hovereffect?0.5:1.0;
 		for (int i=0;i<image_width*image_height;i++)
 		{
-			hovered_data[i]=qRgba(qRed(org_normal_data[i]),qGreen(org_normal_data[i]),qBlue(org_normal_data[i]),
-				(int)(255.0*pow((float)qAlpha(org_normal_data[i])/255.0,faktor)));
+			hovered_data[i]=qRgba(qRed(org_normal_data[i]),
+					      qGreen(org_normal_data[i]),
+					      qBlue(org_normal_data[i]),
+					      (int)(255.0*pow((float)qAlpha(org_normal_data[i])/255.0,
+					      faktor)));
 		}
 		if (org_hovered_data)delete[] org_hovered_data;
 		org_hovered_data=new QRgb[image_width*image_height];
@@ -179,16 +180,23 @@ void ButtonImage::finish()
 
 		for (int i=0;i<image_width*image_height;i++)
 		{
-			pressed_data[i]=qRgba(qRed(org_hovered_data[i]),qGreen(org_hovered_data[i]),qBlue(org_hovered_data[i]),
-				(int)(255.0*pow((float)qAlpha(org_hovered_data[i])/255.0,faktor)));
+			pressed_data[i]=qRgba(qRed(org_hovered_data[i]),
+					      qGreen(org_hovered_data[i]),
+					      qBlue(org_hovered_data[i]),
+					      (int)(255.0*pow((float)qAlpha(org_hovered_data[i])/255.0,
+					      faktor)));
 		}
 		pressed=new QImage(CreateImage(pressed_data,pressed_color));
 	}
 
-	if (!animated_data)animated_data=new QRgb[image_width*image_height];
+	if (!animated_data)
+		animated_data=new QRgb[image_width*image_height];
 	if (!animated)
 	{
-		animated=new QImage((uchar*)animated_data,image_width,image_height,QImage::Format_ARGB32);
+		animated=new QImage((uchar*)animated_data,
+				    image_width,
+				    image_height,
+				    QImage::Format_ARGB32);
 	}
 }
 

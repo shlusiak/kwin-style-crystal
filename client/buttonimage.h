@@ -1,5 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Sascha Hlusiak                                  *
+ *   buttonimage.h                                                         *
+ *   -----------------------                                               *
+ *   Copyright (C) 2006-2011 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *

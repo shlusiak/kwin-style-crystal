@@ -1,4 +1,6 @@
 /***************************************************************************
+ *   crystalclient.cpp                                                     *
+ *   -----------------------                                               *
  *   Copyright (C) 2006-2011 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
@@ -64,7 +66,6 @@ CrystalClient::~CrystalClient()
 
 void CrystalClient::init()
 {
-// 	KCommonDecoration::init();
 	createMainWidget();
 	widget()->installEventFilter(this);
 
@@ -78,7 +79,7 @@ void CrystalClient::init()
 		FullMax=(maximizeMode()==MaximizeFull);
 	
 	// setup layout
-	mainlayout = new QGridLayout(widget()); // 4x3 grid
+	mainlayout = new QGridLayout(widget());
 	titlelayout = new QHBoxLayout();
 	titlebar_ = new QSpacerItem(1, ::factory->titlesize-1, QSizePolicy::Expanding,
 					QSizePolicy::Fixed);
@@ -358,7 +359,7 @@ void CrystalClient::updateLayout()
 	}
 	
 	mainlayout->setRowMinimumHeight(0, (FullMax||::factory->buttontheme==5)?0:1);
-	for (int i=0;i<NumButtons;i++)if (button[i])
+	for (int i=0; i < NumButtons; i++)if (button[i])
 		button[i]->resetSize(FullMax);
 	widget()->layout()->activate();
 }
@@ -366,8 +367,8 @@ void CrystalClient::updateLayout()
 int CrystalClient::borderSpacing()
 {
 	if (::factory->roundCorners)
-		return (::factory->borderwidth<=5)?5: ::factory->borderwidth;
-	return (::factory->borderwidth<=1)?1: ::factory->borderwidth;
+		return (::factory->borderwidth <= 5) ? 5 : ::factory->borderwidth;
+	return (::factory->borderwidth <= 1) ? 1 : ::factory->borderwidth;
 }
 
 void CrystalClient::shadeChange()
@@ -388,12 +389,6 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 	
 	if (!options()->moveResizeMaximizedWindows() )
 	{
-/*		if ( maximizeMode() & MaximizeHorizontal )l=r=1; */
-/*		if (( maximizeMode() & MaximizeVertical ) && !isShade())
-		{
-			b=1;
-			if (!isShade() && ( maximizeMode() & MaximizeHorizontal ))b=0;
-		} */
 		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
 			l=r=b=0;
 	}
@@ -492,8 +487,8 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 {
 	if (::factory->wheelTask)
 	{
-		QList <CrystalClient*> *l=&(::factory->clients);
-		QList<CrystalClient*>::iterator i = l->begin(), activeOne;
+		QList<CrystalClient*> *l=&(::factory->clients);
+		QList<CrystalClient*> ::iterator i = l->begin(), activeOne;
 		Window client;
 		if (l->begin() == l->end()) return;
 		activeOne = l->begin();
@@ -557,24 +552,19 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		QPoint p=widget()->mapToGlobal(QPoint(0,0));
 		int bl,br,bt,bb;
 		borders(bl,br,bt,bb);
-	
-// 		QPixmap pufferPixmap(widget()->width(), bt), alphamask(widget()->width(), bt);
-// 		pufferPixmap.set
-// 		QPainter pufferPainter(&pufferPixmap);
-
 
 		r=QRect(p.x(),p.y(),widget()->width(),bt);
  		painter.fillRect(widget()->rect(),color);
 
 		if (!wndcfg->overlay.isNull())
 		{
-		// -----------------------------------------------------------------------------------------------
+		// ----------------------------------------------------------------------
 		// Stretching of userdefined overlay
 			if (wndcfg->stretch_overlay == false)
 				painter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
 			else
 				painter.drawPixmap(QRect(0,0,widget()->width(),bt), wndcfg->overlay,wndcfg->overlay.rect());
-		// -----------------------------------------------------------------------------------------------
+		// ----------------------------------------------------------------------
 		}
 
 		if (::factory->drawcaption)
@@ -630,26 +620,9 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 		}
 
-// 		pufferPainter.end();
-// 		painter.drawPixmap(0,0,pufferPixmap);
-		
-
-
 		drawFrame=0;
 		if (wndcfg->outlineMode && (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
 			drawFrame=1;
-
-// 		if (::factory->borderwidth>0)
-// 		{
-// 			r=QRect(drawFrame,bt,bl-drawFrame,widget()->height()-bt-drawFrame);
-// 			painter.fillRect(r,color);
-// 	
-// 			r=QRect(widget()->width()-br,bt,br-drawFrame,widget()->height()-bt-drawFrame);
-// 			painter.fillRect(r,color);
-// 
-// 			r=QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
-// 			painter.fillRect(r,color);
-// 		}
 
 		if (!isShade())
 		{
@@ -744,11 +717,6 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 void CrystalClient::resizeEvent(QResizeEvent *e)
 {
-// 	if (!widget()->isHidden()) 
-// 	{
-// 		for (int n=0; n<NumButtons; n++) /* For streched Overlay */
-// 			if (button[n]) button[n]->reset();
-// 	}
 	if (e->size()!=e->oldSize())
 	{
 		updateMask();
@@ -762,15 +730,15 @@ void CrystalClient::moveEvent(QMoveEvent *)
 
 void CrystalClient::showEvent(QShowEvent *)
 {
-// 	if (!widget()->isHidden()) 
-// 		Repaint();
+
 }
 
 void CrystalClient::Repaint()
 {
 	widget()->repaint();
 	for (int n=0; n<NumButtons; n++)
-		if (button[n]) button[n]->reset();
+		if (button[n])
+			button[n]->reset();
 }
 
 void CrystalClient::maxButtonPressed()
@@ -848,7 +816,7 @@ void CrystalClient::closeButtonPressed()
 
 				*proc << "kdocker";
 				sprintf(param,"0x%lx",client);
-				*proc << "-d" << "-w" << param;
+				*proc << "-w" << param;
 				proc->start();
 			} else { /* Sorry man */ }
 			break;
