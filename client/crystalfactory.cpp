@@ -114,7 +114,7 @@ bool CrystalFactory::supports(Ability ability) const
 // 	  case AbilityColorButtonBack:
 // 	  case AbilityColorButtonFore:
 // 	  case AbilityProvidesShadow:
-//  	  case AbilityUsesAlphaChannel:
+ 	  case AbilityUsesAlphaChannel:
 #if KDE_IS_VERSION(4,6,0)
 	  case AbilityUsesBlurBehind:
 #endif
@@ -216,7 +216,7 @@ bool CrystalFactory::readConfig()
 	closeColor_hovered=cg.readEntry("CloseColor2",closeColor_normal);
 	closeColor_pressed=cg.readEntry("CloseColor3",closeColor_normal);
 
-	roundCorners=cg.readEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
+	roundCorners=cg.readEntry("RoundCorners", 0x0f);
 
 	hovereffect=cg.readEntry("HoverEffect",true);
 	animateHover=cg.readEntry("AnimateHover",true);

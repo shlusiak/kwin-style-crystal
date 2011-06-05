@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>522</width>
-    <height>325</height>
+    <height>444</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
        <string>Ge&amp;neral</string>
       </attribute>
       <layout class="QGridLayout">
-       <item row="0" column="0">
+       <item row="2" column="0" rowspan="4">
         <widget class="Q3ButtonGroup" name="titlealign">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -90,125 +90,84 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="1" rowspan="3" colspan="2">
-        <widget class="Q3GroupBox" name="roundCorners">
-         <property name="title">
-          <string>Round &amp;Corners</string>
+       <item row="8" column="0" rowspan="3">
+        <widget class="QCheckBox" name="textshadow">
+         <property name="toolTip">
+          <string>Draws a nice shadowed title bar text to improve visibility.</string>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignHCenter</set>
+         <property name="text">
+          <string>Use Shadowed &amp;Text</string>
          </property>
-         <layout class="QGridLayout">
-          <item row="1" column="1">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Expanding</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="trc">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="blc">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>10</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="2" column="2">
-           <widget class="QCheckBox" name="brc">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="tlc">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>10</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
+         <property name="shortcut">
+          <string>Alt+T</string>
+         </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="11" column="0">
+        <widget class="QCheckBox" name="tooltip">
+         <property name="toolTip">
+          <string>Shows a tooltip, if the mouse pointer is over the caption.</string>
+         </property>
+         <property name="text">
+          <string>Show &amp;Tooltip over Caption</string>
+         </property>
+         <property name="shortcut">
+          <string>Alt+V</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QCheckBox" name="wheelTask">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Wheel on titlebar cycles through visible windows. Does NOT work in compiz. Overrides settings in KDE.</string>
+         </property>
+         <property name="text">
+          <string>C&amp;ycle Tasks with Mouse Wheel</string>
+         </property>
+         <property name="shortcut">
+          <string>Alt+Y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>16</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="roundcorners">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Round &amp;Corners</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
         <widget class="QCheckBox" name="drawCaption">
          <property name="text">
           <string>&amp;Draw Caption</string>
@@ -221,20 +180,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" rowspan="2">
-        <widget class="QCheckBox" name="textshadow">
-         <property name="toolTip">
-          <string>Draws a nice shadowed title bar text to improve visibility.</string>
-         </property>
-         <property name="text">
-          <string>Use shadowed &amp;text</string>
-         </property>
-         <property name="shortcut">
-          <string>Alt+T</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1" rowspan="2">
+       <item row="3" column="1">
         <widget class="QLabel" name="textLabel2_2">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -253,10 +199,13 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="2" rowspan="2">
+       <item row="3" column="2">
         <widget class="QSpinBox" name="borderwidth">
          <property name="toolTip">
           <string>Width of the borders</string>
+         </property>
+         <property name="suffix">
+          <string> px</string>
          </property>
          <property name="prefix">
           <string/>
@@ -266,39 +215,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QCheckBox" name="tooltip">
-         <property name="toolTip">
-          <string>Shows a tooltip, if the mouse pointer is over the caption.</string>
-         </property>
-         <property name="text">
-          <string>Show tooltip o&amp;ver caption</string>
-         </property>
-         <property name="shortcut">
-          <string>Alt+V</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QCheckBox" name="wheelTask">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string>Wheel on titlebar cycles through visible windows. Does NOT work in compiz. Overrides settings in KDE.</string>
-         </property>
-         <property name="text">
-          <string>C&amp;ycle tasks with mouse wheel</string>
-         </property>
-         <property name="shortcut">
-          <string>Alt+Y</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
+       <item row="4" column="1">
         <widget class="QLabel" name="textLabel2_2_2">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -317,10 +234,13 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="4" column="2">
         <widget class="QSpinBox" name="titlebarheight">
          <property name="toolTip">
           <string>Height of the title par (independend to border width)</string>
+         </property>
+         <property name="suffix">
+          <string> px</string>
          </property>
          <property name="prefix">
           <string/>
@@ -333,7 +253,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1" colspan="2">
+       <item row="12" column="1" colspan="2">
         <widget class="QPushButton" name="infoButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -348,28 +268,12 @@
           </size>
          </property>
          <property name="text">
-          <string>I&amp;nfo...</string>
+          <string>Ab&amp;out Crystal...</string>
          </property>
          <property name="shortcut">
           <string>Alt+N</string>
          </property>
         </widget>
-       </item>
-       <item row="7" column="1">
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>16</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -978,277 +882,250 @@
       <attribute name="title">
        <string>Bac&amp;kground</string>
       </attribute>
-      <layout class="QGridLayout">
+      <layout class="QGridLayout" name="gridLayout4">
        <item row="0" column="0">
-        <widget class="QTabWidget" name="tabWidget4">
-         <property name="currentIndex">
-          <number>0</number>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Active Window Transparency:</string>
          </property>
-         <widget class="QWidget" name="tab6">
-          <attribute name="title">
-           <string>A&amp;ctive</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Transparency:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="active_transparency">
-             <property name="suffix">
-              <string>%</string>
-             </property>
-             <property name="prefix">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="singleStep">
-              <number>5</number>
-             </property>
-             <property name="value">
-              <number>100</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QComboBox" name="frame1">
-             <property name="toolTip">
-              <string>Draw outline frame</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>No outline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Simple Outline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sunken</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Raised</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="KColorButton" name="frameColor1">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="toolTip">
-              <string>The color of the outline frame</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="inline1">
-             <property name="toolTip">
-              <string>Draw inline frame around the window content</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>No inline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Simple inline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sunken</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Raised</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="KColorButton" name="inlineColor1">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="toolTip">
-              <string>The color of the inline frame</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <spacer>
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab7">
-          <attribute name="title">
-           <string>Inacti&amp;ve</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Transparency:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="inactive_transparency">
-             <property name="suffix">
-              <string>%</string>
-             </property>
-             <property name="prefix">
-              <string/>
-             </property>
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="singleStep">
-              <number>5</number>
-             </property>
-             <property name="value">
-              <number>100</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QComboBox" name="frame2">
-             <property name="toolTip">
-              <string>Draw outline frame</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>No outline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Simple Outline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sunken</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Raised</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="KColorButton" name="frameColor2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="toolTip">
-              <string>The color of the outline frame</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="inline2">
-             <property name="toolTip">
-              <string>Draw inline frame around the window content</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>No inline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Simple inline</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sunken</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Raised</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="KColorButton" name="inlineColor2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="toolTip">
-              <string>Color of the inline frame</string>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <spacer>
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
         </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="active_transparency">
+         <property name="suffix">
+          <string>%</string>
+         </property>
+         <property name="prefix">
+          <string/>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="singleStep">
+          <number>5</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QComboBox" name="frame1">
+         <property name="toolTip">
+          <string>Draw outline frame</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>No outline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Simple Outline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Sunken</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Raised</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="KColorButton" name="frameColor1">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>The color of the outline frame</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QComboBox" name="inline1">
+         <property name="toolTip">
+          <string>Draw inline frame around the window content</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>No inline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Simple inline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Sunken</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Raised</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="KColorButton" name="inlineColor1">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>The color of the inline frame</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Inactive Window Transparency:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QSpinBox" name="inactive_transparency">
+         <property name="suffix">
+          <string>%</string>
+         </property>
+         <property name="prefix">
+          <string/>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="singleStep">
+          <number>5</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QComboBox" name="frame2">
+         <property name="toolTip">
+          <string>Draw outline frame</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>No outline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Simple Outline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Sunken</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Raised</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="KColorButton" name="frameColor2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>The color of the outline frame</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QComboBox" name="inline2">
+         <property name="toolTip">
+          <string>Draw inline frame around the window content</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>No inline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Simple inline</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Sunken</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Raised</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="KColorButton" name="inlineColor2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Color of the inline frame</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

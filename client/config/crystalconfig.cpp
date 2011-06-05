@@ -56,10 +56,7 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->borderwidth, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->titlebarheight, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
 	
-	connect(dialog_->tlc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
-	connect(dialog_->trc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
-	connect(dialog_->blc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
-	connect(dialog_->brc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+	connect(dialog_->roundcorners, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->buttonColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->buttonColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->buttonColor3, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
@@ -156,11 +153,8 @@ void CrystalConfig::load(KConfigGroup&)
 	dialog_->borderwidth->setValue(cg.readEntry("Borderwidth",6));
 	dialog_->titlebarheight->setValue(cg.readEntry("Titlebarheight",21));
 
-	int cornersFlag = cg.readEntry("RoundCorners",TOP_LEFT & TOP_RIGHT );
-	dialog_->tlc->setChecked( cornersFlag & TOP_LEFT );
-	dialog_->trc->setChecked( cornersFlag & TOP_RIGHT );
-	dialog_->blc->setChecked( cornersFlag & BOT_LEFT );
-	dialog_->brc->setChecked( cornersFlag & BOT_RIGHT );
+	int cornersFlag = cg.readEntry("RoundCorners", 0x0f );
+	dialog_->roundcorners->setChecked( cornersFlag != 0 );
 
 	dialog_->hover->setChecked(cg.readEntry("HoverEffect",true));
 	dialog_->animateHover->setChecked(cg.readEntry("AnimateHover",true));
@@ -249,10 +243,7 @@ void CrystalConfig::save(KConfigGroup&)
 	cg.writeEntry("CloseColor3",dialog_->closeColor3->color());
 
 	int cornersFlag = 0;
-	if(dialog_->tlc->isChecked()) cornersFlag += TOP_LEFT;
-	if(dialog_->trc->isChecked()) cornersFlag += TOP_RIGHT;
-	if(dialog_->blc->isChecked()) cornersFlag += BOT_LEFT;
-	if(dialog_->brc->isChecked()) cornersFlag += BOT_RIGHT;
+	if(dialog_->roundcorners->isChecked()) cornersFlag = 0x0f;
 	cg.writeEntry("RoundCorners", cornersFlag );
 	
 	cg.writeEntry("HoverEffect",dialog_->hover->isChecked());

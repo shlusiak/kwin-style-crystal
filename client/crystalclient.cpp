@@ -159,31 +159,25 @@ void CrystalClient::updateMask()
 	QRegion mask(widget()->rect());
 
 	// Remove top-left corner.
-	if(cornersFlag & TOP_LEFT) {
+	if(cornersFlag) {
 		mask -= QRegion(0, 0, 5, 1);
 		mask -= QRegion(0, 1, 3, 1);
 		mask -= QRegion(0, 2, 2, 1);
 		mask -= QRegion(0, 3, 1, 2);
-	}
 	
 	// Remove top-right corner.
-	if(cornersFlag & TOP_RIGHT) {
 		mask -= QRegion(r - 5, 0, 5, 1);
 		mask -= QRegion(r - 3, 1, 3, 1);
 		mask -= QRegion(r - 2, 2, 2, 1);
 		mask -= QRegion(r - 1, 3, 1, 2);
-	}
 	
 	// Remove bottom-left corner.
-	if(cornersFlag & BOT_LEFT) {
 		mask -= QRegion(0, b - 5, 1, 3);
 		mask -= QRegion(0, b - 3, 2, 1);
 		mask -= QRegion(0, b - 2, 3, 1);
 		mask -= QRegion(0, b - 1, 5, 1);
-	}
 	
 	// Remove bottom-right corner.
-	if(cornersFlag & BOT_RIGHT) {
 		mask -= QRegion(r - 5, b - 1, 5, 1);
 		mask -= QRegion(r - 3, b - 2, 3, 1);
 		mask -= QRegion(r - 2, b - 3, 2, 1);
@@ -804,6 +798,48 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	}
 
 
+	/* Remove transparent parts of round corners */
+	if (::factory->roundCorners && 
+	    (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & ~MaximizeFull) == maximizeMode()))
+	{
+		int r=width();
+		int b=height()-1;
+
+		QPainter::CompositionMode old = painter.compositionMode();
+		painter.setCompositionMode(QPainter::CompositionMode_Source);
+		
+		/* Top Left */
+		painter.fillRect(QRect(0,0,5,1), Qt::transparent);
+		painter.fillRect(QRect(0,1,3,1), Qt::transparent);
+		painter.fillRect(QRect(0,2,2,1), Qt::transparent);
+		painter.fillRect(QRect(0,3,1,1), Qt::transparent);
+		painter.fillRect(QRect(0,4,1,1), Qt::transparent);
+		
+		/* Top Right */
+		painter.fillRect(QRect(r-5,0,5,1), Qt::transparent);
+		painter.fillRect(QRect(r-3,1,3,1), Qt::transparent);
+		painter.fillRect(QRect(r-2,2,2,1), Qt::transparent);
+		painter.fillRect(QRect(r-1,3,1,1), Qt::transparent);
+		painter.fillRect(QRect(r-1,4,1,1), Qt::transparent);
+
+		/* Bottom Left */
+		painter.fillRect(QRect(0,b-0,5,1), Qt::transparent);
+		painter.fillRect(QRect(0,b-1,3,1), Qt::transparent);
+		painter.fillRect(QRect(0,b-2,2,1), Qt::transparent);
+		painter.fillRect(QRect(0,b-3,1,1), Qt::transparent);
+		painter.fillRect(QRect(0,b-4,1,1), Qt::transparent);
+
+		/* Bottom Right */
+		painter.fillRect(QRect(r-5,b-0,5,1), Qt::transparent);
+		painter.fillRect(QRect(r-3,b-1,3,1), Qt::transparent);
+		painter.fillRect(QRect(r-2,b-2,2,1), Qt::transparent);
+		painter.fillRect(QRect(r-1,b-3,1,1), Qt::transparent);
+		painter.fillRect(QRect(r-1,b-4,1,1), Qt::transparent);
+
+		painter.setCompositionMode(old);
+	  
+	}
+	
 	/* Draw outline frame */
 	if (wndcfg->outlineMode && 
 	    (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
@@ -815,59 +851,59 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		if (wndcfg->outlineMode==2)c1=c1.dark(140),c2=c2.light(140);
 		if (wndcfg->outlineMode==3)c1=c1.light(140),c2=c2.dark(140);
 
-		painter.setPen(c1);
-		painter.drawLine(r.left(),r.top(),r.right(),r.top());
-		painter.drawLine(r.left(),r.top(),r.left(),r.bottom());
-
-		painter.setPen(c2);
-		painter.drawLine(r.right(),r.top(),r.right(),r.bottom());
-		painter.drawLine(r.left(),r.bottom(),r.right(),r.bottom());
 
 		if ((::factory->roundCorners) && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
 		{
-			int cornersFlag = ::factory->roundCorners;
-			int r=(width());
-			int b=(height());
-
+			int r=(width()-1);
+			int b=(height()-1);
+			
 			// Draw edge of top-left corner inside the area removed by the mask.
-			if(cornersFlag & TOP_LEFT) {
-				painter.setPen(c1);
-				painter.drawPoint(3, 1);
-				painter.drawPoint(4, 1);
-				painter.drawPoint(2, 2);
-				painter.drawPoint(1, 3);
-				painter.drawPoint(1, 4);
-			}
+			painter.setPen(c1);
+			painter.drawLine(5,0,r-5,0);
+			painter.drawLine(0,5,0,b-5);
+
+			painter.setPen(c2);
+			painter.drawLine(r,5,r,b-5);
+			painter.drawLine(5,b,r-5,b);
+
+			painter.setPen(c1);
+			painter.drawPoint(3, 1);
+			painter.drawPoint(4, 1);
+			painter.drawPoint(2, 2);
+			painter.drawPoint(1, 3);
+			painter.drawPoint(1, 4);
 		
 			// Draw edge of top-right corner inside the area removed by the mask.
-			if(cornersFlag & TOP_RIGHT) {
-				painter.setPen(c1);
-				painter.drawPoint(r - 5, 1);
-				painter.drawPoint(r - 4, 1);
-				painter.drawPoint(r - 3, 2);
-				painter.drawPoint(r - 2, 3);
-				painter.drawPoint(r - 2, 4);
-			}
-		
+			painter.setPen(c1);
+			painter.drawPoint(r - 4, 1);
+			painter.drawPoint(r - 3, 1);
+			painter.drawPoint(r - 2, 2);
+			painter.drawPoint(r - 1, 3);
+			painter.drawPoint(r - 1, 4);
+
 			// Draw edge of bottom-left corner inside the area removed by the mask.
-			if(cornersFlag & BOT_LEFT) {
-				painter.setPen(c2);
-				painter.drawPoint(1, b - 5);
-				painter.drawPoint(1, b - 4);
-				painter.drawPoint(2, b - 3);
-				painter.drawPoint(3, b - 2);
-				painter.drawPoint(4, b - 2);
-			}
+			painter.setPen(c2);
+			painter.drawPoint(1, b - 4);
+			painter.drawPoint(1, b - 3);
+			painter.drawPoint(2, b - 2);
+			painter.drawPoint(3, b - 1);
+			painter.drawPoint(4, b - 1);
 		
 			// Draw edge of bottom-right corner inside the area removed by the mask.
-			if(cornersFlag & BOT_RIGHT) {
-				painter.setPen(c2);
-				painter.drawPoint(r - 2, b - 5);
-				painter.drawPoint(r - 2, b - 4);
-				painter.drawPoint(r - 3, b - 3);
-				painter.drawPoint(r - 4, b - 2);
-				painter.drawPoint(r - 5, b - 2);
-			}
+			painter.setPen(c2);
+			painter.drawPoint(r - 1, b - 4);
+			painter.drawPoint(r - 1, b - 3);
+			painter.drawPoint(r - 2, b - 2);
+			painter.drawPoint(r - 3, b - 1);
+			painter.drawPoint(r - 4, b - 1);
+		}else {
+			painter.setPen(c1);
+			painter.drawLine(r.left(),r.top(),r.right(),r.top());
+			painter.drawLine(r.left(),r.top(),r.left(),r.bottom());
+
+			painter.setPen(c2);
+			painter.drawLine(r.right(),r.top(),r.right(),r.bottom());
+			painter.drawLine(r.left(),r.bottom(),r.right(),r.bottom());
 		}
 	}
 }
