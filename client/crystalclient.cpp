@@ -735,7 +735,9 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	for (i=0; i<tabCount; i++) {
 		int tabwidth = allTabs.width() / tabCount;
 		ClientGroupItem *item;
-		bool active = isActive() && visibleClientGroupItem() == i;
+		bool active = visibleClientGroupItem() == i;
+		if (tabCount == 1)
+			active = isActive();
 		
 		if (i == targetTab && drag_in_progress) {
 			item = NULL;
