@@ -47,6 +47,8 @@
 
 
 
+static QColor separatorColorHi(180,180,180,180);
+static QColor separatorColorLo(32, 32, 32, 128);;
 
 
 
@@ -576,10 +578,12 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 	}
 }
 
-void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupItem *item, bool active)
+void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupItem *item, bool active, bool drawSeparators)
 {
 	WND_CONFIG* wndcfg=(active?&::factory->active:&::factory->inactive);
 	QColor color = options()->color(KDecoration::ColorTitleBar, active);
+	QColor c1, c2;
+	
 	if (KWindowSystem::compositingActive()) {
 		color.setAlpha((wndcfg->transparency*255)/100);
 	}
@@ -653,6 +657,15 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 		painter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
 
 	}
+	
+	if (drawSeparators) {
+		/* Separators between tabs */
+		painter.setPen(separatorColorHi);
+		painter.drawLine(rect.left(), 1, rect.left(), rect.bottom());
+
+		painter.setPen(separatorColorLo);
+		painter.drawLine(rect.right(), 1, rect.right(), rect.bottom());
+	}
 }
 
 void CrystalClient::paintEvent(QPaintEvent*)
@@ -678,19 +691,17 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	int bl, br, bt, bb;
 	borders(bl, br, bt, bb);
 	
-	QColor c1, c2;
-	c1=QColor(180,180,180,128);
-	c2=QColor(32, 32, 32, 128);
 	QRect allTabs = titlebar_->geometry();
 	allTabs.setTop(0);
 	
 	if (drag_in_progress && sourceTab == -1)
 		tabCount++;
+	if (drag_in_progress && tabCount > 1 && sourceTab != -1 && targetTab == -1)
+		tabCount--;
 	
 	if (tabCount>1) {
 		allTabs.setLeft(allTabs.left()+3);
 		allTabs.setRight(allTabs.right()-3);
-		
 	}
 	
 	painter.fillRect(QRect(0,0,allTabs.x(),bt), color);
@@ -722,16 +733,6 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	
 	int tabIndex = 0;
 	
-
-	if (tabCount > 1) {
-		painter.setPen(c1);
-		painter.drawLine(allTabs.left(), 1, allTabs.left(), allTabs.bottom());
-		painter.drawLine(allTabs.right()+1, 1, allTabs.right()+1, allTabs.bottom());
-		painter.setPen(c2);
-		painter.drawLine(allTabs.left()-1, 1, allTabs.left()-1, allTabs.bottom());
-		painter.drawLine(allTabs.right(), 1, allTabs.right(), allTabs.bottom());
-	}
-	
 	for (i=0; i<tabCount; i++) {
 		int tabwidth = allTabs.width() / tabCount;
 		ClientGroupItem *item;
@@ -746,8 +747,11 @@ void CrystalClient::paintEvent(QPaintEvent*)
 				tabIndex++;
 			}
 			active = true;
-		}
-		else {
+		} else if (tabList.count() > 1 && i == sourceTab && drag_in_progress && targetTab == -1) {
+			tabIndex++;
+			item = &tabList[tabIndex];
+			tabIndex++;
+		} else {
 			item = &tabList[tabIndex];
 			tabIndex++;
 			if (drag_in_progress && targetTab != -1)
@@ -757,18 +761,16 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		r = QRect(i * tabwidth + allTabs.x(), 0, tabwidth, bt);
 		if( i == tabCount - 1 )
 			r.setWidth( allTabs.width() - r.left() + allTabs.x());
-		paintTab(painter, r, item, active);
-		
-		/* Separators between tabs */
-		if (i > 0) {
-			painter.setPen(c1);
-			painter.drawLine(r.left(), 1, r.left(), r.bottom());
-		}
-		if (i < tabCount-1) {
-			painter.setPen(c2);
-			painter.drawLine(r.right(), 1, r.right(), r.bottom());
-		}
+		paintTab(painter, r, item, active, tabCount > 1);
 	}
+	
+	if (tabCount > 1) {
+		painter.setPen(separatorColorLo);
+		painter.drawLine(allTabs.left()-1, 1, allTabs.left()-1, allTabs.bottom());
+		painter.setPen(separatorColorHi);
+		painter.drawLine(allTabs.right()+1, 1, allTabs.right()+1, allTabs.bottom());
+	}
+	
 
 	/* Draw Inline */
 	if (!isShade() && wndcfg->inlineMode >=1 )
@@ -929,6 +931,9 @@ bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
 	int item = itemClicked( c );
 	if( item >= 0 && click_in_progress && buttonToWindowOperation( mousebutton ) == ClientGroupDragOp)
         {
+		int bl,br,bt,bb;
+		borders(bl, br, bt, bb);
+		
 		click_in_progress = false;
 		drag_in_progress = true;
 		QDrag *drag = new QDrag( widget() );
@@ -940,29 +945,36 @@ bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
 
 		// Create draggable tab pixmap
  		QList< ClientGroupItem > tabList = clientGroupItems();
-// 		const int tabCount = tabList.count();
- 		QRect frame( QPoint( 0, 0 ), widget()->frameGeometry().size() );
-// 		QRect titlebar( frame.topLeft(), QSize( frame.width(),
-// 		    layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleHeight ) +
-// 		    layoutMetric( LM_TitleEdgeBottom ) - 1 // Titlebar and main frame overlap by 1px
-// 		    ));
-// 		QRect geom = titleRect().adjusted( -1, -layoutMetric( LM_TitleEdgeTop ), 1, 0 );
-// 		geom.setWidth( geom.width() / tabCount + 1 ); // Split titlebar evenly
-// 		geom.translate( geom.width() * item - item, 0 );
-// 		QPixmap pix( geom.size() );
-// 		QPainter painter( &pix );
-// 		paintTab( painter, QRect( QPoint( 0, 0 ), geom.size() ), tabList[item],
-// 		    isActive() && visibleClientGroupItem() == item );
-// 		drag->setPixmap( pix );
-		// If the cursor is on top of the pixmap then it makes the movement jerky on some systems
-		//drag->setHotSpot( QPoint( c.x() - geom.x(), c.y() - geom.y() ));
-// 		drag->setHotSpot( QPoint( c.x() - geom.x(), -1 ));
+		const int tabCount = tabList.count();
+ 		QRect frame( 0, 0, titlebar_->geometry().width()/tabCount, bt );
+
+		QImage pix( frame.size(), QImage::Format_ARGB32);
+		QPainter painter( &pix );
+
+		QPainter::CompositionMode old = painter.compositionMode();
+		painter.setCompositionMode(QPainter::CompositionMode_Source);
+		
+
+		painter.fillRect(frame, QColor(192,192,192,255));
+		
+		painter.setCompositionMode(old);
+		paintTab( painter, frame, &tabList[item], isActive(), true);
+		painter.setPen(separatorColorHi);
+		painter.drawLine(frame.left(), 0, frame.right(), 0);
+		painter.setPen(separatorColorLo);
+		painter.drawLine(frame.left(), frame.bottom(), frame.right(), frame.bottom());
+
+		drag->setPixmap( QPixmap::fromImage(pix) );
+
+		drag->setHotSpot( QPoint( c.x() - (titlebar_->geometry().x() + item * (titlebar_->geometry().width()/tabCount)), -1 ));
 
 		drag->exec( Qt::MoveAction );
 		drag_in_progress = false;
+		
 		if( drag->target() == 0 && tabList.count() > 1 )
 		{ // Remove window from group and move to where the cursor is located
 			QPoint pos = QCursor::pos();
+			frame = widget()->geometry();
 			frame.moveTo( pos.x() - c.x(), pos.y() - c.y() );
 			removeFromClientGroup( sourceTab, frame );
 		}
@@ -1117,6 +1129,7 @@ bool CrystalClient::dragEnterEvent( QDragEnterEvent* e )
 {
 	if( e->source() != 0 && e->mimeData()->hasFormat( clientGroupItemDragMimeType() ) )
 	{
+		widget()->update();
 		drag_in_progress = true;
 		e->acceptProposedAction();
 		return true;
@@ -1128,8 +1141,9 @@ bool CrystalClient::dropEvent( QDropEvent* e )
 {
 	QPoint point = widget()->mapToParent( e->pos() );
 	drag_in_progress = false;
-	int tabClick = itemClicked( point );
-	if( tabClick >= 0 )
+// 	int tabClick = itemClicked( point );
+	/* Dropping on border space will append tab at the end */
+// 	if( tabClick >= 0 )
 	{
 		const QMimeData *group_data = e->mimeData();
 		if( group_data->hasFormat( clientGroupItemDragMimeType() ) )
@@ -1146,8 +1160,9 @@ bool CrystalClient::dropEvent( QDropEvent* e )
 			}
 			else
 			{
+				int item = itemClicked( point, true );
 				long source = QString( group_data->data( clientGroupItemDragMimeType() ) ).toLong();
-				moveItemToClientGroup( source, itemClicked( point, true ));
+				moveItemToClientGroup( source, item);
 			}
 			widget()->update();
 			return true;
@@ -1194,7 +1209,9 @@ bool CrystalClient::dragMoveEvent( QDragMoveEvent* e)
 
 bool CrystalClient::dragLeaveEvent( QDragLeaveEvent* )
 {
-	drag_in_progress = false;
+	if (sourceTab == -1)
+		drag_in_progress = false;
+	targetTab = -1;
 	widget()->update();
 	return false;
 }

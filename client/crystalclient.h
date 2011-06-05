@@ -86,7 +86,7 @@ private:
 	bool dragLeaveEvent( QDragLeaveEvent* e );
 	bool dragEnterEvent( QDragEnterEvent* e );
 	bool dropEvent( QDropEvent* e );
-	void paintTab(QPainter &painter, const QRect &grom, ClientGroupItem *item, bool active);
+	void paintTab(QPainter &painter, const QRect &grom, ClientGroupItem *item, bool active, bool drawSeparators);
 	int itemClicked( const QPoint &point, bool between = false );
 	
 private slots:
