@@ -111,7 +111,7 @@ void CrystalClient::init()
 	mainlayout->setRowStretch(3,0);
 	mainlayout->setColumnStretch(1, 10);
 	
-	mainlayout->setMargin(0);
+	mainlayout->setMargin(15);
 	mainlayout->setSpacing(0);
 	mainlayout->addLayout(titlelayout, 1, 1);
 
@@ -146,6 +146,7 @@ void CrystalClient::init()
 	widget()->setToolTip(caption());
 	updateLayout();
 }
+
 
 void CrystalClient::updateMask()
 {
@@ -396,6 +397,15 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 	}
 }
 
+void CrystalClient::padding(int &left, int &right, int &top, int &bottom) const
+{
+    left = 15;
+    right = 15;
+    top = 15;
+    bottom = 15;
+  
+}
+
 void CrystalClient::resize(const QSize &size)
 {
 	widget()->resize(size);
@@ -408,30 +418,35 @@ QSize CrystalClient::minimumSize() const
 
 KDecoration::Position CrystalClient::mousePosition(const QPoint &point) const
 {
+	int paddingLeft, paddingTop, paddingRight, paddingBottom;
 	const int corner = 20;
+	padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
+	int px = point.x() - paddingLeft;
+	int py = point.y() - paddingTop;
 	Position pos;
 	const int RESIZESIZE=::factory->borderwidth;
 	
+	
 	if (isShade() || !isResizable()) pos=PositionCenter; 
-	else if (point.y() <= 3) {
+	else if (py <= 3) {
 		// inside top frame
-		if (point.x() <= corner)                 pos = PositionTopLeft;
-		else if (point.x() >= (width()-corner))  pos = PositionTopRight;
+		if (px <= corner)   pos = PositionTopLeft;
+		else if (px >= (width()-corner))  pos = PositionTopRight;
 		else                                     pos = PositionTop;
-	} else if (point.y() >= (height()-RESIZESIZE)) {
+	} else if (py >= (height()-RESIZESIZE)) {
 		// inside handle
-		if (point.x() <= corner)                 pos = PositionBottomLeft;
-		else if (point.x() >= (width()-corner))  pos = PositionBottomRight;
+		if (px <= corner)                 pos = PositionBottomLeft;
+		else if (px >= (width()-corner))  pos = PositionBottomRight;
 		else                                     pos = PositionBottom;
-	} else if (point.x() <= RESIZESIZE) {
+	} else if (px <= RESIZESIZE) {
 		// on left frame
-		if (point.y() <= corner)                 pos = PositionTopLeft;
-		else if (point.y() >= (height()-corner)) pos = PositionBottomLeft;
+		if (py <= corner)                 pos = PositionTopLeft;
+		else if (py >= (height()-corner)) pos = PositionBottomLeft;
 		else                                     pos = PositionLeft;
-	} else if (point.x() >= width()-RESIZESIZE) {
+	} else if (px >= width()-RESIZESIZE) {
 		// on right frame
-		if (point.y() <= corner)                 pos = PositionTopRight;
-		else if (point.y() >= (height()-corner)) pos = PositionBottomRight;
+		if (py <= corner)                 pos = PositionTopRight;
+		else if (py >= (height()-corner)) pos = PositionBottomRight;
 		else                                     pos = PositionRight;
 	} else {
 		// inside the frame
@@ -611,6 +626,9 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 	
 		QColor color=options()->color(KDecoration::ColorFont, active);
 		QRect r=rect;
+		r.setWidth(r.width()-2);
+		r.translate(1,0);
+		
 		int logowidth=::factory->logo.width()+::factory->logoDistance;
 		if (::factory->logoEnabled!=1 && (active ||!::factory->logoActive))
 		{
@@ -662,11 +680,24 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 	if (drawSeparators) {
 		/* Separators between tabs */
 		painter.setPen(separatorColorHi);
-		painter.drawLine(rect.left(), 1, rect.left(), rect.bottom());
+		painter.drawLine(rect.left(), rect.top() + 1, rect.left(), rect.bottom());
 
 		painter.setPen(separatorColorLo);
-		painter.drawLine(rect.right(), 1, rect.right(), rect.bottom());
+		painter.drawLine(rect.right(), rect.top() + 1, rect.right(), rect.bottom());
 	}
+}
+
+void CrystalClient::paintShadow(QPainter &painter) {
+	int paddingLeft, paddingRight, paddingTop, paddingBottom;
+	padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
+	/* padding is assumed to be 15 */
+
+	QColor c(0, 0, 0, 96);
+	
+	painter.fillRect(QRect(10, 10, 
+		width() + paddingLeft + paddingRight - 10 - 10,
+		height() + paddingTop + paddingBottom - 8 - 10),
+		c);
 }
 
 void CrystalClient::paintEvent(QPaintEvent* event)
@@ -699,6 +730,11 @@ void CrystalClient::paintEvent(QPaintEvent* event)
 }
 
 void CrystalClient::paint(QPainter &painter) {
+	int paddingLeft, paddingRight, paddingBottom, paddingTop;
+	padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
+	
+	paintShadow(painter);
+	
 	// draw the titlebar
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
@@ -729,24 +765,24 @@ void CrystalClient::paint(QPainter &painter) {
 		allTabs.setRight(allTabs.right()-3);
 	}
 	
-	painter.fillRect(QRect(0,0,allTabs.x(),bt), color);
+	painter.fillRect(QRect(paddingLeft,paddingTop,allTabs.x() - paddingLeft, bt), color);
 	painter.fillRect(QRect(allTabs.x()+allTabs.width(),
-			       0,
-			       widget()->width()-(allTabs.x()+allTabs.width()),
+			       paddingTop,
+			       widget()->width()-(allTabs.x()+allTabs.width()) - paddingRight,
 			       bt), 
 			 color);
-	painter.fillRect(QRect(0,bt,bl,widget()->height()), color);
-	painter.fillRect(QRect(widget()->width()-br,bt,br,widget()->height()), color);
-	painter.fillRect(QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb), color);
+	painter.fillRect(QRect(paddingLeft, bt + paddingTop, bl, widget()->height() - bt - paddingBottom - paddingTop), color);
+	painter.fillRect(QRect(widget()->width()-br - paddingRight,bt + paddingTop ,br,widget()->height() - bt - bb - paddingBottom - paddingTop), color);
+	painter.fillRect(QRect(bl + paddingLeft ,widget()->height()-bb - paddingBottom,widget()->width()-bl - paddingRight - paddingLeft,bb), color);
 	
 	/* Draw Overlays */
 	if (!wndcfg->overlay.isNull())
 	{
 		if (wndcfg->stretch_overlay == false) {
-			painter.drawTiledPixmap(QRect(0,0,allTabs.x(),bt), wndcfg->overlay);
+			painter.drawTiledPixmap(QRect(paddingLeft,paddingTop,allTabs.x() - paddingLeft,bt), wndcfg->overlay);
 			painter.drawTiledPixmap(QRect(allTabs.x()+allTabs.width(),
-			       0,
-			       widget()->width()-(allTabs.x()+allTabs.width()),
+			       paddingTop,
+			       widget()->width()-(allTabs.x()+allTabs.width()) - paddingRight,
 			       bt), 
 			   wndcfg->overlay);
 		}
@@ -783,7 +819,7 @@ void CrystalClient::paint(QPainter &painter) {
 				active = false;
 		}
 
-		r = QRect(i * tabwidth + allTabs.x(), 0, tabwidth, bt);
+		r = QRect(i * tabwidth + allTabs.x(), paddingTop, tabwidth, bt);
 		if( i == tabCount - 1 )
 			r.setWidth( allTabs.width() - r.left() + allTabs.x());
 		paintTab(painter, r, item, active, tabCount > 1);
@@ -791,9 +827,9 @@ void CrystalClient::paint(QPainter &painter) {
 	
 	if (tabCount > 1) {
 		painter.setPen(separatorColorLo);
-		painter.drawLine(allTabs.left()-1, 1, allTabs.left()-1, allTabs.bottom());
+		painter.drawLine(allTabs.left()-1, 1 + paddingTop, allTabs.left()-1, allTabs.bottom());
 		painter.setPen(separatorColorHi);
-		painter.drawLine(allTabs.right()+1, 1, allTabs.right()+1, allTabs.bottom());
+		painter.drawLine(allTabs.right()+1, 1 + paddingTop, allTabs.right()+1, allTabs.bottom());
 	}
 	
 
@@ -806,23 +842,23 @@ void CrystalClient::paint(QPainter &painter) {
 
 		if (wndcfg->inlineMode==1) {
 			painter.setPen(wndcfg->inlineColor);
-			painter.drawRect(bl-1,bt-1,widget()->width()-bl-br+2,widget()->height()-bt-bb+2);
+			painter.drawRect(bl-1 + paddingLeft,bt-1 + paddingTop,widget()->width()-bl-br-paddingRight+2,widget()->height()-bt-bb+2-paddingBottom);
 		}
 		if (wndcfg->inlineMode==2) {
 			painter.setPen(wndcfg->inlineColor.dark(150));
-			painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
-			painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
+			painter.drawLine(bl-1+paddingLeft,bt-1+paddingTop,widget()->width()-br-paddingRight,bt-1-paddingBottom);
+			painter.drawLine(bl-1+paddingLeft,bt-1+paddingTop,bl-1+paddingLeft,widget()->height()-bb-paddingBottom);
 			painter.setPen(wndcfg->inlineColor.light(150));
-			painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
-			painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
+			painter.drawLine(widget()->width()-br-paddingRight,bt-1+paddingTop,widget()->width()-br-paddingRight,widget()->height()-bb-paddingBottom);
+			painter.drawLine(bl-1+paddingLeft,widget()->height()-bb-paddingBottom,widget()->width()-br-1-paddingRight,widget()->height()-bb-paddingBottom);
 		}
 		if (wndcfg->inlineMode==3) {
 			painter.setPen(wndcfg->inlineColor.light(150));
-			painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
-			painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
+			painter.drawLine(bl-1+paddingLeft,bt-1+paddingTop,widget()->width()-br-paddingRight,bt-1-paddingBottom);
+			painter.drawLine(bl-1+paddingLeft,bt-1+paddingTop,bl-1+paddingLeft,widget()->height()-bb-paddingBottom);
 			painter.setPen(wndcfg->inlineColor.dark(150));
-			painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
-			painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
+			painter.drawLine(widget()->width()-br-paddingRight,bt-1+paddingTop,widget()->width()-br-paddingRight,widget()->height()-bb-paddingBottom);
+			painter.drawLine(bl-1+paddingLeft,widget()->height()-bb-paddingBottom,widget()->width()-br-1-paddingRight,widget()->height()-bb-paddingBottom);
 		}
 	}
 
@@ -874,7 +910,6 @@ void CrystalClient::paint(QPainter &painter) {
 	    (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
 	{
 		// outline the frame
-		QRect r=widget()->rect();
 		QColor c1,c2;
 		c1=c2=wndcfg->frameColor;
 		if (wndcfg->outlineMode==2)c1=c1.dark(140),c2=c2.light(140);
@@ -883,40 +918,42 @@ void CrystalClient::paint(QPainter &painter) {
 
 		if ((::factory->roundCorners) && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
 		{
-			int r=(width()-1);
-			int b=(height()-1);
+			int l = paddingLeft;
+			int t = paddingTop;
+			int r=(width()-1 - paddingRight);
+			int b=(height()-1 - paddingBottom);
 			
 			// Draw edge of top-left corner inside the area removed by the mask.
 			painter.setPen(c1);
-			painter.drawLine(5,0,r-5,0);
-			painter.drawLine(0,5,0,b-5);
+			painter.drawLine(l+5,t+0,r-5,t+0);
+			painter.drawLine(l+0,t+5,l+0,b-5);
 
 			painter.setPen(c2);
-			painter.drawLine(r,5,r,b-5);
-			painter.drawLine(5,b,r-5,b);
+			painter.drawLine(r,t+5,r,b-5);
+			painter.drawLine(l+5,b,r-5,b);
 
 			painter.setPen(c1);
-			painter.drawPoint(3, 1);
-			painter.drawPoint(4, 1);
-			painter.drawPoint(2, 2);
-			painter.drawPoint(1, 3);
-			painter.drawPoint(1, 4);
+			painter.drawPoint(l+3, t+1);
+			painter.drawPoint(l+4, t+1);
+			painter.drawPoint(l+2, t+2);
+			painter.drawPoint(l+1, t+3);
+			painter.drawPoint(l+1, t+4);
 		
 			// Draw edge of top-right corner inside the area removed by the mask.
 			painter.setPen(c1);
-			painter.drawPoint(r - 4, 1);
-			painter.drawPoint(r - 3, 1);
-			painter.drawPoint(r - 2, 2);
-			painter.drawPoint(r - 1, 3);
-			painter.drawPoint(r - 1, 4);
+			painter.drawPoint(r - 4, t+1);
+			painter.drawPoint(r - 3, t+1);
+			painter.drawPoint(r - 2, t+2);
+			painter.drawPoint(r - 1, t+3);
+			painter.drawPoint(r - 1, t+4);
 
 			// Draw edge of bottom-left corner inside the area removed by the mask.
 			painter.setPen(c2);
-			painter.drawPoint(1, b - 4);
-			painter.drawPoint(1, b - 3);
-			painter.drawPoint(2, b - 2);
-			painter.drawPoint(3, b - 1);
-			painter.drawPoint(4, b - 1);
+			painter.drawPoint(l+1, b - 4);
+			painter.drawPoint(l+1, b - 3);
+			painter.drawPoint(l+2, b - 2);
+			painter.drawPoint(l+3, b - 1);
+			painter.drawPoint(l+4, b - 1);
 		
 			// Draw edge of bottom-right corner inside the area removed by the mask.
 			painter.setPen(c2);
@@ -926,6 +963,8 @@ void CrystalClient::paint(QPainter &painter) {
 			painter.drawPoint(r - 3, b - 1);
 			painter.drawPoint(r - 4, b - 1);
 		}else {
+			QRect r=widget()->rect().adjusted(paddingLeft, paddingTop, -paddingRight, -paddingBottom);
+		  
 			painter.setPen(c1);
 			painter.drawLine(r.left(),r.top(),r.right(),r.top());
 			painter.drawLine(r.left(),r.top(),r.left(),r.bottom());
@@ -980,7 +1019,7 @@ bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
 		painter.setCompositionMode(QPainter::CompositionMode_Source);
 		
 
-		painter.fillRect(frame, QColor(192,192,192,255));
+		painter.fillRect(frame, QColor(128,128,128,255));
 		
 		painter.setCompositionMode(old);
 		paintTab( painter, frame, &tabList[item], isActive(), true);

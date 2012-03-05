@@ -60,7 +60,7 @@ public:
 	virtual void iconChange();
 	virtual void maximizeChange();
 	virtual void shadeChange();
-	
+	virtual void padding(int &left, int &right, int &top, int &bottom) const;
 	virtual void borders(int &l, int &r, int &t, int &b) const;
 	virtual void resize(const QSize &size);
 	virtual QSize minimumSize() const;
@@ -76,6 +76,7 @@ private:
 	bool mousePressEvent(QMouseEvent *e);
 	bool mouseReleaseEvent(QMouseEvent *e);
 	void mouseDoubleClickEvent(QMouseEvent *e);
+	void paintShadow(QPainter &painter);
 	void paintEvent(QPaintEvent *e);
 	void paint(QPainter &painter);
 	void resizeEvent(QResizeEvent *);
