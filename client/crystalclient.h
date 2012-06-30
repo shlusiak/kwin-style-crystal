@@ -77,6 +77,7 @@ private:
 	bool mouseReleaseEvent(QMouseEvent *e);
 	void mouseDoubleClickEvent(QMouseEvent *e);
 	void paintEvent(QPaintEvent *e);
+	void paint(QPainter &painter);
 	void resizeEvent(QResizeEvent *);
 	void moveEvent(QMoveEvent *);
 	bool mouseMoveEvent(QMouseEvent *);

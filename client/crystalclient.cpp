@@ -669,12 +669,36 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 	}
 }
 
-void CrystalClient::paintEvent(QPaintEvent*)
+void CrystalClient::paintEvent(QPaintEvent* event)
 {
 	if (!CrystalFactory::initialized()) return;
 
-	QPainter painter(widget());
+	if (compositingActive()) {
+		QPainter painter(widget());
+		paint(painter);
+	} else {
+		QPixmap pixmap( widget()->size() );
+		{
+			QPainter painter( &pixmap );
+			painter.setClipRegion( event->region() );
+			paint( painter );
+			
+			QList<CrystalButton*> buttons( widget()->findChildren<CrystalButton*>() );
+			foreach( CrystalButton* button, buttons )
+			{
+				if( event->rect().intersects( button->geometry() ) )
+				{ button->update(); }
+			}
+		}
+		
+		
+		QPainter painter( widget() );
+		painter.drawPixmap( QPoint(), pixmap );
+		
+	}
+}
 
+void CrystalClient::paint(QPainter &painter) {
 	// draw the titlebar
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 

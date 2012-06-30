@@ -172,25 +172,27 @@ void CrystalButton::drawButton(QPainter *painter)
 	CrystalFactory *f=((CrystalFactory*)client_->factory());
 	WND_CONFIG *wndcfg=client_->isActive()?&f->active:&f->inactive;
 
-// 	QColor color = client_->options()->color(KDecoration::ColorTitleBar, client_->isActive());
-// 	color.setAlpha(96);
-// 	painter->fillRect(rect(), color);
+	if (! client_->compositingActive()) {
+		QColor color = client_->options()->color(KDecoration::ColorTitleBar, client_->isActive());
+// 		color.setAlpha(96);
+		painter->fillRect(rect(), color);
 
-// 	if (!wndcfg->overlay.isNull())
-// 	{
-// 		if (wndcfg->stretch_overlay == false)
-// 			painter->drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
-// 		else
-// 		{
-// 			QRectF src(
-// 				(float)x() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
-// 				(float)y(),
-// 				(float)width() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
-// 				(float)height()
-// 			);
-// 			painter->drawPixmap(QRect(0,0,width(),height()), wndcfg->overlay, src);
-// 		}
-// 	}
+		if (!wndcfg->overlay.isNull())
+		{
+			if (wndcfg->stretch_overlay == false)
+				painter->drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
+			else
+			{
+				QRectF src(
+					(float)x() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
+					(float)y(),
+					(float)width() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
+					(float)height()
+				);
+				painter->drawPixmap(QRect(0,0,width(),height()), wndcfg->overlay, src);
+			}
+		}
+	}
 
 	painter->setClipRect(this->rect());
 

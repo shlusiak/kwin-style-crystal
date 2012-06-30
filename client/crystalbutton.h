@@ -46,12 +46,13 @@ public:
 	void reset() { repaint(); }
 	void setFirstLast(bool vfirst,bool vlast) { first|=vfirst; last|=vlast; }
 	void resetSize(bool FullSize);
+	void drawButton(QPainter *painter);
+
 private:
 	void enterEvent(QEvent *e);
 	void leaveEvent(QEvent *e);
 	void mousePressEvent(QMouseEvent *e);
 	void mouseReleaseEvent(QMouseEvent *e);
-	void drawButton(QPainter *painter);
 	void paintEvent(QPaintEvent *event);
 	void drawMenuImage(QPainter *painter, QRect r);
 
