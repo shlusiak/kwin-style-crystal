@@ -43,9 +43,14 @@ Qt::AlignmentFlag CrystalFactory::titlealign_ = Qt::AlignHCenter;
 
 
 
-extern "C" KDE_EXPORT KDecorationFactory* create_factory()
+extern "C" 
 {
-	return new CrystalFactory();
+	KDE_EXPORT KDecorationFactory* create_factory() {
+		return new CrystalFactory();
+	}
+	KWIN_EXPORT int decoration_version() {
+		return KWIN_DECORATION_API_VERSION;
+	}
 }
 
 
