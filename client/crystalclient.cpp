@@ -535,7 +535,7 @@ bool CrystalClient::mouseReleaseEvent(QMouseEvent *e)
 	if( click_in_progress && item >= 0 )
 	{
 		click_in_progress = false;
-		setVisibleClientGroupItem( item );
+		setCurrentTab(tabId(item));
 		return true;
 	}
 	click_in_progress = false;
@@ -599,7 +599,7 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 	}
 }
 
-void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupItem *item, bool active, bool drawSeparators)
+void CrystalClient::paintTab(QPainter &painter, const QRect &rect, int idx, bool active, bool drawSeparators)
 {
 	WND_CONFIG* wndcfg=(active?&::factory->active:&::factory->inactive);
 	QColor color = options()->color(KDecoration::ColorTitleBar, active);
@@ -624,8 +624,13 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 	
 	
 	/* Draw caption */
-	if (::factory->drawcaption && item!=NULL)
+	if (::factory->drawcaption && idx >= 0)
 	{
+		long id;
+	
+		id = tabId(idx);
+//		printf("tab %d id = %ld, title = %s\n", idx, id, caption(id).toLocal8Bit().data());
+		
 		// draw title text
 		painter.setFont(options()->font(active, false));
 	
@@ -641,7 +646,7 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 			if (::factory->logoEnabled==0)r.moveLeft(r.left()+logowidth);
 		}
 		QFontMetrics metrics(options()->font(active, false));
-		int textwidth=metrics.width(item->title());
+		int textwidth=metrics.width(caption(idx));
 		int textalign=CrystalFactory::titleAlign();
 		if (textwidth>r.width())
 			textalign=Qt::AlignLeft, textwidth=r.width();
@@ -649,14 +654,14 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 		{
 			painter.translate(1,1);
 			painter.setPen(color.dark(500));
-			painter.drawText(r, textalign | Qt::AlignVCenter, item->title());
+			painter.drawText(r, textalign | Qt::AlignVCenter, caption(idx));
 			painter.translate(-1,-1);
 		}
 	
 		painter.setPen(color);
 		painter.drawText(r,
 			textalign | Qt::AlignVCenter,
-			item->title());
+			caption(idx));
 
 		/* Draw Logo */
 		if (::factory->logoEnabled!=1 && (active ||!::factory->logoActive))
@@ -855,8 +860,6 @@ void CrystalClient::paint(QPainter &painter) {
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
 	QRect r;
-	QList< ClientGroupItem > tabList = clientGroupItems();
-	int tabCount = tabList.count();
 	int i;
 	
 	QColor color = options()->color(KDecoration::ColorTitleBar, isActive());
@@ -871,6 +874,7 @@ void CrystalClient::paint(QPainter &painter) {
 	
 	QRect allTabs = titlebar_->geometry();
 	allTabs.setTop(0);
+	int tabCount = this->tabCount();
 	
 	if (drag_in_progress && sourceTab == -1)
 		tabCount++;
@@ -913,24 +917,24 @@ void CrystalClient::paint(QPainter &painter) {
 	
 	for (i=0; i<tabCount; i++) {
 		int tabwidth = allTabs.width() / tabCount;
-		ClientGroupItem *item;
-		bool active = visibleClientGroupItem() == i;
+		int idx;
+		bool active = (tabId(i) == currentTabId());
 		if (tabCount == 1)
 			active = isActive();
 		
 		if (i == targetTab && drag_in_progress) {
-			item = NULL;
+			idx = -1;
 			if (sourceTab != -1) {
-				item = &tabList[sourceTab];
+				idx = sourceTab;
 				tabIndex++;
 			}
 			active = true;
-		} else if (tabList.count() > 1 && i == sourceTab && drag_in_progress && targetTab == -1) {
+		} else if (this->tabCount() > 1 && i == sourceTab && drag_in_progress && targetTab == -1) {
 			tabIndex++;
-			item = &tabList[tabIndex];
+			idx = tabIndex;
 			tabIndex++;
 		} else {
-			item = &tabList[tabIndex];
+			idx = tabIndex;
 			tabIndex++;
 			if (drag_in_progress && targetTab != -1)
 				active = false;
@@ -939,7 +943,7 @@ void CrystalClient::paint(QPainter &painter) {
 		r = QRect(i * tabwidth + allTabs.x(), paddingTop, tabwidth, bt);
 		if( i == tabCount - 1 )
 			r.setWidth( allTabs.width() - r.left() + allTabs.x());
-		paintTab(painter, r, item, active, tabCount > 1);
+		paintTab(painter, r, idx, active, tabCount > 1);
 	}
 	
 	if (tabCount > 1) {
@@ -1067,7 +1071,7 @@ bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
 {
 	QPoint c = e->pos();
 	int item = itemClicked( c );
-	if( item >= 0 && click_in_progress && buttonToWindowOperation( mousebutton ) == ClientGroupDragOp)
+	if( item >= 0 && click_in_progress && buttonToWindowOperation( mousebutton ) == TabDragOp)
         {
 		int bl,br,bt,bb;
 		borders(bl, br, bt, bb);
@@ -1076,15 +1080,13 @@ bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
 		drag_in_progress = true;
 		QDrag *drag = new QDrag( widget() );
 		QMimeData *group_data = new QMimeData();
-		group_data->setData( clientGroupItemDragMimeType(), QString().setNum( itemId( item )).toAscii() );
+		group_data->setData( tabDragMimeType(), QString().setNum( tabId( item )).toAscii() );
 		drag->setMimeData( group_data );
-		
+				
 		sourceTab = item;
 
 		// Create draggable tab pixmap
- 		QList< ClientGroupItem > tabList = clientGroupItems();
-		const int tabCount = tabList.count();
- 		QRect frame( 0, 0, titlebar_->geometry().width()/tabCount, bt );
+ 		QRect frame( 0, 0, titlebar_->geometry().width()/tabCount(), bt );
 
 		QImage pix( frame.size(), QImage::Format_ARGB32);
 		QPainter painter( &pix );
@@ -1096,7 +1098,7 @@ bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
 		painter.fillRect(frame, QColor(128,128,128,255));
 		
 		painter.setCompositionMode(old);
-		paintTab( painter, frame, &tabList[item], isActive(), true);
+		paintTab( painter, frame, item, isActive(), true);
 		painter.setPen(separatorColorHi);
 		painter.drawLine(frame.left(), 0, frame.right(), 0);
 		painter.setPen(separatorColorLo);
@@ -1104,17 +1106,17 @@ bool CrystalClient::mouseMoveEvent(QMouseEvent *e)
 
 		drag->setPixmap( QPixmap::fromImage(pix) );
 
-		drag->setHotSpot( QPoint( c.x() - (titlebar_->geometry().x() + item * (titlebar_->geometry().width()/tabCount)), -1 ));
+		drag->setHotSpot( QPoint( c.x() - (titlebar_->geometry().x() + item * (titlebar_->geometry().width()/tabCount())), -1 ));
 
 		drag->exec( Qt::MoveAction );
 		drag_in_progress = false;
 		
-		if( drag->target() == 0 && tabList.count() > 1 )
+		if( drag->target() == 0 && tabCount() > 1 )
 		{ // Remove window from group and move to where the cursor is located
 			QPoint pos = QCursor::pos();
 			frame = widget()->geometry();
 			frame.moveTo( pos.x() - c.x(), pos.y() - c.y() );
-			removeFromClientGroup( sourceTab, frame );
+			untab( tabId(sourceTab), frame );
 		}
 		return true;
         }
@@ -1265,7 +1267,7 @@ void CrystalClient::menuPopUp()
 
 bool CrystalClient::dragEnterEvent( QDragEnterEvent* e )
 {
-	if( e->source() != 0 && e->mimeData()->hasFormat( clientGroupItemDragMimeType() ) )
+	if( e->source() != 0 && e->mimeData()->hasFormat( tabDragMimeType() ) )
 	{
 		widget()->update();
 		drag_in_progress = true;
@@ -1284,7 +1286,7 @@ bool CrystalClient::dropEvent( QDropEvent* e )
 // 	if( tabClick >= 0 )
 	{
 		const QMimeData *group_data = e->mimeData();
-		if( group_data->hasFormat( clientGroupItemDragMimeType() ) )
+		if( group_data->hasFormat( tabDragMimeType() ) )
 		{
 			if( widget() == e->source() )
 			{
@@ -1292,15 +1294,20 @@ bool CrystalClient::dropEvent( QDropEvent* e )
 				int item = itemClicked( point, false );
 				if (from < item)
 					item++;
-				if (item == clientGroupItems().count())
-					item = -1;
-				moveItemInClientGroup( from, item);
+				if (item == tabCount())
+					tab_A_behind_B( tabId(from), tabId(tabCount() -1 ) );
+				else
+					tab_A_before_B( tabId(from), tabId(item) );
 			}
 			else
 			{
 				int item = itemClicked( point, true );
-				long source = QString( group_data->data( clientGroupItemDragMimeType() ) ).toLong();
-				moveItemToClientGroup( source, item);
+				long source = QString( group_data->data( tabDragMimeType() ) ).toLong();
+				if (item == -1) {					
+					tab_A_behind_B( source, tabId(tabCount() -1) );
+				} else {
+					tab_A_before_B( source, tabId(item) );
+				}
 			}
 			widget()->update();
 			return true;
@@ -1311,13 +1318,13 @@ bool CrystalClient::dropEvent( QDropEvent* e )
 
 bool CrystalClient::dragMoveEvent( QDragMoveEvent* e)
 {
-	if( !e->mimeData()->hasFormat( clientGroupItemDragMimeType() ) ) return false;
+	if( !e->mimeData()->hasFormat( tabDragMimeType() ) ) return false;
 	if (!drag_in_progress) return false;
 	
 	QPoint point = widget()->mapToParent( e->pos() );
 
 	if (e->source() == widget()) { /* same window, rearrange tab */
-		if (clientGroupItems().count() <= 1)
+		if (tabCount() <= 1)
 			targetTab = -1;
 		else 
 			targetTab = itemClicked( point, false );
@@ -1327,9 +1334,10 @@ bool CrystalClient::dragMoveEvent( QDragMoveEvent* e)
 			int item = targetTab;
 			if (sourceTab < item)
 				item++;
-			if (item == clientGroupItems().count())
-				item = -1;
-			moveItemInClientGroup( sourceTab, item);
+			if (item == tabCount())
+				tab_A_behind_B( tabId(sourceTab), tabId(tabCount() -1) );
+			else
+				tab_A_before_B( tabId(sourceTab), tabId(item) );
 			sourceTab = targetTab;
 
 		}
@@ -1337,7 +1345,7 @@ bool CrystalClient::dragMoveEvent( QDragMoveEvent* e)
 		sourceTab = -1;
 		targetTab = itemClicked( point, true );
 		if (targetTab == -1)
-			targetTab = clientGroupItems().count();
+			targetTab = tabCount();
 		widget()->update();
 	}
 
@@ -1359,8 +1367,7 @@ int CrystalClient::itemClicked( const QPoint &point, bool between )
 	QRect frame = widget()->frameGeometry();
 	QRect r = titlebar_->geometry();
 	r.setTop(0);
-	QList< ClientGroupItem > list = clientGroupItems();
-	int tabs = list.count();
+	int tabs = tabCount();
 	int tabWidth = r.width()/(between?tabs+1:tabs);
 	int t_x = r.left();
 	int rem = r.width()%tabs;

@@ -118,7 +118,7 @@ bool CrystalFactory::supports(Ability ability) const
 #if KDE_IS_VERSION(4,6,0)
 	  case AbilityUsesBlurBehind:
 #endif
-	  case AbilityClientGrouping:
+	  case AbilityTabbing:
 		return true;
 		
 	  default: return false;
