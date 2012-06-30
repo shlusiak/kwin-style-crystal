@@ -73,13 +73,14 @@ CrystalClient::~CrystalClient()
 void CrystalClient::init()
 {
 	createMainWidget();
-	widget()->installEventFilter(this);
-
-	widget()->setAttribute( Qt::WA_StaticContents );
-	widget()->setAttribute( Qt::WA_OpaquePaintEvent );
-	widget()->setAttribute( Qt::WA_NoSystemBackground );
+	widget()->setAttribute(Qt::WA_TranslucentBackground);	
+	widget()->setAttribute(Qt::WA_NoSystemBackground);
+	widget()->setAttribute(Qt::WA_StaticContents);
+	widget()->setAttribute(Qt::WA_OpaquePaintEvent);
+	
 	widget()->setAutoFillBackground(false);
 	
+	widget()->installEventFilter(this);
 	widget()->setAcceptDrops(true);
 	
 	FullMax=false;
@@ -584,7 +585,7 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 	QColor color = options()->color(KDecoration::ColorTitleBar, active);
 	QColor c1, c2;
 	
-	if (KWindowSystem::compositingActive()) {
+	if (compositingActive()) {
 		color.setAlpha((wndcfg->transparency*255)/100);
 	}
 	
@@ -683,7 +684,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	int i;
 	
 	QColor color = options()->color(KDecoration::ColorTitleBar, isActive());
-	if (KWindowSystem::compositingActive()) {
+	if (compositingActive()) {
 		color.setAlpha((wndcfg->transparency*255)/100);
 	}
 	painter.setClipRegion(widget()->rect());

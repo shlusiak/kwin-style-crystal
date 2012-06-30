@@ -113,8 +113,8 @@ bool CrystalFactory::supports(Ability ability) const
 // 	  case AbilityColorHandle:
 // 	  case AbilityColorButtonBack:
 // 	  case AbilityColorButtonFore:
-// 	  case AbilityProvidesShadow:
- 	  case AbilityUsesAlphaChannel:
+//	  case AbilityProvidesShadow:
+	  case AbilityUsesAlphaChannel:
 #if KDE_IS_VERSION(4,6,0)
 	  case AbilityUsesBlurBehind:
 #endif
