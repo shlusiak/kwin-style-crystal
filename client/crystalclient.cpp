@@ -626,11 +626,6 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, int idx, bool
 	/* Draw caption */
 	if (::factory->drawcaption && idx >= 0)
 	{
-		long id;
-	
-		id = tabId(idx);
-//		printf("tab %d id = %ld, title = %s\n", idx, id, caption(id).toLocal8Bit().data());
-		
 		// draw title text
 		painter.setFont(options()->font(active, false));
 	
@@ -1364,7 +1359,6 @@ bool CrystalClient::dragLeaveEvent( QDragLeaveEvent* )
 
 int CrystalClient::itemClicked( const QPoint &point, bool between )
 {
-	QRect frame = widget()->frameGeometry();
 	QRect r = titlebar_->geometry();
 	r.setTop(0);
 	int tabs = tabCount();
