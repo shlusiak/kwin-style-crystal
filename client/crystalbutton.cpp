@@ -36,6 +36,8 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char */*name*/,
 {
 	setAttribute(Qt::WA_NoSystemBackground);
 	setAttribute(Qt::WA_OpaquePaintEvent, false);
+	setAttribute(Qt::WA_TranslucentBackground);
+	
 	setAutoFillBackground(false);
 	resetSize(false);
 	setCursor(Qt::ArrowCursor);
@@ -161,7 +163,11 @@ void CrystalButton::paintEvent(QPaintEvent* /*event*/)
 
 void CrystalButton::drawButton(QPainter *painter)
 {
+	int paddingLeft, paddingRight, paddingBottom, paddingTop;
 	if (!CrystalFactory::initialized()) return;
+	
+	client_->padding(paddingLeft, paddingRight, paddingTop, paddingBottom);	
+	
 
 	float dx, dy;
 	int dm=0;
@@ -180,7 +186,7 @@ void CrystalButton::drawButton(QPainter *painter)
 		if (!wndcfg->overlay.isNull())
 		{
 			if (wndcfg->stretch_overlay == false)
-				painter->drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
+				painter->drawTiledPixmap(rect(),wndcfg->overlay,QPoint(0, y() - paddingTop));
 			else
 			{
 				QRectF src(
