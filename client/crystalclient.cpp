@@ -691,13 +691,125 @@ void CrystalClient::paintShadow(QPainter &painter) {
 	int paddingLeft, paddingRight, paddingTop, paddingBottom;
 	padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
 	/* padding is assumed to be 15 */
-
-	QColor c(0, 0, 0, 96);
 	
-	painter.fillRect(QRect(10, 10, 
-		width() + paddingLeft + paddingRight - 10 - 10,
-		height() + paddingTop + paddingBottom - 8 - 10),
-		c);
+	int shadowSize = 12;
+
+	QColor c1(0, 0, 0, 0);
+	QColor c2(0, 0, 0, 20);
+	QColor c3(0, 0, 0, 72);
+
+	painter.save();
+	painter.translate(0, 2);
+	
+	QLinearGradient linearGrad(QPointF(paddingLeft - shadowSize, 0), QPointF(paddingLeft, 0));
+	linearGrad.setColorAt(0, c1);
+	linearGrad.setColorAt(0.7, c2);
+	linearGrad.setColorAt(1, c3);
+	/* left + center */
+	{
+		QBrush brush(linearGrad);
+	
+		painter.fillRect(QRect(paddingLeft - shadowSize, paddingTop, 
+			width() + shadowSize,
+			height()),
+			brush);
+	}
+	
+	/* right */
+	linearGrad.setStart(paddingLeft + width() + shadowSize, 0);
+	linearGrad.setFinalStop(paddingLeft + width(), 0);
+	{
+		QBrush brush(linearGrad);
+
+		painter.fillRect(QRect(paddingLeft + width(), paddingTop, 
+			shadowSize,
+			height()),
+			brush);
+	}
+	
+	/* top */
+	linearGrad.setStart(0, paddingTop - shadowSize);
+	linearGrad.setFinalStop(0, paddingTop);
+	{
+		QBrush brush(linearGrad);
+
+		painter.fillRect(QRect(paddingLeft, paddingTop - shadowSize, 
+			width(),
+			shadowSize),
+			brush);
+	}
+	
+	/* bottom */
+	linearGrad.setStart(0, paddingTop + height() + shadowSize);
+	linearGrad.setFinalStop(0, paddingTop + height());
+	{
+		QBrush brush(linearGrad);
+
+		painter.fillRect(QRect(paddingLeft, height() + paddingTop, 
+			width(),
+			height() + paddingTop + shadowSize),
+			brush);
+	}
+	QRadialGradient radialGrad(paddingLeft, paddingTop, shadowSize);
+	radialGrad.setColorAt(0, c3);
+	radialGrad.setColorAt(0.3, c2);
+	radialGrad.setColorAt(1, c1);
+	
+	/* top-left corner */
+	{
+		QBrush brush(radialGrad);
+		painter.fillRect(
+			QRect(
+				paddingLeft - shadowSize, paddingTop - shadowSize, 
+				shadowSize, shadowSize
+			),
+			brush);	
+		
+	}
+
+	/* top-right corner */
+	{
+		radialGrad.setCenter(paddingLeft + width(), paddingTop);
+		radialGrad.setFocalPoint(paddingLeft + width(), paddingTop);
+		QBrush brush(radialGrad);
+		painter.fillRect(
+			QRect(
+				paddingLeft + width(), paddingTop - shadowSize, 
+				shadowSize, shadowSize
+			),
+			brush);	
+		
+	}
+	
+	/* bottom-left corner */
+	{
+		radialGrad.setCenter(paddingLeft, paddingTop + height());
+		radialGrad.setFocalPoint(paddingLeft, paddingTop + height());
+		QBrush brush(radialGrad);
+		painter.fillRect(
+			QRect(
+				paddingLeft - shadowSize, paddingTop + height(), 
+				shadowSize, shadowSize
+			),
+			brush);	
+		
+	}
+
+	/* bottom-right corner */
+	{
+		radialGrad.setCenter(paddingLeft + width(), paddingTop + height());
+		radialGrad.setFocalPoint(paddingLeft + width(), paddingTop + height());
+		QBrush brush(radialGrad);
+		painter.fillRect(
+			QRect(
+				paddingLeft + width(), paddingTop + height(), 
+				shadowSize, shadowSize
+			),
+			brush);	
+		
+	}
+
+	painter.restore();
 }
 
 void CrystalClient::paintEvent(QPaintEvent* event)
