@@ -147,13 +147,15 @@ void CrystalClient::init()
 	updateLayout();
 }
 
-
 void CrystalClient::updateMask()
 {
+	setMask(getMask());
+}
+
+QRegion CrystalClient::getMask() {
 	if ((::factory->roundCorners==0) || (!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull ) ) 
 	{
-		setMask(QRegion(widget()->rect()));
-		return;
+		return QRegion(widget()->rect());
 	}
 	
 	int cornersFlag = ::factory->roundCorners;
@@ -187,8 +189,11 @@ void CrystalClient::updateMask()
 		mask -= QRegion(r - 2, b - 3, 2, 1);
 		mask -= QRegion(r - 1, b - 5, 1, 2);
 	}
+	int paddingLeft, paddingRight, paddingTop, paddingBottom;
+	padding(paddingLeft, paddingRight, paddingTop, paddingBottom);	
+	mask.translate(paddingLeft, paddingRight);
 	
-	setMask(mask);
+	return mask;
 }
 
 CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
@@ -695,8 +700,8 @@ void CrystalClient::paintShadow(QPainter &painter) {
 	int shadowSize = 12;
 
 	QColor c1(0, 0, 0, 0);
-	QColor c2(0, 0, 0, 20);
-	QColor c3(0, 0, 0, 72);
+	QColor c2(0, 0, 0, 24);
+	QColor c3(0, 0, 0, 64);
 
 	painter.save();
 	painter.translate(0, 2);
@@ -844,9 +849,10 @@ void CrystalClient::paintEvent(QPaintEvent* event)
 void CrystalClient::paint(QPainter &painter) {
 	int paddingLeft, paddingRight, paddingBottom, paddingTop;
 	padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
-	
+
 	paintShadow(painter);
-	
+	painter.setClipRegion(getMask());
+
 	// draw the titlebar
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
@@ -859,7 +865,6 @@ void CrystalClient::paint(QPainter &painter) {
 	if (compositingActive()) {
 		color.setAlpha((wndcfg->transparency*255)/100);
 	}
-	painter.setClipRegion(widget()->rect());
 	
 	int bl, br, bt, bb;
 	borders(bl, br, bt, bb);
@@ -973,49 +978,6 @@ void CrystalClient::paint(QPainter &painter) {
 			painter.drawLine(bl-1+paddingLeft,widget()->height()-bb-paddingBottom,widget()->width()-br-1-paddingRight,widget()->height()-bb-paddingBottom);
 		}
 	}
-
-
-	/* Remove transparent parts of round corners */
-	if (::factory->roundCorners && 
-	    (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & ~MaximizeFull) == maximizeMode()))
-	{
-		int r=width();
-		int b=height()-1;
-
-		QPainter::CompositionMode old = painter.compositionMode();
-		painter.setCompositionMode(QPainter::CompositionMode_Source);
-		
-		/* Top Left */
-		painter.fillRect(QRect(0,0,5,1), Qt::transparent);
-		painter.fillRect(QRect(0,1,3,1), Qt::transparent);
-		painter.fillRect(QRect(0,2,2,1), Qt::transparent);
-		painter.fillRect(QRect(0,3,1,1), Qt::transparent);
-		painter.fillRect(QRect(0,4,1,1), Qt::transparent);
-		
-		/* Top Right */
-		painter.fillRect(QRect(r-5,0,5,1), Qt::transparent);
-		painter.fillRect(QRect(r-3,1,3,1), Qt::transparent);
-		painter.fillRect(QRect(r-2,2,2,1), Qt::transparent);
-		painter.fillRect(QRect(r-1,3,1,1), Qt::transparent);
-		painter.fillRect(QRect(r-1,4,1,1), Qt::transparent);
-
-		/* Bottom Left */
-		painter.fillRect(QRect(0,b-0,5,1), Qt::transparent);
-		painter.fillRect(QRect(0,b-1,3,1), Qt::transparent);
-		painter.fillRect(QRect(0,b-2,2,1), Qt::transparent);
-		painter.fillRect(QRect(0,b-3,1,1), Qt::transparent);
-		painter.fillRect(QRect(0,b-4,1,1), Qt::transparent);
-
-		/* Bottom Right */
-		painter.fillRect(QRect(r-5,b-0,5,1), Qt::transparent);
-		painter.fillRect(QRect(r-3,b-1,3,1), Qt::transparent);
-		painter.fillRect(QRect(r-2,b-2,2,1), Qt::transparent);
-		painter.fillRect(QRect(r-1,b-3,1,1), Qt::transparent);
-		painter.fillRect(QRect(r-1,b-4,1,1), Qt::transparent);
-
-		painter.setCompositionMode(old);
-	  
-	}
 	
 	/* Draw outline frame */
 	if (wndcfg->outlineMode && 
@@ -1032,8 +994,8 @@ void CrystalClient::paint(QPainter &painter) {
 		{
 			int l = paddingLeft;
 			int t = paddingTop;
-			int r=(width()-1 - paddingRight);
-			int b=(height()-1 - paddingBottom);
+			int r=(paddingLeft + width()-1);
+			int b=(paddingTop + height()-1);
 			
 			// Draw edge of top-left corner inside the area removed by the mask.
 			painter.setPen(c1);

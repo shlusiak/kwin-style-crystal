@@ -68,6 +68,7 @@ public:
 	
 private:
 	CrystalButton* addButtons(QBoxLayout* layout, const QString& buttons);
+	QRegion getMask();
 	void updateMask();
 	int borderSpacing();
 	void updateLayout();
