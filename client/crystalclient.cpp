@@ -704,7 +704,7 @@ void CrystalClient::paintShadow(QPainter &painter) {
 	QColor c3(0, 0, 0, 64);
 
 	painter.save();
-	painter.translate(0, 2);
+	painter.translate(0, 1);
 	
 	QLinearGradient linearGrad(QPointF(paddingLeft - shadowSize, 0), QPointF(paddingLeft, 0));
 	linearGrad.setColorAt(0, c1);
@@ -850,8 +850,6 @@ void CrystalClient::paint(QPainter &painter) {
 	int paddingLeft, paddingRight, paddingBottom, paddingTop;
 	padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
 
-	paintShadow(painter);
-	painter.setClipRegion(getMask());
 
 	// draw the titlebar
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
@@ -863,8 +861,10 @@ void CrystalClient::paint(QPainter &painter) {
 	
 	QColor color = options()->color(KDecoration::ColorTitleBar, isActive());
 	if (compositingActive()) {
+		paintShadow(painter);
 		color.setAlpha((wndcfg->transparency*255)/100);
 	}
+	painter.setClipRegion(getMask());
 	
 	int bl, br, bt, bb;
 	borders(bl, br, bt, bb);
