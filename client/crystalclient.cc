@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "config.h"
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
@@ -194,7 +195,7 @@ bool CrystalFactory::readConfig()
 	drawcaption=(bool)config.readBoolEntry("DrawCaption",true);
 	textshadow=(bool)config.readBoolEntry("TextShadow",true);
 	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
-	wheelTask=(bool)config.readBoolEntry("WheelTask",true);
+	wheelTask=(bool)config.readBoolEntry("WheelTask",false);
 	transparency=(bool)config.readBoolEntry("EnableTransparency",true);
 	trackdesktop=(bool)config.readBoolEntry("TrackDesktop",false);
 
@@ -711,7 +712,7 @@ void CrystalClient::init()
 
 	if (isPreview()) {
 		char c[512];
-		sprintf(c,"<center><b>Crystal Preview</b><br>Built: %s</center>",__DATE__);
+		sprintf(c,"<center><b>Crystal %s Preview</b><br>Built: %s</center>",VERSION,__DATE__);
 		mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
 		mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
 		mainlayout->addWidget(new QLabel(i18n(c),widget()), 2, 1);
@@ -1081,26 +1082,39 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 	return false;
 }
 
-void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
+void CrystalClient::ClientWindows(Window* v_frame,Window* v_wrapper,Window *v_client)
 {
-	Window root=0,parent=0,*children=NULL;
+	Window root=0,frame=0,wrapper=0,client=0,parent=0,*children=NULL;
 	uint numc;
+	if (v_frame) *v_frame=0;
+	if (v_wrapper) *v_wrapper=0;
+	if (v_client) *v_client=0;
 	// Our Deco is the child of a frame, get our parent
-	XQueryTree(qt_xdisplay(),widget()->winId(),&root,frame,&children,&numc);
+	if (XQueryTree(qt_xdisplay(),widget()->winId(),&root,&frame,&children,&numc) == 0)
+		return;
 	if (children!=NULL)XFree(children);
+	children=NULL;
 	
 	// frame has two children, us and a wrapper, get the wrapper
-	XQueryTree(qt_xdisplay(),*frame,&root,&parent,&children,&numc);	
+	if (XQueryTree(qt_xdisplay(),frame,&root,&parent,&children,&numc)==0)
+		return;
+
 	for (uint i=0;i<numc;i++)
 	{
-		if (children[i]!=widget()->winId())*wrapper=children[i];
+		if (children[i]!=widget()->winId())wrapper=children[i];
 	}
-	XFree(children);
+	if (children!=NULL)XFree(children);
+	children=NULL;
 	
 	// wrapper has only one child, which is the client. We want this!!
-	XQueryTree(qt_xdisplay(),*wrapper,&root,&parent,&children,&numc);
-	if (numc==1)*client=children[0];	
+	if (XQueryTree(qt_xdisplay(),wrapper,&root,&parent,&children,&numc)==0)
+		return;
+	if (numc==1)client=children[0];	
 	if (children!=NULL)XFree(children);
+	children=NULL;
+	if (v_client) *v_client=client;
+	if (v_wrapper) *v_wrapper=wrapper;
+	if (v_frame) *v_frame=frame;
 }
 
 void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
@@ -1134,6 +1148,12 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 			}
 			
 			n->ClientWindows(&frame,&wrapper,&client);
+			if (client == 0) { /* FALLBACK */
+#if KDE_IS_VERSION(3,5,0)
+				titlebarMouseWheelOperation(e->delta());
+#endif
+				return;
+			}
 			KWin::WindowInfo info=KWin::windowInfo(client);
 			if ((n->desktop()==desktop()) && !info.isMinimized())break;
 		}while(n!=this);
@@ -1497,13 +1517,14 @@ void CrystalClient::closeButtonPressed()
 			Window frame,wrapper,client;
 			char param[20];
 			ClientWindows(&frame,&wrapper,&client);
+			if (client != 0) {
+				KProcess *proc = new KProcess;
 
-			KProcess *proc = new KProcess;
-
-			*proc << "kdocker";
-			sprintf(param,"0x%lx",client);
-			*proc << "-d" << "-w" << param;
-			proc->start(KProcess::DontCare);
+				*proc << "kdocker";
+				sprintf(param,"0x%lx",client);
+				*proc << "-d" << "-w" << param;
+				proc->start(KProcess::DontCare);
+			} else { /* Sorry man */ }
 			break;
 		}
 		default:

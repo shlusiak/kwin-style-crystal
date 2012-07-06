@@ -292,8 +292,8 @@ kde_module_LTLIBRARIES = kwin_crystal_config.la
 #>- kwin_crystal_config_la_SOURCES = configdialog.ui infodialog.ui crystalconfig.cc crystalconfig.h
 #>+ 1
 kwin_crystal_config_la_SOURCES=  crystalconfig.cc crystalconfig.h configdialog.cc infodialog.cc
-kwin_crystal_config_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkio
-kwin_crystal_config_la_LIBADD = $(LIB_KDEUI)
+kwin_crystal_config_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN)
+kwin_crystal_config_la_LIBADD = $(LIB_KDEUI) $(LIB_KIO) $(LIB_QT)
 #>- kwin_crystal_config_la_METASOURCES = AUTO
 
 DISTCLEANFILES = $(kwin_crystal_config_la_METASOURCES)
@@ -671,7 +671,7 @@ clean-metasources:
 	-rm -f  crystalconfig.moc
 
 #>+ 2
-KDE_DIST=infodialog.ui Makefile.in configdialog.ui 
+KDE_DIST=infodialog.ui Makefile.in infodialog.h configdialog.ui configdialog.h 
 
 #>+ 5
 clean-ui:
@@ -716,7 +716,7 @@ bcheck-am:
 
 
 #>+ 11
-kwin_crystal_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc configdialog.cc infodialog.cc  crystalconfig.moc
+kwin_crystal_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc $(srcdir)/configdialog.cc $(srcdir)/infodialog.cc  crystalconfig.moc
 	@echo 'creating kwin_crystal_config_la.all_cc.cc ...'; \
 	rm -f kwin_crystal_config_la.all_cc.files kwin_crystal_config_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin_crystal_config_la.all_cc.final; \

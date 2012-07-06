@@ -297,8 +297,8 @@ kde_module_LTLIBRARIES = kwin3_crystal.la
 kwin3_crystal_la_SOURCES = crystalclient.cc myrootpixmap.cc crystalbutton.cpp \
 	imageholder.cpp buttonimage.cpp tiles.h overlays.h
 
-kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la
-kwin3_crystal_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdeui
+kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la $(LIB_QT) $(LIB_KDEUI)
+kwin3_crystal_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN)
 #>- kwin3_crystal_la_METASOURCES = AUTO
 
 CLEANFILES = tiles.h overlays.h
@@ -911,7 +911,7 @@ bcheck-am:
 
 
 #>+ 11
-kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc myrootpixmap.moc.cc imageholder.moc.cc  crystalbutton.moc crystalclient.moc
+kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc $(srcdir)/myrootpixmap.moc.cc $(srcdir)/imageholder.moc.cc  crystalbutton.moc crystalclient.moc
 	@echo 'creating kwin3_crystal_la.all_cc.cc ...'; \
 	rm -f kwin3_crystal_la.all_cc.files kwin3_crystal_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cc.final; \

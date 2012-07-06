@@ -481,6 +481,9 @@
                         <property name="accel">
                             <string>Alt+Y</string>
                         </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Wheel on titlebar cycles through visible windows. Does NOT work in compiz. Overrides settings in KDE.</string>
+                        </property>
                     </widget>
                     <widget class="QPushButton" row="3" column="2" rowspan="1" colspan="2">
                         <property name="name">

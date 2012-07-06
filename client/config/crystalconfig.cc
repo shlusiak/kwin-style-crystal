@@ -161,7 +161,7 @@ void CrystalConfig::load(KConfig*)
 	dialog_->drawCaption->setChecked(config_->readBoolEntry("DrawCaption",true));
 	dialog_->textshadow->setChecked(config_->readBoolEntry("TextShadow",true));
 	dialog_->tooltip->setChecked(config_->readBoolEntry("CaptionTooltip",true));
-	dialog_->wheelTask->setChecked(config_->readBoolEntry("WheelTask",true));
+	dialog_->wheelTask->setChecked(config_->readBoolEntry("WheelTask",false));
 
 	dialog_->enableTransparency->setChecked(config_->readBoolEntry("EnableTransparency",true));
 	dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",false));

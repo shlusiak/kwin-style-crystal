@@ -660,7 +660,7 @@ all: tiles.h overlays.h
 .NOEXPORT:
 
 #>+ 2
-KDE_DIST=Makefile.in glass_overlay.png steel_overlay.png lighting_overlay.png 
+KDE_DIST=Makefile.in embedtool glass_overlay.png steel_overlay.png tiles.h lighting_overlay.png overlays.h 
 
 #>+ 2
 docs-am:
