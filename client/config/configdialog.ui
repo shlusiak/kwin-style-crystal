@@ -40,6 +40,81 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>tooltip</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Show tooltip o&amp;ver caption</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+V</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Shows a tooltip, if the mouse pointer is over the caption.</string>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="2">
+                        <property name="name">
+                            <cstring>spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>16</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>wheelTask</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>C&amp;ycle tasks with mouse wheel</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+Y</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="3" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>infoButton</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>0</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>80</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>I&amp;nfo...</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+N</string>
+                        </property>
+                    </widget>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>titlealign</cstring>
@@ -112,7 +187,7 @@
                             </widget>
                         </vbox>
                     </widget>
-                    <widget class="QButtonGroup" row="0" column="1" rowspan="1" colspan="2">
+                    <widget class="QButtonGroup" row="0" column="1">
                         <property name="name">
                             <cstring>repaintMode</cstring>
                         </property>
@@ -198,7 +273,7 @@
                             </widget>
                         </grid>
                     </widget>
-                    <widget class="QGroupBox" row="0" column="3" rowspan="1" colspan="2">
+                    <widget class="QGroupBox" row="0" column="2" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>roundCorners</cstring>
                         </property>
@@ -335,6 +410,44 @@
                             </spacer>
                         </grid>
                     </widget>
+                    <widget class="QLabel" row="1" column="2">
+                        <property name="name">
+                            <cstring>textLabel2_2</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>0</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>Border width:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>borderwidth</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel2_2_2</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>0</hsizetype>
+                                <vsizetype>5</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>Titlebar height:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>titlebarheight</cstring>
+                        </property>
+                    </widget>
                     <widget class="QSpinBox" row="1" column="4">
                         <property name="name">
                             <cstring>borderwidth</cstring>
@@ -366,21 +479,7 @@
                             <string>Height of the title par (independend to border width)</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>tooltip</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Show tooltip o&amp;ver caption</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+V</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Shows a tooltip, if the mouse pointer is over the caption.</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                    <widget class="QCheckBox" row="1" column="1">
                         <property name="name">
                             <cstring>textshadow</cstring>
                         </property>
@@ -394,103 +493,18 @@
                             <string>Draws a nice shadowed title bar text to improve visibility.</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="2" column="2">
+                    <widget class="QCheckBox" row="1" column="0">
                         <property name="name">
-                            <cstring>textLabel2_2_2</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>0</hsizetype>
-                                <vsizetype>5</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
+                            <cstring>drawCaption</cstring>
                         </property>
                         <property name="text">
-                            <string>Titlebar height:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>titlebarheight</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="1" column="2">
-                        <property name="name">
-                            <cstring>textLabel2_2</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>0</hsizetype>
-                                <vsizetype>5</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="text">
-                            <string>Border width:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>borderwidth</cstring>
-                        </property>
-                    </widget>
-                    <spacer row="4" column="3">
-                        <property name="name">
-                            <cstring>spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="4">
-                        <property name="name">
-                            <cstring>wheelTask</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>3</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="text">
-                            <string>C&amp;ycle tasks with mouse wheel</string>
+                            <string>&amp;Draw Caption</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+Y</string>
+                            <string>Alt+D</string>
                         </property>
-                    </widget>
-                    <widget class="QPushButton" row="3" column="4">
-                        <property name="name">
-                            <cstring>infoButton</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>0</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>80</width>
-                                <height>0</height>
-                            </size>
-                        </property>
-                        <property name="text">
-                            <string>I&amp;nfo...</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+N</string>
+                        <property name="checked">
+                            <bool>true</bool>
                         </property>
                     </widget>
                 </grid>
@@ -616,6 +630,14 @@
                             </property>
                             <property name="pixmap">
                                 <pixmap>image7</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Kubuntu Feisty</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image8</pixmap>
                             </property>
                         </item>
                         <property name="name">
@@ -2001,145 +2023,7 @@
                             <set>AlignCenter</set>
                         </property>
                     </widget>
-                    <widget class="QButtonGroup" row="1" column="0">
-                        <property name="name">
-                            <cstring>overlay_active</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Overlay for Active Window</string>
-                        </property>
-                        <property name="selectedId" stdset="0">
-                            <number>2</number>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QRadioButton" row="0" column="0">
-                                <property name="name">
-                                    <cstring>buttonxx123</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Disabled</string>
-                                </property>
-                                <property name="accel">
-                                    <string></string>
-                                </property>
-                                <property name="checked">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>0</number>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>radioButton14</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Simple &amp;Lighting</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+L</string>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>1</number>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="2" column="0">
-                                <property name="name">
-                                    <cstring>overlay_active_userdefined</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Userdefined:</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+U</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>2</number>
-                                </property>
-                            </widget>
-                            <widget class="KURLRequester" row="3" column="0">
-                                <property name="name">
-                                    <cstring>overlay_active_file</cstring>
-                                </property>
-                            </widget>
-                        </grid>
-                    </widget>
-                    <widget class="QButtonGroup" row="1" column="1">
-                        <property name="name">
-                            <cstring>overlay_inactive</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Overlay for Inactive Window</string>
-                        </property>
-                        <property name="selectedId" stdset="0">
-                            <number>2</number>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QRadioButton" row="0" column="0">
-                                <property name="name">
-                                    <cstring>buttonxx123_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>D&amp;isabled</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+I</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>0</number>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>radioButton14_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Si&amp;mple Lighting</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+M</string>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>1</number>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton" row="2" column="0">
-                                <property name="name">
-                                    <cstring>overlay_inactive_userdefined</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>U&amp;serdefined</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+S</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="buttonGroupId">
-                                    <number>2</number>
-                                </property>
-                            </widget>
-                            <widget class="KURLRequester" row="3" column="0">
-                                <property name="name">
-                                    <cstring>overlay_inactive_file</cstring>
-                                </property>
-                            </widget>
-                        </grid>
-                    </widget>
-                    <widget class="QLabel" row="2" column="0" rowspan="1" colspan="2">
+                    <widget class="QLabel" row="4" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>textLabel4</cstring>
                         </property>
@@ -2158,7 +2042,7 @@
                             <set>AlignCenter</set>
                         </property>
                     </widget>
-                    <spacer row="3" column="1">
+                    <spacer row="5" column="1">
                         <property name="name">
                             <cstring>spacer16</cstring>
                         </property>
@@ -2175,6 +2059,98 @@
                             </size>
                         </property>
                     </spacer>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_7</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Overlay for active window:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="1">
+                        <property name="name">
+                            <cstring>textLabel1_7_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Overlay for inactive window:</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="2" column="0">
+                        <item>
+                            <property name="text">
+                                <string>Disabled</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Simple Lighting</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Glass</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Steel</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Custom</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>overlay_active</cstring>
+                        </property>
+                    </widget>
+                    <widget class="KURLRequester" row="3" column="0">
+                        <property name="name">
+                            <cstring>overlay_active_file</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="KURLRequester" row="3" column="1">
+                        <property name="name">
+                            <cstring>overlay_inactive_file</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="2" column="1">
+                        <item>
+                            <property name="text">
+                                <string>Disabled</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Simple Lighting</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Glass</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Steel</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Custom</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>overlay_inactive</cstring>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </widget>
@@ -2205,6 +2181,9 @@
     <image name="image7">
         <data format="PNG" length="431">89504e470d0a1a0a0000000d494844520000001c000000110806000000ce93cc4a0000017649444154388ddd93b14a23511486bf93491c91059b041fc02220e8ae45c0422b0b5f20855c181d9842304dc0764bdb853459d20c0402172ea4170b2b1b4bb530a4f00134d388166a8a6b61062c92dc01b329f6871fcef961cec7bde70e80c7fce4e5007f8e40ffff07e601df5abb3c0f9a88f879601170029bcde6695ad76ab5dfae7c82160136acb5ebd3dc6ab58cb5f631f5a89f984f32b02140c55aebdc631cc7275114ed7ce92fc7f47fa6cd10913701b6b3eeb0dd6e1f8761b83526bf0ac3f0afeb7b1179caf3f94a33013dcf5b007213f22c335ed3df62d965adf5511004154000d15adfa675100415adf55186397e26a031e64029b5393a5dce18d3534a9d19637a69a694da34c61cb88002ec5b6b7fbaeea2dbedeea575b55a3d77e5e3242237021c0e0683d562b1587441bfa324499252a9749f039e3b9d4e022cfd4b8f18cf02ac150a85dd288a5eeaf5ba94cbe585599eacdfefbf371a0d1bc7f18fe17078217c2e7d0df805accc12f6450fc03570f70132f7c875314776b20000000049454e44ae426082</data>
     </image>
+    <image name="image8">
+        <data format="PNG" length="346">89504e470d0a1a0a0000000d494844520000001c000000110806000000ce93cc4a0000012149444154388dcd95316b84301886df68a0500206a174291cd88283e026b80ac5d11fd2f9a61b9d9dfb431c5d247f41103ab42e2dd92a0a47af1dd44e4eada782297d20907c843c1fe12521002e1cc7b9b52ceb4ed7751d0ae8baaeabaaeab92ccb176adbb675381cbc288a7ac6d8a042783c1e499aa65e1cc703f13cef3ecbb29e73ae4436d2340d09c350a3755d779cf337953200e09ca3aeeb1b2aa5fc02f0aa5a080052ca2b7a3a9d7a42c8e7dce624491ec7f97ebf7f98ab4fd00380bf44360c831cc72899aa9fc15f249c3a7ca56c9df037e94a1900f8da52d996fcbf2bdd32347441573fe23eaea7ea732c0ecd06f8d4344d2dcff36bd7753b95a6a228f4200834ca187b1742f8bbddeec3300c250f78dbb6440871c9187b22f8e3fff01bc36efcafd63932e90000000049454e44ae426082</data>
+    </image>
 </images>
 <connections>
     <connection>
@@ -2217,18 +2196,6 @@
         <sender>hover</sender>
         <signal>toggled(bool)</signal>
         <receiver>animateHover</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>overlay_active_userdefined</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>overlay_active_file</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>overlay_inactive_userdefined</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>overlay_inactive_file</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
     <connection>
@@ -2367,6 +2334,18 @@
         <sender>enableTransparency</sender>
         <signal>toggled(bool)</signal>
         <receiver>textLabel1_5_2</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>drawCaption</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>titlealign</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>drawCaption</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>textshadow</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
 </connections>

@@ -123,7 +123,7 @@ public:
 	QColor closeColor_normal,closeColor_hovered,closeColor_pressed;
 
 	int borderwidth;
-	bool textshadow,captiontooltip;
+	bool drawcaption,textshadow,captiontooltip;
 	bool trackdesktop,transparency;
 	int roundCorners;
 	int repaintMode,repaintTime;

@@ -52,11 +52,10 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	
 	dialog_ = new ConfigDialog(parent);
 	dialog_->show();
-	
-	load(config_);
-	
+		
 	connect(dialog_->titlealign, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
 	
+	connect(dialog_->drawCaption, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->textshadow, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->tooltip,SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->wheelTask,SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
@@ -121,8 +120,8 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->inactiveFile,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged( const QString& )));
 
 
-	connect(dialog_->overlay_active, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
-	connect(dialog_->overlay_inactive, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
+	connect(dialog_->overlay_active, SIGNAL(activated(int)),this, SLOT(overlay_active_changed(int)));
+	connect(dialog_->overlay_inactive, SIGNAL(activated(int)),this, SLOT(overlay_inactive_changed(int)));
 
 	connect(dialog_->overlay_active_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
 	connect(dialog_->overlay_inactive_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
@@ -133,6 +132,8 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->logoStretch, SIGNAL(activated(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->logoActive, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->logoDistance,SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
+
+	load(config_);
 }
 
 CrystalConfig::~CrystalConfig()
@@ -156,6 +157,7 @@ void CrystalConfig::load(KConfig*)
 	QRadioButton *button = (QRadioButton*)dialog_->titlealign->child(value);
 	if (button) button->setChecked(true);
 	
+	dialog_->drawCaption->setChecked(config_->readBoolEntry("DrawCaption",true));
 	dialog_->textshadow->setChecked(config_->readBoolEntry("TextShadow",true));
 	dialog_->tooltip->setChecked(config_->readBoolEntry("CaptionTooltip",true));
 	dialog_->wheelTask->setChecked(config_->readBoolEntry("WheelTask",true));
@@ -231,13 +233,13 @@ void CrystalConfig::load(KConfig*)
 	dialog_->userPicture2->setChecked(config_->readBoolEntry("InactiveUserdefined",false));
 
 
-	button=(QRadioButton*)dialog_->overlay_active->find(config_->readNumEntry("OverlayModeActive",0));
-	if (button)button->setChecked(true);
+	dialog_->overlay_active->setCurrentItem(config_->readNumEntry("OverlayModeActive",0));
 	dialog_->overlay_active_file->setURL(config_->readEntry("OverlayFileActive",""));
+	overlay_active_changed(dialog_->overlay_active->currentItem());
 
-	button=(QRadioButton*)dialog_->overlay_inactive->find(config_->readNumEntry("OverlayModeInactive",0));
-	if (button)button->setChecked(true);
+	dialog_->overlay_inactive->setCurrentItem(config_->readNumEntry("OverlayModeInactive",0));
 	dialog_->overlay_inactive_file->setURL(config_->readEntry("OverlayFileInactive",""));
+	overlay_inactive_changed(dialog_->overlay_inactive->currentItem());
 
 	dialog_->logoEnabled->setButton(config_->readNumEntry("LogoAlignment",1));
 	dialog_->logoFile->setURL(config_->readEntry("LogoFile",""));
@@ -253,6 +255,7 @@ void CrystalConfig::save(KConfig*)
 
 	QRadioButton *button = (QRadioButton*)dialog_->titlealign->selected();
 	if (button) config_->writeEntry("TitleAlignment", QString(button->name()));
+	config_->writeEntry("DrawCaption",dialog_->drawCaption->isChecked());
 	config_->writeEntry("TextShadow",dialog_->textshadow->isChecked());
 	config_->writeEntry("CaptionTooltip",dialog_->tooltip->isChecked());
 	config_->writeEntry("WheelTask",dialog_->wheelTask->isChecked());
@@ -313,9 +316,9 @@ void CrystalConfig::save(KConfig*)
 	config_->writeEntry("InactiveUserdefined",dialog_->userPicture2->isChecked());
 	config_->writeEntry("InactiveUserdefinedPicture",dialog_->inactiveFile->url());
 
-	config_->writeEntry("OverlayModeActive",dialog_->overlay_active->selectedId());
+	config_->writeEntry("OverlayModeActive",dialog_->overlay_active->currentItem());
 	config_->writeEntry("OverlayFileActive",dialog_->overlay_active_file->url());
-	config_->writeEntry("OverlayModeInactive",dialog_->overlay_inactive->selectedId());
+	config_->writeEntry("OverlayModeInactive",dialog_->overlay_inactive->currentItem());
 	config_->writeEntry("OverlayFileInactive",dialog_->overlay_inactive_file->url());
 
 	config_->writeEntry("LogoAlignment",dialog_->logoEnabled->selectedId());
@@ -337,6 +340,18 @@ void CrystalConfig::infoDialog()
 void CrystalConfig::logoTextChanged(const QString&)
 {
 	updateLogo();
+	emit changed();
+}
+
+void CrystalConfig::overlay_active_changed(int a)
+{
+	dialog_->overlay_active_file->setEnabled(a==4);
+	emit changed();
+}
+
+void CrystalConfig::overlay_inactive_changed(int a)
+{
+	dialog_->overlay_inactive_file->setEnabled(a==4);
 	emit changed();
 }
 

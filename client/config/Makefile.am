@@ -7,7 +7,7 @@ INCLUDES = $(all_includes)
 noinst_HEADERS = crystalconfig.h
 
 kde_module_LTLIBRARIES = kwin_crystal_config.la
-kwin_crystal_config_la_SOURCES = configdialog.ui infodialog.ui crystalconfig.cc
+kwin_crystal_config_la_SOURCES = configdialog.ui infodialog.ui crystalconfig.cc crystalconfig.h
 kwin_crystal_config_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkio
 kwin_crystal_config_la_LIBADD = $(LIB_KDEUI)
 kwin_crystal_config_la_METASOURCES = AUTO

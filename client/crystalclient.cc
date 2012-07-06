@@ -147,12 +147,26 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 		case 0:	break;
 		case 1:{
 			cfg->overlay.resize(0,0);
-			QImage img=QImage((uchar*)lighting_data,1,60,32,NULL,0,QImage::LittleEndian);
+			QImage img=QImage((uchar*)lighting_overlay_data,1,60,32,NULL,0,QImage::LittleEndian);
 			img.setAlphaBuffer(true);
 			cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
 			break;
 		}
 		case 2:{
+			cfg->overlay.resize(0,0);
+			QImage img=QImage((uchar*)glass_overlay_data,20,64,32,NULL,0,QImage::LittleEndian);
+			img.setAlphaBuffer(true);
+			cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
+			break;
+		}
+		case 3:{
+			cfg->overlay.resize(0,0);
+			QImage img=QImage((uchar*)steel_overlay_data,28,64,32,NULL,0,QImage::LittleEndian);
+			img.setAlphaBuffer(true);
+			cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
+			break;
+		}
+		case 4:{
 			QImage img;
 			if (img.load(filename))
 			{
@@ -176,6 +190,7 @@ bool CrystalFactory::readConfig()
 	else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
 	else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 	
+	drawcaption=(bool)config.readBoolEntry("DrawCaption",true);
 	textshadow=(bool)config.readBoolEntry("TextShadow",true);
 	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
 	wheelTask=(bool)config.readBoolEntry("WheelTask",true);
@@ -444,53 +459,53 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageClose]->setSpace(0,0);
 
 		break;
-	case 6: // Kubuntu
-		buttonImages[ButtonImageHelp]->SetNormal(kubuntu_help_data,28,17);
-		buttonImages[ButtonImageHelp]->SetHovered(kubuntu_help_hovered_data);
-		buttonImages[ButtonImageHelp]->SetPressed(kubuntu_help_pressed_data);
+	case 6: // Kubuntu Dapper
+		buttonImages[ButtonImageHelp]->SetNormal(dapper_help_data,28,17);
+		buttonImages[ButtonImageHelp]->SetHovered(dapper_help_hovered_data);
+		buttonImages[ButtonImageHelp]->SetPressed(dapper_help_pressed_data);
 
-		buttonImages[ButtonImageMax]->SetNormal(kubuntu_max_data,28,17);
-		buttonImages[ButtonImageMax]->SetHovered(kubuntu_max_hovered_data);
-		buttonImages[ButtonImageMax]->SetPressed(kubuntu_max_pressed_data);
-		buttonImages[ButtonImageRestore]->SetNormal(kubuntu_restore_data,28,17);
-		buttonImages[ButtonImageRestore]->SetHovered(kubuntu_restore_hovered_data);
-		buttonImages[ButtonImageRestore]->SetPressed(kubuntu_restore_pressed_data);
-		buttonImages[ButtonImageMin]->SetNormal(kubuntu_min_data,28,17);
-		buttonImages[ButtonImageMin]->SetHovered(kubuntu_min_hovered_data);
-		buttonImages[ButtonImageMin]->SetPressed(kubuntu_min_pressed_data);
-		buttonImages[ButtonImageClose]->SetNormal(kubuntu_close_data,28,17);
-		buttonImages[ButtonImageClose]->SetHovered(kubuntu_close_hovered_data);
-		buttonImages[ButtonImageClose]->SetPressed(kubuntu_close_pressed_data);
+		buttonImages[ButtonImageMax]->SetNormal(dapper_max_data,28,17);
+		buttonImages[ButtonImageMax]->SetHovered(dapper_max_hovered_data);
+		buttonImages[ButtonImageMax]->SetPressed(dapper_max_pressed_data);
+		buttonImages[ButtonImageRestore]->SetNormal(dapper_restore_data,28,17);
+		buttonImages[ButtonImageRestore]->SetHovered(dapper_restore_hovered_data);
+		buttonImages[ButtonImageRestore]->SetPressed(dapper_restore_pressed_data);
+		buttonImages[ButtonImageMin]->SetNormal(dapper_min_data,28,17);
+		buttonImages[ButtonImageMin]->SetHovered(dapper_min_hovered_data);
+		buttonImages[ButtonImageMin]->SetPressed(dapper_min_pressed_data);
+		buttonImages[ButtonImageClose]->SetNormal(dapper_close_data,28,17);
+		buttonImages[ButtonImageClose]->SetHovered(dapper_close_hovered_data);
+		buttonImages[ButtonImageClose]->SetPressed(dapper_close_pressed_data);
 
-		buttonImages[ButtonImageSticky]->SetNormal(kubuntu_sticky_data,28,17);
-		buttonImages[ButtonImageSticky]->SetHovered(kubuntu_sticky_hovered_data);
-		buttonImages[ButtonImageSticky]->SetPressed(kubuntu_sticky_pressed_data);
-		buttonImages[ButtonImageUnSticky]->SetNormal(kubuntu_un_sticky_data,28,17);
-		buttonImages[ButtonImageUnSticky]->SetHovered(kubuntu_un_sticky_hovered_data);
-		buttonImages[ButtonImageUnSticky]->SetPressed(kubuntu_un_sticky_pressed_data);
+		buttonImages[ButtonImageSticky]->SetNormal(dapper_sticky_data,28,17);
+		buttonImages[ButtonImageSticky]->SetHovered(dapper_sticky_hovered_data);
+		buttonImages[ButtonImageSticky]->SetPressed(dapper_sticky_pressed_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(dapper_un_sticky_data,28,17);
+		buttonImages[ButtonImageUnSticky]->SetHovered(dapper_un_sticky_hovered_data);
+		buttonImages[ButtonImageUnSticky]->SetPressed(dapper_un_sticky_pressed_data);
 
-		buttonImages[ButtonImageAbove]->SetNormal(kubuntu_above_data,28,17);
-		buttonImages[ButtonImageAbove]->SetHovered(kubuntu_above_hovered_data);
-		buttonImages[ButtonImageAbove]->SetPressed(kubuntu_above_pressed_data);
-		buttonImages[ButtonImageUnAbove]->SetNormal(kubuntu_un_above_data,28,17);
-		buttonImages[ButtonImageUnAbove]->SetHovered(kubuntu_un_above_hovered_data);
-		buttonImages[ButtonImageUnAbove]->SetPressed(kubuntu_un_above_pressed_data);
+		buttonImages[ButtonImageAbove]->SetNormal(dapper_above_data,28,17);
+		buttonImages[ButtonImageAbove]->SetHovered(dapper_above_hovered_data);
+		buttonImages[ButtonImageAbove]->SetPressed(dapper_above_pressed_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(dapper_un_above_data,28,17);
+		buttonImages[ButtonImageUnAbove]->SetHovered(dapper_un_above_hovered_data);
+		buttonImages[ButtonImageUnAbove]->SetPressed(dapper_un_above_pressed_data);
 
 
-		buttonImages[ButtonImageBelow]->SetNormal(kubuntu_below_data,28,17);
-		buttonImages[ButtonImageBelow]->SetHovered(kubuntu_below_hovered_data);
-		buttonImages[ButtonImageBelow]->SetPressed(kubuntu_below_pressed_data);
+		buttonImages[ButtonImageBelow]->SetNormal(dapper_below_data,28,17);
+		buttonImages[ButtonImageBelow]->SetHovered(dapper_below_hovered_data);
+		buttonImages[ButtonImageBelow]->SetPressed(dapper_below_pressed_data);
 
-		buttonImages[ButtonImageUnBelow]->SetNormal(kubuntu_un_below_data,28,17);
-		buttonImages[ButtonImageUnBelow]->SetHovered(kubuntu_un_below_hovered_data);
-		buttonImages[ButtonImageUnBelow]->SetPressed(kubuntu_un_below_pressed_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(dapper_un_below_data,28,17);
+		buttonImages[ButtonImageUnBelow]->SetHovered(dapper_un_below_hovered_data);
+		buttonImages[ButtonImageUnBelow]->SetPressed(dapper_un_below_pressed_data);
 
-		buttonImages[ButtonImageShade]->SetNormal(kubuntu_shade_data,28,17);
-		buttonImages[ButtonImageShade]->SetHovered(kubuntu_shade_hovered_data);
-		buttonImages[ButtonImageShade]->SetPressed(kubuntu_shade_pressed_data);
-		buttonImages[ButtonImageUnShade]->SetNormal(kubuntu_un_shade_data,28,17);
-		buttonImages[ButtonImageUnShade]->SetHovered(kubuntu_un_shade_hovered_data);
-		buttonImages[ButtonImageUnShade]->SetPressed(kubuntu_un_shade_pressed_data);
+		buttonImages[ButtonImageShade]->SetNormal(dapper_shade_data,28,17);
+		buttonImages[ButtonImageShade]->SetHovered(dapper_shade_hovered_data);
+		buttonImages[ButtonImageShade]->SetPressed(dapper_shade_pressed_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(dapper_un_shade_data,28,17);
+		buttonImages[ButtonImageUnShade]->SetHovered(dapper_un_shade_hovered_data);
+		buttonImages[ButtonImageUnShade]->SetPressed(dapper_un_shade_pressed_data);
 	
 		for (int i=0;i<ButtonImageCount;i++)
 		{
@@ -562,9 +577,68 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageClose]->setSpace(0,0);
 
 		break;
+	case 8: // Kubuntu-Feisty
+		buttonImages[ButtonImageHelp]->SetNormal(feisty_help_data,28,17);
+		buttonImages[ButtonImageHelp]->SetHovered(feisty_help_hovered_data);
+		buttonImages[ButtonImageHelp]->SetPressed(feisty_help_pressed_data);
 
+		buttonImages[ButtonImageMax]->SetNormal(feisty_max_data,28,17);
+		buttonImages[ButtonImageMax]->SetHovered(feisty_max_hovered_data);
+		buttonImages[ButtonImageMax]->SetPressed(feisty_max_pressed_data);
+		buttonImages[ButtonImageRestore]->SetNormal(feisty_restore_data,28,17);
+		buttonImages[ButtonImageRestore]->SetHovered(feisty_restore_hovered_data);
+		buttonImages[ButtonImageRestore]->SetPressed(feisty_restore_pressed_data);
+		buttonImages[ButtonImageMin]->SetNormal(feisty_min_data,28,17);
+		buttonImages[ButtonImageMin]->SetHovered(feisty_min_hovered_data);
+		buttonImages[ButtonImageMin]->SetPressed(feisty_min_pressed_data);
+		buttonImages[ButtonImageClose]->SetNormal(feisty_close_data,28,17);
+		buttonImages[ButtonImageClose]->SetHovered(feisty_close_hovered_data);
+		buttonImages[ButtonImageClose]->SetPressed(feisty_close_pressed_data);
+
+		buttonImages[ButtonImageSticky]->SetNormal(feisty_sticky_data,28,17);
+		buttonImages[ButtonImageSticky]->SetHovered(feisty_sticky_hovered_data);
+		buttonImages[ButtonImageSticky]->SetPressed(feisty_sticky_pressed_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(feisty_un_sticky_data,28,17);
+		buttonImages[ButtonImageUnSticky]->SetHovered(feisty_un_sticky_hovered_data);
+		buttonImages[ButtonImageUnSticky]->SetPressed(feisty_un_sticky_pressed_data);
+
+		buttonImages[ButtonImageAbove]->SetNormal(feisty_above_data,28,17);
+		buttonImages[ButtonImageAbove]->SetHovered(feisty_above_hovered_data);
+		buttonImages[ButtonImageAbove]->SetPressed(feisty_above_pressed_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(feisty_un_above_data,28,17);
+		buttonImages[ButtonImageUnAbove]->SetHovered(feisty_un_above_hovered_data);
+		buttonImages[ButtonImageUnAbove]->SetPressed(feisty_un_above_pressed_data);
+
+
+		buttonImages[ButtonImageBelow]->SetNormal(feisty_below_data,28,17);
+		buttonImages[ButtonImageBelow]->SetHovered(feisty_below_hovered_data);
+		buttonImages[ButtonImageBelow]->SetPressed(feisty_below_pressed_data);
+
+		buttonImages[ButtonImageUnBelow]->SetNormal(feisty_un_below_data,28,17);
+		buttonImages[ButtonImageUnBelow]->SetHovered(feisty_un_below_hovered_data);
+		buttonImages[ButtonImageUnBelow]->SetPressed(feisty_un_below_pressed_data);
+
+		buttonImages[ButtonImageShade]->SetNormal(feisty_shade_data,28,17);
+		buttonImages[ButtonImageShade]->SetHovered(feisty_shade_hovered_data);
+		buttonImages[ButtonImageShade]->SetPressed(feisty_shade_pressed_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(feisty_un_shade_data,28,17);
+		buttonImages[ButtonImageUnShade]->SetHovered(feisty_un_shade_hovered_data);
+		buttonImages[ButtonImageUnShade]->SetPressed(feisty_un_shade_pressed_data);
+	
+		for (int i=0;i<ButtonImageCount;i++)
+		{
+			buttonImages[i]->setSpace(1,0);
+			buttonImages[i]->setDrawMode(0);
+		}
+		buttonImages[ButtonImageMax]->setSpace(0,0);
+		buttonImages[ButtonImageRestore]->setSpace(0,0);
+		buttonImages[ButtonImageMin]->setSpace(0,0);
+		buttonImages[ButtonImageClose]->setSpace(0,0);
+
+		break;
 
 	}
+
 
 	for (int i=0;i<ButtonImageCount;i++)buttonImages[i]->finish();
 }
@@ -820,7 +894,7 @@ void CrystalClient::activeChange()
 
 void CrystalClient::captionChange()
 {
-	widget()->repaint(titlebar_->geometry(), false);
+	if (::factory->drawcaption) widget()->repaint(titlebar_->geometry(), false);
 }
 
 void CrystalClient::desktopChange()
@@ -1042,7 +1116,7 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 			
 			n->ClientWindows(&frame,&wrapper,&client);
 			KWin::WindowInfo info=KWin::windowInfo(client);
-			if (n->desktop()==desktop() && !info.isMinimized())break;
+			if ((n->desktop()==desktop()) && !info.isMinimized())break;
 		}while(n!=this);
 			
 		KWin::activateWindow(client);
@@ -1089,51 +1163,61 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		{
 			pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
 		}
-	
-		// draw title text
-		pufferPainter.setFont(options()->font(isActive(), false));
-	
-		QColor color=options()->color(KDecoration::ColorFont, isActive());
-		r=titlebar_->geometry();
-		r.moveBy(0,-1);
-		int logowidth=::factory->logo.width()+::factory->logoDistance;
-		if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
+
+		if (::factory->drawcaption)
 		{
-			r.setWidth(r.width()-logowidth);
-			if (::factory->logoEnabled==0)r.moveLeft(r.left()+logowidth);
-		}
-		int textalign=CrystalFactory::titleAlign();
-		QFontMetrics metrics(options()->font(isActive(), false));
-		int textwidth=metrics.width(caption());
-		if (textwidth>r.width())
-			textalign=AlignLeft, textwidth=r.width();
+			// draw title text
+			pufferPainter.setFont(options()->font(isActive(), false));
 		
-		if (::factory->textshadow)
-		{
-			pufferPainter.translate(1,1);
-			pufferPainter.setPen(color.dark(300));
-			pufferPainter.drawText(r,textalign | AlignVCenter,caption());
-			pufferPainter.translate(-1,-1);
-		}
-	
-		pufferPainter.setPen(color);
-		pufferPainter.drawText(r,
-			textalign | AlignVCenter,
-			caption());
-		if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
-		{
-			int x=0;
-			if (::factory->logoEnabled==0 && textalign==AlignLeft)x=r.left()-logowidth;
-			if (::factory->logoEnabled==2 && textalign==AlignLeft)x=r.left()+textwidth+::factory->logoDistance;
+			QColor color=options()->color(KDecoration::ColorFont, isActive());
+			r=titlebar_->geometry();
+			r.moveBy(0,-1);
+			int logowidth=::factory->logo.width()+::factory->logoDistance;
+			if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
+			{
+				r.setWidth(r.width()-logowidth);
+				if (::factory->logoEnabled==0)r.moveLeft(r.left()+logowidth);
+			}
+			QFontMetrics metrics(options()->font(isActive(), false));
+			int textwidth=metrics.width(caption());
+			int textalign=CrystalFactory::titleAlign();
+			if (textwidth>r.width())
+				textalign=AlignLeft, textwidth=r.width();			
+			if (::factory->textshadow)
+			{
+				pufferPainter.translate(1,1);
+				pufferPainter.setPen(color.dark(300));
+				pufferPainter.drawText(r,textalign | AlignVCenter,caption());
+				pufferPainter.translate(-1,-1);
+			}
+		
+			pufferPainter.setPen(color);
+			pufferPainter.drawText(r,
+				textalign | AlignVCenter,
+				caption());
 
-			if (::factory->logoEnabled==0 && textalign==AlignRight)x=r.right()-textwidth-logowidth;
-			if (::factory->logoEnabled==2 && textalign==AlignRight)x=r.right()+::factory->logoDistance;
+			if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
+			{
+				int x=0;
+				if (::factory->logoEnabled==0 && textalign==AlignLeft)x=r.left()-logowidth;
+				if (::factory->logoEnabled==2 && textalign==AlignLeft)x=r.left()+textwidth+::factory->logoDistance;
 
-			if (::factory->logoEnabled==0 && textalign==AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
-			if (::factory->logoEnabled==2 && textalign==AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
+				if (::factory->logoEnabled==0 && textalign==AlignRight)x=r.right()-textwidth-logowidth;
+				if (::factory->logoEnabled==2 && textalign==AlignRight)x=r.right()+::factory->logoDistance;
 
+				if (::factory->logoEnabled==0 && textalign==AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
+				if (::factory->logoEnabled==2 && textalign==AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
+				pufferPainter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
+			}
+		}else if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive)) {
+			int x=0;	
+			r=titlebar_->geometry();
+			if (::factory->logoEnabled==0) x=r.left();
+			if (::factory->logoEnabled==2) x=r.right()-::factory->logo.width();
 			pufferPainter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
+
 		}
+
 		pufferPainter.end();
 		painter.drawPixmap(0,0,pufferPixmap);
 
