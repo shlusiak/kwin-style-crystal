@@ -1,23 +1,80 @@
+/***************************************************************************
+ *   Copyright (C) 2006 by Sascha Hlusiak                                  *
+ *   Spam84@gmx.de                                                         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+
 #include <kapp.h>
 #include <qimage.h>
 #include <kimageeffect.h>
+#include <qapplication.h>
+#include <qdesktopwidget.h>
 #include "imageholder.h"
 #include "crystalclient.h"
 
 
-
-QImageHolder::QImageHolder()
+QImageHolder::QImageHolder(QImage act,QImage inact)
 :img_active(NULL),img_inactive(NULL)
 {
 	rootpixmap=NULL;
-	initialized=false;
+	setUserdefinedPictures( act,inact);
+	initialized=userdefinedActive && userdefinedInactive;
+
+	emit repaintNeeded();
 }
 
 QImageHolder::~QImageHolder()
 {
 	if (rootpixmap)delete rootpixmap;
-	if (img_active)delete img_active;
-	if (img_inactive)delete img_inactive;
+	if (img_active && !userdefinedActive)delete img_active;
+	if (img_inactive && !userdefinedInactive)delete img_inactive;
+}
+
+void QImageHolder::setUserdefinedPictures( QImage act,QImage inact)
+{
+	int w=QApplication::desktop()->width();
+	int h=QApplication::desktop()->height();
+	if (img_active && !userdefinedActive)
+	{
+		delete img_active;	
+		img_active=NULL;
+	}
+	if (img_inactive && !userdefinedInactive)
+	{
+		delete img_inactive;
+		img_inactive=NULL;
+	}
+
+	if (!act.isNull())
+	{
+		act=act.smoothScale(w,h);
+		img_active=ApplyEffect(act,&::factory->active,factory->options()->colorGroup(KDecoration::ColorTitleBar, true)); 
+	}else img_active=NULL;
+	if (!inact.isNull())
+	{
+		inact=inact.smoothScale(w,h);
+		img_inactive=ApplyEffect(inact,&::factory->inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false)); 
+	}else img_inactive=NULL;
+
+	userdefinedActive=(img_active!=NULL);
+	userdefinedInactive=(img_inactive!=NULL);
+
+	CheckSanity();
 }
 
 void QImageHolder::Init()
@@ -36,7 +93,7 @@ void QImageHolder::Init()
 void QImageHolder::repaint(bool force)
 {
 	Init(); 
-	rootpixmap->repaint(force);
+	if (rootpixmap)rootpixmap->repaint(force);
 }
 
 void QImageHolder::handleDesktopChanged(int)
@@ -47,16 +104,17 @@ void QImageHolder::handleDesktopChanged(int)
 void QImageHolder::CheckSanity()
 {
 	if (!initialized)return;
-	if (img_active!=NULL)return;
-	if (img_inactive!=NULL)return;
+	if (userdefinedActive && userdefinedInactive)return;
+	if (img_active!=NULL && !userdefinedActive)return;
+	if (img_inactive!=NULL && !userdefinedInactive)return;
 
-	delete rootpixmap;
+	if (rootpixmap)delete rootpixmap;
 	rootpixmap=NULL;
 	
 	initialized=false;
 }
 
-QPixmap *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
+QPixmap* QImageHolder::ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
 {
 	QImage dst;
 	
@@ -86,12 +144,12 @@ QPixmap *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
 
 void QImageHolder::BackgroundUpdated(const QImage *src)
 {
-	if (img_active)
+	if (img_active && !userdefinedActive)
 	{
 		delete img_active;
 		img_active=NULL;
 	}
-	if (img_inactive)
+	if (img_inactive && !userdefinedInactive)
 	{
 		delete img_inactive;
 		img_inactive=NULL;
@@ -101,11 +159,13 @@ void QImageHolder::BackgroundUpdated(const QImage *src)
 	{
 		QImage tmp=src->copy();
 
-		img_inactive=ApplyEffect(tmp,&::factory->inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false));
-		tmp=src->copy();
-		img_active=ApplyEffect(tmp,&::factory->active,factory->options()->colorGroup(KDecoration::ColorTitleBar, true));
+		if (!userdefinedInactive)
+			img_inactive=ApplyEffect(tmp,&::factory->inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false));
+
+		tmp=src->copy();		
+		if (!userdefinedActive)
+			img_active=ApplyEffect(tmp,&::factory->active,factory->options()->colorGroup(KDecoration::ColorTitleBar, true));
 	}
 	
-	emit repaintNeeded();	
+	emit repaintNeeded();
 }
-

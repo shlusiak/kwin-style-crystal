@@ -29,6 +29,9 @@
       <programargs/>
       <autocompile>true</autocompile>
       <envvars/>
+      <runarguments>
+        <embedtool></embedtool>
+      </runarguments>
     </run>
     <configurations>
       <optimized>
@@ -165,6 +168,11 @@
     <designerintegration>
       <qtdesigner/>
     </designerintegration>
+    <qt>
+      <used>false</used>
+      <version>3</version>
+      <root>/usr/qt/3</root>
+    </qt>
   </kdevcppsupport>
   <kdevdebugger>
     <general>

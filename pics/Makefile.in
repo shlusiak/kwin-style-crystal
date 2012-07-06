@@ -21,7 +21,7 @@ VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-top_builddir = ../..
+top_builddir = ..
 
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 INSTALL = @INSTALL@
@@ -271,45 +271,49 @@ xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
 AUTOMAKE_OPTIONS = foreign
 
-KDE_CXXFLAGS = -DQT_PLUGIN
-
 INCLUDES = $(all_includes)
 
-noinst_HEADERS = crystalconfig.h
+images = vista/*.png \
+	aqua/*.png \
+	default/*.png \
+	handpainted/*.png \
+	knifty/*.png \
+	svg/*.png
 
-kde_module_LTLIBRARIES = kwin_crystal_config.la
-#>- kwin_crystal_config_la_SOURCES = configdialog.ui infodialog.ui crystalconfig.cc
-#>+ 1
-kwin_crystal_config_la_SOURCES=  crystalconfig.cc configdialog.cc infodialog.cc
-kwin_crystal_config_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkio
-kwin_crystal_config_la_LIBADD = $(LIB_KDEUI)
-#>- kwin_crystal_config_la_METASOURCES = AUTO
 
-DISTCLEANFILES = $(kwin_crystal_config_la_METASOURCES)
-METASOURCES = AUTO
-subdir = client/config
+noinst_PROGRAMS = embedtool tiles.h
+embedtool_SOURCES = embedtool.cpp
+embedtool_LDFLAGS = $(all_libraries)
+embedtool_LDADD = ${LIB_QT}
+tiles_h_SOURCES = ${images}
+subdir = pics
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/admin/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-LTLIBRARIES = $(kde_module_LTLIBRARIES)
+noinst_PROGRAMS = embedtool$(EXEEXT) tiles.h$(EXEEXT)
+PROGRAMS = $(noinst_PROGRAMS)
 
-kwin_crystal_config_la_DEPENDENCIES =
-am_kwin_crystal_config_la_OBJECTS = crystalconfig.lo
-#>- kwin_crystal_config_la_OBJECTS = $(am_kwin_crystal_config_la_OBJECTS)
-#>+ 4
-kwin_crystal_config_la_final_OBJECTS = kwin_crystal_config_la.all_cc.lo 
-kwin_crystal_config_la_nofinal_OBJECTS = crystalconfig.lo configdialog.lo infodialog.lo
-@KDE_USE_FINAL_FALSE@kwin_crystal_config_la_OBJECTS = $(kwin_crystal_config_la_nofinal_OBJECTS)
-@KDE_USE_FINAL_TRUE@kwin_crystal_config_la_OBJECTS = $(kwin_crystal_config_la_final_OBJECTS)
+am_embedtool_OBJECTS = embedtool.$(OBJEXT)
+#>- embedtool_OBJECTS = $(am_embedtool_OBJECTS)
+#>+ 1
+embedtool_OBJECTS = embedtool.$(OBJEXT)
+embedtool_DEPENDENCIES =
+am__objects_1 =
+am_tiles_h_OBJECTS = $(am__objects_1)
+#>- tiles_h_OBJECTS = $(am_tiles_h_OBJECTS)
+#>+ 1
+tiles_h_OBJECTS = $(am__objects_1)
+tiles_h_LDADD = $(LDADD)
+tiles_h_DEPENDENCIES =
+tiles_h_LDFLAGS =
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
 am__depfiles_maybe = depfiles
-#>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/crystalconfig.Plo
-#>+ 2
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/configdialog.P $(DEPDIR)/infodialog.P  $(DEPDIR)/kwin_crystal_config_la.all_cc.P ./$(DEPDIR)/crystalconfig.Plo
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/configdialog.P $(DEPDIR)/infodialog.P ./$(DEPDIR)/crystalconfig.Plo
+#>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/embedtool.Po
+#>+ 1
+@AMDEP_TRUE@DEP_FILES =  ./$(DEPDIR)/embedtool.Po
 #>- CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 #>- 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 #>+ 2
@@ -328,60 +332,42 @@ CXXLD = $(CXX)
 #>+ 2
 CXXLINK = $(LIBTOOL) --mode=link --tag=CXX $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(kwin_crystal_config_la_SOURCES)
-HEADERS = $(noinst_HEADERS)
-
-DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.in Makefile.am
-SOURCES = $(kwin_crystal_config_la_SOURCES)
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
+	$(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES = $(embedtool_SOURCES) $(tiles_h_SOURCES)
+DIST_COMMON = README $(srcdir)/Makefile.in Makefile.am
+SOURCES = $(embedtool_SOURCES) $(tiles_h_SOURCES)
 
 #>- all: all-am
 #>+ 1
 all: docs-am  all-am
 
 .SUFFIXES:
-.SUFFIXES: .cc .lo .o .obj
+.SUFFIXES: .cpp .lo .o .obj
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>- 	cd $(top_srcdir) && \
-#>- 	  $(AUTOMAKE) --foreign  client/config/Makefile
+#>- 	  $(AUTOMAKE) --foreign  pics/Makefile
 #>+ 3
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  client/config/Makefile
-	cd $(top_srcdir) && perl admin/am_edit client/config/Makefile.in
+	  $(AUTOMAKE) --foreign  pics/Makefile
+	cd $(top_srcdir) && perl admin/am_edit pics/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
-kde_moduleLTLIBRARIES_INSTALL = $(INSTALL)
-install-kde_moduleLTLIBRARIES: $(kde_module_LTLIBRARIES)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(kde_moduledir)
-	@list='$(kde_module_LTLIBRARIES)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    f="`echo $$p | sed -e 's|^.*/||'`"; \
-	    echo " $(LIBTOOL) --mode=install $(kde_moduleLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(kde_moduledir)/$$f"; \
-	    $(LIBTOOL) --mode=install $(kde_moduleLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(kde_moduledir)/$$f; \
-	  else :; fi; \
-	done
 
-uninstall-kde_moduleLTLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(kde_module_LTLIBRARIES)'; for p in $$list; do \
-	    p="`echo $$p | sed -e 's|^.*/||'`"; \
-	  echo " $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(kde_moduledir)/$$p"; \
-	  $(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(kde_moduledir)/$$p; \
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  echo " rm -f $$p $$f"; \
+	  rm -f $$p $$f ; \
 	done
-
-clean-kde_moduleLTLIBRARIES:
-	-test -z "$(kde_module_LTLIBRARIES)" || rm -f $(kde_module_LTLIBRARIES)
-	@list='$(kde_module_LTLIBRARIES)'; for p in $$list; do \
-	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
-	  test "$$dir" = "$$p" && dir=.; \
-	  echo "rm -f \"$${dir}/so_locations\""; \
-	  rm -f "$${dir}/so_locations"; \
-	done
-#>- kwin_crystal_config.la: $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal_config_la_DEPENDENCIES) 
-#>+ 2
-@KDE_USE_CLOSURE_TRUE@kwin_crystal_config.la: kwin_crystal_config.la.closure $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal_config_la_DEPENDENCIES) 
-@KDE_USE_CLOSURE_FALSE@kwin_crystal_config.la: $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal_config_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(kde_moduledir) $(kwin_crystal_config_la_LDFLAGS) $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal_config_la_LIBADD) $(LIBS)
+embedtool$(EXEEXT): $(embedtool_OBJECTS) $(embedtool_DEPENDENCIES) 
+	@rm -f embedtool$(EXEEXT)
+	$(CXXLINK) $(embedtool_LDFLAGS) $(embedtool_OBJECTS) $(embedtool_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -389,9 +375,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crystalconfig.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/embedtool.Po@am__quote@
 
-.cc.o:
+.cpp.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
 @am__fastdepCXX_TRUE@	  -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
@@ -402,7 +388,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
 
-.cc.obj:
+.cpp.obj:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
 @am__fastdepCXX_TRUE@	  -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; \
@@ -413,7 +399,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`
 
-.cc.lo:
+.cpp.lo:
 @am__fastdepCXX_TRUE@	if $(LTCXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" \
 @am__fastdepCXX_TRUE@	  -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Plo"; \
@@ -491,7 +477,7 @@ distclean-tags:
 #>+ 1
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
-top_distdir = ../..
+top_distdir = ..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
@@ -523,10 +509,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(HEADERS)
+all-am: Makefile $(PROGRAMS)
 
 installdirs:
-	$(mkinstalldirs) $(DESTDIR)$(kde_moduledir)
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -547,7 +532,6 @@ clean-generic:
 
 distclean-generic:
 	-rm -f $(CONFIG_CLEAN_FILES)
-	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -556,10 +540,10 @@ maintainer-clean-generic:
 #>+ 1
 clean: kde-rpo-clean  clean-am
 
-#>- clean-am: clean-generic clean-kde_moduleLTLIBRARIES clean-libtool \
+#>- clean-am: clean-generic clean-libtool clean-noinstPROGRAMS \
 #>- 	mostlyclean-am
 #>+ 2
-clean-am: clean-metasources clean-ui clean-closures clean-bcheck clean-final  clean-generic clean-kde_moduleLTLIBRARIES clean-libtool \
+clean-am: clean-bcheck  clean-generic clean-libtool clean-noinstPROGRAMS \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -576,13 +560,9 @@ info: info-am
 
 info-am:
 
-#>- install-data-am: install-kde_moduleLTLIBRARIES
-#>+ 1
-install-data-am:   
+install-data-am:
 
-#>- install-exec-am:
-#>+ 1
-install-exec-am:  install-kde_moduleLTLIBRARIES
+install-exec-am:
 
 install-info: install-info-am
 
@@ -608,62 +588,30 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am uninstall-kde_moduleLTLIBRARIES
+uninstall-am: uninstall-info-am
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-kde_moduleLTLIBRARIES clean-libtool ctags distclean \
+	clean-libtool clean-noinstPROGRAMS ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am info info-am install \
 	install-am install-data install-data-am install-exec \
-	install-exec-am install-info install-info-am \
-	install-kde_moduleLTLIBRARIES install-man install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-info-am \
-	uninstall-kde_moduleLTLIBRARIES
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool pdf \
+	pdf-am ps ps-am tags uninstall uninstall-am uninstall-info-am
 
 
-crystalconfig.cc: configdialog.h infodialog.h
-
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kwin_crystal_config.pot
+tiles.h: embedtool ${images}
+	@echo Generating Button Themes...
+	./embedtool ${images} > tiles.h
+	cp tiles.h ../client/tiles.h
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
-#>+ 8
-kwin_crystal_config.la.closure: $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal_config_la_DEPENDENCIES)
-	@echo "int main() {return 0;}" > kwin_crystal_config_la_closure.cc
-	@$(LTCXXCOMPILE) -c kwin_crystal_config_la_closure.cc
-	$(CXXLINK) kwin_crystal_config_la_closure.lo $(kwin_crystal_config_la_LDFLAGS) $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal_config_la_LIBADD) $(LIBS)
-	@rm -f kwin_crystal_config_la_closure.* kwin_crystal_config.la.closure
-	@echo "timestamp" > kwin_crystal_config.la.closure
-
-
-#>+ 3
-crystalconfig.moc: $(srcdir)/crystalconfig.h
-	$(MOC) $(srcdir)/crystalconfig.h -o crystalconfig.moc
-
 #>+ 2
-mocs: crystalconfig.moc
-
-#>+ 3
-clean-metasources:
-	-rm -f  crystalconfig.moc
-
-#>+ 2
-KDE_DIST=infodialog.ui Makefile.in configdialog.ui 
-
-#>+ 5
-clean-ui:
-	-rm -f \
-	configdialog.cc configdialog.h configdialog.moc \
-	infodialog.cc infodialog.h infodialog.moc 
-
-#>+ 3
-clean-closures:
-	-rm -f  kwin_crystal_config.la.closure
+KDE_DIST=Makefile.in lighting.png 
 
 #>+ 2
 docs-am:
@@ -671,8 +619,8 @@ docs-am:
 #>+ 6
 force-reedit:
 		cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  client/config/Makefile
-	cd $(top_srcdir) && perl admin/am_edit client/config/Makefile.in
+	  $(AUTOMAKE) --foreign  pics/Makefile
+	cd $(top_srcdir) && perl admin/am_edit pics/Makefile.in
 
 
 #>+ 21
@@ -697,37 +645,21 @@ bcheck-am:
 	done
 
 
-#>+ 11
-kwin_crystal_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc configdialog.cc infodialog.cc  crystalconfig.moc
-	@echo 'creating kwin_crystal_config_la.all_cc.cc ...'; \
-	rm -f kwin_crystal_config_la.all_cc.files kwin_crystal_config_la.all_cc.final; \
-	echo "#define KDE_USE_FINAL 1" >> kwin_crystal_config_la.all_cc.final; \
-	for file in crystalconfig.cc configdialog.cc infodialog.cc ; do \
-	  echo "#include \"$$file\"" >> kwin_crystal_config_la.all_cc.files; \
-	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin_crystal_config_la.all_cc.final; \
-	done; \
-	cat kwin_crystal_config_la.all_cc.final kwin_crystal_config_la.all_cc.files > kwin_crystal_config_la.all_cc.cc; \
-	rm -f kwin_crystal_config_la.all_cc.final kwin_crystal_config_la.all_cc.files
-
-#>+ 3
-clean-final:
-	-rm -f kwin_crystal_config_la.all_cc.cc
-
 #>+ 3
 final:
-	$(MAKE) kwin_crystal_config_la_OBJECTS="$(kwin_crystal_config_la_final_OBJECTS)" all-am
+	$(MAKE) all-am
 
 #>+ 3
 final-install:
-	$(MAKE) kwin_crystal_config_la_OBJECTS="$(kwin_crystal_config_la_final_OBJECTS)" install-am
+	$(MAKE) install-am
 
 #>+ 3
 no-final:
-	$(MAKE) kwin_crystal_config_la_OBJECTS="$(kwin_crystal_config_la_nofinal_OBJECTS)" all-am
+	$(MAKE) all-am
 
 #>+ 3
 no-final-install:
-	$(MAKE) kwin_crystal_config_la_OBJECTS="$(kwin_crystal_config_la_nofinal_OBJECTS)" install-am
+	$(MAKE) install-am
 
 #>+ 3
 cvs-clean:
@@ -737,40 +669,6 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 6
+#>+ 3
 nmcheck: 
 nmcheck-am: nmcheck
-crystalconfig.lo: crystalconfig.moc 
-crystalconfig.o: crystalconfig.moc 
-$(srcdir)/crystalconfig.cc: configdialog.h infodialog.h 
-
-#>+ 30
-infodialog.cc: $(srcdir)/infodialog.ui infodialog.h infodialog.moc
-	rm -f infodialog.cc
-	echo '#include <kdialog.h>' > infodialog.cc
-	echo '#include <klocale.h>' >> infodialog.cc
-	$(UIC) -tr ${UIC_TR} -i infodialog.h $(srcdir)/infodialog.ui > infodialog.cc.temp ; ret=$$?; \
-	$(PERL) -pe "s,${UIC_TR}( \"\" ),QString::null,g" infodialog.cc.temp | $(PERL) -pe "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | $(PERL) -pe "s,image([0-9][0-9]*)_data,img\$$1_infodialog,g" | $(PERL) -pe "s,: QWizard\(,: KWizard(,g" >> infodialog.cc ;\
-	rm -f infodialog.cc.temp ;\
-	if test "$$ret" = 0; then echo '#include "infodialog.moc"' >> infodialog.cc; else rm -f infodialog.cc ; exit $$ret ; fi
-
-infodialog.h: $(srcdir)/infodialog.ui
-	rm -rf infodialog.h;
-	$(UIC) $(srcdir)/infodialog.ui | $(PERL) -pi -e "s,public QWizard,public KWizard,g; s,#include <qwizard.h>,#include <kwizard.h>,g" >> infodialog.h ;
-infodialog.moc: infodialog.h
-	$(MOC) infodialog.h -o infodialog.moc
-
-configdialog.cc: $(srcdir)/configdialog.ui configdialog.h configdialog.moc
-	rm -f configdialog.cc
-	echo '#include <kdialog.h>' > configdialog.cc
-	echo '#include <klocale.h>' >> configdialog.cc
-	$(UIC) -tr ${UIC_TR} -i configdialog.h $(srcdir)/configdialog.ui > configdialog.cc.temp ; ret=$$?; \
-	$(PERL) -pe "s,${UIC_TR}( \"\" ),QString::null,g" configdialog.cc.temp | $(PERL) -pe "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | $(PERL) -pe "s,image([0-9][0-9]*)_data,img\$$1_configdialog,g" | $(PERL) -pe "s,: QWizard\(,: KWizard(,g" >> configdialog.cc ;\
-	rm -f configdialog.cc.temp ;\
-	if test "$$ret" = 0; then echo '#include "configdialog.moc"' >> configdialog.cc; else rm -f configdialog.cc ; exit $$ret ; fi
-
-configdialog.h: $(srcdir)/configdialog.ui
-	rm -rf configdialog.h;
-	$(UIC) $(srcdir)/configdialog.ui | $(PERL) -pi -e "s,public QWizard,public KWizard,g; s,#include <qwizard.h>,#include <kwizard.h>,g" >> configdialog.h ;
-configdialog.moc: configdialog.h
-	$(MOC) configdialog.h -o configdialog.moc

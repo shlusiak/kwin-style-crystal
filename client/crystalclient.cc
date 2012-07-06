@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2006 by Sascha Hlusiak                                  *
+ *   Spam84@gmx.de                                                         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
@@ -11,12 +31,7 @@
 #include <qapplication.h>
 #include <qimage.h>
 #include <qpopupmenu.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-
-#include <qworkspace.h>
 #include <kwin.h>
-#include <ksystemtray.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
@@ -26,12 +41,6 @@
 
 // Button themes
 #include "tiles.h"
-#include "aqua.h"
-#include "knifty.h"
-#include "handpainted.h"
-#include "svg.h"
-#include "vista.h"
-
 
 
 CrystalFactory* factory=NULL;
@@ -40,12 +49,10 @@ bool CrystalFactory::initialized_              = false;
 Qt::AlignmentFlags CrystalFactory::titlealign_ = Qt::AlignHCenter;
 
 
-
 extern "C" KDecorationFactory* create_factory()
 {
-    return new CrystalFactory();
+	return new CrystalFactory();
 }
-
 
 
 /*****************
@@ -69,27 +76,21 @@ public:
 
 
 
-
-
-//////////////////////////////////////////////////////////////////////////////
-// CrystalFactory Class                                                     //
-//////////////////////////////////////////////////////////////////////////////
-
 CrystalFactory::CrystalFactory()
 {
 	for (int i=0;i<ButtonImageCount;i++)
 		buttonImages[i]=NULL;
 
 	::factory=this;
-    readConfig();
-    initialized_ = true;
+	readConfig();
+	initialized_ = true;
 
-    image_holder=new QImageHolder();
+	image_holder=new QImageHolder(active.userdefinedPicture,inactive.userdefinedPicture);
 	CreateButtonImages();
 }
 
 CrystalFactory::~CrystalFactory() 
-{ 
+{
 	initialized_ = false; 
 	::factory=NULL;
 	if (image_holder)delete image_holder;
@@ -102,28 +103,30 @@ CrystalFactory::~CrystalFactory()
 
 KDecoration* CrystalFactory::createDecoration(KDecorationBridge* b)
 {
-    return new CrystalClient(b,factory );
+	return new CrystalClient(b,factory );
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// reset()
-// -------
-// Reset the handler. Returns true if decorations need to be remade, false if
-// only a repaint is necessary
 
 bool CrystalFactory::reset(unsigned long /*changed*/)
 {
-    // read in the configuration
-    initialized_ = false;
-//    bool confchange = 
+	initialized_ = false;
 	readConfig();
+	initialized_ = true;
 
-    initialized_ = true;
-
-    image_holder->repaint(true);
+	image_holder->setUserdefinedPictures(active.userdefinedPicture,inactive.userdefinedPicture);
+	image_holder->repaint(true);
 	CreateButtonImages();
 	
-    return true;
+	return true;
+}
+
+bool CrystalFactory::supports(Ability ability)
+{
+	switch (ability)
+	{
+	case AbilityButtonResize: return false;
+	default:
+		return true;
+	}
 }
 
 void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
@@ -152,62 +155,69 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// readConfig()
-// ------------
-// Read in the configuration file
-
 bool CrystalFactory::readConfig()
 {
     // create a config object
-    KConfig config("kwincrystalrc");
-    config.setGroup("General");
+	KConfig config("kwincrystalrc");
+	config.setGroup("General");
 	QColor c;
 
-    QString value = config.readEntry("TitleAlignment", "AlignHCenter");
-    if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
-    else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
-    else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
-
-    textshadow=(bool)config.readBoolEntry("TextShadow",true);
+	QString value = config.readEntry("TitleAlignment", "AlignHCenter");
+	if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
+	else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
+	else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
+	
+	textshadow=(bool)config.readBoolEntry("TextShadow",true);
 	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
 	wheelTask=(bool)config.readBoolEntry("WheelTask",true);
-    trackdesktop=(bool)config.readBoolEntry("TrackDesktop",false);
+	trackdesktop=(bool)config.readBoolEntry("TrackDesktop",false);
 
-    active.mode=config.readNumEntry("ActiveMode",0);
-    inactive.mode=config.readNumEntry("InactiveMode",1);
-    active.amount=(double)config.readNumEntry("ActiveShade",30)/100.0;
-    inactive.amount=(double)config.readNumEntry("InactiveShade",-30)/100.0;
-    active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
-    inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
+	active.mode=config.readNumEntry("ActiveMode",0);
+	inactive.mode=config.readNumEntry("InactiveMode",1);
+	active.amount=(double)config.readNumEntry("ActiveShade",30)/100.0;
+	inactive.amount=(double)config.readNumEntry("InactiveShade",-30)/100.0;
+	active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
+	inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
 	c=QColor(160,160,160);
-    active.frameColor=config.readColorEntry("FrameColor1",&c);
+	active.frameColor=config.readColorEntry("FrameColor1",&c);
 	c=QColor(128,128,128);
-    inactive.frameColor=config.readColorEntry("FrameColor2",&c);
+	inactive.frameColor=config.readColorEntry("FrameColor2",&c);
 
-    active.inlineFrame=(bool)config.readBoolEntry("ActiveInline",false);
-    inactive.inlineFrame=(bool)config.readBoolEntry("InactiveInline",false);
+	active.inlineFrame=(bool)config.readBoolEntry("ActiveInline",false);
+	inactive.inlineFrame=(bool)config.readBoolEntry("InactiveInline",false);
 	c=QColor(160,160,160);
-    active.inlineColor=config.readColorEntry("InlineColor1",&c);
+	active.inlineColor=config.readColorEntry("InlineColor1",&c);
 	c=QColor(160,160,160);
-    inactive.inlineColor=config.readColorEntry("InlineColor2",&c);
+	inactive.inlineColor=config.readColorEntry("InlineColor2",&c);
 
 	active.blur=config.readNumEntry("ActiveBlur",0);
 	inactive.blur=config.readNumEntry("InactiveBlur",0);
-    
-    borderwidth=config.readNumEntry("Borderwidth",5);
-    titlesize=config.readNumEntry("Titlebarheight",21);
+
+	active.userdefinedPicture=QImage();
+	inactive.userdefinedPicture=QImage();
+	if ((bool)config.readBoolEntry("ActiveUserdefined",false))
+	{
+		active.userdefinedPicture.load(config.readEntry("ActiveUserdefinedPicture"));
+	}
+	if ((bool)config.readBoolEntry("InactiveUserdefined",false))
+	{
+		inactive.userdefinedPicture.load(config.readEntry("InactiveUserdefinedPicture"));
+	}
+
+
+	borderwidth=config.readNumEntry("Borderwidth",5);
+	titlesize=config.readNumEntry("Titlebarheight",21);
  
 	buttonColor_normal=QColor(255,255,255);
-    buttonColor_normal=config.readColorEntry("ButtonColor",&buttonColor_normal);
-    buttonColor_hovered=config.readColorEntry("ButtonColor2",&buttonColor_normal);
-    buttonColor_pressed=config.readColorEntry("ButtonColor3",&buttonColor_normal);
+	buttonColor_normal=config.readColorEntry("ButtonColor",&buttonColor_normal);
+	buttonColor_hovered=config.readColorEntry("ButtonColor2",&buttonColor_normal);
+	buttonColor_pressed=config.readColorEntry("ButtonColor3",&buttonColor_normal);
 	closeColor_normal=QColor(255,255,255);
 	closeColor_normal=config.readColorEntry("CloseColor",&closeColor_normal);
 	closeColor_hovered=config.readColorEntry("CloseColor2",&closeColor_normal);
 	closeColor_pressed=config.readColorEntry("CloseColor3",&closeColor_normal);
 
-    roundCorners=config.readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
+	roundCorners=config.readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
 
 	hovereffect=config.readBoolEntry("HoverEffect",true);
 	animateHover=config.readBoolEntry("AnimateHover",true);
@@ -235,9 +245,7 @@ bool CrystalFactory::readConfig()
 			}
 		}else logoEnabled=1;
 	}else logo.resize(0,0);
-
-
-    return true;
+	return true;
 }
 
 void CrystalFactory::CreateButtonImages()
@@ -279,26 +287,25 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data);
 		break;
 	case 1: // Aqua buttons
-		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data);
-		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageUnShade]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data,16,16);
+		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageUnShade]->SetNormal(aqua_default_data,16,16);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data);
-		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data);
-		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data);
-		
+		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data,16,16);
+		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data,16,16);
+		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data,16,16);
 		
 		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data);
-		buttonImages[ButtonImageMax]->SetHovered(aqua_maximize_data);
-		buttonImages[ButtonImageMin]->SetHovered(aqua_minimize_data);
-		buttonImages[ButtonImageRestore]->SetHovered(aqua_maximize_data);
+		buttonImages[ButtonImageMax]->SetHovered(aqua_max_data);
+		buttonImages[ButtonImageMin]->SetHovered(aqua_min_data);
+		buttonImages[ButtonImageRestore]->SetHovered(aqua_max_data);
 		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data);
 		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data);
 		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data);
@@ -421,12 +428,13 @@ void CrystalFactory::CreateButtonImages()
 
 
 
-//////////////////////////////////////////////////////////////////////////////
-// CrystalClient Class                                                      //
-//////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
-    : KDecoration(b,f)
+: KDecoration(b,f)
 {
 	::factory->clients.append(this);
 }
@@ -434,74 +442,64 @@ CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
 CrystalClient::~CrystalClient()
 {
 	::factory->clients.remove(this);
-    for (int n=0; n<ButtonTypeCount; n++) {
-        if (button[n]) delete button[n];
-    }
+	for (int n=0; n<ButtonTypeCount; n++) {
+		if (button[n]) delete button[n];
+	}
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// init()
-// ------
-// Actual initializer for class
 
 void CrystalClient::init()
 {
-    createMainWidget(WResizeNoErase | WRepaintNoErase);
-    widget()->installEventFilter(this);
+	createMainWidget(WResizeNoErase | WRepaintNoErase);
+	widget()->installEventFilter(this);
 	FullMax=false;
 	
-    // for flicker-free redraws
-    widget()->setBackgroundMode(NoBackground);
+	// for flicker-free redraws
+	widget()->setBackgroundMode(NoBackground);
 
-    // setup layout
-    mainlayout = new QGridLayout(widget(), 4, 3); // 4x3 grid
-    titlelayout = new QHBoxLayout();
-    titlebar_ = new QSpacerItem(1, ::factory->titlesize-1, QSizePolicy::Expanding,
-                                QSizePolicy::Fixed);
+	// setup layout
+	mainlayout = new QGridLayout(widget(), 4, 3); // 4x3 grid
+	titlelayout = new QHBoxLayout();
+	titlebar_ = new QSpacerItem(1, ::factory->titlesize-1, QSizePolicy::Expanding,
+					QSizePolicy::Fixed);
 
-    mainlayout->setResizeMode(QLayout::FreeResize);
-    mainlayout->setRowSpacing(0, (::factory->buttontheme==5)?0:1);
+	mainlayout->setResizeMode(QLayout::FreeResize);
+	mainlayout->setRowSpacing(0, (::factory->buttontheme==5)?0:1);
 	mainlayout->setRowSpacing(3, ::factory->borderwidth*1);
 
 	mainlayout->setColSpacing(2,borderSpacing());
 	mainlayout->setColSpacing(0,borderSpacing());
-    mainlayout->addLayout(titlelayout, 1, 1);
+	mainlayout->addLayout(titlelayout, 1, 1);
 
-    if (isPreview()) {
+	if (isPreview()) {
 		char c[512];
-		sprintf(c,"<center><b>Crystal Preview</b><br>Built: %s</center",__DATE__);
-        mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
-        mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
+		sprintf(c,"<center><b>Crystal Preview</b><br>Built: %s</center>",__DATE__);
+		mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
+		mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
 		mainlayout->addWidget(new QLabel(i18n(c),widget()), 2, 1);
-    } else {
-        mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
-    }
+	} else {
+		mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
+	}
 	
-    // the window should stretch
-    mainlayout->setRowStretch(2, 10);
-    mainlayout->setColStretch(1, 10);
-    
-    updateMask();
-    
-    // setup titlebar buttons
-//    titlelayout->addItem(new QSpacerItem(::factory->borderwidth/2,0));
-    
-    for (int n=0; n<ButtonTypeCount; n++) button[n] = 0;
-//	titlelayout->insertSpacing(0,borderSpacing());
-    addButtons(titlelayout, options()->titleButtonsLeft());
-    titlelayout->addItem(titlebar_);
-    CrystalButton* lastbutton=addButtons(titlelayout, options()->titleButtonsRight());
-	if (lastbutton)lastbutton->setFirstLast(false,true);
-//	titlelayout->insertSpacing(-1,borderSpacing());
+	mainlayout->setRowStretch(2, 10);
+	mainlayout->setColStretch(1, 10);
+
+	updateMask();
+
+	for (int n=0; n<ButtonTypeCount; n++) button[n] = 0;
+	addButtons(titlelayout, options()->titleButtonsLeft());
+	titlelayout->addItem(titlebar_);
+	{
+		CrystalButton* lastbutton=addButtons(titlelayout, options()->titleButtonsRight());
+		if (lastbutton)lastbutton->setFirstLast(false,true);
+	}
 
 	if (::factory->captiontooltip) new CCrystalTooltip(widget(),this);	
 
-    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
-    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
-
+	connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
+	connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 	
-    connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
-    connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
+	connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
+	connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
 }
 
 void CrystalClient::updateMask()
@@ -512,168 +510,148 @@ void CrystalClient::updateMask()
 		return;
 	}
 	
-    int cornersFlag = ::factory->roundCorners;
+	int cornersFlag = ::factory->roundCorners;
 	int r(width());
 	int b(height());
 	QRegion mask;
 
 	mask=QRegion(widget()->rect());
 	
-    // Remove top-left corner.
-    if(cornersFlag & TOP_LEFT) {
-        mask -= QRegion(0, 0, 5, 1);
-        mask -= QRegion(0, 1, 3, 1);
-        mask -= QRegion(0, 2, 2, 1);
-        mask -= QRegion(0, 3, 1, 2);
-    }
-    // Remove top-right corner.
-    if(cornersFlag & TOP_RIGHT) {
-        mask -= QRegion(r - 5, 0, 5, 1);
-        mask -= QRegion(r - 3, 1, 3, 1);
-        mask -= QRegion(r - 2, 2, 2, 1);
-        mask -= QRegion(r - 1, 3, 1, 2);
-    }
-    // Remove bottom-left corner.
-    if(cornersFlag & BOT_LEFT) {
-        mask -= QRegion(0, b - 5, 1, 3);
-        mask -= QRegion(0, b - 3, 2, 1);
-        mask -= QRegion(0, b - 2, 3, 1);
-        mask -= QRegion(0, b - 1, 5, 1);
-    }
-    // Remove bottom-right corner.
-    if(cornersFlag & BOT_RIGHT) {
-        mask -= QRegion(r - 5, b - 1, 5, 1);
-        mask -= QRegion(r - 3, b - 2, 3, 1);
-        mask -= QRegion(r - 2, b - 3, 2, 1);
-        mask -= QRegion(r - 1, b - 5, 1, 2);
-    }
+	// Remove top-left corner.
+	if(cornersFlag & TOP_LEFT) {
+		mask -= QRegion(0, 0, 5, 1);
+		mask -= QRegion(0, 1, 3, 1);
+		mask -= QRegion(0, 2, 2, 1);
+		mask -= QRegion(0, 3, 1, 2);
+	}
+	// Remove top-right corner.
+	if(cornersFlag & TOP_RIGHT) {
+		mask -= QRegion(r - 5, 0, 5, 1);
+		mask -= QRegion(r - 3, 1, 3, 1);
+		mask -= QRegion(r - 2, 2, 2, 1);
+		mask -= QRegion(r - 1, 3, 1, 2);
+	}
+	// Remove bottom-left corner.
+	if(cornersFlag & BOT_LEFT) {
+		mask -= QRegion(0, b - 5, 1, 3);
+		mask -= QRegion(0, b - 3, 2, 1);
+		mask -= QRegion(0, b - 2, 3, 1);
+		mask -= QRegion(0, b - 1, 5, 1);
+	}
+	// Remove bottom-right corner.
+	if(cornersFlag & BOT_RIGHT) {
+		mask -= QRegion(r - 5, b - 1, 5, 1);
+		mask -= QRegion(r - 3, b - 2, 3, 1);
+		mask -= QRegion(r - 2, b - 3, 2, 1);
+		mask -= QRegion(r - 1, b - 5, 1, 2);
+	}
 	
 	setMask(mask);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// addButtons()
-// ------------
-// Add buttons to title layout
-
 CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 {
-    ButtonImage *bitmap;
-    QString tip;
+	ButtonImage *bitmap;
+	QString tip;
 	CrystalButton *lastone=NULL;
 
-    if (s.length() > 0) {
-        for (unsigned n=0; n < s.length(); n++) {
+	if (s.length() > 0) 
+	{
+		for (unsigned n=0; n < s.length(); n++)
+		{
 			CrystalButton *current=NULL;
-            switch (s[n]) {
-              case 'M': // Menu button
-                  if (!button[ButtonMenu]) 
-				  {
-                      button[ButtonMenu] = current = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, 0);
-                      connect(button[ButtonMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
-                  }
-                  break;
+			switch (s[n]) {
+			case 'M': // Menu button
+				if (!button[ButtonMenu]) {
+					button[ButtonMenu] = current = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, 0);
+					connect(button[ButtonMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
+				}
+				break;
 
-              case 'S': // Sticky button
-                  if (!button[ButtonSticky]) 
-				  {
-              			if (isOnAllDesktops()) 
-						{
-              				bitmap = ::factory->buttonImages[ButtonImageSticky];
-              				tip = i18n("Not on all desktops");
-              			} else {
-              				bitmap = ::factory->buttonImages[ButtonImageUnSticky];
-							tip = i18n("On All Desktops");
-						}
-                      	button[ButtonSticky] =current=new CrystalButton(this, "sticky", tip,ButtonSticky, bitmap);
-                      	connect(button[ButtonSticky], SIGNAL(clicked()),this, SLOT(toggleOnAllDesktops()));
-                  }
-                  break;
+			case 'S': // Sticky button
+				if (!button[ButtonSticky]) {
+					if (isOnAllDesktops()) {
+						bitmap = ::factory->buttonImages[ButtonImageSticky];
+						tip = i18n("Not on all desktops");
+					} else {
+						bitmap = ::factory->buttonImages[ButtonImageUnSticky];
+						tip = i18n("On All Desktops");
+					}
+					button[ButtonSticky] =current=new CrystalButton(this, "sticky", tip,ButtonSticky, bitmap);
+					connect(button[ButtonSticky], SIGNAL(clicked()),this, SLOT(toggleOnAllDesktops()));
+				}
+				break;
 
-              case 'H': // Help button
-                  if (providesContextHelp()) {
-                      button[ButtonHelp] =current=
-                          new CrystalButton(this, "help", i18n("Help"),
-                                            ButtonHelp, ::factory->buttonImages[ButtonImageHelp]);
-                      connect(button[ButtonHelp], SIGNAL(clicked()),
-                              this, SLOT(showContextHelp()));
-                  }
-                  break;
+			case 'H': // Help button
+				if (providesContextHelp()) {
+					button[ButtonHelp] =current=
+						new CrystalButton(this, "help", i18n("Help"),ButtonHelp, ::factory->buttonImages[ButtonImageHelp]);
+					connect(button[ButtonHelp], SIGNAL(clicked()),this, SLOT(showContextHelp()));
+				}
+				break;
 
-              case 'I': // Minimize button
-                  if ((!button[ButtonMin]) && isMinimizable())  {
-                      button[ButtonMin] =current=
-                          new CrystalButton(this, "iconify", i18n("Minimize"),
-                                            ButtonMin, ::factory->buttonImages[ButtonImageMin]);
-                      connect(button[ButtonMin], SIGNAL(clicked()),
-                              this, SLOT(minButtonPressed()));
-                  }
-                  break;
+			case 'I': // Minimize button
+				if ((!button[ButtonMin]) && isMinimizable())  {
+					button[ButtonMin] =current=
+						new CrystalButton(this, "iconify", i18n("Minimize"),ButtonMin, ::factory->buttonImages[ButtonImageMin]);
+					connect(button[ButtonMin], SIGNAL(clicked()),this, SLOT(minButtonPressed()));
+				}
+				break;
 
+			case 'F': // Above button
+				if (!button[ButtonAbove]) {
+					button[ButtonAbove] =current=
+						new CrystalButton(this, "above", i18n("Keep Above Others"),ButtonAbove, ::factory->buttonImages[keepAbove()?ButtonImageUnAbove:ButtonImageAbove]);
+					connect(button[ButtonAbove], SIGNAL(clicked()),this, SLOT(aboveButtonPressed()));
+				}
+				break;
+		
+			case 'B': // Below button
+				if ((!button[ButtonBelow])) {
+					button[ButtonBelow] =current=
+						new CrystalButton(this, "below", i18n("Keep Below Others"),ButtonBelow, ::factory->buttonImages[keepBelow()?ButtonImageUnBelow:ButtonImageBelow]);
+					connect(button[ButtonBelow], SIGNAL(clicked()),this, SLOT(belowButtonPressed()));
+				}
+				break;
 
-              case 'F': // Above button
-                  if ((!button[ButtonAbove]))  {
-                      button[ButtonAbove] =current=
-                          new CrystalButton(this, "above", i18n("Keep Above Others"),
-                                            ButtonAbove, ::factory->buttonImages[keepAbove()?ButtonImageUnAbove:ButtonImageAbove]);
-                      connect(button[ButtonAbove], SIGNAL(clicked()),
-                              this, SLOT(aboveButtonPressed()));
-                  }
-                  break;
-
-              case 'B': // Below button
-                  if ((!button[ButtonBelow]))  {
-                      button[ButtonBelow] =current=
-                          new CrystalButton(this, "below", i18n("Keep Below Others"),
-                                            ButtonBelow, ::factory->buttonImages[keepBelow()?ButtonImageUnBelow:ButtonImageBelow]);
-                      connect(button[ButtonBelow], SIGNAL(clicked()),
-                              this, SLOT(belowButtonPressed()));
-                  }
-                  break;
-
-				  
-              case 'L': // Shade button
-                  if ((!button[ButtonShade]) && isShadeable())  {
-                      button[ButtonShade] =current=
-                          new CrystalButton(this, "shade", i18n("Shade"),
-                                            ButtonShade, ::factory->buttonImages[ButtonImageShade]);
-                      connect(button[ButtonShade], SIGNAL(clicked()),
-                              this, SLOT(shadeButtonPressed()));
-                  }
-                  break;
+			case 'L': // Shade button
+				if ((!button[ButtonShade]) && isShadeable())  {
+					button[ButtonShade] =current=
+						new CrystalButton(this, "shade", i18n("Shade"),ButtonShade, ::factory->buttonImages[ButtonImageShade]);
+					connect(button[ButtonShade], SIGNAL(clicked()),this, SLOT(shadeButtonPressed()));
+				}
+				break;
 		  
-              case 'A': // Maximize button
-                  if ((!button[ButtonMax]) && isMaximizable()) {
-              if (maximizeMode() == MaximizeFull) {
-              bitmap = ::factory->buttonImages[ButtonImageRestore];
-              tip = i18n("Restore");
-              } else {
-              bitmap = ::factory->buttonImages[ButtonImageMax];
-              tip = i18n("Maximize");
-              }
-                      button[ButtonMax]  =current=
-                          new CrystalButton(this, "maximize", tip,
-                                            ButtonMax, bitmap);
-                      connect(button[ButtonMax], SIGNAL(clicked()),
-                              this, SLOT(maxButtonPressed()));
-                  }
-                  break;
+			case 'A': // Maximize button
+				if ((!button[ButtonMax]) && isMaximizable()) 
+				{
+					if (maximizeMode() == MaximizeFull) 
+					{
+						bitmap = ::factory->buttonImages[ButtonImageRestore];
+						tip = i18n("Restore");
+					} else {
+						bitmap = ::factory->buttonImages[ButtonImageMax];
+						tip = i18n("Maximize");
+					}
+					button[ButtonMax]  =current=
+						new CrystalButton(this, "maximize", tip,ButtonMax, bitmap);
+					connect(button[ButtonMax], SIGNAL(clicked()),this, SLOT(maxButtonPressed()));
+				}
+				break;
 
-              case 'X': // Close button
-                  if (isCloseable()) {
-                      button[ButtonClose] =current=
-                          new CrystalButton(this, "close", i18n("Close"),
-                                            ButtonClose, ::factory->buttonImages[ButtonImageClose]);
-                      connect(button[ButtonClose], SIGNAL(clicked()),
-                              this, SLOT(closeWindow()));
-                  }
-                  break;
+			case 'X': // Close button
+				if (isCloseable()) {
+					button[ButtonClose] =current=
+					new CrystalButton(this, "close", i18n("Close"),ButtonClose, ::factory->buttonImages[ButtonImageClose]);
+					connect(button[ButtonClose], SIGNAL(clicked()),this, SLOT(closeButtonPressed()));
+				}
+				break;
 
-              case '_': // Spacer item
-                  layout->addSpacing(4);
-				  current=NULL;
-				  break;
-            }
+			case '_': // Spacer item
+				layout->addSpacing(4);
+				current=NULL;
+				break;
+			}
 			
 			if (current)
 			{
@@ -682,14 +660,9 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 			}
 			lastone=current;
 		}
-    }
+	}
 	return lastone;
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// activeChange()
-// --------------
-// window active state has changed
 
 void CrystalClient::activeChange()
 {
@@ -697,59 +670,37 @@ void CrystalClient::activeChange()
 	if (isActive()) ::factory->clients.at(::factory->clients.find(this));
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// captionChange()
-// ---------------
-// The title has changed
-
 void CrystalClient::captionChange()
 {
-    widget()->repaint(titlebar_->geometry(), false);
+	widget()->repaint(titlebar_->geometry(), false);
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// desktopChange()
-// ---------------
-// Called when desktop/sticky changes
 
 void CrystalClient::desktopChange()
 {
-    bool d = isOnAllDesktops();
-    if (button[ButtonSticky]) {
-        button[ButtonSticky]->setBitmap(::factory->buttonImages[d ? ButtonImageSticky : ButtonImageUnSticky ]);
-    	QToolTip::remove(button[ButtonSticky]);
-    	QToolTip::add(button[ButtonSticky], d ? i18n("Not on all desktops") : i18n("On All Desktops"));
-    }
-    
-//    wallpaper->repaint(true);
+	bool d = isOnAllDesktops();
+	if (button[ButtonSticky]) {
+		button[ButtonSticky]->setBitmap(::factory->buttonImages[d ? ButtonImageSticky : ButtonImageUnSticky ]);
+		QToolTip::remove(button[ButtonSticky]);
+		QToolTip::add(button[ButtonSticky], d ? i18n("Not on all desktops") : i18n("On All Desktops"));
+	}
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// iconChange()
-// ------------
-// The title has changed
 
 void CrystalClient::iconChange()
 {
-    if (button[ButtonMenu]) {
-        button[ButtonMenu]->setBitmap(0);
-    }
+	if (button[ButtonMenu]) {
+		button[ButtonMenu]->setBitmap(0);
+	}
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// maximizeChange()
-// ----------------
-// Maximized state has changed
 
 void CrystalClient::maximizeChange()
 {
-    bool m = (maximizeMode() == MaximizeFull);
-    if (button[ButtonMax]) {
-        button[ButtonMax]->setBitmap(::factory->buttonImages[ m ? ButtonImageRestore : ButtonImageMax ]);
-    	QToolTip::remove(button[ButtonMax]);
-    	QToolTip::add(button[ButtonMax], m ? i18n("Restore") : i18n("Maximize"));
-    }
-	
+	bool m = (maximizeMode() == MaximizeFull);
+	if (button[ButtonMax]) {
+		button[ButtonMax]->setBitmap(::factory->buttonImages[ m ? ButtonImageRestore : ButtonImageMax ]);
+		QToolTip::remove(button[ButtonMax]);
+		QToolTip::add(button[ButtonMax], m ? i18n("Restore") : i18n("Maximize"));
+	}
+		
 	if (!options()->moveResizeMaximizedWindows())
 	{
 		FullMax=m;
@@ -782,11 +733,6 @@ int CrystalClient::borderSpacing()
 	return (::factory->borderwidth<=1)?1: ::factory->borderwidth;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// shadeChange()
-// -------------
-// Called when window shading changes
-
 void CrystalClient::shadeChange()
 { 
 	if (button[ButtonShade])
@@ -794,21 +740,13 @@ void CrystalClient::shadeChange()
 		button[ButtonShade]->setBitmap(::factory->buttonImages[isShade()?ButtonImageUnShade:ButtonImageShade]);
 	}
 	return;
-	updateLayout(); 
-	updateMask();
-	Repaint();
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// borders()
-// ----------
-// Get the size of the borders
 
 void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 {
-    l = r = ::factory->borderwidth;
-    t = ::factory->titlesize;
-    if (!isShade())b = ::factory->borderwidth; else b=0;
+	l = r = ::factory->borderwidth;
+	t = ::factory->titlesize;
+	if (!isShade())b = ::factory->borderwidth; else b=0;
 	
 	if (!options()->moveResizeMaximizedWindows() )
 	{
@@ -821,117 +759,85 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
 			l=r=0;
 	}
-}
 
-//////////////////////////////////////////////////////////////////////////////
-// resize()
-// --------
-// Called to resize the window
+}
 
 void CrystalClient::resize(const QSize &size)
 {
-    widget()->resize(size);
+	widget()->resize(size);
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// minimumSize()
-// -------------
-// Return the minimum allowable size for this window
 
 QSize CrystalClient::minimumSize() const
 {
-    return widget()->minimumSize();
+	return widget()->minimumSize();
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// mousePosition()
-// ---------------
-// Return logical mouse position
 
 KDecoration::Position CrystalClient::mousePosition(const QPoint &point) const
 {
-    const int corner = 20;
-    Position pos;
-    const int RESIZESIZE=::factory->borderwidth;
-
-    if (isShade() || !isResizable()) pos=PositionCenter; 
-    else if (point.y() <= 3) {
-        // inside top frame
-        if (point.x() <= corner)                 pos = PositionTopLeft;
-        else if (point.x() >= (width()-corner))  pos = PositionTopRight;
-        else                                     pos = PositionTop;
-    } else if (point.y() >= (height()-RESIZESIZE)) {
-        // inside handle
-        if (point.x() <= corner)                 pos = PositionBottomLeft;
-        else if (point.x() >= (width()-corner))  pos = PositionBottomRight;
-        else                                     pos = PositionBottom;
-    } else if (point.x() <= RESIZESIZE) {
-        // on left frame
-        if (point.y() <= corner)                 pos = PositionTopLeft;
-        else if (point.y() >= (height()-corner)) pos = PositionBottomLeft;
-        else                                     pos = PositionLeft;
-    } else if (point.x() >= width()-RESIZESIZE) {
-        // on right frame
-        if (point.y() <= corner)                 pos = PositionTopRight;
-        else if (point.y() >= (height()-corner)) pos = PositionBottomRight;
-        else                                     pos = PositionRight;
-    } else {
-        // inside the frame
-        pos = PositionCenter;
-    }
-    return pos;
+	const int corner = 20;
+	Position pos;
+	const int RESIZESIZE=::factory->borderwidth;
+	
+	if (isShade() || !isResizable()) pos=PositionCenter; 
+	else if (point.y() <= 3) {
+		// inside top frame
+		if (point.x() <= corner)                 pos = PositionTopLeft;
+		else if (point.x() >= (width()-corner))  pos = PositionTopRight;
+		else                                     pos = PositionTop;
+	} else if (point.y() >= (height()-RESIZESIZE)) {
+		// inside handle
+		if (point.x() <= corner)                 pos = PositionBottomLeft;
+		else if (point.x() >= (width()-corner))  pos = PositionBottomRight;
+		else                                     pos = PositionBottom;
+	} else if (point.x() <= RESIZESIZE) {
+		// on left frame
+		if (point.y() <= corner)                 pos = PositionTopLeft;
+		else if (point.y() >= (height()-corner)) pos = PositionBottomLeft;
+		else                                     pos = PositionLeft;
+	} else if (point.x() >= width()-RESIZESIZE) {
+		// on right frame
+		if (point.y() <= corner)                 pos = PositionTopRight;
+		else if (point.y() >= (height()-corner)) pos = PositionBottomRight;
+		else                                     pos = PositionRight;
+	} else {
+		// inside the frame
+		pos = PositionCenter;
+	}
+	return pos;
 }
-
-//////////////////////////////////////////////////////////////////////////////
-// eventFilter()
-// -------------
-// Event filter
 
 bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 {
-    if (obj != widget()) return false;
+	if (obj != widget()) return false;
+	
+	switch (e->type()) {
+	case QEvent::MouseButtonDblClick:
+		mouseDoubleClickEvent(static_cast<QMouseEvent *>(e));
+		return true;
+	case QEvent::MouseButtonPress:
+		processMousePressEvent(static_cast<QMouseEvent *>(e));
+		return true;
+	case QEvent::Paint:
+		paintEvent(static_cast<QPaintEvent *>(e));
+		return true;
+	case QEvent::Wheel:
+		mouseWheelEvent(static_cast<QWheelEvent *>(e));
+		return true;
 
-    switch (e->type()) {
+	case QEvent::Resize: 
+		resizeEvent(static_cast<QResizeEvent *>(e));
+		return true;
 
-	  case QEvent::MouseButtonDblClick: {
-          mouseDoubleClickEvent(static_cast<QMouseEvent *>(e));
-          return true;
-      }
-      case QEvent::MouseButtonPress: {
-	  	  QMouseEvent *me=static_cast<QMouseEvent *>(e);
-		  
-		  if (me->state() & ControlButton)
-		  {
-		  	ShowTabMenu(me);
-		  }else processMousePressEvent(me);
-          return true;
-      }
-      case QEvent::Paint: {
-          paintEvent(static_cast<QPaintEvent *>(e));
-          return true;
-      }
-	  case QEvent::Wheel: {
-	  	  mouseWheelEvent(static_cast<QWheelEvent *>(e));
-	  	  return true;
-	  }
-      case QEvent::Resize: {
-          resizeEvent(static_cast<QResizeEvent *>(e));
-          return true;
-      }
-      case QEvent::Show: {
-          showEvent(static_cast<QShowEvent *>(e));
-          return true;
-	  }
-      case QEvent::Move: {
-          moveEvent(static_cast<QMoveEvent *>(e));
-	      return true;
-	  }
-      default: {
-          return false;
-      }
-    }
+	case QEvent::Show:
+		showEvent(static_cast<QShowEvent *>(e));
+		return true;
+	case QEvent::Move:
+		moveEvent(static_cast<QMoveEvent *>(e));
+		return true;
+	default:return false;
+	}
 
-    return false;
+	return false;
 }
 
 void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
@@ -946,7 +852,6 @@ void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
 	XQueryTree(qt_xdisplay(),*frame,&root,&parent,&children,&numc);	
 	for (uint i=0;i<numc;i++)
 	{
-//		printf("Child of frame[%d]=%d\n",i,children[i]);
 		if (children[i]!=widget()->winId())*wrapper=children[i];
 	}
 	XFree(children);
@@ -957,16 +862,10 @@ void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
 	if (children!=NULL)XFree(children);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// mouseDoubleClickEvent()
-// -----------------------
-// Doubleclick on title
-
 void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if ((titlebar_->geometry().contains(e->pos()))&&(e->button()==LeftButton)) titlebarDblClickOperation();
-		else 
-	{
+	if ((titlebar_->geometry().contains(e->pos()))&&(e->button()==LeftButton)) titlebarDblClickOperation();
+	else {
 		QMouseEvent me(QEvent::MouseButtonPress,e->pos(),e->button(),e->state());
 		processMousePressEvent(&me);
 	}
@@ -982,7 +881,6 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 		
 		CrystalClient *n=this;
 		Window client,frame,wrapper;
-		
 		do
 		{
 			if(e->delta()>0)
@@ -1007,11 +905,6 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// paintEvent()
-// ------------
-// Repaint the window
-
 void CrystalClient::paintEvent(QPaintEvent*)
 {
 	if (!CrystalFactory::initialized()) return;
@@ -1026,6 +919,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	if (::factory->trackdesktop)
 		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
 	QPixmap *background=::factory->image_holder->image(isActive());
+	int drawFrame;
 
 	{
 		QRect r;
@@ -1092,36 +986,39 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 			pufferPainter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
 		}
+		pufferPainter.end();
+		painter.drawPixmap(0,0,pufferPixmap);
+
+		drawFrame=0;
+		if (wndcfg->frame && (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
+			drawFrame=1;
 
 		if (::factory->borderwidth>0)
 		{
 			if (background && !background->isNull())
 			{	// Draw the side and bottom of the window with transparency
-				r=QRect(p.x(),p.y()+bt,bl,widget()->height()-bt);
-				painter.drawPixmap(QPoint(0,bt),*background,r);
-		
-				r=QRect(widget()->width()-br+p.x(),p.y()+bt,widget()->width(),widget()->height()-bt);
+				// Left
+				r=QRect(p.x()+drawFrame,p.y()+bt,bl-drawFrame,widget()->height()-bt-drawFrame);
+				painter.drawPixmap(QPoint(drawFrame,bt),*background,r);
+
+				// Right
+				r=QRect(widget()->width()-br+p.x(),p.y()+bt,br-drawFrame,widget()->height()-bt-drawFrame);
 				painter.drawPixmap(QPoint(widget()->width()-br,bt),*background,r);
 
-				r=QRect(p.x()+bl,p.y()+widget()->height()-bb,widget()->width()-bl-br,bb);
+				// Bottom
+				r=QRect(p.x()+bl,p.y()+widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
 				painter.drawPixmap(QPoint(bl,widget()->height()-bb),*background,r);
 			}else{
-				r=QRect(0,bt,bl,widget()->height()-bt);
+				r=QRect(drawFrame,bt,bl-drawFrame,widget()->height()-bt-drawFrame);
 				painter.fillRect(r,group.background());
 		
-				r=QRect(widget()->width()-br,bt,widget()->width(),widget()->height()-bt);
+				r=QRect(widget()->width()-br,bt,br-drawFrame,widget()->height()-bt-drawFrame);
 				painter.fillRect(r,group.background());
 
-				r=QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb);
+				r=QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
 				painter.fillRect(r,group.background());
 			}
 		}
-	
-		pufferPainter.end();
-	
-	
-		painter.drawPixmap(0,0,pufferPixmap);
-
 
 		if (wndcfg->inlineFrame && !isShade())
 		{
@@ -1137,69 +1034,58 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		QTimer::singleShot(500,::factory->image_holder,SLOT(CheckSanity()));
 	}
 
-
-
-	// draw frame
-	if (wndcfg->frame)
+	if (drawFrame)
 	{
-    	// outline the frame
+		// outline the frame
 		QRect r=widget()->rect();
 		painter.setPen(wndcfg->frameColor);
-		if (!options()->moveResizeMaximizedWindows() && !isShade() && (maximizeMode() & MaximizeFull)==MaximizeFull)
-		{
-
-		}else painter.drawRect(r);
+		
+		painter.drawRect(r);
 
 		if ((::factory->roundCorners) && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
 		{
 			int cornersFlag = ::factory->roundCorners;
-			int r(width());
-			int b(height());
+			int r=(width());
+			int b=(height());
 
-            // Draw edge of top-left corner inside the area removed by the mask.
-            if(cornersFlag & TOP_LEFT) {
-                painter.drawPoint(3, 1);
-                painter.drawPoint(4, 1);
-                painter.drawPoint(2, 2);
-                painter.drawPoint(1, 3);
-                painter.drawPoint(1, 4);
-            }
-
-            // Draw edge of top-right corner inside the area removed by the mask.
-            if(cornersFlag & TOP_RIGHT) {
-                painter.drawPoint(r - 5, 1);
-                painter.drawPoint(r - 4, 1);
-                painter.drawPoint(r - 3, 2);
-                painter.drawPoint(r - 2, 3);
-                painter.drawPoint(r - 2, 4);
-            }
-
-            // Draw edge of bottom-left corner inside the area removed by the mask.
-            if(cornersFlag & BOT_LEFT) {
-                painter.drawPoint(1, b - 5);
-                painter.drawPoint(1, b - 4);
-                painter.drawPoint(2, b - 3);
-                painter.drawPoint(3, b - 2);
-                painter.drawPoint(4, b - 2);
-            }
-
-            // Draw edge of bottom-right corner inside the area removed by the mask.
-            if(cornersFlag & BOT_RIGHT) {
-                painter.drawPoint(r - 2, b - 5);
-                painter.drawPoint(r - 2, b - 4);
-                painter.drawPoint(r - 3, b - 3);
-                painter.drawPoint(r - 4, b - 2);
-                painter.drawPoint(r - 5, b - 2);
-            }
+			// Draw edge of top-left corner inside the area removed by the mask.
+			if(cornersFlag & TOP_LEFT) {
+				painter.drawPoint(3, 1);
+				painter.drawPoint(4, 1);
+				painter.drawPoint(2, 2);
+				painter.drawPoint(1, 3);
+				painter.drawPoint(1, 4);
+			}
+		
+			// Draw edge of top-right corner inside the area removed by the mask.
+			if(cornersFlag & TOP_RIGHT) {
+				painter.drawPoint(r - 5, 1);
+				painter.drawPoint(r - 4, 1);
+				painter.drawPoint(r - 3, 2);
+				painter.drawPoint(r - 2, 3);
+				painter.drawPoint(r - 2, 4);
+			}
+		
+			// Draw edge of bottom-left corner inside the area removed by the mask.
+			if(cornersFlag & BOT_LEFT) {
+				painter.drawPoint(1, b - 5);
+				painter.drawPoint(1, b - 4);
+				painter.drawPoint(2, b - 3);
+				painter.drawPoint(3, b - 2);
+				painter.drawPoint(4, b - 2);
+			}
+		
+			// Draw edge of bottom-right corner inside the area removed by the mask.
+			if(cornersFlag & BOT_RIGHT) {
+				painter.drawPoint(r - 2, b - 5);
+				painter.drawPoint(r - 2, b - 4);
+				painter.drawPoint(r - 3, b - 3);
+				painter.drawPoint(r - 4, b - 2);
+				painter.drawPoint(r - 5, b - 2);
+			}
 		}
 	}
 }
-
-
-//////////////////////////////////////////////////////////////////////////////
-// resizeEvent()
-// -------------
-// Window is being resized
 
 void CrystalClient::resizeEvent(QResizeEvent *e)
 {
@@ -1244,11 +1130,6 @@ void CrystalClient::moveEvent(QMoveEvent *)
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// showEvent()
-// -----------
-// Window is being shown
-
 void CrystalClient::showEvent(QShowEvent *)
 {
 	if (widget()->isShown()) 
@@ -1262,35 +1143,30 @@ void CrystalClient::Repaint()
 		if (button[n]) button[n]->reset();
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// maxButtonPressed()
-// -----------------
-// Max button was pressed
-
 void CrystalClient::maxButtonPressed()
 {
-    if (button[ButtonMax]) {
-        switch (button[ButtonMax]->lastMousePress()) {
-          case MidButton:
-              maximize(maximizeMode() ^ MaximizeVertical);
-              break;
-          case RightButton:
-              maximize(maximizeMode() ^ MaximizeHorizontal);
-              break;
-          default:
-              (maximizeMode() == MaximizeFull) ? maximize(MaximizeRestore)
-                  : maximize(MaximizeFull);
-        }
-    }
+	if (button[ButtonMax])
+	{
+		switch (button[ButtonMax]->lastMousePress()) 
+		{
+		case MidButton:
+			maximize(maximizeMode() ^ MaximizeVertical);
+			break;
+		case RightButton:
+			maximize(maximizeMode() ^ MaximizeHorizontal);
+			break;
+		default:
+			maximize((maximizeMode() == MaximizeFull) ? MaximizeRestore: MaximizeFull);
+		}
+	}
 }
 
 void CrystalClient::minButtonPressed()
 {
-    if (button[ButtonMin]) {
-        switch (button[ButtonMin]->lastMousePress()) {
-          case MidButton:
-		  {
-	  		performWindowOperation(LowerOp);
+	if (button[ButtonMin]) {
+		switch (button[ButtonMin]->lastMousePress()) {
+		case MidButton:{
+			performWindowOperation(LowerOp);
 /*			Window client,frame,wrapper;
 			ClientWindows(&frame,&wrapper,&client);
 			#define SYSTEM_TRAY_REQUEST_DOCK    0
@@ -1317,15 +1193,15 @@ void CrystalClient::minButtonPressed()
   			XSync(qt_xdisplay(), False);
 			
 			XUnmapWindow(qt_xdisplay(),client);*/
+			break;
 		}
-	  	break;
-	  case RightButton:
-              if (isShadeable()) setShade(!isShade());
-              break;
-          default:
-	  	minimize();
-	  }
-    }
+		case RightButton:
+			if (isShadeable()) setShade(!isShade());
+			break;
+		default:
+			minimize();
+		}
+	}
 }
 
 void CrystalClient::aboveButtonPressed()
@@ -1354,24 +1230,32 @@ void CrystalClient::keepBelowChange(bool /*set*/)
 	}
 }
 
-void CrystalClient::shadeButtonPressed()
+void CrystalClient::closeButtonPressed()
 {
-    if (button[ButtonShade]) {
-        switch (button[ButtonShade]->lastMousePress()) {
-          case MidButton:
-	  case RightButton:
-//              if (isShadeable()) setShade(!isShade());
-              break;
-          default:
-              if (isShadeable()) setShade(!isShade());
-        }
-    }
+	if (button[ButtonClose])
+	switch (button[ButtonClose]->lastMousePress()) {
+		case RightButton:
+		{
+			break;
+		}
+		default:
+			closeWindow();
+			break;
+	}
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// menuButtonPressed()
-// -------------------
-// Menu button was pressed (popup the menu)
+void CrystalClient::shadeButtonPressed()
+{
+	if (button[ButtonShade]) {
+		switch (button[ButtonShade]->lastMousePress()) {
+		case MidButton:
+		case RightButton:
+			break;
+		default:
+			if (isShadeable()) setShade(!isShade());
+		}
+	}
+}
 
 void CrystalClient::menuButtonPressed()
 {
@@ -1391,8 +1275,6 @@ void CrystalClient::menuButtonPressed()
 		return;
 	}
 
-	// Do not show menu immediately, so a double click to close the window does not cause flicker
-// 	QTimer::singleShot(150,this,SLOT(menuPopUp()));
 	menuPopUp();
 }
 
@@ -1405,58 +1287,5 @@ void CrystalClient::menuPopUp()
 	if (!f->exists(this)) return; // decoration was destroyed
 	button[ButtonMenu]->setDown(false);
 }
-
-void CrystalClient::ShowTabMenu(QMouseEvent* /*me*/)
-{	
-	// FIXME This stuff does not work at all!
-/*	QPopupMenu p(widget());
-	for (uint i=0;i<(::factory->clients.count());i++)
-	{
-		CrystalClient* c=::factory->clients.at(i);
-		if (c!=this)
-			p.insertItem(c->caption(),(int)c);
-	}
-	CrystalClient* client=(CrystalClient*)p.exec(widget()->mapToGlobal(me->pos()));
-	if ((int)client==-1) return;
-	if (!::factory->exists(client)) return;
-	
-	XWindowAttributes attr;
-	Window w_client2,w_frame2,w_wrapper2,w_client1,w_frame1,w_wrapper1;
-	
-	client->ClientWindows(&w_frame1,&w_wrapper1,&w_client1);
-	XGetWindowAttributes(qt_xdisplay(),w_frame1,&attr);
-	
-	
-	ClientWindows(&w_frame2,&w_wrapper2,&w_client2);
-	
-	
-	XWindowChanges c;
-	c.x=attr.x;
-	c.y=attr.y;
-	c.width=attr.width;
-	c.height=attr.height;
-	
-//	XReconfigureWMWindow(qt_xdisplay(),w_frame,0,CWX|CWY|CWWidth|CWHeight,&c);
-	
-//	XUnmapWindow(qt_xdisplay(),w_frame2);
-	grabXServer();
-	static XSizeHints size;
-	size.flags=PSize;
-	size.width=attr.width;
-	size.height=attr.height;
-	XSetWMNormalHints(qt_xdisplay(),w_client2,&size);
-	XResizeWindow(qt_xdisplay(),w_client2,attr.width,attr.height);
-	ungrabXServer();
-	
-//	XMapWindow(qt_xdisplay(),w_frame2);
-
-//	XMoveResizeWindow( qt_xdisplay(), w_frame, attr.x, attr.y, attr.width, attr.height );
-//	resize(QSize(attr.width,attr.height));
-
-//	XMoveResizeWindow( qt_xdisplay(), w_wrapper, 0, 0, attr.width, attr.height);
-//	XMoveResizeWindow( qt_xdisplay(), w_client, 0, 0, attr.width, attr.height);
-*/
-}
-
 
 #include "crystalclient.moc"

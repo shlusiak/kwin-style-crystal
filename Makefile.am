@@ -1,4 +1,4 @@
-SUBDIRS = client
+SUBDIRS = pics client
 
 MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 configure.files
 

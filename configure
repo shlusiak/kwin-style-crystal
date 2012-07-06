@@ -32259,6 +32259,8 @@ done
 
           ac_config_files="$ac_config_files client/config/Makefile"
 
+          ac_config_files="$ac_config_files pics/Makefile"
+
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -32839,6 +32841,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "client/Makefile" ) CONFIG_FILES="$CONFIG_FILES client/Makefile" ;;
   "client/config/Makefile" ) CONFIG_FILES="$CONFIG_FILES client/config/Makefile" ;;
+  "pics/Makefile" ) CONFIG_FILES="$CONFIG_FILES pics/Makefile" ;;
   "depfiles" ) CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5

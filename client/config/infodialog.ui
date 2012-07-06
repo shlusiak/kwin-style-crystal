@@ -12,7 +12,7 @@
             <x>0</x>
             <y>0</y>
             <width>412</width>
-            <height>297</height>
+            <height>318</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -39,53 +39,66 @@
         <property name="resizeMode">
             <enum>Minimum</enum>
         </property>
-        <widget class="QGroupBox" row="2" column="0" rowspan="1" colspan="4">
+        <widget class="QPushButton" row="8" column="1">
             <property name="name">
-                <cstring>groupBox3_2</cstring>
-            </property>
-            <property name="enabled">
-                <bool>true</bool>
+                <cstring>pushButton1</cstring>
             </property>
             <property name="sizePolicy">
                 <sizepolicy>
-                    <hsizetype>5</hsizetype>
+                    <hsizetype>1</hsizetype>
                     <vsizetype>0</vsizetype>
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                 </sizepolicy>
             </property>
-            <property name="minimumSize">
-                <size>
-                    <width>0</width>
-                    <height>20</height>
-                </size>
+            <property name="autoMask">
+                <bool>true</bool>
             </property>
-            <property name="maximumSize">
-                <size>
-                    <width>32767</width>
-                    <height>20</height>
-                </size>
+            <property name="text">
+                <string>&amp;Close</string>
             </property>
-            <property name="frameShape">
-                <enum>ToolBarPanel</enum>
+            <property name="accel">
+                <string>Alt+C</string>
             </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="lineWidth">
-                <number>1</number>
-            </property>
-            <property name="title">
-                <string>Usage:</string>
-            </property>
-            <property name="alignment">
-                <set>AlignCenter</set>
-            </property>
-            <property name="flat">
+            <property name="default">
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="QGroupBox" row="0" column="0" rowspan="1" colspan="4">
+        <spacer row="8" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacer7</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>150</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <spacer row="8" column="0">
+            <property name="name">
+                <cstring>spacer6</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>170</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QGroupBox" row="0" column="0" rowspan="2" colspan="4">
             <property name="name">
                 <cstring>groupBox3</cstring>
             </property>
@@ -131,7 +144,111 @@
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="QLabel" row="3" column="0" rowspan="1" colspan="4">
+        <widget class="QLabel" row="2" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>1</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="backgroundMode">
+                <enum>PaletteBackground</enum>
+            </property>
+            <property name="text">
+                <string>Crystal kwin decoration theme,
+Sascha Hlusiak &lt;spam84@gmx.de&gt;, 2004-2006.
+
+You may look for the most recent version at kde-look.org:</string>
+            </property>
+            <property name="textFormat">
+                <enum>PlainText</enum>
+            </property>
+            <property name="alignment">
+                <set>AlignTop|AlignLeft</set>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="3" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>pixmapLabel2</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>1</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="pixmap">
+                <pixmap>image0</pixmap>
+            </property>
+            <property name="scaledContents">
+                <bool>false</bool>
+            </property>
+        </widget>
+        <widget class="KURLLabel" row="3" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>kURLLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>www.kde-look.org/content/show.php?content=13969</string>
+            </property>
+            <property name="url" stdset="0">
+                <string>http://www.kde-look.org/content/show.php?content=13969</string>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="4" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>groupBox3_2</cstring>
+            </property>
+            <property name="enabled">
+                <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>20</height>
+                </size>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>32767</width>
+                    <height>20</height>
+                </size>
+            </property>
+            <property name="frameShape">
+                <enum>ToolBarPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="lineWidth">
+                <number>1</number>
+            </property>
+            <property name="title">
+                <string>Usage:</string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+            <property name="flat">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QLabel" row="5" column="0" rowspan="1" colspan="4">
             <property name="name">
                 <cstring>textLabel1_2</cstring>
             </property>
@@ -159,66 +276,7 @@
                 <set>AlignVCenter|AlignLeft</set>
             </property>
         </widget>
-        <widget class="QPushButton" row="6" column="1">
-            <property name="name">
-                <cstring>pushButton1</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="autoMask">
-                <bool>true</bool>
-            </property>
-            <property name="text">
-                <string>&amp;Close</string>
-            </property>
-            <property name="accel">
-                <string>Alt+C</string>
-            </property>
-            <property name="default">
-                <bool>true</bool>
-            </property>
-        </widget>
-        <spacer row="6" column="2" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>spacer7</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>150</width>
-                    <height>20</height>
-                </size>
-            </property>
-        </spacer>
-        <spacer row="6" column="0">
-            <property name="name">
-                <cstring>spacer6</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>170</width>
-                    <height>20</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="Line" row="5" column="0" rowspan="1" colspan="4">
+        <widget class="Line" row="6" column="0" rowspan="1" colspan="4">
             <property name="name">
                 <cstring>line2</cstring>
             </property>
@@ -232,7 +290,7 @@
                 <enum>Horizontal</enum>
             </property>
         </widget>
-        <spacer row="4" column="1">
+        <spacer row="7" column="1">
             <property name="name">
                 <cstring>spacer5</cstring>
             </property>
@@ -245,57 +303,10 @@
             <property name="sizeHint">
                 <size>
                     <width>20</width>
-                    <height>50</height>
+                    <height>16</height>
                 </size>
             </property>
         </spacer>
-        <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>textLabel1</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>7</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="backgroundMode">
-                <enum>PaletteBackground</enum>
-            </property>
-            <property name="text">
-                <string>Crystal kwin decoration theme,
-Sascha Hlusiak &lt;spam84@gmx.de&gt;, 2004-2006.
-
-You may look for the most recent version at kde-look.org!</string>
-            </property>
-            <property name="textFormat">
-                <enum>PlainText</enum>
-            </property>
-            <property name="alignment">
-                <set>AlignTop|AlignLeft</set>
-            </property>
-        </widget>
-        <widget class="QLabel" row="1" column="3">
-            <property name="name">
-                <cstring>pixmapLabel2</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>1</hsizetype>
-                    <vsizetype>1</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="pixmap">
-                <pixmap>image0</pixmap>
-            </property>
-            <property name="scaledContents">
-                <bool>false</bool>
-            </property>
-        </widget>
     </grid>
 </widget>
 <images>
@@ -311,5 +322,11 @@ You may look for the most recent version at kde-look.org!</string>
         <slot>close()</slot>
     </connection>
 </connections>
+<slots>
+    <slot>kURLLabel1_leftURL()</slot>
+</slots>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurllabel.h</includehint>
+</includehints>
 </UI>

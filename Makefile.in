@@ -269,7 +269,7 @@ x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
-SUBDIRS = client
+SUBDIRS = pics client
 
 MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 configure.files
 
@@ -295,11 +295,11 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \
 	installdirs-recursive install-recursive uninstall-recursive \
 	check-recursive installcheck-recursive nmcheck-recursive bcheck-recursive
 DIST_COMMON = README $(srcdir)/Makefile.in $(srcdir)/configure AUTHORS \
-	INSTALL Makefile.am acinclude.m4 aclocal.m4 admin/ChangeLog \
-	admin/compile admin/config.guess admin/config.sub admin/depcomp \
-	admin/install-sh admin/ltmain.sh admin/missing \
-	admin/mkinstalldirs admin/ylwrap config.h.in configure \
-	configure.in
+	COPYING INSTALL Makefile.am acinclude.m4 aclocal.m4 \
+	admin/ChangeLog admin/compile admin/config.guess \
+	admin/config.sub admin/depcomp admin/install-sh admin/ltmain.sh \
+	admin/missing admin/mkinstalldirs admin/ylwrap config.h.in \
+	configure configure.in
 DIST_SUBDIRS = $(SUBDIRS)
 #>- all: config.h
 #>+ 1
@@ -733,7 +733,7 @@ dist-hook:
 .NOEXPORT:
 
 #>+ 2
-KDE_DIST=stamp-h.in crystal.kdevelop.pcs subdirs Makefile.in configure.files crystal.kdevses Doxyfile configure.in.in crystal.kdevelop 
+KDE_DIST=stamp-h.in subdirs Makefile.in configure.files crystal.kdevses Doxyfile configure.in.in crystal.kdevelop 
 
 #>+ 2
 docs-am:

@@ -70,6 +70,7 @@ KDE_CREATE_SUBDIRSLIST
 AC_CONFIG_FILES([ Makefile ])
 AC_CONFIG_FILES([ client/Makefile ])
 AC_CONFIG_FILES([ client/config/Makefile ])
+AC_CONFIG_FILES([ pics/Makefile ])
 AC_OUTPUT
 # Check if KDE_SET_PREFIX was called, and --prefix was passed to configure
 if test -n "$kde_libs_prefix" -a -n "$given_prefix"; then
