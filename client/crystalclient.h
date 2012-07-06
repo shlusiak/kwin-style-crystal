@@ -60,6 +60,7 @@ struct WND_CONFIG
 	double amount;
 	bool frame;
 	QColor frameColor;
+	QPixmap overlay;
 };
 
 

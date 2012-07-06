@@ -1,32 +1,38 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="4" >
-  <Doc0 NumberOfViews="1" URL="file:/home/sascha/develop/crystal/crystal-0.9.1/client/crystalclient.cc" >
-   <View0 line="144" Type="Source" />
+ <DocsAndViews NumberOfDocuments="6" >
+  <Doc0 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.2/client/crystalclient.cc" >
+   <View0 line="107" Type="Source" />
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:/home/sascha/develop/crystal/crystal-0.9.1/client/crystalclient.h" >
-   <View0 Type="Source" />
+  <Doc1 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.2/client/crystalclient.h" >
+   <View0 line="62" Type="Source" />
   </Doc1>
-  <Doc2 NumberOfViews="1" URL="file:/home/sascha/develop/crystal/crystal-0.9.1/client/config/infodialog.ui" >
-   <View0 Type="Other" />
+  <Doc2 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.2/client/crystalbutton.cpp" >
+   <View0 line="28" Type="Source" />
   </Doc2>
-  <Doc3 NumberOfViews="1" URL="file:/home/sascha/develop/crystal/crystal-0.9.1/client/crystalbutton.cpp" >
-   <View0 line="0" Type="Source" />
+  <Doc3 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.2/client/config/crystalconfig.cc" >
+   <View0 line="96" Type="Source" />
   </Doc3>
+  <Doc4 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.2/client/config/crystalconfig.h" >
+   <View0 line="59" Type="Source" />
+  </Doc4>
+  <Doc5 NumberOfViews="1" URL="file:///usr/qt/3/doc/html/qimage.html#load" >
+   <View0 Type="Documentation" />
+  </Doc5>
  </DocsAndViews>
  <pluginList>
-  <kdevvalgrind>
-   <executable path="" params="" />
-   <valgrind path="" params="" />
-   <calltree path="" params="" />
-   <kcachegrind path="" />
-  </kdevvalgrind>
   <kdevdebugger>
    <breakpointList/>
   </kdevdebugger>
   <kdevbookmarks>
    <bookmarks/>
   </kdevbookmarks>
+  <kdevvalgrind>
+   <executable path="" params="" />
+   <valgrind path="" params="" />
+   <calltree path="" params="" />
+   <kcachegrind path="" />
+  </kdevvalgrind>
  </pluginList>
 </KDevPrjSession>

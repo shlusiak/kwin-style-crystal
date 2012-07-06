@@ -229,11 +229,13 @@ void CrystalButton::drawButton(QPainter *painter)
     QPainter pufferPainter(&pufferPixmap);
     
     // paint a plain box with border
-    QPixmap *background=((CrystalFactory*)client_->factory())->image_holder->image(client_->isActive());
-	
+	CrystalFactory *f=((CrystalFactory*)client_->factory());
+    QPixmap *background=f->image_holder->image(client_->isActive());
+	WND_CONFIG *wndcfg=client_->isActive()?&f->active:&f->inactive;
+
     if (background && !background->isNull())
     {
-    	QRect r=rect();
+		QRect r=rect();
 		QPoint p=mapToGlobal(QPoint(0,0));
 		r.moveBy(p.x(),p.y());
 	
@@ -243,17 +245,14 @@ void CrystalButton::drawButton(QPainter *painter)
 		pufferPainter.fillRect(rect(), group.background());
     }
 
+	if (!wndcfg->overlay.isNull())
+	{
+		pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
+	}
+
 	int m=(rect().width()-2<rect().height())?rect().width()-2:rect().height();
     QRect r((rect().width()-m)/2,(rect().height()-m)/2,m,m);
 
-// TODO: Das hier richtig machen, wenn maximiert!
-
-//	if (client_->FullMax)
-//	{
-//		r.setSize(
-//		r.moveBy(0,FRAMESIZE);
-//	}
-	
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
         dx = float(width() - 16) / 2.0;
@@ -261,11 +260,11 @@ void CrystalButton::drawButton(QPainter *painter)
 
 		if (dx<1 || dy<=1)
 		{
-			if (isDown()) { r.moveBy(1,1); }
+// 			if (isDown()) { r.moveBy(1,1); }
         		pufferPainter.drawPixmap(r, client_->icon().pixmap(QIconSet::Small,
                                                            QIconSet::Normal));
 		}else{
-        	if (isDown()) { dx++; dy++; }
+//         	if (isDown()) { dx++; dy++; }
 			pufferPainter.drawPixmap((int)dx, (int)dy, client_->icon().pixmap(QIconSet::Small,
                                                            QIconSet::Normal));
 		}
@@ -299,10 +298,8 @@ void CrystalButton::drawButton(QPainter *painter)
 	    }
 	}
 	
-	WND_CONFIG* wndcfg=(client_->isActive()?&::factory->active:&::factory->inactive);
-	// draw frame
-	
-	if (wndcfg->frame && client_->FullMax)
+
+	if (wndcfg->frame && client_->FullMax && client_->isShade())
 	{
 		group = client_->options()->colorGroup(KDecoration::ColorFrame, client_->isActive());
 

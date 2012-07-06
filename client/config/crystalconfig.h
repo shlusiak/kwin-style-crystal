@@ -56,6 +56,8 @@ public slots:
 protected slots:
     void selectionChanged(int);
     void colorChanged(const QColor&) { selectionChanged(0); }
+	void loadOverlayActive();
+	void loadOverlayInactive();
 
 private:
     KConfig *config_;

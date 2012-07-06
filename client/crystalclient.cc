@@ -13,6 +13,7 @@
 #include <qpopupmenu.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
+
 #include <qworkspace.h>
 #include <kwin.h>
 #include <ksystemtray.h>
@@ -28,6 +29,7 @@
 #include "handpainted.h"
 #include "svg.h"
 
+#include "overlays.h"
 
 
 CrystalFactory* factory=NULL;
@@ -52,9 +54,9 @@ CrystalFactory::CrystalFactory()
 	for (int i=0;i<ButtonImageCount;i++)
 		buttonImages[i]=NULL;
 
+	::factory=this;
     readConfig();
     initialized_ = true;
-	::factory=this;
 
     image_holder=new QImageHolder();
 	CreateButtonImages();
@@ -83,7 +85,7 @@ KDecoration* CrystalFactory::createDecoration(KDecorationBridge* b)
 // Reset the handler. Returns true if decorations need to be remade, false if
 // only a repaint is necessary
 
-bool CrystalFactory::reset(unsigned long changed)
+bool CrystalFactory::reset(unsigned long /*changed*/)
 {
     // read in the configuration
     initialized_ = false;
@@ -96,6 +98,34 @@ bool CrystalFactory::reset(unsigned long changed)
 	CreateButtonImages();
 	
     return true;
+}
+
+void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
+{
+	cfg->overlay.resize(0,0);
+	switch(mode)
+	{
+		case 0:	break;
+		case 1:{
+			cfg->overlay.resize(0,0);
+			QImage img=QImage((uchar*)lighting_data,1,64,32,NULL,0,QImage::LittleEndian);
+			img.setAlphaBuffer(true);
+			cfg->overlay.convertFromImage(img.smoothScale(1,::factory->titlesize));
+			break;
+		}
+		case 2:{
+			QImage img;
+			printf("loading\n");
+			if (img.load(filename))
+			{
+				printf("loaded\n");
+				img.setAlphaBuffer(true);
+				cfg->overlay.convertFromImage(img.smoothScale(1,::factory->titlesize));
+			}
+			break;
+		}
+	}
+
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -140,7 +170,11 @@ bool CrystalFactory::readConfig()
 	repaintMode=config.readNumEntry("RepaintMode",2);
 	repaintTime=config.readNumEntry("RepaintTime",200);
 	buttontheme=config.readNumEntry("ButtonTheme",0);
-       
+
+
+	setupOverlay(&active,config.readNumEntry("OverlayModeActive",0),config.readEntry("OverlayFileActive",""));
+	setupOverlay(&inactive,config.readNumEntry("OverlayModeInactive",0),config.readEntry("OverlayFileInactive",""));
+
     return true;
 }
 
@@ -631,12 +665,14 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 	
 	if (!options()->moveResizeMaximizedWindows() )
 	{
-		if ( maximizeMode() & MaximizeHorizontal )	l=r=1;
+		if ( maximizeMode() & MaximizeHorizontal )l=r=1;
 		if ( maximizeMode() & MaximizeVertical )
 		{
-			b=isShade()?1:1;
-			t=::factory->titlesize;
+			b=1;
+			if (!isShade() && ( maximizeMode() & MaximizeHorizontal ))b=0;
 		}
+		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
+			l=r=0;
 	}
 }
 
@@ -835,11 +871,12 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 	// draw the titlebar
 	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
+	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
    
 	if (::factory->trackdesktop)
 		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
 	QPixmap *background=::factory->image_holder->image(isActive());
-    
+
 	{
 		QRect r;
 		QPoint p=widget()->mapToGlobal(QPoint(0,0));
@@ -851,11 +888,15 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		QPainter pufferPainter(&pufferPixmap);
 
 		r=QRect(p.x(),p.y(),widget()->width(),bt);
-		if (background && !background->isNull())pufferPainter.drawPixmap(QPoint(0,0),*background,r);
-		else 
+ 		if (background && !background->isNull())pufferPainter.drawPixmap(QPoint(0,0),*background,r);
+ 		else 
 		{
 			pufferPainter.fillRect(widget()->rect(),group.background());
-			painter.fillRect(widget()->rect(), group.background());
+// 			painter.fillRect(widget()->rect(), group.background());
+		}
+		if (!wndcfg->overlay.isNull())
+		{
+			pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
 		}
 	
 	// draw title text
@@ -903,21 +944,25 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		QTimer::singleShot(500,::factory->image_holder,SLOT(CheckSanity()));
 	}
 
-	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 	// draw frame
 	if (wndcfg->frame)
 	{
 		group = options()->colorGroup(KDecoration::ColorFrame, isActive());
 
     	// outline the frame
+		QRect r=widget()->rect();
 		painter.setPen(wndcfg->frameColor);
-		painter.drawRect(widget()->rect());
+		if (!options()->moveResizeMaximizedWindows() && !isShade() && (maximizeMode() & MaximizeFull)==MaximizeFull)
+		{
+
+		}else painter.drawRect(r);
+
 		if ((::factory->roundCorners) && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
 		{
 			int cornersFlag = ::factory->roundCorners;
 			int r(width());
 			int b(height());
-  
+
             // Draw edge of top-left corner inside the area removed by the mask.
             if(cornersFlag & TOP_LEFT) {
                 painter.drawPoint(3, 1);
@@ -1090,7 +1135,7 @@ void CrystalClient::belowButtonPressed()
 	setKeepBelow(!keepBelow());
 }
 
-void CrystalClient::keepAboveChange(bool set)
+void CrystalClient::keepAboveChange(bool /*set*/)
 {
 	if (button[ButtonAbove])
 	{
@@ -1098,7 +1143,7 @@ void CrystalClient::keepAboveChange(bool set)
 	}
 }
 
-void CrystalClient::keepBelowChange(bool set)
+void CrystalClient::keepBelowChange(bool /*set*/)
 {
 	if (button[ButtonBelow])
 	{
@@ -1144,7 +1189,8 @@ void CrystalClient::menuButtonPressed()
 	}
 
 	// Do not show menu immediately, so a double click to close the window does not cause flicker
-	QTimer::singleShot(150,this,SLOT(menuPopUp()));
+// 	QTimer::singleShot(150,this,SLOT(menuPopUp()));
+	menuPopUp();
 }
 
 void CrystalClient::menuPopUp()

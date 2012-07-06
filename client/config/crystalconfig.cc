@@ -18,7 +18,10 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qwidgetstack.h>
+#include <qlineedit.h>
+#include <qfiledialog.h>
 #include <kcolorbutton.h>
+#include <kfiledialog.h>
 
 #include "crystalconfig.h"
 #include "configdialog.h"
@@ -89,6 +92,12 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
             this, SLOT(selectionChanged(int)));
 	
 	connect(dialog_->infoButton, SIGNAL(clicked(void)),this,SLOT(infoDialog(void)));
+
+    connect(dialog_->overlay_active, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
+    connect(dialog_->overlay_inactive, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
+
+	connect(dialog_->overlay_active_button,SIGNAL(clicked(void)),this,SLOT(loadOverlayActive(void)));
+	connect(dialog_->overlay_inactive_button,SIGNAL(clicked(void)),this,SLOT(loadOverlayInactive(void)));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -121,7 +130,7 @@ void ExampleConfig::selectionChanged(int)
 void ExampleConfig::load(KConfig*)
 {
     QColor color(255,255,255);
-    
+
 	config_->setGroup("General");
     
     QString value = config_->readEntry("TitleAlignment", "AlignHCenter");
@@ -167,6 +176,14 @@ void ExampleConfig::load(KConfig*)
 	button=(QRadioButton*)dialog_->repaintMode->find(config_->readNumEntry("RepaintMode",2));
 	if (button)button->setChecked(true);
     dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
+
+	button=(QRadioButton*)dialog_->overlay_active->find(config_->readNumEntry("OverlayModeActive",0));
+	if (button)button->setChecked(true);
+    dialog_->overlay_active_file->setText(config_->readEntry("OverlayFileActive",""));
+
+	button=(QRadioButton*)dialog_->overlay_inactive->find(config_->readNumEntry("OverlayModeInactive",0));
+	if (button)button->setChecked(true);
+    dialog_->overlay_inactive_file->setText(config_->readEntry("OverlayFileInactive",""));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -210,7 +227,12 @@ void ExampleConfig::save(KConfig*)
 	config_->writeEntry("ButtonTheme",dialog_->buttonTheme->currentItem());
 	config_->writeEntry("RepaintMode",dialog_->repaintMode->selectedId());
     config_->writeEntry("RepaintTime",dialog_->updateTime->value());
-        
+
+	config_->writeEntry("OverlayModeActive",dialog_->overlay_active->selectedId());
+	config_->writeEntry("OverlayFileActive",dialog_->overlay_active_file->text());
+	config_->writeEntry("OverlayModeInactive",dialog_->overlay_inactive->selectedId());
+	config_->writeEntry("OverlayFileInactive",dialog_->overlay_inactive_file->text());
+
     config_->sync();
 }
 
@@ -218,6 +240,26 @@ void ExampleConfig::infoDialog()
 {
 	InfoDialog d(dialog_);
 	d.exec();
+}
+
+void ExampleConfig::loadOverlayActive()
+{
+	KURL s=KFileDialog::getImageOpenURL();
+    if (!s.isEmpty())
+	{
+		dialog_->overlay_active_file->setText( s.path() );
+        emit changed();
+    }
+}
+
+void ExampleConfig::loadOverlayInactive()
+{
+	KURL s=KFileDialog::getImageOpenURL();
+    if (!s.isEmpty())
+	{
+		dialog_->overlay_inactive_file->setText( s.path() );
+        emit changed();
+    }
 }
 
 
