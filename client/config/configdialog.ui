@@ -485,52 +485,235 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QGroupBox" row="1" column="0" rowspan="3" colspan="1">
                         <property name="name">
-                            <cstring>textLabel1_3</cstring>
+                            <cstring>tintButtons</cstring>
                         </property>
-                        <property name="text">
-                            <string>Button theme:</string>
+                        <property name="title">
+                            <string>Tint Buttons</string>
                         </property>
-                    </widget>
-                    <spacer row="3" column="1">
-                        <property name="name">
-                            <cstring>spacer2</cstring>
+                        <property name="checkable">
+                            <bool>true</bool>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>90</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="2" column="0">
-                        <property name="name">
-                            <cstring>hover</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>7</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="text">
-                            <string>Ho&amp;ver effect</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+V</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Provides a mouse-over effect for the title bar buttons.</string>
-                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel" row="0" column="2">
+                                <property name="name">
+                                    <cstring>textLabel1</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Close Button</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>textLabel4_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Pressed</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>textLabel3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Hovered</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>textLabel2_4</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Normal</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="0" column="1">
+                                <property name="name">
+                                    <cstring>textLabel5</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Other Buttons</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="3" column="1">
+                                <property name="name">
+                                    <cstring>buttonColor3</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>7</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="toggleButton">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="color">
+                                    <color>
+                                        <red>255</red>
+                                        <green>255</green>
+                                        <blue>255</blue>
+                                    </color>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="2" column="1">
+                                <property name="name">
+                                    <cstring>buttonColor2</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>7</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="toggleButton">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="color">
+                                    <color>
+                                        <red>255</red>
+                                        <green>255</green>
+                                        <blue>255</blue>
+                                    </color>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="1" column="2">
+                                <property name="name">
+                                    <cstring>closeColor1</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>7</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="toggleButton">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="color">
+                                    <color>
+                                        <red>255</red>
+                                        <green>255</green>
+                                        <blue>255</blue>
+                                    </color>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="2" column="2">
+                                <property name="name">
+                                    <cstring>closeColor2</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>7</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="toggleButton">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="color">
+                                    <color>
+                                        <red>255</red>
+                                        <green>255</green>
+                                        <blue>255</blue>
+                                    </color>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="3" column="2">
+                                <property name="name">
+                                    <cstring>closeColor3</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>7</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="toggleButton">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="color">
+                                    <color>
+                                        <red>255</red>
+                                        <green>255</green>
+                                        <blue>255</blue>
+                                    </color>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="1" column="1">
+                                <property name="name">
+                                    <cstring>buttonColor1</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>7</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="toggleButton">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="color">
+                                    <color>
+                                        <red>255</red>
+                                        <green>255</green>
+                                        <blue>255</blue>
+                                    </color>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
+                                </property>
+                            </widget>
+                        </grid>
                     </widget>
                     <widget class="QComboBox" row="0" column="1">
                         <item>
@@ -573,6 +756,14 @@
                                 <pixmap>image4</pixmap>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Vista</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image5</pixmap>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>buttonTheme</cstring>
                         </property>
@@ -580,38 +771,17 @@
                             <string>Select your favourite button theme here</string>
                         </property>
                     </widget>
-                    <widget class="KColorButton" row="1" column="1">
+                    <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>buttonColor</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>7</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
+                            <cstring>textLabel1_3</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
-                        </property>
-                        <property name="toggleButton">
-                            <bool>false</bool>
-                        </property>
-                        <property name="color">
-                            <color>
-                                <red>255</red>
-                                <green>255</green>
-                                <blue>255</blue>
-                            </color>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
+                            <string>Button theme:</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="1" column="0">
+                    <widget class="QCheckBox" row="1" column="1">
                         <property name="name">
-                            <cstring>tintButtons</cstring>
+                            <cstring>hover</cstring>
                         </property>
                         <property name="sizePolicy">
                             <sizepolicy>
@@ -622,15 +792,32 @@
                             </sizepolicy>
                         </property>
                         <property name="text">
-                            <string>&amp;Tint buttons</string>
+                            <string>Ho&amp;ver effect</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+T</string>
+                            <string>Alt+V</string>
                         </property>
                         <property name="toolTip" stdset="0">
-                            <string>Tint the buttons in this color, or leave them with original colors (recommended for some themes)</string>
+                            <string>Provides a mouse-over effect for the title bar buttons.</string>
                         </property>
                     </widget>
+                    <spacer row="3" column="1" rowspan="2" colspan="1">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>140</height>
+                            </size>
+                        </property>
+                    </spacer>
                     <widget class="QCheckBox" row="2" column="1">
                         <property name="name">
                             <cstring>animateHover</cstring>
@@ -645,6 +832,23 @@
                             <string>Smoothly animate the hover effect of the buttons</string>
                         </property>
                     </widget>
+                    <spacer row="4" column="0">
+                        <property name="name">
+                            <cstring>spacer15</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -1456,6 +1660,9 @@
     <image name="image4">
         <data format="PNG" length="667">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd1000002624944415428917dd231481b611806e0f7bf24975e72dc2584cb3581b40a2de5701221b64390165cba3a0822e85491802011119c1414cfa1a066398d838ea2838b43a7664a9084b6d2e14068a425d08628489bdc71ffff1b9768b7bcf3f7f07dbc7c8410128fc7e31fd2e9f42b499244f488e3386ea954fade6c360bc4308c7cb15854344dbbeb851e727575e51b1919f9e94fa7d3294dd39a8d46c3679aa69a4824f8ecececdf70387c0700d7d7d7be9d9d1d050072b9dc6d5f5f9f373838f84200400138ebebebe1c9c9c9c8f0f0706c7a7a5aafd7ebd4b66d9ecd669f8e8d8d4533994c747b7b3b08c001c0fd8c310ec09165b9dd6ab590c964904aa5a46c36fb2c180c0af97c3ea8691a8e8f8f1189441c000e638cfb19631480b3b8b8f86b6a6a4a89c56211c330605996248a22a2d128cae5324e4e4e1a0707077500e09c738131c600b41545f9675956756161e1c6b66de8bafe883636367eefeded7d1345b10da0cd18e302a594016803685f5c5c4055d5502291786cb1bfbf1f8220c89797979d8739c6d8ff8d954a45d8dfdf7fb3bbbbfb445555148b4554ab55e8ba0ecbb2e4959595d7b55a8d7721133ccf63001cd3349fafadad856459c6d9d919363737ede5e5e55ab95c86a669585a5a524cd34c027028a5dcdf3dd5098542b7a7a7a7705db7737e7efee5e8e8a8e4ba2e999898783b3a3a6ab45aad8ea228b75dc8c8d0d0d0c74aa5f289734eb6b6b692c964d21d1f1fbf218474ba0d92c3c343cdf33c323333f3a7d3e990818181774492a4dcfcfcfccdeaeaea0f9fcfd7f3dd1863646e6ece28140a7704801fc0fb4020f032100808bd20a594534abf02f87c0f638020102f4b25e50000000049454e44ae426082</data>
     </image>
+    <image name="image5">
+        <data format="PNG" length="697">89504e470d0a1a0a0000000d494844520000001b0000000f08060000001593b4d80000028049444154388dbd94bd8a275510c57fa7baff1fc332b2b2080b6b32b8e007b2a1acc93e811b1af80006fa0206229818998aa04fa0e96a2808066a60e2266ae2202a18380e063b33ddb76f1d83db33ff1e1599c882dbdcae5b7d4f9daa53adbb6fbcffd9476fbe76fdcbdf12019290004062b73f772cccf6623fafc53b8bf3671e0f22fa9effcbfa884e25e1cff13c7b13da31fce58787fcfeeb21fa978f7df16876e3d601b79ebe43a62ff901ce2af4ea3acec142208482b9a4f0f34f877cf0fafd2b65feea7b9fb07f70075b730577880d4ca129e15169ce08130082881674553babf0683409a42fb31e2bf4001533643be9726616a00a535e1d6c320c066703f3026db21bd8f77f24ef7e3310822e4417102122200f278e8e8e78ea9d2fe01f9df3850a0fdfbac7831f0bda1fc9349997d52aafe8d5454ba5967697d5e84ba420fb56c77aadd2bdf812440b91c115a8905f7ddaa055910b54437249fa6447ef9a9009d3d0c042b8870ca1b5f07a621806723dc1b50177334103535b39c7783591dd00a3dbd912acf6f4761ad70b30f7c23328215285711c715798be7e80630196adaf042d460569c09a99d525b30dbd6b9dcb383667b48b4cb47d144a297cfbf2ddff14472905a2608dd8b9637ed1de4a9f597da9678025243516376ff2fcc79fc30a1c6a092c99a5a10023e8892781027213c752c939d1e734b5dae6041db88d353eff0f1edc46cfddc62ba10d7835eb07500106d06874063e019fd4a61efe366899f4c7c7c7a76c1fbb7eff8567db6c6d21f6047b823df01e7803ac446e80a5402a68066300ce8053e0c4706a3cecb0be9ba0dfdfae37afbcfd616b578036a0ad60cbbc84d74d38b9997b1aad8424c40014a39136d133a08739811d31fe02846e5eb578ac01db0000000049454e44ae426082</data>
+    </image>
 </images>
 <connections>
     <connection>
@@ -1464,18 +1671,17 @@
         <receiver>animateHover</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
-    <connection>
-        <sender>tintButtons</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>buttonColor</receiver>
-        <slot>setEnabled(bool)</slot>
-    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">configdialog.ui.h</include>
 </includes>
 <layoutdefaults spacing="6" margin="5"/>
 <includehints>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>

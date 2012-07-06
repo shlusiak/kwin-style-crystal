@@ -1,16 +1,13 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="3" >
-  <Doc0 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.6/client/crystalclient.cc" >
-   <View0 line="203" Type="Source" />
+ <DocsAndViews NumberOfDocuments="2" >
+  <Doc0 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.8/client/buttonimage.h" >
+   <View0 Type="Source" />
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.6/client/crystalclient.h" >
-   <View0 line="45" Type="Source" />
+  <Doc1 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.8/client/crystalbutton.cpp" >
+   <View0 line="203" Type="Source" />
   </Doc1>
-  <Doc2 NumberOfViews="1" URL="file:///home/sascha/develop/crystal/crystal-0.9.6/client/crystalbutton.cpp" >
-   <View0 line="66" Type="Source" />
-  </Doc2>
  </DocsAndViews>
  <pluginList>
   <kdevdebugger>

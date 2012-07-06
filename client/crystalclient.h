@@ -3,7 +3,7 @@
 // -------------------
 // Crystal window decoration for KDE
 // -------------------
-// Copyright (c) 2005 Sascha Hlusiak <spam84@gmx.de>
+// Copyright (c) 2006 Sascha Hlusiak <spam84@gmx.de>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -116,7 +116,10 @@ public:
 	
 	int titlesize;
 	bool hovereffect,tintButtons,animateHover,wheelTask;
-	QColor buttonColor;
+
+	QColor buttonColor_normal,buttonColor_hovered,buttonColor_pressed;
+	QColor closeColor_normal,closeColor_hovered,closeColor_pressed;
+
 	int borderwidth;
 	bool textshadow,captiontooltip;
 	bool trackdesktop;

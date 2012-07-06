@@ -95,12 +95,17 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     connect(dialog_->trc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->blc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->brc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
-    connect(dialog_->buttonColor, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->buttonColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->buttonColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->buttonColor3, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->closeColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->closeColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->closeColor3, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 
     connect(dialog_->hover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->animateHover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->buttonTheme, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
-    connect(dialog_->tintButtons, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->tintButtons, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
 
     connect(dialog_->repaintMode, SIGNAL(clicked(int)),
             this, SLOT(selectionChanged(int)));
@@ -215,11 +220,24 @@ void ExampleConfig::load(KConfig*)
 	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",true));
 	dialog_->animateHover->setChecked(config_->readBoolEntry("AnimateHover",true));
 	dialog_->animateHover->setEnabled(dialog_->hover->isChecked());
-	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor->color()!=QColor(255,255,255)));
+
+
+
+
+
+
 	color=QColor(255,255,255);
-    dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
-	dialog_->buttonColor->setEnabled(dialog_->tintButtons->isChecked());
-	
+    dialog_->buttonColor1->setColor(config_->readColorEntry("ButtonColor",&color));
+    dialog_->buttonColor2->setColor(config_->readColorEntry("ButtonColor2",&color));
+    dialog_->buttonColor3->setColor(config_->readColorEntry("ButtonColor3",&color));
+    dialog_->closeColor1->setColor(config_->readColorEntry("CloseColor",&color));
+    dialog_->closeColor2->setColor(config_->readColorEntry("CloseColor2",&color));
+    dialog_->closeColor3->setColor(config_->readColorEntry("CloseColor3",&color));
+
+	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor1->color()!=QColor(255,255,255)));
+
+
+
 	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",0));
 	
     dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
@@ -278,7 +296,12 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("InactiveInline",dialog_->inline2->isChecked());
     config_->writeEntry("InlineColor2",dialog_->inlineColor2->color());
 
-    config_->writeEntry("ButtonColor",dialog_->buttonColor->color());
+    config_->writeEntry("ButtonColor",dialog_->buttonColor1->color());
+    config_->writeEntry("ButtonColor2",dialog_->buttonColor2->color());
+    config_->writeEntry("ButtonColor3",dialog_->buttonColor3->color());
+    config_->writeEntry("CloseColor",dialog_->closeColor1->color());
+    config_->writeEntry("CloseColor2",dialog_->closeColor2->color());
+    config_->writeEntry("CloseColor3",dialog_->closeColor3->color());
 	
     int cornersFlag = 0;
     if(dialog_->tlc->isChecked()) cornersFlag += TOP_LEFT;

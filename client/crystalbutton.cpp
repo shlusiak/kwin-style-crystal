@@ -8,8 +8,6 @@
 #include "imageholder.h"
 
 
-#define FRAMESIZE 2
-
 
 CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
                              const QString& tip, ButtonType type,
@@ -18,7 +16,8 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
       image(vimage), lastmouse_(0)
 {
     setBackgroundMode(NoBackground);
-    setFixedSize(buttonSizeH(), buttonSizeV());
+//     setFixedSize(buttonSizeH(), buttonSizeV());
+	resetSize(false);
     setCursor(arrowCursor);
 	
 	hover=first=last=false;
@@ -33,9 +32,9 @@ CrystalButton::~CrystalButton()
 
 void CrystalButton::resetSize(bool FullSize)
 {
-	if (FullSize)
+	if (FullSize || (image && image->drawMode==1))
 	{
-		setFixedSize(buttonSizeH(),factory->titlesize+1);
+		setFixedSize(buttonSizeH(),factory->titlesize);
 	}else setFixedSize(buttonSizeH(),buttonSizeV());
 }
 
@@ -54,15 +53,18 @@ int CrystalButton::buttonSizeH() const
 {
 	int w=image?image->image_width:DEFAULT_IMAGE_SIZE;
 	int h=image?image->image_height:DEFAULT_IMAGE_SIZE;
-	return (factory->titlesize-1-FRAMESIZE>=h)?
-		w+4:
-		(int)(((float)buttonSizeV()/(float)h)*(float)w)+2;
+	int vS=image?image->vSpace:2;
+	int hS=image?image->hSpace:2;
+	return (factory->titlesize-1-vS>=h)?
+		w+hS*2:
+		(int)(((float)buttonSizeV()/(float)h)*(float)w)+hS;
 }
 
 int CrystalButton::buttonSizeV() const
 {
 	int h=image?image->image_height:DEFAULT_IMAGE_SIZE;
-	return (factory->titlesize-1-FRAMESIZE>h)?h:factory->titlesize-1-FRAMESIZE;
+	int vS=image?image->vSpace:2;
+	return (factory->titlesize-1-vS>h)?h:factory->titlesize-1-vS;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -169,6 +171,7 @@ void CrystalButton::drawButton(QPainter *painter)
     
     QColorGroup group;
     float dx, dy;
+	int dm=0;
 
     QPixmap pufferPixmap;
     pufferPixmap.resize(width(), height());
@@ -194,6 +197,25 @@ void CrystalButton::drawButton(QPainter *painter)
 	if (!wndcfg->overlay.isNull())
 	{
 		pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
+	}
+
+	dm=0;
+	if (image && (image->drawMode==1))dm=1;
+	if (wndcfg->frame && (client_->FullMax|| (dm==1)) && (client_->isShade()||(dm==1)))
+	{
+    	// outline the frame
+		pufferPainter.setPen(wndcfg->frameColor);
+		pufferPainter.drawLine(0,0,width(),0);
+		if (client_->isShade())pufferPainter.drawLine(0,height()-1,width(),height()-1);
+		
+		if (first && client_->FullMax)pufferPainter.drawLine(0,0,0,height());
+		if (last && client_->FullMax)pufferPainter.drawLine(width()-1,0,width()-1,height());
+	}
+	if (wndcfg->inlineFrame && (client_->FullMax||dm==1) && !client_->isShade())
+	{
+    	// inline the frame
+		pufferPainter.setPen(wndcfg->inlineColor);
+		pufferPainter.drawLine(0,height()-1,width(),height()-1);
 	}
 
 
@@ -222,37 +244,31 @@ void CrystalButton::drawButton(QPainter *painter)
 		
 		QImage *img=image->normal;
 
-		int count=1;
 		if (::factory->hovereffect)
 		{
-			count=1;
+
 			if (hover)
 			{
-				if (image->hovered)img=image->hovered; else count=2;
+				img=image->hovered; 
 			}
 			if (::factory->animateHover)
 			{
 				img=image->getAnimated(animation);
-				count=1;
 			}
 		}
 		if (isDown())
 		{
-			count=1;
-			if (image->pressed)img=image->pressed; else 
-			{
-				if (::factory->animateHover)count=2;
-				else count=3;
-			}
+			img=image->pressed;
 		}
 	
-		if (dx<1 || dy<0)
+		if (img)
+		if (dx<image->hSpace/2 || dy<0)
 		{	// Deco size is smaller than image, we need to stretch it
 			int w,h;
 
-			if (rect().width()-2<rect().height())
+			if (rect().width()-image->hSpace<rect().height())
 			{
-				w=rect().width()-2;
+				w=rect().width()-image->hSpace;
 				h=(int)((float)w*(float)image->image_height/(float)image->image_width);
 			}else{
 				h=rect().height();
@@ -261,31 +277,12 @@ void CrystalButton::drawButton(QPainter *painter)
 
 			QRect r((rect().width()-w)/2,(rect().height()-h)/2,w,h);
 
-			for (int i=0;i<count;i++)
-				pufferPainter.drawImage(r,*img);
+			pufferPainter.drawImage(r,*img);
 		}else{
 			// Otherwise we just paint it
-			for (int i=0;i<count;i++)
-				pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
+			if (image->drawMode==1)dy=0;
+			pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
 	    }
-	}
-	
-
-	if (wndcfg->frame && client_->FullMax && client_->isShade())
-	{
-    	// outline the frame
-		pufferPainter.setPen(wndcfg->frameColor);
-		pufferPainter.drawLine(0,0,width(),0);
-		pufferPainter.drawLine(0,height()-1,width(),height()-1);
-		
-		if (first)pufferPainter.drawLine(0,0,0,height());
-		if (last)pufferPainter.drawLine(width()-1,0,width()-1,height());
-	}
-	if (wndcfg->inlineFrame && client_->FullMax && !client_->isShade())
-	{
-    	// outline the frame
-		pufferPainter.setPen(wndcfg->inlineColor);
-		pufferPainter.drawLine(0,height()-2,width(),height()-2);
 	}
 	
 	pufferPainter.end();

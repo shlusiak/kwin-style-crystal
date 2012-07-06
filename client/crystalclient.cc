@@ -22,6 +22,7 @@
 #include "crystalbutton.h"
 #include "buttonimage.h"
 #include "imageholder.h"
+#include "overlays.h"
 
 // Button themes
 #include "tiles.h"
@@ -29,8 +30,8 @@
 #include "knifty.h"
 #include "handpainted.h"
 #include "svg.h"
+#include "vista.h"
 
-#include "overlays.h"
 
 
 CrystalFactory* factory=NULL;
@@ -161,6 +162,7 @@ bool CrystalFactory::readConfig()
     // create a config object
     KConfig config("kwincrystalrc");
     config.setGroup("General");
+	QColor c;
 
     QString value = config.readEntry("TitleAlignment", "AlignHCenter");
     if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
@@ -178,17 +180,17 @@ bool CrystalFactory::readConfig()
     inactive.amount=(double)config.readNumEntry("InactiveShade",-30)/100.0;
     active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
     inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
-	buttonColor=QColor(160,160,160);
-    active.frameColor=config.readColorEntry("FrameColor1",&buttonColor);
-	buttonColor=QColor(128,128,128);
-    inactive.frameColor=config.readColorEntry("FrameColor2",&buttonColor);
+	c=QColor(160,160,160);
+    active.frameColor=config.readColorEntry("FrameColor1",&c);
+	c=QColor(128,128,128);
+    inactive.frameColor=config.readColorEntry("FrameColor2",&c);
 
     active.inlineFrame=(bool)config.readBoolEntry("ActiveInline",false);
     inactive.inlineFrame=(bool)config.readBoolEntry("InactiveInline",false);
-	buttonColor=QColor(160,160,160);
-    active.inlineColor=config.readColorEntry("InlineColor1",&buttonColor);
-	buttonColor=QColor(160,160,160);
-    inactive.inlineColor=config.readColorEntry("InlineColor2",&buttonColor);
+	c=QColor(160,160,160);
+    active.inlineColor=config.readColorEntry("InlineColor1",&c);
+	c=QColor(160,160,160);
+    inactive.inlineColor=config.readColorEntry("InlineColor2",&c);
 
 	active.blur=config.readNumEntry("ActiveBlur",0);
 	inactive.blur=config.readNumEntry("InactiveBlur",0);
@@ -196,13 +198,20 @@ bool CrystalFactory::readConfig()
     borderwidth=config.readNumEntry("Borderwidth",5);
     titlesize=config.readNumEntry("Titlebarheight",21);
  
-	buttonColor=QColor(255,255,255);
-    buttonColor=config.readColorEntry("ButtonColor",&buttonColor);
+	buttonColor_normal=QColor(255,255,255);
+    buttonColor_normal=config.readColorEntry("ButtonColor",&buttonColor_normal);
+    buttonColor_hovered=config.readColorEntry("ButtonColor2",&buttonColor_normal);
+    buttonColor_pressed=config.readColorEntry("ButtonColor3",&buttonColor_normal);
+	closeColor_normal=QColor(255,255,255);
+	closeColor_normal=config.readColorEntry("CloseColor",&closeColor_normal);
+	closeColor_hovered=config.readColorEntry("CloseColor2",&closeColor_normal);
+	closeColor_pressed=config.readColorEntry("CloseColor3",&closeColor_normal);
+
     roundCorners=config.readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
 
 	hovereffect=config.readBoolEntry("HoverEffect",true);
 	animateHover=config.readBoolEntry("AnimateHover",true);
-	tintButtons=config.readBoolEntry("TintButtons",buttonColor!=QColor(255,255,255));
+	tintButtons=config.readBoolEntry("TintButtons",false);
 	repaintMode=config.readNumEntry("RepaintMode",1);
 	repaintTime=config.readNumEntry("RepaintTime",200);
 	buttontheme=config.readNumEntry("ButtonTheme",0);
@@ -237,105 +246,177 @@ void CrystalFactory::CreateButtonImages()
 	{
 		if (buttonImages[i])buttonImages[i]->reset(); else
 		buttonImages[i]=new ButtonImage;
+		if (!tintButtons)buttonImages[i]->setColors(Qt::white,Qt::white,Qt::white);
+		else switch(i)
+		{
+			case ButtonImageClose:
+				buttonImages[i]->setColors(closeColor_normal,closeColor_hovered,closeColor_pressed);
+				break;
+
+			default:
+				buttonImages[i]->setColors(buttonColor_normal,buttonColor_hovered,buttonColor_pressed);
+				break;
+		}
 	}
 	
 	switch(buttontheme)
 	{
-	default:	// whee, seems to work. ;)
+	default:
 	case 0:	// Crystal default
-		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,14,14,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,14,14,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,14,14,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(crystal_min_data,14,14,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,14,14,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnShade]->SetNormal(crystal_shade_data,14,14,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data);
+		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data);
+		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data);
+		buttonImages[ButtonImageMin]->SetNormal(crystal_min_data);
+		buttonImages[ButtonImageClose]->SetNormal(crystal_close_data);
+		buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data);
+		buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(crystal_shade_data);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,14,14,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,14,14,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data);
+		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data);
 		break;
 	case 1: // Aqua buttons
-		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnShade]->SetNormal(aqua_default_data,14,14,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(aqua_default_data);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data,14,14,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data,14,14,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data);
+		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data);
 		
 		
-		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data,tintButtons);
-		buttonImages[ButtonImageMax]->SetHovered(aqua_maximize_data,tintButtons);
-		buttonImages[ButtonImageMin]->SetHovered(aqua_minimize_data,tintButtons);
-		buttonImages[ButtonImageRestore]->SetHovered(aqua_maximize_data,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data,tintButtons);
-		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data,tintButtons);
-		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data,tintButtons);
-		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data,tintButtons);
-		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data,tintButtons);
-		buttonImages[ButtonImageUnShade]->SetHovered(aqua_shade_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data);
+		buttonImages[ButtonImageMax]->SetHovered(aqua_maximize_data);
+		buttonImages[ButtonImageMin]->SetHovered(aqua_minimize_data);
+		buttonImages[ButtonImageRestore]->SetHovered(aqua_maximize_data);
+		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data);
+		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data);
+		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data);
+		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data);
+		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data);
+		buttonImages[ButtonImageUnShade]->SetHovered(aqua_shade_data);
 		break;
 	case 2: // Knifty buttons
-		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data,14,14,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(knifty_max_data,14,14,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(knifty_restore_data,14,14,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(knifty_min_data,14,14,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(knifty_close_data,14,14,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(knifty_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(knifty_un_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(knifty_shade_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnShade]->SetNormal(knifty_shade_data,14,14,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data);
+		buttonImages[ButtonImageMax]->SetNormal(knifty_max_data);
+		buttonImages[ButtonImageRestore]->SetNormal(knifty_restore_data);
+		buttonImages[ButtonImageMin]->SetNormal(knifty_min_data);
+		buttonImages[ButtonImageClose]->SetNormal(knifty_close_data);
+		buttonImages[ButtonImageSticky]->SetNormal(knifty_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(knifty_un_sticky_data);
+		buttonImages[ButtonImageShade]->SetNormal(knifty_shade_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(knifty_shade_data);
 
-		buttonImages[ButtonImageAbove]->SetNormal(knifty_above_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(knifty_unabove_data,14,14,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(knifty_unbelow_data,14,14,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(knifty_above_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(knifty_unabove_data);
+		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(knifty_unbelow_data);
 		break;
 	
 	case 3:	// Handpainted
-		buttonImages[ButtonImageHelp]->SetNormal(handpainted_help_data,14,14,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(handpainted_max_data,14,14,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(handpainted_restore_data,14,14,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(handpainted_min_data,14,14,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(handpainted_close_data,14,14,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(handpainted_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(handpainted_un_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(handpainted_shade_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnShade]->SetNormal(handpainted_un_shade_data,14,14,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(handpainted_help_data);
+		buttonImages[ButtonImageMax]->SetNormal(handpainted_max_data);
+		buttonImages[ButtonImageRestore]->SetNormal(handpainted_restore_data);
+		buttonImages[ButtonImageMin]->SetNormal(handpainted_min_data);
+		buttonImages[ButtonImageClose]->SetNormal(handpainted_close_data);
+		buttonImages[ButtonImageSticky]->SetNormal(handpainted_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(handpainted_un_sticky_data);
+		buttonImages[ButtonImageShade]->SetNormal(handpainted_shade_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(handpainted_un_shade_data);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(handpainted_above_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(handpainted_unabove_data,14,14,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(handpainted_below_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(handpainted_unbelow_data,14,14,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(handpainted_above_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(handpainted_unabove_data);
+		buttonImages[ButtonImageBelow]->SetNormal(handpainted_below_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(handpainted_unbelow_data);
 		break;
 	case 4: // SVG
-		buttonImages[ButtonImageHelp]->SetNormal(svg_help_data,14,14,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(svg_max_data,14,14,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(svg_restore_data,14,14,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(svg_min_data,14,14,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(svg_close_data,14,14,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(svg_sticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(svg_unsticky_data,14,14,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(svg_shade_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnShade]->SetNormal(svg_shade_data,14,14,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(svg_help_data);
+		buttonImages[ButtonImageMax]->SetNormal(svg_max_data);
+		buttonImages[ButtonImageRestore]->SetNormal(svg_restore_data);
+		buttonImages[ButtonImageMin]->SetNormal(svg_min_data);
+		buttonImages[ButtonImageClose]->SetNormal(svg_close_data);
+		buttonImages[ButtonImageSticky]->SetNormal(svg_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(svg_unsticky_data);
+		buttonImages[ButtonImageShade]->SetNormal(svg_shade_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(svg_shade_data);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(svg_above_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(svg_above_data,14,14,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(svg_below_data,14,14,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(svg_below_data,14,14,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(svg_above_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(svg_above_data);
+		buttonImages[ButtonImageBelow]->SetNormal(svg_below_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(svg_below_data);
+		break;
+	case 5: // Vista
+		buttonImages[ButtonImageHelp]->SetNormal(vista_help_data,26,15);
+		buttonImages[ButtonImageHelp]->SetHovered(vista_help_hovered_data);
+		buttonImages[ButtonImageHelp]->SetPressed(vista_help_pressed_data);
+
+		buttonImages[ButtonImageMax]->SetNormal(vista_max_data,27,15);
+		buttonImages[ButtonImageMax]->SetHovered(vista_max_hovered_data);
+		buttonImages[ButtonImageMax]->SetPressed(vista_max_pressed_data);
+		buttonImages[ButtonImageRestore]->SetNormal(vista_restore_data,27,15);
+		buttonImages[ButtonImageRestore]->SetHovered(vista_restore_hovered_data);
+		buttonImages[ButtonImageRestore]->SetPressed(vista_restore_pressed_data);
+		buttonImages[ButtonImageMin]->SetNormal(vista_min_data,26,15);
+		buttonImages[ButtonImageMin]->SetHovered(vista_min_hovered_data);
+		buttonImages[ButtonImageMin]->SetPressed(vista_min_pressed_data);
+		buttonImages[ButtonImageClose]->SetNormal(vista_close_data,40,15);
+		buttonImages[ButtonImageClose]->SetHovered(vista_close_hovered_data);
+		buttonImages[ButtonImageClose]->SetPressed(vista_close_pressed_data);
+
+		buttonImages[ButtonImageSticky]->SetNormal(vista_sticky_data,26,15);
+		buttonImages[ButtonImageSticky]->SetHovered(vista_sticky_hovered_data);
+		buttonImages[ButtonImageSticky]->SetPressed(vista_sticky_pressed_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(vista_un_sticky_data,26,15);
+		buttonImages[ButtonImageUnSticky]->SetHovered(vista_un_sticky_hovered_data);
+		buttonImages[ButtonImageUnSticky]->SetPressed(vista_un_sticky_pressed_data);
+
+		buttonImages[ButtonImageAbove]->SetNormal(vista_above_data,26,15);
+		buttonImages[ButtonImageAbove]->SetHovered(vista_above_hovered_data);
+		buttonImages[ButtonImageAbove]->SetPressed(vista_above_pressed_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(vista_un_above_data,26,15);
+		buttonImages[ButtonImageUnAbove]->SetHovered(vista_un_above_hovered_data);
+		buttonImages[ButtonImageUnAbove]->SetPressed(vista_un_above_pressed_data);
+
+
+		buttonImages[ButtonImageBelow]->SetNormal(vista_below_data,26,15);
+		buttonImages[ButtonImageBelow]->SetHovered(vista_below_hovered_data);
+		buttonImages[ButtonImageBelow]->SetPressed(vista_below_pressed_data);
+
+		buttonImages[ButtonImageUnBelow]->SetNormal(vista_un_below_data,26,15);
+		buttonImages[ButtonImageUnBelow]->SetHovered(vista_un_below_hovered_data);
+		buttonImages[ButtonImageUnBelow]->SetPressed(vista_un_below_pressed_data);
+
+		buttonImages[ButtonImageShade]->SetNormal(vista_shade_data,26,15);
+		buttonImages[ButtonImageShade]->SetHovered(vista_shade_hovered_data);
+		buttonImages[ButtonImageShade]->SetPressed(vista_shade_pressed_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(vista_un_shade_data,26,15);
+		buttonImages[ButtonImageUnShade]->SetHovered(vista_un_shade_hovered_data);
+		buttonImages[ButtonImageUnShade]->SetPressed(vista_un_shade_pressed_data);
+	
+		for (int i=0;i<ButtonImageCount;i++)
+		{
+			buttonImages[i]->setSpace(1,0);
+			buttonImages[i]->setDrawMode(1);
+		}
+		buttonImages[ButtonImageMax]->setSpace(0,0);
+		buttonImages[ButtonImageRestore]->setSpace(0,0);
+		buttonImages[ButtonImageMin]->setSpace(0,0);
+		buttonImages[ButtonImageClose]->setSpace(0,0);
+
 		break;
 	}
+
+	for (int i=0;i<ButtonImageCount;i++)buttonImages[i]->finish();
 }
 
 
@@ -379,7 +460,7 @@ void CrystalClient::init()
                                 QSizePolicy::Fixed);
 
     mainlayout->setResizeMode(QLayout::FreeResize);
-    mainlayout->setRowSpacing(0, 1);
+    mainlayout->setRowSpacing(0, (::factory->buttontheme==5)?0:1);
 	mainlayout->setRowSpacing(3, ::factory->borderwidth*1);
 
 	mainlayout->setColSpacing(2,borderSpacing());
@@ -688,7 +769,7 @@ void CrystalClient::updateLayout()
 		mainlayout->setColSpacing(0,borderSpacing());
 	}
 	
-	mainlayout->setRowSpacing(0, (FullMax)?0:1);
+	mainlayout->setRowSpacing(0, (FullMax||::factory->buttontheme==5)?0:1);
 	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
 		button[i]->resetSize(FullMax);
 	widget()->layout()->activate();
@@ -727,14 +808,14 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 {
     l = r = ::factory->borderwidth;
     t = ::factory->titlesize;
-    if (!isShade())b = ::factory->borderwidth; else b=1;
+    if (!isShade())b = ::factory->borderwidth; else b=0;
 	
 	if (!options()->moveResizeMaximizedWindows() )
 	{
 		if ( maximizeMode() & MaximizeHorizontal )l=r=1;
 		if ( maximizeMode() & MaximizeVertical )
 		{
-			b=1;
+			b=isShade()?0:1;
 			if (!isShade() && ( maximizeMode() & MaximizeHorizontal ))b=0;
 		}
 		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
