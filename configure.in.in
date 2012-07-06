@@ -1,3 +1,2 @@
 #MIN_CONFIG
-
-AM_INIT_AUTOMAKE(crystal, 1.0.6)
+AM_INIT_AUTOMAKE(crystal, 1.0.7)

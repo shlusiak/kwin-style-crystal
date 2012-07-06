@@ -10,7 +10,8 @@ images = $(srcdir)/vista/*.png \
 	$(srcdir)/svg/*.png \
 	$(srcdir)/kubuntu-dapper/*.png \
 	$(srcdir)/kubuntu-edgy/*.png \
-	$(srcdir)/kubuntu-feisty/*.png
+	$(srcdir)/kubuntu-feisty/*.png \
+	$(srcdir)/kubuntu-hardy/*.png
 
 overlays = $(srcdir)/lighting_overlay.png \
 	$(srcdir)/glass_overlay.png \
@@ -24,7 +25,8 @@ EXTRA_DIST = $(srcdir)/vista/* \
 	    $(srcdir)/svg/* \
 	    $(srcdir)/kubuntu-dapper/* \
 	    $(srcdir)/kubuntu-edgy/* \
-	    $(srcdir)/kubuntu-feisty/*
+	    $(srcdir)/kubuntu-feisty/* \
+	    $(srcdir)/kubuntu-hardy/*
 
 noinst_PROGRAMS = embedtool tiles.h overlays.h
 nodist_DIST = tiles.h overlays.h

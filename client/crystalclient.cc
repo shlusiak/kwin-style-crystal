@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Sascha Hlusiak                                  *
+ *   Copyright (C) 2006-2009 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -262,12 +262,12 @@ bool CrystalFactory::readConfig()
 	buttontheme=config.readNumEntry("ButtonTheme",8);
 
 
-	setupOverlay(&active,config.readNumEntry("OverlayModeActive",0),config.readEntry("OverlayFileActive",""));
-	setupOverlay(&inactive,config.readNumEntry("OverlayModeInactive",0),config.readEntry("OverlayFileInactive",""));
+	setupOverlay(&active,config.readNumEntry("OverlayModeActive",2),config.readEntry("OverlayFileActive",""));
+	setupOverlay(&inactive,config.readNumEntry("OverlayModeInactive",2),config.readEntry("OverlayFileInactive",""));
 
 	logoEnabled=config.readNumEntry("LogoAlignment",1);
 	logoStretch=config.readNumEntry("LogoStretch",0);
-	logoActive=config.readBoolEntry("LogoActive",0);
+	logoActive=config.readBoolEntry("LogoActive",false);
 	logoDistance=config.readNumEntry("LogoDistance",0);
 	QString filename=config.readEntry("LogoFile","");
 	if (!filename.isNull() && logoEnabled!=1)
@@ -656,7 +656,69 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageClose]->setSpace(0,0);
 
 		break;
+	case 9: // Kubuntu-hardy
+		buttonImages[ButtonImageMenu]->SetNormal(hardy_menu_data,28,17);
+		buttonImages[ButtonImageMenu]->SetHovered(hardy_menu_hovered_data);
+		buttonImages[ButtonImageMenu]->SetPressed(hardy_menu_pressed_data);
 
+		buttonImages[ButtonImageHelp]->SetNormal(hardy_help_data,28,17);
+		buttonImages[ButtonImageHelp]->SetHovered(hardy_help_hovered_data);
+		buttonImages[ButtonImageHelp]->SetPressed(hardy_help_pressed_data);
+
+		buttonImages[ButtonImageMax]->SetNormal(hardy_max_data,28,17);
+		buttonImages[ButtonImageMax]->SetHovered(hardy_max_hovered_data);
+		buttonImages[ButtonImageMax]->SetPressed(hardy_max_pressed_data);
+		buttonImages[ButtonImageRestore]->SetNormal(hardy_restore_data,28,17);
+		buttonImages[ButtonImageRestore]->SetHovered(hardy_restore_hovered_data);
+		buttonImages[ButtonImageRestore]->SetPressed(hardy_restore_pressed_data);
+		buttonImages[ButtonImageMin]->SetNormal(hardy_min_data,28,17);
+		buttonImages[ButtonImageMin]->SetHovered(hardy_min_hovered_data);
+		buttonImages[ButtonImageMin]->SetPressed(hardy_min_pressed_data);
+		buttonImages[ButtonImageClose]->SetNormal(hardy_close_data,28,17);
+		buttonImages[ButtonImageClose]->SetHovered(hardy_close_hovered_data);
+		buttonImages[ButtonImageClose]->SetPressed(hardy_close_pressed_data);
+
+		buttonImages[ButtonImageSticky]->SetNormal(hardy_sticky_data,28,17);
+		buttonImages[ButtonImageSticky]->SetHovered(hardy_sticky_hovered_data);
+		buttonImages[ButtonImageSticky]->SetPressed(hardy_sticky_pressed_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(hardy_un_sticky_data,28,17);
+		buttonImages[ButtonImageUnSticky]->SetHovered(hardy_un_sticky_hovered_data);
+		buttonImages[ButtonImageUnSticky]->SetPressed(hardy_un_sticky_pressed_data);
+
+		buttonImages[ButtonImageAbove]->SetNormal(hardy_above_data,28,17);
+		buttonImages[ButtonImageAbove]->SetHovered(hardy_above_hovered_data);
+		buttonImages[ButtonImageAbove]->SetPressed(hardy_above_pressed_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(hardy_un_above_data,28,17);
+		buttonImages[ButtonImageUnAbove]->SetHovered(hardy_un_above_hovered_data);
+		buttonImages[ButtonImageUnAbove]->SetPressed(hardy_un_above_pressed_data);
+
+
+		buttonImages[ButtonImageBelow]->SetNormal(hardy_below_data,28,17);
+		buttonImages[ButtonImageBelow]->SetHovered(hardy_below_hovered_data);
+		buttonImages[ButtonImageBelow]->SetPressed(hardy_below_pressed_data);
+
+		buttonImages[ButtonImageUnBelow]->SetNormal(hardy_un_below_data,28,17);
+		buttonImages[ButtonImageUnBelow]->SetHovered(hardy_un_below_hovered_data);
+		buttonImages[ButtonImageUnBelow]->SetPressed(hardy_un_below_pressed_data);
+
+		buttonImages[ButtonImageShade]->SetNormal(hardy_shade_data,28,17);
+		buttonImages[ButtonImageShade]->SetHovered(hardy_shade_hovered_data);
+		buttonImages[ButtonImageShade]->SetPressed(hardy_shade_pressed_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(hardy_un_shade_data,28,17);
+		buttonImages[ButtonImageUnShade]->SetHovered(hardy_un_shade_hovered_data);
+		buttonImages[ButtonImageUnShade]->SetPressed(hardy_un_shade_pressed_data);
+
+		for (int i=0;i<ButtonImageCount;i++)
+		{
+			buttonImages[i]->setSpace(1,0);
+			buttonImages[i]->setDrawMode(0);
+		}
+		buttonImages[ButtonImageMax]->setSpace(0,0);
+		buttonImages[ButtonImageRestore]->setSpace(0,0);
+		buttonImages[ButtonImageMin]->setSpace(0,0);
+		buttonImages[ButtonImageClose]->setSpace(0,0);
+
+		break;
 	}
 
 
@@ -1223,10 +1285,10 @@ void CrystalClient::paintEvent(QPaintEvent*)
 			int textalign=CrystalFactory::titleAlign();
 			if (textwidth>r.width())
 				textalign=AlignLeft, textwidth=r.width();			
-			if (::factory->textshadow)
+			if (::factory->textshadow && isActive())
 			{
 				pufferPainter.translate(1,1);
-				pufferPainter.setPen(color.dark(300));
+				pufferPainter.setPen(color.dark(500));
 				pufferPainter.drawText(r,textalign | AlignVCenter,caption());
 				pufferPainter.translate(-1,-1);
 			}

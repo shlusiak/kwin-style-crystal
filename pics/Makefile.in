@@ -292,7 +292,8 @@ images = $(srcdir)/vista/*.png \
 	$(srcdir)/svg/*.png \
 	$(srcdir)/kubuntu-dapper/*.png \
 	$(srcdir)/kubuntu-edgy/*.png \
-	$(srcdir)/kubuntu-feisty/*.png
+	$(srcdir)/kubuntu-feisty/*.png \
+	$(srcdir)/kubuntu-hardy/*.png
 
 
 overlays = $(srcdir)/lighting_overlay.png \
@@ -308,7 +309,8 @@ EXTRA_DIST = $(srcdir)/vista/* \
 	    $(srcdir)/svg/* \
 	    $(srcdir)/kubuntu-dapper/* \
 	    $(srcdir)/kubuntu-edgy/* \
-	    $(srcdir)/kubuntu-feisty/*
+	    $(srcdir)/kubuntu-feisty/* \
+	    $(srcdir)/kubuntu-hardy/*
 
 
 noinst_PROGRAMS = embedtool tiles.h overlays.h
@@ -522,7 +524,7 @@ top_distdir = ..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
-	$(mkinstalldirs) $(distdir)/$(srcdir)/aqua $(distdir)/$(srcdir)/default $(distdir)/$(srcdir)/handpainted $(distdir)/$(srcdir)/knifty $(distdir)/$(srcdir)/kubuntu-dapper $(distdir)/$(srcdir)/kubuntu-edgy $(distdir)/$(srcdir)/kubuntu-feisty $(distdir)/$(srcdir)/svg $(distdir)/$(srcdir)/vista
+	$(mkinstalldirs) $(distdir)/$(srcdir)/aqua $(distdir)/$(srcdir)/default $(distdir)/$(srcdir)/handpainted $(distdir)/$(srcdir)/knifty $(distdir)/$(srcdir)/kubuntu-dapper $(distdir)/$(srcdir)/kubuntu-edgy $(distdir)/$(srcdir)/kubuntu-feisty $(distdir)/$(srcdir)/kubuntu-hardy $(distdir)/$(srcdir)/svg $(distdir)/$(srcdir)/vista
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

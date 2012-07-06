@@ -182,7 +182,7 @@ void CrystalConfig::load(KConfig*)
 
 
 	dialog_->borderwidth->setValue(config_->readNumEntry("Borderwidth",5));
-	dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",19));
+	dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",21));
 
 	int active=config_->readNumEntry("ActiveShade",30);
 	dialog_->shade1->setValue(active);
@@ -219,7 +219,7 @@ void CrystalConfig::load(KConfig*)
 
 	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor1->color()!=QColor(255,255,255)));
 
-	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",8));
+	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",9));
 	
 	dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
 	button=(QRadioButton*)dialog_->repaintMode->find(config_->readNumEntry("RepaintMode",1));
@@ -235,17 +235,17 @@ void CrystalConfig::load(KConfig*)
 	dialog_->userPicture2->setChecked(config_->readBoolEntry("InactiveUserdefined",false));
 
 
-	dialog_->overlay_active->setCurrentItem(config_->readNumEntry("OverlayModeActive",0));
+	dialog_->overlay_active->setCurrentItem(config_->readNumEntry("OverlayModeActive",2));
 	dialog_->overlay_active_file->setURL(config_->readEntry("OverlayFileActive",""));
 	overlay_active_changed(dialog_->overlay_active->currentItem());
 
-	dialog_->overlay_inactive->setCurrentItem(config_->readNumEntry("OverlayModeInactive",0));
+	dialog_->overlay_inactive->setCurrentItem(config_->readNumEntry("OverlayModeInactive",2));
 	dialog_->overlay_inactive_file->setURL(config_->readEntry("OverlayFileInactive",""));
 	overlay_inactive_changed(dialog_->overlay_inactive->currentItem());
 
 	dialog_->logoEnabled->setButton(config_->readNumEntry("LogoAlignment",1));
 	dialog_->logoFile->setURL(config_->readEntry("LogoFile",""));
-	dialog_->logoActive->setChecked(config_->readBoolEntry("LogoActive",1));
+	dialog_->logoActive->setChecked(config_->readBoolEntry("LogoActive",true));
 	dialog_->logoStretch->setCurrentItem(config_->readNumEntry("LogoStretch",0));
 	dialog_->logoDistance->setValue(config_->readNumEntry("LogoDistance",0));
 	updateLogo();

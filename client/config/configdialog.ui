@@ -1095,6 +1095,14 @@
                                 <pixmap>image8</pixmap>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Kubuntu Hardy</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image9</pixmap>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>buttonTheme</cstring>
                         </property>
@@ -2203,6 +2211,9 @@
     </image>
     <image name="image8">
         <data format="PNG" length="346">89504e470d0a1a0a0000000d494844520000001c000000110806000000ce93cc4a0000012149444154388dcd95316b84301886df68a0500206a174291cd88283e026b80ac5d11fd2f9a61b9d9dfb431c5d247f41103ab42e2dd92a0a47af1dd44e4eada782297d20907c843c1fe12521002e1cc7b9b52ceb4ed7751d0ae8baaeabaaeab92ccb176adbb675381cbc288a7ac6d8a042783c1e499aa65e1cc703f13cef3ecbb29e73ae4436d2340d09c350a3755d779cf337953200e09ca3aeeb1b2aa5fc02f0aa5a080052ca2b7a3a9d7a42c8e7dce624491ec7f97ebf7f98ab4fd00380bf44360c831cc72899aa9fc15f249c3a7ca56c9df037e94a1900f8da52d996fcbf2bdd32347441573fe23eaea7ea732c0ecd06f8d4344d2dcff36bd7753b95a6a228f4200834ca187b1742f8bbddeec3300c250f78dbb6440871c9187b22f8e3fff01bc36efcafd63932e90000000049454e44ae426082</data>
+    </image>
+    <image name="image9">
+        <data format="PNG" length="450">89504e470d0a1a0a0000000d494844520000001c000000110806000000ce93cc4a0000018949444154388db5d5cd6a534118c6f1df31a9dad685c6a2dbe207a85110bc032fa044912e5ca9c490a517d01b10eac65d5db972257a23e2a62d2e8aa18b3614a24917a7b14d938c8be448299ee440390f3cc3bc0fbcf387770626420165dcc7827cf40b1bd82ce2de18f60d7b3901afe31142018ff13d47181c601f0f8bb88a668eb0447b281511c6ce5b01212b701e2f4ed41f8dc69496a742b3029fb73b717de6fccc3c3c28df2d6c6f37be2c2ede78babef9e30d1cf78e0f4a572ef5f0210d96706a98cde07aabd5593f3cea87c3a37ea8d66a6f937dabd559477d4aff45bc365eb20067b1d61f0cc369632d43ef0554939166d5204ac933f44608e7c6c028839777769be5fe60a83f185a5d7df73ed9efec36cb58ce7046805746af6d92abed4edc88bbbd10777b61a95259c1ada54a6525c9da9db881ea8433e6f032327ad69fa78c630e4f4ed45fd19d90ff4f01cf923b4cb99a7ffa834fa7b268429e060c45fcc635b4a640cfaa05b40be3e20e62e9e338ab4a465fe05664f41fdec46d5cce09b88f2dfcfc0b4c89a9c1c9dceb400000000049454e44ae426082</data>
     </image>
 </images>
 <connections>
