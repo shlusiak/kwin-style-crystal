@@ -164,7 +164,9 @@ void CrystalButton::drawButton(QPainter *painter)
 	QPainter pufferPainter(&pufferPixmap);
 	
 	CrystalFactory *f=((CrystalFactory*)client_->factory());
-	QPixmap *background=f->image_holder->image(client_->isActive());
+	QPixmap *background;
+	if (f->transparency)background=f->image_holder->image(client_->isActive());
+		else background=NULL;
 	WND_CONFIG *wndcfg=client_->isActive()?&f->active:&f->inactive;
 
 	if (background && !background->isNull())
@@ -186,20 +188,34 @@ void CrystalButton::drawButton(QPainter *painter)
 
 	dm=0;
 	if (image && (image->drawMode==1))dm=1;
-	if (wndcfg->frame && (client_->FullMax|| (dm==1)) && (client_->isShade()||(dm==1)))
+	if (wndcfg->outlineMode)
 	{
 		// outline the frame
 		pufferPainter.setPen(wndcfg->frameColor);
-		pufferPainter.drawLine(0,0,width(),0);
-		if (client_->isShade())pufferPainter.drawLine(0,height()-1,width(),height()-1);
+
+		if (wndcfg->outlineMode==2)pufferPainter.setPen(wndcfg->frameColor.dark(150));
+		if (wndcfg->outlineMode==3)pufferPainter.setPen(wndcfg->frameColor.light(150));
+		// top
+		if ((client_->FullMax && client_->isShade() && (dm==0)) ||
+			((dm==1)&&(!client_->FullMax || client_->isShade()))) pufferPainter.drawLine(0,0,width(),0);
+		// left
+		if (first && client_->FullMax && client_->isShade())pufferPainter.drawLine(0,0,0,height());
+
+		if (wndcfg->outlineMode==2)pufferPainter.setPen(wndcfg->frameColor.light(150));
+		if (wndcfg->outlineMode==3)pufferPainter.setPen(wndcfg->frameColor.dark(150));
+		// bottom
+		if (client_->isShade() && ((dm==1)||(client_->FullMax)))pufferPainter.drawLine(0,height()-1,width(),height()-1);
 		
-		if (first && client_->FullMax)pufferPainter.drawLine(0,0,0,height());
-		if (last && client_->FullMax)pufferPainter.drawLine(width()-1,0,width()-1,height());
+		// right
+		if (last && client_->FullMax && client_->isShade())pufferPainter.drawLine(width()-1,0,width()-1,height());
 	}
-	if (wndcfg->inlineFrame && (client_->FullMax||dm==1) && !client_->isShade())
+	if (wndcfg->inlineMode && (client_->FullMax||dm==1) && !client_->isShade())
 	{
 		// inline the frame
-		pufferPainter.setPen(wndcfg->inlineColor);
+		if (wndcfg->inlineMode==1)pufferPainter.setPen(wndcfg->inlineColor);
+		if (wndcfg->inlineMode==2)pufferPainter.setPen(wndcfg->inlineColor.dark(150));
+		if (wndcfg->inlineMode==3)pufferPainter.setPen(wndcfg->inlineColor.light(150));
+		// buttons just need to draw the bottom line
 		pufferPainter.drawLine(0,height()-1,width(),height()-1);
 	}
 

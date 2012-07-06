@@ -53,13 +53,7 @@ protected slots:
 	void boolChanged(bool) { selectionChanged(0); }
 	void colorChanged(const QColor&) { selectionChanged(0); }
 	void textChanged(const QString&) { selectionChanged(0); }
-	void loadOverlayActive();
-	void loadOverlayInactive();
-	void loadLogo();
 	void logoTextChanged(const QString&);
-
-	void loadActivePicture();
-	void loadInactivePicture();
 
 private:
 	KConfig *config_;

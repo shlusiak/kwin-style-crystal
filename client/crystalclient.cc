@@ -85,7 +85,8 @@ CrystalFactory::CrystalFactory()
 	readConfig();
 	initialized_ = true;
 
-	image_holder=new QImageHolder(active.userdefinedPicture,inactive.userdefinedPicture);
+	if (transparency)image_holder=new QImageHolder(active.userdefinedPicture,inactive.userdefinedPicture);
+		else image_holder=NULL;
 	CreateButtonImages();
 }
 
@@ -112,8 +113,15 @@ bool CrystalFactory::reset(unsigned long /*changed*/)
 	readConfig();
 	initialized_ = true;
 
-	image_holder->setUserdefinedPictures(active.userdefinedPicture,inactive.userdefinedPicture);
-	image_holder->repaint(true);
+	if (transparency)
+	{
+		if (!image_holder)image_holder=new QImageHolder(active.userdefinedPicture,inactive.userdefinedPicture);
+		image_holder->setUserdefinedPictures(active.userdefinedPicture,inactive.userdefinedPicture);
+		image_holder->repaint(true);
+	}else{
+		if (image_holder)delete image_holder;
+		image_holder=NULL;
+	}
 	CreateButtonImages();
 	
 	return true;
@@ -123,7 +131,9 @@ bool CrystalFactory::supports(Ability ability)
 {
 	switch (ability)
 	{
+#if KDE_IS_VERSION(3,4,0)
 	case AbilityButtonResize: return false;
+#endif
 	default:
 		return true;
 	}
@@ -152,7 +162,6 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 			break;
 		}
 	}
-
 }
 
 bool CrystalFactory::readConfig()
@@ -170,21 +179,22 @@ bool CrystalFactory::readConfig()
 	textshadow=(bool)config.readBoolEntry("TextShadow",true);
 	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
 	wheelTask=(bool)config.readBoolEntry("WheelTask",true);
+	transparency=(bool)config.readBoolEntry("EnableTransparency",true);
 	trackdesktop=(bool)config.readBoolEntry("TrackDesktop",false);
 
 	active.mode=config.readNumEntry("ActiveMode",0);
 	inactive.mode=config.readNumEntry("InactiveMode",1);
 	active.amount=(double)config.readNumEntry("ActiveShade",30)/100.0;
 	inactive.amount=(double)config.readNumEntry("InactiveShade",-30)/100.0;
-	active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
-	inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
+	active.outlineMode=(int)config.readNumEntry("ActiveFrame",1);
+	inactive.outlineMode=(int)config.readNumEntry("InactiveFrame",1);
 	c=QColor(160,160,160);
 	active.frameColor=config.readColorEntry("FrameColor1",&c);
 	c=QColor(128,128,128);
 	inactive.frameColor=config.readColorEntry("FrameColor2",&c);
 
-	active.inlineFrame=(bool)config.readBoolEntry("ActiveInline",false);
-	inactive.inlineFrame=(bool)config.readBoolEntry("InactiveInline",false);
+	active.inlineMode=(int)config.readNumEntry("ActiveInline",0);
+	inactive.inlineMode=(int)config.readNumEntry("InactiveInline",0);
 	c=QColor(160,160,160);
 	active.inlineColor=config.readColorEntry("InlineColor1",&c);
 	c=QColor(160,160,160);
@@ -204,7 +214,6 @@ bool CrystalFactory::readConfig()
 		inactive.userdefinedPicture.load(config.readEntry("InactiveUserdefinedPicture"));
 	}
 
-
 	borderwidth=config.readNumEntry("Borderwidth",5);
 	titlesize=config.readNumEntry("Titlebarheight",21);
  
@@ -212,6 +221,14 @@ bool CrystalFactory::readConfig()
 	buttonColor_normal=config.readColorEntry("ButtonColor",&buttonColor_normal);
 	buttonColor_hovered=config.readColorEntry("ButtonColor2",&buttonColor_normal);
 	buttonColor_pressed=config.readColorEntry("ButtonColor3",&buttonColor_normal);
+	minColor_normal=QColor(255,255,255);
+	minColor_normal=config.readColorEntry("MinColor",&buttonColor_normal);
+	minColor_hovered=config.readColorEntry("MinColor2",&buttonColor_normal);
+	minColor_pressed=config.readColorEntry("MinColor3",&buttonColor_normal);
+	maxColor_normal=QColor(255,255,255);
+	maxColor_normal=config.readColorEntry("MaxColor",&buttonColor_normal);
+	maxColor_hovered=config.readColorEntry("MaxColor2",&buttonColor_normal);
+	maxColor_pressed=config.readColorEntry("MaxColor3",&buttonColor_normal);
 	closeColor_normal=QColor(255,255,255);
 	closeColor_normal=config.readColorEntry("CloseColor",&closeColor_normal);
 	closeColor_hovered=config.readColorEntry("CloseColor2",&closeColor_normal);
@@ -257,6 +274,12 @@ void CrystalFactory::CreateButtonImages()
 		if (!tintButtons)buttonImages[i]->setColors(Qt::white,Qt::white,Qt::white);
 		else switch(i)
 		{
+			case ButtonImageMin:
+				buttonImages[i]->setColors(minColor_normal,minColor_hovered,minColor_pressed);
+				break;
+			case ButtonImageMax:
+				buttonImages[i]->setColors(maxColor_normal,maxColor_hovered,maxColor_pressed);
+				break;
 			case ButtonImageClose:
 				buttonImages[i]->setColors(closeColor_normal,closeColor_hovered,closeColor_pressed);
 				break;
@@ -498,8 +521,8 @@ void CrystalClient::init()
 	connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
 	connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 	
-	connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
-	connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
+	if (::factory->transparency)connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
+	if (::factory->transparency)connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
 }
 
 void CrystalClient::updateMask()
@@ -739,6 +762,7 @@ void CrystalClient::shadeChange()
 	{
 		button[ButtonShade]->setBitmap(::factory->buttonImages[isShade()?ButtonImageUnShade:ButtonImageShade]);
 	}
+	if (!::factory->transparency)Repaint();
 	return;
 }
 
@@ -759,7 +783,6 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
 			l=r=0;
 	}
-
 }
 
 void CrystalClient::resize(const QSize &size)
@@ -916,9 +939,9 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
-	if (::factory->trackdesktop)
+	if (::factory->transparency && ::factory->trackdesktop)
 		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
-	QPixmap *background=::factory->image_holder->image(isActive());
+	QPixmap *background=::factory->transparency?::factory->image_holder->image(isActive()):NULL;
 	int drawFrame;
 
 	{
@@ -990,7 +1013,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		painter.drawPixmap(0,0,pufferPixmap);
 
 		drawFrame=0;
-		if (wndcfg->frame && (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
+		if (wndcfg->outlineMode && (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
 			drawFrame=1;
 
 		if (::factory->borderwidth>0)
@@ -1020,13 +1043,31 @@ void CrystalClient::paintEvent(QPaintEvent*)
 			}
 		}
 
-		if (wndcfg->inlineFrame && !isShade())
+		if (!isShade())
 		{
-			painter.setPen(wndcfg->inlineColor);
-			painter.drawRect(bl-1,bt-1,widget()->width()-bl-br+2,widget()->height()-bt-bb+2);
+			if (wndcfg->inlineMode==1) {
+				painter.setPen(wndcfg->inlineColor);
+				painter.drawRect(bl-1,bt-1,widget()->width()-bl-br+2,widget()->height()-bt-bb+2);
+			}
+			if (wndcfg->inlineMode==2) {
+				painter.setPen(wndcfg->inlineColor.dark(150));
+				painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
+				painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
+				painter.setPen(wndcfg->inlineColor.light(150));
+				painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
+				painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
+			}
+			if (wndcfg->inlineMode==3) {
+				painter.setPen(wndcfg->inlineColor.light(150));
+				painter.drawLine(bl-1,bt-1,widget()->width()-br,bt-1);
+				painter.drawLine(bl-1,bt-1,bl-1,widget()->height()-bb);
+				painter.setPen(wndcfg->inlineColor.dark(150));
+				painter.drawLine(widget()->width()-br,bt-1,widget()->width()-br,widget()->height()-bb);
+				painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
+			}
 		}
 	}
-	if (background==NULL)
+	if (background==NULL && ::factory->transparency)
 	{	// We don't have a background image, draw a solid rectangle
 		// And notify image_holder that we need an update asap
 		if (::factory)if (::factory->image_holder)
@@ -1038,9 +1079,18 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	{
 		// outline the frame
 		QRect r=widget()->rect();
-		painter.setPen(wndcfg->frameColor);
-		
-		painter.drawRect(r);
+		QColor c1,c2;
+		c1=c2=wndcfg->frameColor;
+		if (wndcfg->outlineMode==2)c1=c1.dark(140),c2=c2.light(140);
+		if (wndcfg->outlineMode==3)c1=c1.light(140),c2=c2.dark(140);
+
+		painter.setPen(c1);
+		painter.drawLine(r.left(),r.top(),r.right(),r.top());
+		painter.drawLine(r.left(),r.top(),r.left(),r.bottom());
+
+		painter.setPen(c2);
+		painter.drawLine(r.right(),r.top(),r.right(),r.bottom());
+		painter.drawLine(r.left(),r.bottom(),r.right(),r.bottom());
 
 		if ((::factory->roundCorners) && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
 		{
@@ -1050,6 +1100,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 			// Draw edge of top-left corner inside the area removed by the mask.
 			if(cornersFlag & TOP_LEFT) {
+				painter.setPen(c1);
 				painter.drawPoint(3, 1);
 				painter.drawPoint(4, 1);
 				painter.drawPoint(2, 2);
@@ -1059,6 +1110,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		
 			// Draw edge of top-right corner inside the area removed by the mask.
 			if(cornersFlag & TOP_RIGHT) {
+				painter.setPen(c1);
 				painter.drawPoint(r - 5, 1);
 				painter.drawPoint(r - 4, 1);
 				painter.drawPoint(r - 3, 2);
@@ -1068,6 +1120,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		
 			// Draw edge of bottom-left corner inside the area removed by the mask.
 			if(cornersFlag & BOT_LEFT) {
+				painter.setPen(c2);
 				painter.drawPoint(1, b - 5);
 				painter.drawPoint(1, b - 4);
 				painter.drawPoint(2, b - 3);
@@ -1077,6 +1130,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		
 			// Draw edge of bottom-right corner inside the area removed by the mask.
 			if(cornersFlag & BOT_RIGHT) {
+				painter.setPen(c2);
 				painter.drawPoint(r - 2, b - 5);
 				painter.drawPoint(r - 2, b - 4);
 				painter.drawPoint(r - 3, b - 3);
@@ -1091,7 +1145,8 @@ void CrystalClient::resizeEvent(QResizeEvent *e)
 {
 	if (widget()->isShown()) 
 	{
-		if (::factory->repaintMode==1)
+		if (!::factory->transparency) ;
+		else if (::factory->repaintMode==1)
 		{
 			if (!timer.isActive())timer.start(0,true);
 // 			Repaint();
@@ -1115,7 +1170,8 @@ void CrystalClient::moveEvent(QMoveEvent *)
 {
 	if (widget()->isShown())
 	{
-		if (::factory->repaintMode==1)
+		if (!::factory->transparency) return;
+		else if (::factory->repaintMode==1)
 		{
 			Repaint();
 		}

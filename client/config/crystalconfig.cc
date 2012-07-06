@@ -38,6 +38,7 @@
 #include <kfiledialog.h>
 #include <qpicture.h>
 #include <kapplication.h>
+#include <kurlrequester.h>
 
 #include "configdialog.h"
 #include "infodialog.h"
@@ -65,22 +66,20 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->shade1, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->shade2, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
 	
-	connect(dialog_->frame1, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
-	connect(dialog_->frame2, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
+	connect(dialog_->frame1, SIGNAL(activated(int)),this, SLOT(selectionChanged(int)));
+	connect(dialog_->frame2, SIGNAL(activated(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->frameColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->frameColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	
-	connect(dialog_->inline1, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
-	connect(dialog_->inline2, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
+	connect(dialog_->inline1, SIGNAL(activated(int)),this, SLOT(selectionChanged(int)));
+	connect(dialog_->inline2, SIGNAL(activated(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->inlineColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->inlineColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 		
 	connect(dialog_->type1,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->type2,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
 	
-	connect(dialog_->activeFileButton,SIGNAL(clicked(void)),this,SLOT(loadActivePicture(void)));
-	connect(dialog_->inactiveFileButton,SIGNAL(clicked(void)),this,SLOT(loadInactivePicture(void)));
-	
+	connect(dialog_->enableTransparency,SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	
 	connect(dialog_->borderwidth, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->titlebarheight, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
@@ -92,6 +91,12 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->buttonColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->buttonColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->buttonColor3, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->minColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->minColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->minColor3, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->maxColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->maxColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->maxColor3, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->closeColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->closeColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->closeColor3, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
@@ -119,9 +124,6 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->overlay_active, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->overlay_inactive, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
 
-	connect(dialog_->overlay_active_button,SIGNAL(clicked(void)),this,SLOT(loadOverlayActive(void)));
-	connect(dialog_->overlay_inactive_button,SIGNAL(clicked(void)),this,SLOT(loadOverlayInactive(void)));
-
 	connect(dialog_->overlay_active_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
 	connect(dialog_->overlay_inactive_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
 
@@ -130,10 +132,8 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->logoFile, SIGNAL(textChanged(const QString &)),this, SLOT(logoTextChanged(const QString&)));
 	connect(dialog_->logoStretch, SIGNAL(activated(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->logoActive, SIGNAL(stateChanged(int)),this, SLOT(selectionChanged(int)));
-	connect(dialog_->logoButton,SIGNAL(clicked(void)),this,SLOT(loadLogo(void)));
 	connect(dialog_->logoDistance,SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
 }
-
 
 CrystalConfig::~CrystalConfig()
 {
@@ -160,19 +160,20 @@ void CrystalConfig::load(KConfig*)
 	dialog_->tooltip->setChecked(config_->readBoolEntry("CaptionTooltip",true));
 	dialog_->wheelTask->setChecked(config_->readBoolEntry("WheelTask",true));
 
+	dialog_->enableTransparency->setChecked(config_->readBoolEntry("EnableTransparency",true));
 	dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",false));
 
-	dialog_->frame1->setChecked(config_->readBoolEntry("ActiveFrame",true));
+	dialog_->frame1->setCurrentItem(config_->readNumEntry("ActiveFrame",1));
 	color=QColor(192,192,192);
 	dialog_->frameColor1->setColor(config_->readColorEntry("FrameColor1",&color));
-	dialog_->frame2->setChecked(config_->readBoolEntry("InactiveFrame",true));
+	dialog_->frame2->setCurrentItem(config_->readNumEntry("InactiveFrame",1));
 	color=QColor(192,192,192);
 	dialog_->frameColor2->setColor(config_->readColorEntry("FrameColor2",&color));
 
-	dialog_->inline1->setChecked(config_->readBoolEntry("ActiveInline",false));
+	dialog_->inline1->setCurrentItem(config_->readNumEntry("ActiveInline",0));
 	color=QColor(192,192,192);
 	dialog_->inlineColor1->setColor(config_->readColorEntry("InlineColor1",&color));
-	dialog_->inline2->setChecked(config_->readBoolEntry("InactiveInline",false));
+	dialog_->inline2->setCurrentItem(config_->readNumEntry("InactiveInline",0));
 	color=QColor(192,192,192);
 	dialog_->inlineColor2->setColor(config_->readColorEntry("InlineColor2",&color));
 
@@ -197,13 +198,17 @@ void CrystalConfig::load(KConfig*)
 
 	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",true));
 	dialog_->animateHover->setChecked(config_->readBoolEntry("AnimateHover",true));
-	dialog_->animateHover->setEnabled(dialog_->hover->isChecked());
-
 
 	color=QColor(255,255,255);
 	dialog_->buttonColor1->setColor(config_->readColorEntry("ButtonColor",&color));
 	dialog_->buttonColor2->setColor(config_->readColorEntry("ButtonColor2",&color));
 	dialog_->buttonColor3->setColor(config_->readColorEntry("ButtonColor3",&color));
+	dialog_->minColor1->setColor(config_->readColorEntry("MinColor",&color));
+	dialog_->minColor2->setColor(config_->readColorEntry("MinColor2",&color));
+	dialog_->minColor3->setColor(config_->readColorEntry("MinColor3",&color));
+	dialog_->maxColor1->setColor(config_->readColorEntry("MaxColor",&color));
+	dialog_->maxColor2->setColor(config_->readColorEntry("MaxColor2",&color));
+	dialog_->maxColor3->setColor(config_->readColorEntry("MaxColor3",&color));
 	dialog_->closeColor1->setColor(config_->readColorEntry("CloseColor",&color));
 	dialog_->closeColor2->setColor(config_->readColorEntry("CloseColor2",&color));
 	dialog_->closeColor3->setColor(config_->readColorEntry("CloseColor3",&color));
@@ -220,22 +225,22 @@ void CrystalConfig::load(KConfig*)
 	dialog_->inactive_blur->setValue(config_->readNumEntry("InactiveBlur",0));
 
 
-	dialog_->activeFile->setText(config_->readEntry("ActiveUserdefinedPicture",""));
+	dialog_->activeFile->setURL(config_->readEntry("ActiveUserdefinedPicture",""));
 	dialog_->userPicture1->setChecked(config_->readBoolEntry("ActiveUserdefined",false));
-	dialog_->inactiveFile->setText(config_->readEntry("InactiveUserdefinedPicture",""));
+	dialog_->inactiveFile->setURL(config_->readEntry("InactiveUserdefinedPicture",""));
 	dialog_->userPicture2->setChecked(config_->readBoolEntry("InactiveUserdefined",false));
 
 
 	button=(QRadioButton*)dialog_->overlay_active->find(config_->readNumEntry("OverlayModeActive",0));
 	if (button)button->setChecked(true);
-	dialog_->overlay_active_file->setText(config_->readEntry("OverlayFileActive",""));
+	dialog_->overlay_active_file->setURL(config_->readEntry("OverlayFileActive",""));
 
 	button=(QRadioButton*)dialog_->overlay_inactive->find(config_->readNumEntry("OverlayModeInactive",0));
 	if (button)button->setChecked(true);
-	dialog_->overlay_inactive_file->setText(config_->readEntry("OverlayFileInactive",""));
+	dialog_->overlay_inactive_file->setURL(config_->readEntry("OverlayFileInactive",""));
 
 	dialog_->logoEnabled->setButton(config_->readNumEntry("LogoAlignment",1));
-	dialog_->logoFile->setText(config_->readEntry("LogoFile",""));
+	dialog_->logoFile->setURL(config_->readEntry("LogoFile",""));
 	dialog_->logoActive->setChecked(config_->readBoolEntry("LogoActive",1));
 	dialog_->logoStretch->setCurrentItem(config_->readNumEntry("LogoStretch",0));
 	dialog_->logoDistance->setValue(config_->readNumEntry("LogoDistance",0));
@@ -251,6 +256,8 @@ void CrystalConfig::save(KConfig*)
 	config_->writeEntry("TextShadow",dialog_->textshadow->isChecked());
 	config_->writeEntry("CaptionTooltip",dialog_->tooltip->isChecked());
 	config_->writeEntry("WheelTask",dialog_->wheelTask->isChecked());
+
+	config_->writeEntry("EnableTransparency",dialog_->enableTransparency->isChecked());
 	config_->writeEntry("TrackDesktop",dialog_->trackdesktop->isChecked());
 
 	config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
@@ -258,21 +265,27 @@ void CrystalConfig::save(KConfig*)
 
 	config_->writeEntry("ActiveShade",dialog_->shade1->value());
 	config_->writeEntry("InactiveShade",dialog_->shade2->value());
-	config_->writeEntry("ActiveFrame",dialog_->frame1->isChecked());
+	config_->writeEntry("ActiveFrame",dialog_->frame1->currentItem());
 	config_->writeEntry("FrameColor1",dialog_->frameColor1->color());
-	config_->writeEntry("InactiveFrame",dialog_->frame2->isChecked());
+	config_->writeEntry("InactiveFrame",dialog_->frame2->currentItem());
 	config_->writeEntry("ActiveMode",dialog_->type1->currentItem());
 	config_->writeEntry("InactiveMode",dialog_->type2->currentItem());
 	config_->writeEntry("FrameColor2",dialog_->frameColor2->color());
 
-	config_->writeEntry("ActiveInline",dialog_->inline1->isChecked());
+	config_->writeEntry("ActiveInline",dialog_->inline1->currentItem());
 	config_->writeEntry("InlineColor1",dialog_->inlineColor1->color());
-	config_->writeEntry("InactiveInline",dialog_->inline2->isChecked());
+	config_->writeEntry("InactiveInline",dialog_->inline2->currentItem());
 	config_->writeEntry("InlineColor2",dialog_->inlineColor2->color());
 
 	config_->writeEntry("ButtonColor",dialog_->buttonColor1->color());
 	config_->writeEntry("ButtonColor2",dialog_->buttonColor2->color());
 	config_->writeEntry("ButtonColor3",dialog_->buttonColor3->color());
+	config_->writeEntry("MinColor",dialog_->minColor1->color());
+	config_->writeEntry("MinColor2",dialog_->minColor2->color());
+	config_->writeEntry("MinColor3",dialog_->minColor3->color());
+	config_->writeEntry("MaxColor",dialog_->maxColor1->color());
+	config_->writeEntry("MaxColor2",dialog_->maxColor2->color());
+	config_->writeEntry("MaxColor3",dialog_->maxColor3->color());
 	config_->writeEntry("CloseColor",dialog_->closeColor1->color());
 	config_->writeEntry("CloseColor2",dialog_->closeColor2->color());
 	config_->writeEntry("CloseColor3",dialog_->closeColor3->color());
@@ -296,17 +309,17 @@ void CrystalConfig::save(KConfig*)
 	config_->writeEntry("InactiveBlur",dialog_->inactive_blur->value());
 
 	config_->writeEntry("ActiveUserdefined",dialog_->userPicture1->isChecked());
-	config_->writeEntry("ActiveUserdefinedPicture",dialog_->activeFile->text());
+	config_->writeEntry("ActiveUserdefinedPicture",dialog_->activeFile->url());
 	config_->writeEntry("InactiveUserdefined",dialog_->userPicture2->isChecked());
-	config_->writeEntry("InactiveUserdefinedPicture",dialog_->inactiveFile->text());
+	config_->writeEntry("InactiveUserdefinedPicture",dialog_->inactiveFile->url());
 
 	config_->writeEntry("OverlayModeActive",dialog_->overlay_active->selectedId());
-	config_->writeEntry("OverlayFileActive",dialog_->overlay_active_file->text());
+	config_->writeEntry("OverlayFileActive",dialog_->overlay_active_file->url());
 	config_->writeEntry("OverlayModeInactive",dialog_->overlay_inactive->selectedId());
-	config_->writeEntry("OverlayFileInactive",dialog_->overlay_inactive_file->text());
+	config_->writeEntry("OverlayFileInactive",dialog_->overlay_inactive_file->url());
 
 	config_->writeEntry("LogoAlignment",dialog_->logoEnabled->selectedId());
-	config_->writeEntry("LogoFile",dialog_->logoFile->text());
+	config_->writeEntry("LogoFile",dialog_->logoFile->url());
 	config_->writeEntry("LogoActive",dialog_->logoActive->isChecked());
 	config_->writeEntry("LogoStretch",dialog_->logoStretch->currentItem());
 	config_->writeEntry("LogoDistance",dialog_->logoDistance->value());
@@ -321,60 +334,6 @@ void CrystalConfig::infoDialog()
 	d.exec();
 }
 
-void CrystalConfig::loadOverlayActive()
-{
-	KURL s=KFileDialog::getImageOpenURL();
-	if (!s.isEmpty())
-	{
-		dialog_->overlay_active_file->setText( s.path() );
-		dialog_->overlay_active_userdefined->setChecked(true);
-		emit changed();
-	}
-}
-
-void CrystalConfig::loadOverlayInactive()
-{
-	KURL s=KFileDialog::getImageOpenURL();
-	if (!s.isEmpty())
-	{
-		dialog_->overlay_inactive_file->setText( s.path() );
-		dialog_->overlay_inactive_userdefined->setChecked(true);
-		emit changed();
-	}
-}
-
-void CrystalConfig::loadActivePicture()
-{
-	KURL s=KFileDialog::getImageOpenURL();
-	if (!s.isEmpty())
-	{
-		dialog_->activeFile->setText( s.path() );
-		emit changed();
-	}
-}
-
-void CrystalConfig::loadInactivePicture()
-{
-	KURL s=KFileDialog::getImageOpenURL();
-	if (!s.isEmpty())
-	{
-		dialog_->inactiveFile->setText( s.path() );
-		emit changed();
-	}
-}
-
-
-void CrystalConfig::loadLogo()
-{
-	KURL s=KFileDialog::getImageOpenURL();
-	if (!s.isEmpty())
-	{
-		dialog_->logoFile->setText( s.path() );
-		emit changed();
-		updateLogo();
-	}
-}
-
 void CrystalConfig::logoTextChanged(const QString&)
 {
 	updateLogo();
@@ -384,7 +343,7 @@ void CrystalConfig::logoTextChanged(const QString&)
 void CrystalConfig::updateLogo()
 {
 	QPixmap pic;
-	pic.load(dialog_->logoFile->text());
+	pic.load(dialog_->logoFile->url());
 	dialog_->logoPreview->setPixmap(pic);
 }
 

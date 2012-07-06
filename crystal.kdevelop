@@ -30,7 +30,7 @@
       <autocompile>true</autocompile>
       <envvars/>
       <runarguments>
-        <embedtool></embedtool>
+        <embedtool/>
       </runarguments>
     </run>
     <configurations>

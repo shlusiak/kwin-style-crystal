@@ -57,7 +57,7 @@ struct WND_CONFIG
 	int mode;	// The mode (fade, emboss, ...)
 	
 	double amount;
-	bool frame,inlineFrame;
+	int outlineMode,inlineMode;
 	QColor frameColor,inlineColor;
 	QPixmap overlay;
 	QImage userdefinedPicture; // Userdefined background image, instead of wallpaper
@@ -118,11 +118,13 @@ public:
 	bool hovereffect,tintButtons,animateHover,wheelTask;
 
 	QColor buttonColor_normal,buttonColor_hovered,buttonColor_pressed;
+	QColor minColor_normal,minColor_hovered,minColor_pressed;
+	QColor maxColor_normal,maxColor_hovered,maxColor_pressed;
 	QColor closeColor_normal,closeColor_hovered,closeColor_pressed;
 
 	int borderwidth;
 	bool textshadow,captiontooltip;
-	bool trackdesktop;
+	bool trackdesktop,transparency;
 	int roundCorners;
 	int repaintMode,repaintTime;
 	WND_CONFIG active,inactive;
