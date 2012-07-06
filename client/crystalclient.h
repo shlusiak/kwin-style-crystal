@@ -27,20 +27,37 @@
 #ifndef EXAMPLECLIENT_H
 #define EXAMPLECLIENT_H
 
-#include <qbutton.h>
-#include <qtimer.h>
+#include <qlayout.h>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
-#include <kwinmodule.h>
-#include "myrootpixmap.h"
+#include <qtimer.h>
+#include <qptrlist.h>
+#include <X11/Xlib.h>
+
 
 class QSpacerItem;
 class QPoint;
 
-namespace Crystal {
+class CrystalClient;
+class CrystalFactory;
+class CrystalButton;
+class QImageHolder;
 
-class ExampleClient;
-class ExampleFactory;
+class ButtonImage;
+
+extern CrystalFactory *factory;
+
+
+
+struct WND_CONFIG
+{
+	int mode;	// The mode (fade, emboss, ...)
+	
+	double amount;
+	bool frame;
+	QColor frameColor;
+};
+
 
 enum ButtonType {
     ButtonHelp=0,
@@ -50,112 +67,78 @@ enum ButtonType {
     ButtonMenu,
     ButtonSticky,
     ButtonShade,
+	ButtonAbove,
+	ButtonBelow,
     ButtonTypeCount
 };
 
-// ExampleFactory /////////////////////////////////////////////////////////////
 
-class QImageHolder:public QObject
-{
-	Q_OBJECT
-public:
-	QImageHolder(ExampleFactory *vfactory);
-	virtual ~QImageHolder();
-	
-	void Init();
-	QImage *image(bool active) { Init(); return active?img_active:img_inactive; }
-	void repaint(bool force);
-
-private:
-	ExampleFactory *factory;
-	bool initialized;
-	KMyRootPixmap *rootpixmap;
-	QImage *img_active,*img_inactive;
-	
-public slots:
-	void BackgroundUpdated(const QImage *);
-	void handleDesktopChanged(int desk);
-	void CheckSanity();
-	
-signals:
-	void repaintNeeded();
+enum ButtonImageTypes {
+    ButtonImageHelp=0,
+    ButtonImageMax,
+	ButtonImageRestore,
+    ButtonImageMin,
+    ButtonImageClose, 
+    ButtonImageSticky,
+	ButtonImageUnSticky,
+    ButtonImageShade,
+	ButtonImageBelow,
+	ButtonImageUnBelow,
+	ButtonImageAbove,
+	ButtonImageUnAbove,
+    ButtonImageCount
 };
 
-class ExampleFactory: public KDecorationFactory
+
+
+// ExampleFactory /////////////////////////////////////////////////////////////
+
+
+class CrystalFactory: public KDecorationFactory
 {
 public:
-    ExampleFactory();
-    virtual ~ExampleFactory();
+    CrystalFactory();
+    virtual ~CrystalFactory();
     virtual KDecoration *createDecoration(KDecorationBridge *b);
     virtual bool reset(unsigned long changed);
 
-    static bool initialized();
-    static Qt::AlignmentFlags titleAlign();
+    static bool initialized() { return initialized_; }
+    static Qt::AlignmentFlags titleAlign() { return titlealign_; }
 public:
 	QImageHolder *image_holder;
 	
+	int titlesize;
+	bool hovereffect;
+	int borderwidth;
+	bool textshadow;
+	bool trackdesktop;
+	bool roundCorners;
+	QColor buttonColor;
+	int repaintMode,repaintTime;
+	WND_CONFIG active,inactive;
+	
+	
+	ButtonImage *buttonImages[ButtonImageCount];
+	QPtrList <CrystalClient> clients;
+	
 private:
-    void initButtonPixmaps();
     bool readConfig();
-
+	void CreateButtonImages();
 private:
     static bool initialized_;
     static Qt::AlignmentFlags titlealign_;
 };
 
-inline bool ExampleFactory::initialized()
-    { return initialized_; }
 
-inline Qt::AlignmentFlags ExampleFactory::titleAlign()
-    { return titlealign_; }
-
-// ExampleButton //////////////////////////////////////////////////////////////
-
-class ExampleButton : public QButton
-{
-public:
-    ExampleButton(ExampleClient *parent=0, const char *name=0,
-                  const QString &tip=NULL,
-                  ButtonType type=ButtonHelp,
-                  QImage *bitmap=0);
-    ~ExampleButton();
-
-    void setBitmap(QImage *bitmap) {deco_=bitmap; repaint(false); }
-    QSize sizeHint() const;
-    int lastMousePress() const;
-    void reset();
-
-private:
-    void enterEvent(QEvent *e);
-    void leaveEvent(QEvent *e);
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
-    void drawButton(QPainter *painter);
-    
-    int buttonSize() const;
-
-private:
-	bool hover;
-    ExampleClient *client_;
-    ButtonType type_;
-    QImage *deco_;
-    int lastmouse_;
-};
-
-inline int ExampleButton::lastMousePress() const
-    { return lastmouse_; }
-
-inline void ExampleButton::reset()
-    { repaint(false); }
 
 // ExampleClient //////////////////////////////////////////////////////////////
 
-class ExampleClient : public KDecoration
+class CrystalClient : public KDecoration
 {
     Q_OBJECT
 public:
-    ExampleClient(KDecorationBridge *b, ExampleFactory *f);
-    virtual ~ExampleClient();
+    CrystalClient(KDecorationBridge *b,CrystalFactory *f);
+    virtual ~CrystalClient();
 
     virtual void init();
 
@@ -172,34 +155,42 @@ public:
     virtual Position mousePosition(const QPoint &point) const;
 
 private:
-    void addButtons(QBoxLayout* layout, const QString& buttons);
+    CrystalButton* addButtons(QBoxLayout* layout, const QString& buttons);
     void updateMask();
-
+	int borderSpacing();
+	void updateLayout();
+	
     bool eventFilter(QObject *obj, QEvent *e);
     void mouseDoubleClickEvent(QMouseEvent *e);
     void paintEvent(QPaintEvent *e);
     void resizeEvent(QResizeEvent *);
     void moveEvent(QMoveEvent *);
     void showEvent(QShowEvent *);
-    
-
+	void mouseWheelEvent(QWheelEvent *e);
+	
+	void ShowTabMenu(QMouseEvent *e);
+	void ClientWindows(Window* frame,Window* wrapper,Window* client);
 private slots:
     void Repaint();
     void maxButtonPressed();
     void minButtonPressed();
     void shadeButtonPressed();
+	void aboveButtonPressed();
+	void belowButtonPressed();
     void menuButtonPressed();
-//    void BackgroundUpdated(const QImage&);
-//    void DesktopChanged(int desktop);    
-
+	
+	void keepAboveChange( bool );
+	void keepBelowChange( bool );
+	void menuPopUp();
 private:
-    ExampleButton *button[ButtonTypeCount];
+    CrystalButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
-    QRegion mask;
-    ExampleFactory* my_factory;
+	QGridLayout *mainlayout;
     QTimer timer;
+	
+public:
+	bool FullMax;
 };
 
-} // namespace Example
 
 #endif // EXAMPLECLIENT_H

@@ -1,240 +1,72 @@
-//////////////////////////////////////////////////////////////////////////////
-// exampleclient.cc
-// -------------------
-// Example window decoration for KDE
-// -------------------
-// Copyright (c) 2003, 2004 David Johnson
-// Please see the header file for copyright and license information.
-//////////////////////////////////////////////////////////////////////////////
-
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
-#include <kimageeffect.h>
 #include <kdebug.h>
 
 #include <qbitmap.h>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qpainter.h>
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qimage.h>
-#include <qtimer.h>
-#include <kapp.h>
-#include <netwm.h>
+#include <qpopupmenu.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <qworkspace.h>
 
 #include "crystalclient.h"
+#include "crystalbutton.h"
+#include "imageholder.h"
 #include "tiles.h"
 
 
-using namespace Crystal;
 
-// global constants
+CrystalFactory* factory=NULL;
 
-static const int BUTTONSIZE      = 18;
-static const int FRAMESIZE       = 1;
-static const int DECOSIZE	 = 14;
+bool CrystalFactory::initialized_              = false;
+Qt::AlignmentFlags CrystalFactory::titlealign_ = Qt::AlignHCenter;
 
-static const int CORNER_EDGE_H=7;
-static const int CORNER_EDGE_V=7;
-static const int CORNER_EDGE_OFFSET=1;
-
-
-
-struct WND_CONFIG
-{
-	int mode;	// The mode (fade, emboss, ...)
-	
-	double amount;
-	bool frame;
-	QColor frameColor;
-}active,inactive;
-
-
-static int borderwidth=1;
-static bool textshadow=true;
-static int titlesize = 20;
-static bool trackdesktop=true;
-static bool roundCorners=false;
-static bool hovereffect=false;
-static QColor buttonColor(255,255,255);
-
-static QImage deco_close,deco_min,deco_sticky,deco_un_sticky,deco_max,deco_restore,deco_shade,deco_help;
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-// ExampleFactory Class                                                     //
-//////////////////////////////////////////////////////////////////////////////
-
-bool ExampleFactory::initialized_              = false;
-Qt::AlignmentFlags ExampleFactory::titlealign_ = Qt::AlignHCenter;
 
 
 extern "C" KDecorationFactory* create_factory()
 {
-    return new ExampleFactory();
+    return new CrystalFactory();
 }
-
-//////////////////////////////////////////////////////
-// QImageHolder
-//
-
-
-QImageHolder::QImageHolder(ExampleFactory *vfactory)
-:factory(vfactory),img_active(NULL),img_inactive(NULL)
-{
-	rootpixmap=NULL;
-	initialized=false;
-}
-
-QImageHolder::~QImageHolder()
-{
-	if (rootpixmap)delete rootpixmap;
-	if (img_active)delete img_active;
-	if (img_inactive)delete img_inactive;
-}
-
-void QImageHolder::Init()
-{
-	if (initialized)return;
-	
-//	printf("Calling Init\n");	
-	
-	rootpixmap=new KMyRootPixmap(NULL/*,this*/);
-	rootpixmap->start();
-	rootpixmap->repaint(true);
-	connect( rootpixmap,SIGNAL(backgroundUpdated(const QImage*)),this, SLOT(BackgroundUpdated(const QImage*)));
-	connect(kapp, SIGNAL(backgroundChanged(int)),SLOT(handleDesktopChanged(int)));
-	
-	initialized=true;
-}
-
-void QImageHolder::repaint(bool force)
-{
-	Init(); 
-	rootpixmap->repaint(force);
-}
-
-void QImageHolder::handleDesktopChanged(int)
-{
-	repaint(true);
-}
-
-void QImageHolder::CheckSanity()
-{
-	if (!initialized)return;
-	if (img_active!=NULL)return;
-	if (img_inactive!=NULL)return;
-
-//	printf("SanityCheck failed, uninitializing\n");	
-	delete rootpixmap;
-	rootpixmap=NULL;
-	
-	initialized=false;
-//	printf("Uninitialized.\n");	
-	
-}
-
-
-QImage *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
-{
-	QImage dst;
-	
-	switch(cfg->mode)
-	{
-	case 0:	if (cfg->amount>0.99)return new QImage();
-		dst=KImageEffect::fade(src, cfg->amount, colorgroup.background());
-		break;
-	case 1:dst=KImageEffect::channelIntensity(src,cfg->amount,KImageEffect::All);
-		break;
-	case 2:dst=KImageEffect::intensity(src,cfg->amount);
-		break;
-	case 3:dst=KImageEffect::desaturate(src,cfg->amount);
-		break;
-	case 4: dst=src;
-		KImageEffect::solarize(dst,cfg->amount*100.0);
-		break;
-//	case 5:dst=KImageEffect::emboss(src);
-//		break;
-//	case 6:dst=KImageEffect::charcoal(src);
-//		break;
-
-	default:dst=src;
-		break;	
-	}
-	
-	return new QImage(dst);
-}
-
-void QImageHolder::BackgroundUpdated(const QImage *src)
-{
-	if (img_active)
-	{
-		delete img_active;
-		img_active=NULL;
-	}
-	if (img_inactive)
-	{
-		delete img_inactive;
-		img_inactive=NULL;
-	}
-	
-	if (src && !src->isNull())
-	{
-		src->scale(1024,768);
-		QImage tmp=src->copy();
-
-		if (!img_active)img_active=new QImage;
-		if (!img_inactive)img_inactive=new QImage;
-
-		img_inactive=ApplyEffect(tmp,&inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false));
-		tmp=src->copy();
-		img_active=ApplyEffect(tmp,&active,factory->options()->colorGroup(KDecoration::ColorTitleBar, true));
-	}
-	
-	emit repaintNeeded();	
-}
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////
-// ExampleFactory()
-// ----------------
-// Constructor
+// CrystalFactory Class                                                     //
+//////////////////////////////////////////////////////////////////////////////
 
-ExampleFactory::ExampleFactory()
+CrystalFactory::CrystalFactory()
 {
+	for (int i=0;i<ButtonImageCount;i++)
+		buttonImages[i]=NULL;
+
     readConfig();
     initialized_ = true;
-    initButtonPixmaps();
-    
-    image_holder=new QImageHolder(this);
+	::factory=this;
+
+    image_holder=new QImageHolder();
+	CreateButtonImages();
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// ~ExampleFactory()
-// -----------------
-// Destructor
-
-ExampleFactory::~ExampleFactory() 
+CrystalFactory::~CrystalFactory() 
 { 
 	initialized_ = false; 
+	::factory=NULL;
 	if (image_holder)delete image_holder;
+	for (int i=0;i<ButtonImageCount;i++)
+	{
+		if (buttonImages[i])delete buttonImages[i];
+		buttonImages[i]=NULL;
+	}
 }
 
-
-//////////////////////////////////////////////////////////////////////////////
-// createDecoration()
-// -----------------
-// Create the decoration
-
-KDecoration* ExampleFactory::createDecoration(KDecorationBridge* b)
+KDecoration* CrystalFactory::createDecoration(KDecorationBridge* b)
 {
-    return new ExampleClient(b, this);
+    return new CrystalClient(b,factory );
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -243,45 +75,19 @@ KDecoration* ExampleFactory::createDecoration(KDecorationBridge* b)
 // Reset the handler. Returns true if decorations need to be remade, false if
 // only a repaint is necessary
 
-QImage makeButtonImage(uchar* data)
-{
-	QImage img=QImage(data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-	img.setAlphaBuffer(true);
-	
-	img=img.copy();
-	return KImageEffect::blend(buttonColor,img,1.0f);
-}
-
-void ExampleFactory::initButtonPixmaps()
-{
-	deco_close=makeButtonImage((uchar*)crystal_close_data);
-	deco_min=makeButtonImage((uchar*)crystal_min_data);
-	deco_sticky=makeButtonImage((uchar*)crystal_sticky_data);
-	deco_un_sticky=makeButtonImage((uchar*)crystal_un_sticky_data);
-	deco_max=makeButtonImage((uchar*)crystal_max_data);
-	deco_restore=makeButtonImage((uchar*)crystal_restore_data);
-	deco_shade=makeButtonImage((uchar*)crystal_shade_data);
-	deco_help=makeButtonImage((uchar*)crystal_help_data);
-}
-
-bool ExampleFactory::reset(unsigned long changed)
+bool CrystalFactory::reset(unsigned long changed)
 {
     // read in the configuration
     initialized_ = false;
-    bool confchange = readConfig();
-    initButtonPixmaps();
-        
+//    bool confchange = 
+	readConfig();
+
     initialized_ = true;
 
     image_holder->repaint(true);
-    
-    if (confchange ||
-        (changed & (SettingDecoration | SettingButtons | SettingBorder))) {
-        return true;
-    } else {
-        resetDecorations(changed);
-        return false;
-    }
+	CreateButtonImages();
+	
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -289,16 +95,12 @@ bool ExampleFactory::reset(unsigned long changed)
 // ------------
 // Read in the configuration file
 
-bool ExampleFactory::readConfig()
+bool CrystalFactory::readConfig()
 {
     // create a config object
     KConfig config("kwincrystalrc");
     config.setGroup("General");
 
-    // grab settings
-//    Qt::AlignmentFlags oldalign = titlealign_;
-        
-    
     QString value = config.readEntry("TitleAlignment", "AlignHCenter");
     if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
     else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
@@ -313,9 +115,9 @@ bool ExampleFactory::readConfig()
     inactive.amount=(double)config.readNumEntry("InactiveShade",50)/100.0;
     active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
     inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
-	buttonColor=QColor(192,192,192);
+	buttonColor=QColor(160,160,160);
     active.frameColor=config.readColorEntry("FrameColor1",&buttonColor);
-	buttonColor=QColor(192,192,192);
+	buttonColor=QColor(128,128,128);
     inactive.frameColor=config.readColorEntry("FrameColor2",&buttonColor);
     
     borderwidth=config.readNumEntry("Borderwidth",4);
@@ -326,254 +128,50 @@ bool ExampleFactory::readConfig()
     roundCorners=config.readBoolEntry("RoundCorners",false);
 
 	hovereffect=config.readBoolEntry("HoverEffect",false);
+	repaintMode=config.readNumEntry("RepaintMode",2);
+	repaintTime=config.readNumEntry("RepaintTime",200);
        
     return true;
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////////
-// ExampleButton Class                                                      //
-//////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////
-// ExampleButton()
-// ---------------
-// Constructor
-
-ExampleButton::ExampleButton(ExampleClient *parent, const char *name,
-                             const QString& tip, ButtonType type,
-                             QImage *bitmap)
-    : QButton(parent->widget(), name), client_(parent), type_(type),
-      deco_(0), lastmouse_(0)
+void CrystalFactory::CreateButtonImages()
 {
-    setBackgroundMode(NoBackground);
-    setFixedSize(buttonSize(), buttonSize());
-    setCursor(arrowCursor);
-	
-	hover=false;
-
-    if (bitmap==NULL || bitmap->isNull())deco_=NULL;
-    	else deco_=bitmap;
-
-    QToolTip::add(this, tip);
-}
-
-ExampleButton::~ExampleButton()
-{
-
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// sizeHint()
-// ----------
-// Return size hint
-
-QSize ExampleButton::sizeHint() const
-{
-	return QSize(buttonSize(),buttonSize());
-}
-
-int ExampleButton::buttonSize() const
-{
-	return (titlesize>BUTTONSIZE)?BUTTONSIZE:titlesize;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// enterEvent()
-// ------------
-// Mouse has entered the button
-
-void ExampleButton::enterEvent(QEvent *e)
-{
-    // if we wanted to do mouseovers, we would keep track of it here
-	hover=true;
-	if (hovereffect)repaint(false);
-    QButton::enterEvent(e);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// leaveEvent()
-// ------------
-// Mouse has left the button
-
-void ExampleButton::leaveEvent(QEvent *e)
-{
-    // if we wanted to do mouseovers, we would keep track of it here
-	hover=false;
-	if (hovereffect)repaint(false);
-    QButton::leaveEvent(e);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// mousePressEvent()
-// -----------------
-// Button has been pressed
-
-void ExampleButton::mousePressEvent(QMouseEvent* e)
-{
-    lastmouse_ = e->button();
-    int button;
-    // translate and pass on mouse event
-    switch(e->button())
-    {
-    	case LeftButton:
-		button=LeftButton;
-		break;
-	case RightButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu))
-			button=LeftButton; else button=NoButton;
-		break;
-	case MidButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin))
-			button=LeftButton; else button=NoButton;
-		break;
-	
-	default:button=NoButton;
-		break;
-    }
-    
-    
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   button, e->state());
-    QButton::mousePressEvent(&me);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// mouseReleaseEvent()
-// -----------------
-// Button has been released
-
-void ExampleButton::mouseReleaseEvent(QMouseEvent* e)
-{
-    lastmouse_ = e->button();
-    int button;
-    // translate and pass on mouse event
-    switch(e->button())
-    {
-    	case LeftButton:
-		button=LeftButton;
-		break;
-	case RightButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu))
-			button=LeftButton; else button=NoButton;
-		break;
-	case MidButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin))
-			button=LeftButton; else button=NoButton;
-		break;
-	
-	default:button=NoButton;
-		break;
-    }
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(), button, e->state());
-    QButton::mouseReleaseEvent(&me);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// drawButton()
-// ------------
-// Draw the button
-
-void ExampleButton::drawButton(QPainter *painter)
-{
-    if (!ExampleFactory::initialized()) return;
-    
-    QColorGroup group;
-    int dx, dy;
-
-    QPixmap pufferPixmap;
-    pufferPixmap.resize(BUTTONSIZE, BUTTONSIZE);
-    QPainter pufferPainter(&pufferPixmap);
-    
-    // paint a plain box with border
-    QImage *background=((ExampleFactory*)client_->factory())->image_holder->image(client_->isActive());
-    if (background && !background->isNull())
-    {
-    	QRect r=rect();
-	QPoint p=mapToGlobal(QPoint(0,0));
-	r.moveBy(p.x(),p.y());
-	
-	pufferPainter.drawImage(QPoint(0,0),*background,r);
-    }else{
-	group = client_->options()->colorGroup(KDecoration::ColorTitleBar, client_->isActive());
-	pufferPainter.fillRect(rect(), group.background());
-    }
-
-    QRect r(1,1,rect().width()-2,rect().height()-2);
-
-    if (type_ == ButtonMenu) {
-        // we paint the mini icon (which is 16 pixels high)
-        dx = (width() - 16) / 2;
-        dy = (height() - 16) / 2;
-
-	if (dx<1 || dy<1)
+	for (int i=0;i<ButtonImageCount;i++)
 	{
-		if (isDown()) { r.moveBy(1,1); }
-        	pufferPainter.drawPixmap(r, client_->icon().pixmap(QIconSet::Small,
-                                                           QIconSet::Normal));
-	}else{
-        	if (isDown()) { dx++; dy++; }
-		pufferPainter.drawPixmap(dx, dy, client_->icon().pixmap(QIconSet::Small,
-                                                           QIconSet::Normal));
+		if (buttonImages[i])buttonImages[i]->reset(); else
+		buttonImages[i]=new ButtonImage;
 	}
-    } else if (deco_) {
-        // otherwise we paint the deco
+
+	buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,true);
+	buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,true);
+	buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,true);
+	buttonImages[ButtonImageMin]->SetNormal(crystal_min_data,true);
+	buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,true);
+	buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,true);
+	buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,true);
+	buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,true);
 	
-        dx = (width() - DECOSIZE) / 2;
-        dy = (height() - DECOSIZE) / 2;
-	
-		if (hover && !isDown() && 0)
-		{
-			QWMatrix mat;
-			
-			mat.translate(rect().center().x(),rect().center().y());
-			mat.rotate(15);
-			mat.translate(-rect().center().x(),-rect().center().y());
-			
-			pufferPainter.setWorldMatrix(mat);
-		}
-		
-	if (dx<1 || dy<1)
-	{	// Deco size is smaller than image, we need to stretch it
-		
-		pufferPainter.drawImage(r,*deco_);
-		if (isDown())
-			pufferPainter.drawImage(r,*deco_);
-		if (hover && hovereffect)
-			pufferPainter.drawImage(r,*deco_);
-	}else{
-		// Otherwise we just paint it
-		pufferPainter.drawImage(QPoint(dx,dy),*deco_);
-		if (isDown())
-			pufferPainter.drawImage(QPoint(dx,dy),*deco_);
-		if (hover && hovereffect)
-			pufferPainter.drawImage(QPoint(dx,dy),*deco_);
-    }
-	}
-	pufferPainter.end();
-    	painter->drawPixmap(0,0, pufferPixmap);    
+	buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,true);
+	buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,true);
+	buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,true);
+	buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,true);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// ExampleClient Class                                                      //
-//////////////////////////////////////////////////////////////////////////////
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////
-// ExampleClient()
-// ---------------
-// Constructor
+// CrystalClient Class                                                      //
+//////////////////////////////////////////////////////////////////////////////
 
-ExampleClient::ExampleClient(KDecorationBridge *b, ExampleFactory *f)
-    : KDecoration(b, f) , my_factory(f)
-{ 
-}
-
-ExampleClient::~ExampleClient()
+CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
+    : KDecoration(b,f)
 {
+	::factory->clients.append(this);
+}
+
+CrystalClient::~CrystalClient()
+{
+	::factory->clients.remove(this);
     for (int n=0; n<ButtonTypeCount; n++) {
         if (button[n]) delete button[n];
     }
@@ -584,31 +182,31 @@ ExampleClient::~ExampleClient()
 // ------
 // Actual initializer for class
 
-void ExampleClient::init()
+void CrystalClient::init()
 {
     createMainWidget(WResizeNoErase | WRepaintNoErase);
     widget()->installEventFilter(this);
-
+	FullMax=false;
+	
     // for flicker-free redraws
     widget()->setBackgroundMode(NoBackground);
 
     // setup layout
-    QGridLayout *mainlayout = new QGridLayout(widget(), 4, 3); // 4x3 grid
+    mainlayout = new QGridLayout(widget(), 4, 3,0,-1,"mainlayout"); // 4x3 grid
     QHBoxLayout *titlelayout = new QHBoxLayout();
-    titlebar_ = new QSpacerItem(1, titlesize, QSizePolicy::Expanding,
+    titlebar_ = new QSpacerItem(1, ::factory->titlesize-2*FRAMESIZE+1, QSizePolicy::Expanding,
                                 QSizePolicy::Fixed);
 
     mainlayout->setResizeMode(QLayout::FreeResize);
-    mainlayout->addRowSpacing(0, FRAMESIZE);
-    mainlayout->addRowSpacing(3, FRAMESIZE*2);
-    mainlayout->addColSpacing(0, FRAMESIZE*2);
-    mainlayout->addColSpacing(2, FRAMESIZE*2);
+    mainlayout->setRowSpacing(0, FRAMESIZE);
+    mainlayout->setRowSpacing(3, 0);
+    mainlayout->setColSpacing(0, borderSpacing());
+    mainlayout->setColSpacing(2, borderSpacing());
 
     mainlayout->addLayout(titlelayout, 1, 1);
     if (isPreview()) {
-        mainlayout->addWidget(
-        new QLabel(i18n("<b><center>Example preview</center></b>"),
-        widget()), 2, 1);
+      mainlayout->addWidget(
+        new QLabel(i18n("<b><center>Preview</center></b>"),widget()), 2, 1);
     } else {
         mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
     }
@@ -617,76 +215,67 @@ void ExampleClient::init()
     mainlayout->setRowStretch(2, 10);
     mainlayout->setColStretch(1, 10);
     
-    updateMask();    
+    updateMask();
     
     // setup titlebar buttons
-    titlelayout->addItem(new QSpacerItem(borderwidth/2,0));
+//    titlelayout->addItem(new QSpacerItem(::factory->borderwidth/2,0));
     
     for (int n=0; n<ButtonTypeCount; n++) button[n] = 0;
     addButtons(titlelayout, options()->titleButtonsLeft());
     titlelayout->addItem(titlebar_);
-    addButtons(titlelayout, options()->titleButtonsRight());
-    titlelayout->addItem(new QSpacerItem(borderwidth/2,0));
+    CrystalButton* lastbutton=addButtons(titlelayout, options()->titleButtonsRight());
+	if (lastbutton)lastbutton->setFirstLast(false,true);
+	
+	
+    connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
+    connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 
-    connect ( my_factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
+	
+    connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
     connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
 }
 
-void ExampleClient::updateMask()
+void CrystalClient::updateMask()
 {
-	if (!roundCorners)
+	if (!::factory->roundCorners || (!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull ) ) 
 	{
-		mask=QRegion(widget()->rect());
-		setMask(mask);
-//		clearMask();
+		setMask(QRegion(widget()->rect()));
 		return;
 	}
-	/*
-	// Two rects, which leave the four corners blank	
-	mask =QRegion(CORNER_EDGE_H,0,width()-CORNER_EDGE_H*2,height());
-	mask+=QRegion(0,CORNER_EDGE_V,width(),height()-CORNER_EDGE_V*2);
 	
-	// Two upper edges
-	mask+=QRegion(CORNER_EDGE_OFFSET,CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
-	mask+=QRegion(width()-CORNER_EDGE_H*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
+	int r(width());
+	int b(height());
+	QRegion mask;
 
-	// Lower edges
-	mask+=QRegion(CORNER_EDGE_OFFSET,height()-CORNER_EDGE_V*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
-	mask+=QRegion(width()-CORNER_EDGE_H*2+1-CORNER_EDGE_OFFSET,height()-CORNER_EDGE_V*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
-	*/
+	mask=QRegion(widget()->rect());
 	
-  int r(width());
-  int b(height());
+	// Remove top-left corner.
 
-  mask=QRegion(widget()->rect());
-	
-  // Remove top-left corner.
+	mask -= QRegion(0, 0, 5, 1);
+	mask -= QRegion(0, 1, 3, 1);
+	mask -= QRegion(0, 2, 2, 1);
+	mask -= QRegion(0, 3, 1, 2);
 
-  mask -= QRegion(0, 0, 5, 1);
-  mask -= QRegion(0, 1, 3, 1);
-  mask -= QRegion(0, 2, 2, 1);
-  mask -= QRegion(0, 3, 1, 2);
+	// Remove top-right corner.
 
-  // Remove top-right corner.
+	mask -= QRegion(r - 5, 0, 5, 1);
+	mask -= QRegion(r - 3, 1, 3, 1);
+	mask -= QRegion(r - 2, 2, 2, 1);
+	mask -= QRegion(r - 1, 3, 1, 2);
 
-  mask -= QRegion(r - 5, 0, 5, 1);
-  mask -= QRegion(r - 3, 1, 3, 1);
-  mask -= QRegion(r - 2, 2, 2, 1);
-  mask -= QRegion(r - 1, 3, 1, 2);
+	// Remove bottom-left corner.
 
-  // Remove bottom-left corner.
+	mask -= QRegion(0, b - 5, 1, 3);
+	mask -= QRegion(0, b - 3, 2, 1);
+	mask -= QRegion(0, b - 2, 3, 1);
+	mask -= QRegion(0, b - 1, 5, 1);
 
-  mask -= QRegion(0, b - 5, 1, 3);
-  mask -= QRegion(0, b - 3, 2, 1);
-  mask -= QRegion(0, b - 2, 3, 1);
-  mask -= QRegion(0, b - 1, 5, 1);
+	// Remove bottom-right corner.
 
-  // Remove bottom-right corner.
-
-  mask -= QRegion(r - 5, b - 1, 5, 1);
-  mask -= QRegion(r - 3, b - 2, 3, 1);
-  mask -= QRegion(r - 2, b - 3, 2, 1);
-  mask -= QRegion(r - 1, b - 5, 1, 2);
+	mask -= QRegion(r - 5, b - 1, 5, 1);
+	mask -= QRegion(r - 3, b - 2, 3, 1);
+	mask -= QRegion(r - 2, b - 3, 2, 1);
+	mask -= QRegion(r - 1, b - 5, 1, 2);
 	
 	setMask(mask);
 }
@@ -696,110 +285,134 @@ void ExampleClient::updateMask()
 // ------------
 // Add buttons to title layout
 
-void ExampleClient::addButtons(QBoxLayout *layout, const QString& s)
+CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 {
-    QImage *bitmap;
+    ButtonImage *bitmap;
     QString tip;
+	CrystalButton *lastone=NULL;
 
     if (s.length() > 0) {
         for (unsigned n=0; n < s.length(); n++) {
+			CrystalButton *current=NULL;
             switch (s[n]) {
               case 'M': // Menu button
-                  if (!button[ButtonMenu]) {
-                      button[ButtonMenu] =
-                          new ExampleButton(this, "menu", i18n("Menu"),
-                                            ButtonMenu, 0);
-                      connect(button[ButtonMenu], SIGNAL(pressed()),
-                              this, SLOT(menuButtonPressed()));
-                      layout->addWidget(button[ButtonMenu]);
+                  if (!button[ButtonMenu]) 
+				  {
+                      button[ButtonMenu] = current = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, 0);
+                      connect(button[ButtonMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
                   }
                   break;
 
               case 'S': // Sticky button
-                  if (!button[ButtonSticky]) {
-              if (isOnAllDesktops()) {
-              bitmap = &deco_sticky;
-              tip = i18n("Not On All Desktops");
-              } else {
-              bitmap = &deco_un_sticky;
-              tip = i18n("On All Desktops");
-              }
-                      button[ButtonSticky] =
-                          new ExampleButton(this, "sticky", tip,
-                                            ButtonSticky, bitmap);
-                      connect(button[ButtonSticky], SIGNAL(clicked()),
-                              this, SLOT(toggleOnAllDesktops()));
-                      layout->addWidget(button[ButtonSticky]);
+                  if (!button[ButtonSticky]) 
+				  {
+              			if (isOnAllDesktops()) 
+						{
+              				bitmap = ::factory->buttonImages[ButtonImageSticky];
+              				tip = i18n("Not on all desktops");
+              			} else {
+              				bitmap = ::factory->buttonImages[ButtonImageUnSticky];
+							tip = i18n("On All Desktops");
+						}
+                      	button[ButtonSticky] =current=new CrystalButton(this, "sticky", tip,ButtonSticky, bitmap);
+                      	connect(button[ButtonSticky], SIGNAL(clicked()),this, SLOT(toggleOnAllDesktops()));
                   }
                   break;
 
               case 'H': // Help button
-                  if ((!button[ButtonHelp]) && providesContextHelp()) {
-                      button[ButtonHelp] =
-                          new ExampleButton(this, "help", i18n("Help"),
-                                            ButtonHelp, &deco_help);
+                  if (providesContextHelp()) {
+                      button[ButtonHelp] =current=
+                          new CrystalButton(this, "help", i18n("Help"),
+                                            ButtonHelp, ::factory->buttonImages[ButtonImageHelp]);
                       connect(button[ButtonHelp], SIGNAL(clicked()),
                               this, SLOT(showContextHelp()));
-                      layout->addWidget(button[ButtonHelp]);
                   }
                   break;
 
               case 'I': // Minimize button
                   if ((!button[ButtonMin]) && isMinimizable())  {
-                      button[ButtonMin] =
-                          new ExampleButton(this, "iconify", i18n("Minimize"),
-                                            ButtonMin, &deco_min);
+                      button[ButtonMin] =current=
+                          new CrystalButton(this, "iconify", i18n("Minimize"),
+                                            ButtonMin, ::factory->buttonImages[ButtonImageMin]);
                       connect(button[ButtonMin], SIGNAL(clicked()),
                               this, SLOT(minButtonPressed()));
-                      layout->addWidget(button[ButtonMin]);
                   }
                   break;
 
+
+              case 'F': // Above button
+                  if ((!button[ButtonAbove]))  {
+                      button[ButtonAbove] =current=
+                          new CrystalButton(this, "above", i18n("Keep Above Others"),
+                                            ButtonAbove, ::factory->buttonImages[keepAbove()?ButtonImageUnAbove:ButtonImageAbove]);
+                      connect(button[ButtonAbove], SIGNAL(clicked()),
+                              this, SLOT(aboveButtonPressed()));
+                  }
+                  break;
+
+              case 'B': // Below button
+                  if ((!button[ButtonBelow]))  {
+                      button[ButtonBelow] =current=
+                          new CrystalButton(this, "below", i18n("Keep Below Others"),
+                                            ButtonBelow, ::factory->buttonImages[keepBelow()?ButtonImageUnBelow:ButtonImageBelow]);
+                      connect(button[ButtonBelow], SIGNAL(clicked()),
+                              this, SLOT(belowButtonPressed()));
+                  }
+                  break;
+
+				  
               case 'L': // Shade button
                   if ((!button[ButtonShade]) && isShadeable())  {
-                      button[ButtonShade] =
-                          new ExampleButton(this, "shade", i18n("Shade"),
-                                            ButtonShade, &deco_shade);
+                      button[ButtonShade] =current=
+                          new CrystalButton(this, "shade", i18n("Shade"),
+                                            ButtonShade, ::factory->buttonImages[ButtonImageShade]);
                       connect(button[ButtonShade], SIGNAL(clicked()),
                               this, SLOT(shadeButtonPressed()));
-                      layout->addWidget(button[ButtonShade]);
                   }
                   break;
 		  
               case 'A': // Maximize button
                   if ((!button[ButtonMax]) && isMaximizable()) {
               if (maximizeMode() == MaximizeFull) {
-              bitmap = &deco_restore;
+              bitmap = ::factory->buttonImages[ButtonImageRestore];
               tip = i18n("Restore");
               } else {
-              bitmap = &deco_max;
+              bitmap = ::factory->buttonImages[ButtonImageMax];
               tip = i18n("Maximize");
               }
-                      button[ButtonMax]  =
-                          new ExampleButton(this, "maximize", tip,
+                      button[ButtonMax]  =current=
+                          new CrystalButton(this, "maximize", tip,
                                             ButtonMax, bitmap);
                       connect(button[ButtonMax], SIGNAL(clicked()),
                               this, SLOT(maxButtonPressed()));
-                      layout->addWidget(button[ButtonMax]);
                   }
                   break;
 
               case 'X': // Close button
-                  if ((!button[ButtonClose]) && isCloseable()) {
-                      button[ButtonClose] =
-                          new ExampleButton(this, "close", i18n("Close"),
-                                            ButtonClose, &deco_close);
+                  if (isCloseable()) {
+                      button[ButtonClose] =current=
+                          new CrystalButton(this, "close", i18n("Close"),
+                                            ButtonClose, ::factory->buttonImages[ButtonImageClose]);
                       connect(button[ButtonClose], SIGNAL(clicked()),
                               this, SLOT(closeWindow()));
-                      layout->addWidget(button[ButtonClose]);
                   }
                   break;
 
               case '_': // Spacer item
-                  layout->addSpacing(FRAMESIZE);
+                  layout->addSpacing(4);
+				  current=NULL;
+				  break;
             }
+			
+			if (current)
+			{
+				layout->addWidget(current);
+				if (layout->findWidget(current)==0)current->setFirstLast(true,false);
+			}
+			lastone=current;
+		}
     }
-    }
+	return lastone;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -807,7 +420,7 @@ void ExampleClient::addButtons(QBoxLayout *layout, const QString& s)
 // --------------
 // window active state has changed
 
-void ExampleClient::activeChange()
+void CrystalClient::activeChange()
 {
 	Repaint();
 }
@@ -817,7 +430,7 @@ void ExampleClient::activeChange()
 // ---------------
 // The title has changed
 
-void ExampleClient::captionChange()
+void CrystalClient::captionChange()
 {
     widget()->repaint(titlebar_->geometry(), false);
 }
@@ -827,13 +440,13 @@ void ExampleClient::captionChange()
 // ---------------
 // Called when desktop/sticky changes
 
-void ExampleClient::desktopChange()
+void CrystalClient::desktopChange()
 {
     bool d = isOnAllDesktops();
     if (button[ButtonSticky]) {
-        button[ButtonSticky]->setBitmap(d ? &deco_sticky : &deco_un_sticky);
+        button[ButtonSticky]->setBitmap(::factory->buttonImages[d ? ButtonImageSticky : ButtonImageUnSticky ]);
     	QToolTip::remove(button[ButtonSticky]);
-    	QToolTip::add(button[ButtonSticky], d ? i18n("Not On All Desktops") : i18n("On All Desktops"));
+    	QToolTip::add(button[ButtonSticky], d ? i18n("Not on all desktops") : i18n("On All Desktops"));
     }
     
 //    wallpaper->repaint(true);
@@ -844,11 +457,10 @@ void ExampleClient::desktopChange()
 // ------------
 // The title has changed
 
-void ExampleClient::iconChange()
+void CrystalClient::iconChange()
 {
     if (button[ButtonMenu]) {
         button[ButtonMenu]->setBitmap(0);
-        button[ButtonMenu]->repaint(false);
     }
 }
 
@@ -857,14 +469,49 @@ void ExampleClient::iconChange()
 // ----------------
 // Maximized state has changed
 
-void ExampleClient::maximizeChange()
+void CrystalClient::maximizeChange()
 {
     bool m = (maximizeMode() == MaximizeFull);
     if (button[ButtonMax]) {
-        button[ButtonMax]->setBitmap(m ? &deco_restore : &deco_max);
-    QToolTip::remove(button[ButtonMax]);
-    QToolTip::add(button[ButtonMax], m ? i18n("Restore") : i18n("Maximize"));
+        button[ButtonMax]->setBitmap(::factory->buttonImages[ m ? ButtonImageRestore : ButtonImageMax ]);
+    	QToolTip::remove(button[ButtonMax]);
+    	QToolTip::add(button[ButtonMax], m ? i18n("Restore") : i18n("Maximize"));
     }
+	
+	if (!options()->moveResizeMaximizedWindows())
+	{
+		FullMax=m;
+		updateLayout();
+		Repaint();
+	}
+}
+
+void CrystalClient::updateLayout()
+{
+	if (FullMax)
+	{
+		mainlayout->setColSpacing(0,0);
+		mainlayout->setColSpacing(2,0);
+		titlebar_->changeSize(1, ::factory->titlesize, QSizePolicy::Expanding,
+                                QSizePolicy::Fixed);
+	}else{
+		mainlayout->setColSpacing(2,borderSpacing());
+		mainlayout->setColSpacing(0,borderSpacing());
+		titlebar_->changeSize(1, ::factory->titlesize-FRAMESIZE*2+1, QSizePolicy::Expanding,
+                                QSizePolicy::Fixed);
+	}
+	
+
+	mainlayout->setRowSpacing(0, (FullMax)?0:FRAMESIZE);
+	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
+		button[i]->resetSize(FullMax);
+	widget()->layout()->activate();
+}
+
+int CrystalClient::borderSpacing()
+{
+	if (!::factory->roundCorners)return (::factory->borderwidth<=2)?1: ::factory->borderwidth-1;
+	return (::factory->borderwidth<=6)?5: ::factory->borderwidth-1;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -872,19 +519,34 @@ void ExampleClient::maximizeChange()
 // -------------
 // Called when window shading changes
 
-void ExampleClient::shadeChange()
-{ ; }
+void CrystalClient::shadeChange()
+{ 
+	return;
+	updateLayout(); 
+	updateMask();
+	Repaint();
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // borders()
 // ----------
 // Get the size of the borders
 
-void ExampleClient::borders(int &l, int &r, int &t, int &b) const
+void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 {
-    l = r = FRAMESIZE*borderwidth;
-    t = titlesize + FRAMESIZE;
-    if (!isShade())b = FRAMESIZE * borderwidth; else b=FRAMESIZE;
+    l = r = ::factory->borderwidth;
+    t = ::factory->titlesize;
+    if (!isShade())b = ::factory->borderwidth; else b=1;
+	
+	if (!options()->moveResizeMaximizedWindows() )
+	{
+		if ( maximizeMode() & MaximizeHorizontal )	l=r=1;
+		if ( maximizeMode() & MaximizeVertical )
+		{
+			b=isShade()?1:1;
+			t=::factory->titlesize;
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -892,7 +554,7 @@ void ExampleClient::borders(int &l, int &r, int &t, int &b) const
 // --------
 // Called to resize the window
 
-void ExampleClient::resize(const QSize &size)
+void CrystalClient::resize(const QSize &size)
 {
     widget()->resize(size);
 }
@@ -902,7 +564,7 @@ void ExampleClient::resize(const QSize &size)
 // -------------
 // Return the minimum allowable size for this window
 
-QSize ExampleClient::minimumSize() const
+QSize CrystalClient::minimumSize() const
 {
     return widget()->minimumSize();
 }
@@ -912,14 +574,14 @@ QSize ExampleClient::minimumSize() const
 // ---------------
 // Return logical mouse position
 
-KDecoration::Position ExampleClient::mousePosition(const QPoint &point) const
+KDecoration::Position CrystalClient::mousePosition(const QPoint &point) const
 {
-    const int corner = 24;
+    const int corner = 20;
     Position pos;
-    const int RESIZESIZE=FRAMESIZE*borderwidth;
+    const int RESIZESIZE=::factory->borderwidth;
 
-    if (isShade()) pos=PositionCenter; 
-    else if (point.y() <= FRAMESIZE*3) {
+    if (isShade() || !isResizable()) pos=PositionCenter; 
+    else if (point.y() <= 3) {
         // inside top frame
         if (point.x() <= corner)                 pos = PositionTopLeft;
         else if (point.x() >= (width()-corner))  pos = PositionTopRight;
@@ -951,23 +613,33 @@ KDecoration::Position ExampleClient::mousePosition(const QPoint &point) const
 // -------------
 // Event filter
 
-bool ExampleClient::eventFilter(QObject *obj, QEvent *e)
+bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 {
     if (obj != widget()) return false;
 
     switch (e->type()) {
-      case QEvent::MouseButtonDblClick: {
+
+	  case QEvent::MouseButtonDblClick: {
           mouseDoubleClickEvent(static_cast<QMouseEvent *>(e));
           return true;
       }
       case QEvent::MouseButtonPress: {
-          processMousePressEvent(static_cast<QMouseEvent *>(e));
+	  	  QMouseEvent *me=static_cast<QMouseEvent *>(e);
+		  
+		  if (me->state() & ControlButton)
+		  {
+		  	ShowTabMenu(me);
+		  }else processMousePressEvent(me);
           return true;
       }
       case QEvent::Paint: {
           paintEvent(static_cast<QPaintEvent *>(e));
           return true;
       }
+	  case QEvent::Wheel: {
+	  	  mouseWheelEvent(static_cast<QWheelEvent *>(e));
+	  	  return true;
+	  }
       case QEvent::Resize: {
           resizeEvent(static_cast<QResizeEvent *>(e));
           return true;
@@ -975,11 +647,11 @@ bool ExampleClient::eventFilter(QObject *obj, QEvent *e)
       case QEvent::Show: {
           showEvent(static_cast<QShowEvent *>(e));
           return true;
+	  }
       case QEvent::Move: {
           moveEvent(static_cast<QMoveEvent *>(e));	  
-	  return true;
-      }
-      }
+	      return true;
+	  }
       default: {
           return false;
       }
@@ -988,14 +660,77 @@ bool ExampleClient::eventFilter(QObject *obj, QEvent *e)
     return false;
 }
 
+void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
+{
+	Window root=0,parent=0,*children=NULL;
+	uint numc;
+	// Our Deco is the child of a frame, get our parent
+	XQueryTree(qt_xdisplay(),widget()->winId(),&root,frame,&children,&numc);
+	if (children!=NULL)XFree(children);
+	
+	// frame has two children, us and a wrapper, get the wrapper
+	XQueryTree(qt_xdisplay(),*frame,&root,&parent,&children,&numc);	
+	for (uint i=0;i<numc;i++)
+	{
+//		printf("Child of frame[%d]=%d\n",i,children[i]);
+		if (children[i]!=widget()->winId())*wrapper=children[i];
+	}
+	XFree(children);
+	
+	// wrapper has only one child, which is the client. We want this!!
+	XQueryTree(qt_xdisplay(),*wrapper,&root,&parent,&children,&numc);
+	if (numc==1)*client=children[0];	
+	if (children!=NULL)XFree(children);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // mouseDoubleClickEvent()
 // -----------------------
 // Doubleclick on title
 
-void ExampleClient::mouseDoubleClickEvent(QMouseEvent *e)
+void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if (titlebar_->geometry().contains(e->pos())) titlebarDblClickOperation();
+    if ((titlebar_->geometry().contains(e->pos()))&&(e->button()==LeftButton)) titlebarDblClickOperation();
+		else 
+	{
+		QMouseEvent me(QEvent::MouseButtonPress,e->pos(),e->button(),e->state());
+		processMousePressEvent(&me);
+	}
+}
+
+void CrystalClient::mouseWheelEvent(QWheelEvent *e)
+{
+	// FIXME: Make it good!
+	if (titlebar_->geometry().contains(e->pos()))
+	{
+		QPtrList <CrystalClient> *l=&(::factory->clients);
+		
+		if (l->current()==NULL) for (unsigned int i=0;i<l->count();i++) if ((l->at(i))->isActive()) break;
+		
+		CrystalClient *n=this;
+		
+		do
+		{
+			if(e->delta()>0)
+			{
+				n=l->next();
+				if (n==NULL)n=l->first();
+			}else{
+				n=l->prev();
+				if (n==NULL)n=l->last();
+			}
+			if (n->desktop()==desktop())break;
+		}while(n!=this);
+			
+		Window client,frame,wrapper;
+		n->ClientWindows(&frame,&wrapper,&client);
+//		int p=XRaiseWindow(qt_xdisplay(),frame);
+//		printf("%d\n",p);
+
+// 		XSetInputFocus(qt_xdisplay(),client,RevertToParent,CurrentTime);
+// 		XSetInputFocus(qt_xdisplay(),wrapper,RevertToParent,CurrentTime);
+// 		XSetInputFocus(qt_xdisplay(),frame,RevertToParent,CurrentTime);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1003,9 +738,9 @@ void ExampleClient::mouseDoubleClickEvent(QMouseEvent *e)
 // ------------
 // Repaint the window
 
-void ExampleClient::paintEvent(QPaintEvent*)
+void CrystalClient::paintEvent(QPaintEvent*)
 {
-	if (!ExampleFactory::initialized()) return;
+	if (!CrystalFactory::initialized()) return;
 
 	QColorGroup group;
 	QPainter painter(widget());
@@ -1013,9 +748,9 @@ void ExampleClient::paintEvent(QPaintEvent*)
 	// draw the titlebar
 	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
    
-	if (trackdesktop)
-		my_factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
-	QImage *background=my_factory->image_holder->image(isActive());
+	if (::factory->trackdesktop)
+		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
+	QPixmap *background=::factory->image_holder->image(isActive());
     
 	{
 		QRect r;
@@ -1028,7 +763,7 @@ void ExampleClient::paintEvent(QPaintEvent*)
 		QPainter pufferPainter(&pufferPixmap);
 
 		r=QRect(p.x(),p.y(),widget()->width(),bt);
-		if (background && !background->isNull())pufferPainter.drawImage(QPoint(0,0),*background,r);
+		if (background && !background->isNull())pufferPainter.drawPixmap(QPoint(0,0),*background,r);
 		else 
 		{
 			pufferPainter.fillRect(widget()->rect(),group.background());
@@ -1040,30 +775,31 @@ void ExampleClient::paintEvent(QPaintEvent*)
 	
 		QColor color=options()->color(KDecoration::ColorFont, isActive());
 		r=titlebar_->geometry();
+		r.moveBy(0,-1);
 	
-		if (textshadow)
+		if (::factory->textshadow)
 		{
 			pufferPainter.translate(1,1);
 			pufferPainter.setPen(color.dark(200));
-			pufferPainter.drawText(r,ExampleFactory::titleAlign() | AlignVCenter,caption());
+			pufferPainter.drawText(r,CrystalFactory::titleAlign() | AlignVCenter,caption());
 			pufferPainter.translate(-1,-1);
 		}
 	
 		pufferPainter.setPen(color);
 		pufferPainter.drawText(r,
-			ExampleFactory::titleAlign() | AlignVCenter,
+			CrystalFactory::titleAlign() | AlignVCenter,
 			caption());
 
-		if (borderwidth>0 && background && !background->isNull())
+		if (::factory->borderwidth>0 && background && !background->isNull())
 		{	// Draw the side and bottom of the window with transparency
 			r=QRect(p.x(),p.y()+bt,bl,widget()->height()-bt);
-			painter.drawImage(QPoint(0,bt),*background,r);
+			painter.drawPixmap(QPoint(0,bt),*background,r);
 	
 			r=QRect(widget()->width()-br+p.x(),p.y()+bt,widget()->width(),widget()->height()-bt);
-			painter.drawImage(QPoint(widget()->width()-br,bt),*background,r);
+			painter.drawPixmap(QPoint(widget()->width()-br,bt),*background,r);
 
 			r=QRect(p.x()+bl,p.y()+widget()->height()-bb,widget()->width()-bl-br,bb);
-			painter.drawImage(QPoint(bl,widget()->height()-bb),*background,r);
+			painter.drawPixmap(QPoint(bl,widget()->height()-bb),*background,r);
 		}
 	
 		pufferPainter.end();
@@ -1074,12 +810,12 @@ void ExampleClient::paintEvent(QPaintEvent*)
 	if (background==NULL)
 	{	// We don't have a background image, draw a solid rectangle
 		// And notify image_holder that we need an update asap
-		if (my_factory)if (my_factory->image_holder)
+		if (::factory)if (::factory->image_holder)
 		// UnInit image_holder, on next Repaint it will be Init'ed again.
-		QTimer::singleShot(500,my_factory->image_holder,SLOT(CheckSanity()));
+		QTimer::singleShot(500,::factory->image_holder,SLOT(CheckSanity()));
 	}
 
-	WND_CONFIG* wndcfg=(isActive()?&active:&inactive);
+	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 	// draw frame
 	if (wndcfg->frame)
 	{
@@ -1088,7 +824,7 @@ void ExampleClient::paintEvent(QPaintEvent*)
     	// outline the frame
 		painter.setPen(wndcfg->frameColor);
 		painter.drawRect(widget()->rect());
-		if (roundCorners)
+		if (::factory->roundCorners && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
 		{
 			int r(width());
 			int b(height());
@@ -1128,38 +864,43 @@ void ExampleClient::paintEvent(QPaintEvent*)
 	}
 }
 
+
 //////////////////////////////////////////////////////////////////////////////
 // resizeEvent()
 // -------------
 // Window is being resized
 
-void ExampleClient::resizeEvent(QResizeEvent *)
+void CrystalClient::resizeEvent(QResizeEvent *)
 {
-    if (widget()->isShown()) {
-        // repaint only every 200 ms
-	if (!timer.isActive())
+	if (widget()->isShown()) 
 	{
-		// Repaint only, when mode!=fade || value<100
-		WND_CONFIG* wnd=isActive()?&active:&inactive;
-		if (wnd->mode!=0 || wnd->amount<100)
-			timer.start(200,true);	
+		if (::factory->repaintMode==1)Repaint();
+		// repaint only every xxx ms
+		else if (::factory->repaintMode==3 || !timer.isActive())
+		{
+			// Repaint only, when mode!=fade || amount<100
+			WND_CONFIG* wnd=isActive()?&::factory->active:&::factory->inactive;
+			if (wnd->mode!=0 || wnd->amount<100)
+				timer.start(::factory->repaintTime,true);	
+		}
+		updateMask();
 	}
-	updateMask();
-    }
 }
 
-void ExampleClient::moveEvent(QMoveEvent *)
+void CrystalClient::moveEvent(QMoveEvent *)
 {
-    if (widget()->isShown()) {
-	// repaint every 200 ms, so constant moving does not take too much CPU
-	if (!timer.isActive())
+	if (widget()->isShown()) 
 	{
-		// Repaint only, when mode!=fade || value<100
-		WND_CONFIG* wnd=isActive()?&active:&inactive;
-		if (wnd->mode!=0 || wnd->amount<100)
-			timer.start(200,true);		
+		if (::factory->repaintMode==1)Repaint();
+		// repaint every xxx ms, so constant moving does not take too much CPU
+		else if (::factory->repaintMode==3 || !timer.isActive())
+		{
+			// Repaint only, when mode!=fade || value<100, because otherwise it is a plain color
+			WND_CONFIG* wnd=isActive()?&::factory->active:&::factory->inactive;
+			if (wnd->mode!=0 || wnd->amount<100)
+				timer.start(::factory->repaintTime,true);
+		}
 	}
-    }	
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1167,17 +908,17 @@ void ExampleClient::moveEvent(QMoveEvent *)
 // -----------
 // Window is being shown
 
-void ExampleClient::showEvent(QShowEvent *)
+void CrystalClient::showEvent(QShowEvent *)
 {
 	if (widget()->isShown()) 
 		Repaint();
 }
 
-void ExampleClient::Repaint()
+void CrystalClient::Repaint()
 {
 	widget()->repaint(false);
-        for (int n=0; n<ButtonTypeCount; n++)
-              if (button[n]) button[n]->reset();
+	for (int n=0; n<ButtonTypeCount; n++)
+		if (button[n]) button[n]->reset();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1185,7 +926,7 @@ void ExampleClient::Repaint()
 // -----------------
 // Max button was pressed
 
-void ExampleClient::maxButtonPressed()
+void CrystalClient::maxButtonPressed()
 {
     if (button[ButtonMax]) {
         switch (button[ButtonMax]->lastMousePress()) {
@@ -1202,7 +943,7 @@ void ExampleClient::maxButtonPressed()
     }
 }
 
-void ExampleClient::minButtonPressed()
+void CrystalClient::minButtonPressed()
 {
     if (button[ButtonMin]) {
         switch (button[ButtonMin]->lastMousePress()) {
@@ -1218,7 +959,33 @@ void ExampleClient::minButtonPressed()
     }
 }
 
-void ExampleClient::shadeButtonPressed()
+void CrystalClient::aboveButtonPressed()
+{
+	setKeepAbove(!keepAbove());
+}
+
+void CrystalClient::belowButtonPressed()
+{
+	setKeepBelow(!keepBelow());
+}
+
+void CrystalClient::keepAboveChange(bool set)
+{
+	if (button[ButtonAbove])
+	{
+		button[ButtonAbove]->setBitmap(::factory->buttonImages[keepAbove()?ButtonImageUnAbove:ButtonImageAbove]);
+	}
+}
+
+void CrystalClient::keepBelowChange(bool set)
+{
+	if (button[ButtonBelow])
+	{
+		button[ButtonBelow]->setBitmap(::factory->buttonImages[keepBelow()?ButtonImageUnBelow:ButtonImageBelow]);
+	}
+}
+
+void CrystalClient::shadeButtonPressed()
 {
     if (button[ButtonShade]) {
         switch (button[ButtonShade]->lastMousePress()) {
@@ -1237,12 +1004,12 @@ void ExampleClient::shadeButtonPressed()
 // -------------------
 // Menu button was pressed (popup the menu)
 
-void ExampleClient::menuButtonPressed()
+void CrystalClient::menuButtonPressed()
 {
 	if (!button[ButtonMenu])return;
 	
 	static QTime* t = 0;
-	static ExampleClient* lastClient = 0;
+	static CrystalClient* lastClient = 0;
 	if (t == 0) 
 		t = new QTime;
 	bool dbl = (lastClient == this && t->elapsed() <= QApplication::doubleClickInterval());
@@ -1254,14 +1021,74 @@ void ExampleClient::menuButtonPressed()
 		closeWindow();
 		return;
 	}
-		
+
+	// Do not show menu immediately, so a double click to close the window does not cause flicker
+	QTimer::singleShot(150,this,SLOT(menuPopUp()));
+}
+
+void CrystalClient::menuPopUp()
+{
 	QPoint p(button[ButtonMenu]->rect().bottomLeft().x(),
                  button[ButtonMenu]->rect().bottomLeft().y());
 	KDecorationFactory* f = factory();
 	showWindowMenu(button[ButtonMenu]->mapToGlobal(p));
 	if (!f->exists(this)) return; // decoration was destroyed
 	button[ButtonMenu]->setDown(false);
+}
+
+void CrystalClient::ShowTabMenu(QMouseEvent *me)
+{	
+	// FIXME This stuff does not work at all!
+	return;
+	QPopupMenu p(widget());
+	for (uint i=0;i<(::factory->clients.count());i++)
+	{
+		CrystalClient* c=::factory->clients.at(i);
+		if (c!=this)
+			p.insertItem(c->caption(),(int)c);
+	}
+	CrystalClient* client=(CrystalClient*)p.exec(widget()->mapToGlobal(me->pos()));
+	if ((int)client==-1) return;
+	if (!::factory->exists(client)) return;
+	
+	XWindowAttributes attr;
+	Window w_client2,w_frame2,w_wrapper2,w_client1,w_frame1,w_wrapper1;
+	
+	client->ClientWindows(&w_frame1,&w_wrapper1,&w_client1);
+	XGetWindowAttributes(qt_xdisplay(),w_frame1,&attr);
+	
+	
+	ClientWindows(&w_frame2,&w_wrapper2,&w_client2);
+	
+	
+	XWindowChanges c;
+	c.x=attr.x;
+	c.y=attr.y;
+	c.width=attr.width;
+	c.height=attr.height;
+	
+//	XReconfigureWMWindow(qt_xdisplay(),w_frame,0,CWX|CWY|CWWidth|CWHeight,&c);
+	
+//	XUnmapWindow(qt_xdisplay(),w_frame2);
+	grabXServer();
+	static XSizeHints size;
+	size.flags=PSize;
+	size.width=attr.width;
+	size.height=attr.height;
+	XSetWMNormalHints(qt_xdisplay(),w_client2,&size);
+	XResizeWindow(qt_xdisplay(),w_client2,attr.width,attr.height);
+	ungrabXServer();
+	
+//	XMapWindow(qt_xdisplay(),w_frame2);
+
+//	XMoveResizeWindow( qt_xdisplay(), w_frame, attr.x, attr.y, attr.width, attr.height );
+//	resize(QSize(attr.width,attr.height));
+
+//	XMoveResizeWindow( qt_xdisplay(), w_wrapper, 0, 0, attr.width, attr.height);
+//	XMoveResizeWindow( qt_xdisplay(), w_client, 0, 0, attr.width, attr.height);
+
 
 }
+
 
 #include "crystalclient.moc"

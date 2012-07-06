@@ -261,9 +261,9 @@ INCLUDES = $(all_includes)
 noinst_HEADERS = crystalconfig.h
 
 kde_module_LTLIBRARIES = kwin_crystal_config.la
-#>- kwin_crystal_config_la_SOURCES = crystalconfig.cc configdialog.ui
+#>- kwin_crystal_config_la_SOURCES = crystalconfig.cc configdialog.ui infodialog.ui
 #>+ 1
-kwin_crystal_config_la_SOURCES=crystalconfig.cc  configdialog.cc
+kwin_crystal_config_la_SOURCES=crystalconfig.cc   configdialog.cc infodialog.cc
 kwin_crystal_config_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
 kwin_crystal_config_la_LIBADD = $(LIB_KDEUI)
 #>- kwin_crystal_config_la_METASOURCES = AUTO
@@ -281,7 +281,7 @@ am_kwin_crystal_config_la_OBJECTS = crystalconfig.lo
 #>- kwin_crystal_config_la_OBJECTS = $(am_kwin_crystal_config_la_OBJECTS)
 #>+ 4
 kwin_crystal_config_la_final_OBJECTS = kwin_crystal_config_la.all_cc.lo 
-kwin_crystal_config_la_nofinal_OBJECTS = crystalconfig.lo configdialog.lo
+kwin_crystal_config_la_nofinal_OBJECTS = crystalconfig.lo configdialog.lo infodialog.lo
 @KDE_USE_FINAL_FALSE@kwin_crystal_config_la_OBJECTS = $(kwin_crystal_config_la_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@kwin_crystal_config_la_OBJECTS = $(kwin_crystal_config_la_final_OBJECTS)
 
@@ -294,8 +294,8 @@ depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
 am__depfiles_maybe = depfiles
 #>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/crystalconfig.Plo
 #>+ 3
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/configdialog.P  $(DEPDIR)/kwin_crystal_config_la.all_cc.P  ./$(DEPDIR)/crystalconfig.Plo
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/configdialog.P  ./$(DEPDIR)/crystalconfig.Plo
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/configdialog.P $(DEPDIR)/infodialog.P  $(DEPDIR)/kwin_crystal_config_la.all_cc.P  ./$(DEPDIR)/crystalconfig.Plo
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/configdialog.P $(DEPDIR)/infodialog.P  ./$(DEPDIR)/crystalconfig.Plo
 
 #>- CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 #>- 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -448,7 +448,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=configdialog.ui.h configdialog.ui 
+KDE_DIST=configdialog.ui.h infodialog.ui configdialog.ui 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -585,7 +585,7 @@ kwin_crystal_config.la.closure: $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal
 	@echo "timestamp" > kwin_crystal_config.la.closure
 
 
-#>+ 14
+#>+ 27
 configdialog.cc: $(srcdir)/configdialog.ui configdialog.h configdialog.moc
 	rm -f configdialog.cc
 	echo '#include <klocale.h>' > configdialog.cc
@@ -599,6 +599,19 @@ configdialog.h: $(srcdir)/configdialog.ui
 
 configdialog.moc: configdialog.h
 	$(MOC) configdialog.h -o configdialog.moc
+infodialog.cc: $(srcdir)/infodialog.ui infodialog.h infodialog.moc
+	rm -f infodialog.cc
+	echo '#include <klocale.h>' > infodialog.cc
+	$(UIC) -tr ${UIC_TR} -i infodialog.h $(srcdir)/infodialog.ui > infodialog.cc.temp ; ret=$$?; \
+	sed -e "s,${UIC_TR}( \"\" ),QString::null,g" infodialog.cc.temp | sed -e "s,${UIC_TR}( \"\"\, \"\" ),QString::null,g" | sed -e "s,image\([0-9][0-9]*\)_data,img\1_infodialog,g" >> infodialog.cc ;\
+	rm -f infodialog.cc.temp ;\
+	if test "$$ret" = 0; then echo '#include "infodialog.moc"' >> infodialog.cc; else rm -f infodialog.cc ; exit $$ret ; fi
+
+infodialog.h: $(srcdir)/infodialog.ui
+	$(UIC) -o infodialog.h $(srcdir)/infodialog.ui
+
+infodialog.moc: infodialog.h
+	$(MOC) infodialog.h -o infodialog.moc
 
 #>+ 3
 crystalconfig.moc: $(srcdir)/crystalconfig.h
@@ -610,10 +623,11 @@ mocs: crystalconfig.moc
 clean-metasources:
 	-rm -f  crystalconfig.moc
 
-#>+ 4
+#>+ 5
 clean-ui:
 	-rm -f \
-	configdialog.cc configdialog.h configdialog.moc 
+	configdialog.cc configdialog.h configdialog.moc \
+	infodialog.cc infodialog.h infodialog.moc 
 
 #>+ 3
 clean-closures:
@@ -651,11 +665,11 @@ bcheck-am:
 
 
 #>+ 11
-kwin_crystal_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc configdialog.cc  crystalconfig.moc
+kwin_crystal_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc configdialog.cc infodialog.cc  crystalconfig.moc
 	@echo 'creating kwin_crystal_config_la.all_cc.cc ...'; \
 	rm -f kwin_crystal_config_la.all_cc.files kwin_crystal_config_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin_crystal_config_la.all_cc.final; \
-	for file in crystalconfig.cc configdialog.cc ; do \
+	for file in crystalconfig.cc configdialog.cc infodialog.cc ; do \
 	  echo "#include \"$$file\"" >> kwin_crystal_config_la.all_cc.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin_crystal_config_la.all_cc.final; \
 	done; \
@@ -691,4 +705,4 @@ nmcheck:
 nmcheck-am: nmcheck
 crystalconfig.lo: crystalconfig.moc 
 crystalconfig.o: crystalconfig.moc 
-$(srcdir)/crystalconfig.cc: configdialog.h 
+$(srcdir)/crystalconfig.cc: configdialog.h infodialog.h 

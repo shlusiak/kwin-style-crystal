@@ -22,6 +22,7 @@
 
 #include "crystalconfig.h"
 #include "configdialog.h"
+#include "infodialog.h"
 
 //////////////////////////////////////////////////////////////////////////////
 // ExampleConfig()
@@ -75,6 +76,15 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     connect(dialog_->buttonColor, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 
     connect(dialog_->hover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+	connect(dialog_->buttonTheme, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
+
+    connect(dialog_->repaintMode, SIGNAL(clicked(int)),
+            this, SLOT(selectionChanged(int)));
+
+    connect(dialog_->updateTime, SIGNAL(valueChanged(int)),
+            this, SLOT(selectionChanged(int)));
+	
+	connect(dialog_->infoButton, SIGNAL(clicked(void)),this,SLOT(infoDialog(void)));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -114,7 +124,6 @@ void ExampleConfig::selectionChanged(int)
 {
     updateStack(dialog_->stack1,dialog_->type1->currentItem());
     updateStack(dialog_->stack2,dialog_->type2->currentItem());
-
 
     emit changed();
 }
@@ -165,6 +174,12 @@ void ExampleConfig::load(KConfig*)
     dialog_->roundCorners->setChecked(config_->readBoolEntry("RoundCorners",false));
 	
 	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",false));
+	
+	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",0));
+	
+	button=(QRadioButton*)dialog_->repaintMode->find(config_->readNumEntry("RepaintMode",2));
+	if (button)button->setChecked(true);
+    dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -197,9 +212,20 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("RoundCorners",dialog_->roundCorners->isChecked());
 	
 	config_->writeEntry("HoverEffect",dialog_->hover->isChecked());
+	
+	config_->writeEntry("ButtonTheme",dialog_->buttonTheme->currentItem());
+	config_->writeEntry("RepaintMode",dialog_->repaintMode->selectedId());
+    config_->writeEntry("RepaintTime",dialog_->updateTime->value());
         
     config_->sync();
 }
+
+void ExampleConfig::infoDialog()
+{
+	InfoDialog d(dialog_);
+	d.exec();
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 // defaults()
