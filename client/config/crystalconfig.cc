@@ -71,12 +71,16 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
             this, SLOT(selectionChanged(int)));
     connect(dialog_->titlebarheight, SIGNAL(valueChanged(int)),
             this, SLOT(selectionChanged(int)));
-
-    connect(dialog_->roundCorners, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    
+	connect(dialog_->tlc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->trc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->blc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->brc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->buttonColor, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 
     connect(dialog_->hover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->buttonTheme, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->tintButtons, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 
     connect(dialog_->repaintMode, SIGNAL(clicked(int)),
             this, SLOT(selectionChanged(int)));
@@ -103,28 +107,9 @@ ExampleConfig::~ExampleConfig()
 // ------------------
 // Selection has changed
 
-void ExampleConfig::updateStack(QWidgetStack* stack,int selected)
-{
-    switch(selected)
-    {
-    case 0: // Fade
-    case 1: // channelIntensity
-    case 2: // Brighten
-    case 3: // desaturate
-    case 4: // solarize
-    	stack->raiseWidget(0);
-    	break;
-    
-    default:stack->raiseWidget(1);
-    	break;
-    }
-}
 
 void ExampleConfig::selectionChanged(int)
 {
-    updateStack(dialog_->stack1,dialog_->type1->currentItem());
-    updateStack(dialog_->stack2,dialog_->type2->currentItem());
-
     emit changed();
 }
 
@@ -166,14 +151,16 @@ void ExampleConfig::load(KConfig*)
     dialog_->type1->setCurrentItem(config_->readNumEntry("ActiveMode",0));
     dialog_->type2->setCurrentItem(config_->readNumEntry("InactiveMode",0));
 
-    updateStack(dialog_->stack1,dialog_->type1->currentItem());
-    updateStack(dialog_->stack2,dialog_->type2->currentItem());
-    
 	color=QColor(255,255,255);
     dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
-    dialog_->roundCorners->setChecked(config_->readBoolEntry("RoundCorners",false));
+    int cornersFlag = config_->readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT );
+    dialog_->tlc->setChecked( cornersFlag & TOP_LEFT );
+    dialog_->trc->setChecked( cornersFlag & TOP_RIGHT );
+    dialog_->blc->setChecked( cornersFlag & BOT_LEFT );
+    dialog_->brc->setChecked( cornersFlag & BOT_RIGHT );
 	
 	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",false));
+	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor->color()!=QColor(255,255,255)));
 	
 	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",0));
 	
@@ -209,9 +196,16 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("FrameColor2",dialog_->frameColor2->color());
 
     config_->writeEntry("ButtonColor",dialog_->buttonColor->color());
-    config_->writeEntry("RoundCorners",dialog_->roundCorners->isChecked());
+	
+    int cornersFlag = 0;
+    if(dialog_->tlc->isChecked()) cornersFlag += TOP_LEFT;
+    if(dialog_->trc->isChecked()) cornersFlag += TOP_RIGHT;
+    if(dialog_->blc->isChecked()) cornersFlag += BOT_LEFT;
+    if(dialog_->brc->isChecked()) cornersFlag += BOT_RIGHT;
+    config_->writeEntry("RoundCorners", cornersFlag );
 	
 	config_->writeEntry("HoverEffect",dialog_->hover->isChecked());
+	config_->writeEntry("TintButtons",dialog_->tintButtons->isChecked());
 	
 	config_->writeEntry("ButtonTheme",dialog_->buttonTheme->currentItem());
 	config_->writeEntry("RepaintMode",dialog_->repaintMode->selectedId());

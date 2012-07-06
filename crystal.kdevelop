@@ -22,7 +22,7 @@
   <kdevautoproject>
     <general>
       <activetarget>client/kwin3_crystal.la</activetarget>
-      <useconfiguration>optimized</useconfiguration>
+      <useconfiguration>default</useconfiguration>
     </general>
     <run>
       <mainprogram>src/crystal</mainprogram>

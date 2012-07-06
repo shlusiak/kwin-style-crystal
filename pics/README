@@ -1,9 +1,13 @@
-These are the button themes.
+These are the button themes for Crystal-GL.
 
-embedtool: Tool wich converts the png files into source code. Make with "make".
-Use with 'embedtool file1 file2 > tiles.h', or 'embedtool default/* > tiles.h'. The tiles.h must be included properly, you may overwrite the "tiles.h" in the client subdir.
+embedtool: Tool wich converts the png files into source code, which is compiled into the decoration. Make with "make".
 
-Recompile crystal and you have your modified buttons used.
+Use with 'embedtool file1 file2 > tiles.h', or 'embedtool default/*.png > tiles.h'. The tiles.h must be included properly, you may overwrite the "tiles.h" in the client subdir for testing.
+Then recompile crystal and you have your modified buttons used.
 
+If you have made a button theme, please mail it to me (at spam84@gmx.de), I'll take care of the proper implementation.
 Please send me overwhelming button themes. :)
+
+
+Sascha
  

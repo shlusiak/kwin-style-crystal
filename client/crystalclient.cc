@@ -18,7 +18,11 @@
 #include "crystalclient.h"
 #include "crystalbutton.h"
 #include "imageholder.h"
+
+// Button themes
 #include "tiles.h"
+#include "aqua.h"
+#include "knifty.h"
 
 
 
@@ -125,11 +129,13 @@ bool CrystalFactory::readConfig()
  
 	buttonColor=QColor(255,255,255);
     buttonColor=config.readColorEntry("ButtonColor",&buttonColor);
-    roundCorners=config.readBoolEntry("RoundCorners",false);
+    roundCorners=config.readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
 
 	hovereffect=config.readBoolEntry("HoverEffect",false);
+	tintButtons=config.readBoolEntry("TintButtons",buttonColor!=QColor(255,255,255));
 	repaintMode=config.readNumEntry("RepaintMode",2);
 	repaintTime=config.readNumEntry("RepaintTime",200);
+	buttontheme=config.readNumEntry("ButtonTheme",0);
        
     return true;
 }
@@ -141,20 +147,68 @@ void CrystalFactory::CreateButtonImages()
 		if (buttonImages[i])buttonImages[i]->reset(); else
 		buttonImages[i]=new ButtonImage;
 	}
-
-	buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,true);
-	buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,true);
-	buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,true);
-	buttonImages[ButtonImageMin]->SetNormal(crystal_min_data,true);
-	buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,true);
-	buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,true);
-	buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,true);
-	buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,true);
 	
-	buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,true);
-	buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,true);
-	buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,true);
-	buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,true);
+	switch(buttontheme)
+	{
+	default:	// whee, seems to work. ;)
+	case 0:	// Crystal default
+		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(crystal_min_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,tintButtons);
+	
+		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
+		break;
+	case 1: // Aqua buttons
+		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data,tintButtons);
+	
+		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data,tintButtons);
+		
+		
+		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetHovered(aqua_maximize_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetHovered(aqua_minimize_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetHovered(aqua_maximize_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data,tintButtons);
+		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data,tintButtons);
+		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data,tintButtons);
+		break;
+	case 2: // Knifty buttons
+		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(knifty_max_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(knifty_restore_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(knifty_min_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(knifty_close_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(knifty_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(knifty_un_sticky_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(knifty_shade_data,tintButtons);
+        
+		buttonImages[ButtonImageAbove]->SetNormal(knifty_above_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(knifty_unabove_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(knifty_unbelow_data,tintButtons);
+		break;
+	}	
+
 }
 
 
@@ -192,25 +246,29 @@ void CrystalClient::init()
     widget()->setBackgroundMode(NoBackground);
 
     // setup layout
-    mainlayout = new QGridLayout(widget(), 4, 3,0,-1,"mainlayout"); // 4x3 grid
-    QHBoxLayout *titlelayout = new QHBoxLayout();
-    titlebar_ = new QSpacerItem(1, ::factory->titlesize-2*FRAMESIZE+1, QSizePolicy::Expanding,
+    mainlayout = new QGridLayout(widget(), 4, 3); // 4x3 grid
+    titlelayout = new QHBoxLayout();
+    titlebar_ = new QSpacerItem(1, ::factory->titlesize, QSizePolicy::Expanding,
                                 QSizePolicy::Fixed);
 
     mainlayout->setResizeMode(QLayout::FreeResize);
-    mainlayout->setRowSpacing(0, FRAMESIZE);
-    mainlayout->setRowSpacing(3, 0);
-    mainlayout->setColSpacing(0, borderSpacing());
-    mainlayout->setColSpacing(2, borderSpacing());
+    mainlayout->setRowSpacing(0, 1);
+	mainlayout->setRowSpacing(3, ::factory->borderwidth*2);
 
+	mainlayout->setColSpacing(2,borderSpacing());
+	mainlayout->setColSpacing(0,borderSpacing());
     mainlayout->addLayout(titlelayout, 1, 1);
+
+	
     if (isPreview()) {
-      mainlayout->addWidget(
-        new QLabel(i18n("<b><center>Preview</center></b>"),widget()), 2, 1);
+        mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
+        mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
+		mainlayout->addWidget(
+        new QLabel(i18n("<b><center>Crystal Preview</center></b>"),widget()), 2, 1);
     } else {
         mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
     }
-
+	
     // the window should stretch
     mainlayout->setRowStretch(2, 10);
     mainlayout->setColStretch(1, 10);
@@ -221,11 +279,12 @@ void CrystalClient::init()
 //    titlelayout->addItem(new QSpacerItem(::factory->borderwidth/2,0));
     
     for (int n=0; n<ButtonTypeCount; n++) button[n] = 0;
+//	titlelayout->insertSpacing(0,borderSpacing());
     addButtons(titlelayout, options()->titleButtonsLeft());
     titlelayout->addItem(titlebar_);
     CrystalButton* lastbutton=addButtons(titlelayout, options()->titleButtonsRight());
 	if (lastbutton)lastbutton->setFirstLast(false,true);
-	
+//	titlelayout->insertSpacing(-1,borderSpacing());
 	
     connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
     connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
@@ -237,45 +296,47 @@ void CrystalClient::init()
 
 void CrystalClient::updateMask()
 {
-	if (!::factory->roundCorners || (!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull ) ) 
+	if ((::factory->roundCorners==0)|| (!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull ) ) 
 	{
 		setMask(QRegion(widget()->rect()));
 		return;
 	}
 	
+    int cornersFlag = ::factory->roundCorners;
 	int r(width());
 	int b(height());
 	QRegion mask;
 
 	mask=QRegion(widget()->rect());
 	
-	// Remove top-left corner.
-
-	mask -= QRegion(0, 0, 5, 1);
-	mask -= QRegion(0, 1, 3, 1);
-	mask -= QRegion(0, 2, 2, 1);
-	mask -= QRegion(0, 3, 1, 2);
-
-	// Remove top-right corner.
-
-	mask -= QRegion(r - 5, 0, 5, 1);
-	mask -= QRegion(r - 3, 1, 3, 1);
-	mask -= QRegion(r - 2, 2, 2, 1);
-	mask -= QRegion(r - 1, 3, 1, 2);
-
-	// Remove bottom-left corner.
-
-	mask -= QRegion(0, b - 5, 1, 3);
-	mask -= QRegion(0, b - 3, 2, 1);
-	mask -= QRegion(0, b - 2, 3, 1);
-	mask -= QRegion(0, b - 1, 5, 1);
-
-	// Remove bottom-right corner.
-
-	mask -= QRegion(r - 5, b - 1, 5, 1);
-	mask -= QRegion(r - 3, b - 2, 3, 1);
-	mask -= QRegion(r - 2, b - 3, 2, 1);
-	mask -= QRegion(r - 1, b - 5, 1, 2);
+    // Remove top-left corner.
+    if(cornersFlag & TOP_LEFT) {
+        mask -= QRegion(0, 0, 5, 1);
+        mask -= QRegion(0, 1, 3, 1);
+        mask -= QRegion(0, 2, 2, 1);
+        mask -= QRegion(0, 3, 1, 2);
+    }
+    // Remove top-right corner.
+    if(cornersFlag & TOP_RIGHT) {
+        mask -= QRegion(r - 5, 0, 5, 1);
+        mask -= QRegion(r - 3, 1, 3, 1);
+        mask -= QRegion(r - 2, 2, 2, 1);
+        mask -= QRegion(r - 1, 3, 1, 2);
+    }
+    // Remove bottom-left corner.
+    if(cornersFlag & BOT_LEFT) {
+        mask -= QRegion(0, b - 5, 1, 3);
+        mask -= QRegion(0, b - 3, 2, 1);
+        mask -= QRegion(0, b - 2, 3, 1);
+        mask -= QRegion(0, b - 1, 5, 1);
+    }
+    // Remove bottom-right corner.
+    if(cornersFlag & BOT_RIGHT) {
+        mask -= QRegion(r - 5, b - 1, 5, 1);
+        mask -= QRegion(r - 3, b - 2, 3, 1);
+        mask -= QRegion(r - 2, b - 3, 2, 1);
+        mask -= QRegion(r - 1, b - 5, 1, 2);
+    }
 	
 	setMask(mask);
 }
@@ -492,17 +553,12 @@ void CrystalClient::updateLayout()
 	{
 		mainlayout->setColSpacing(0,0);
 		mainlayout->setColSpacing(2,0);
-		titlebar_->changeSize(1, ::factory->titlesize, QSizePolicy::Expanding,
-                                QSizePolicy::Fixed);
 	}else{
 		mainlayout->setColSpacing(2,borderSpacing());
 		mainlayout->setColSpacing(0,borderSpacing());
-		titlebar_->changeSize(1, ::factory->titlesize-FRAMESIZE*2+1, QSizePolicy::Expanding,
-                                QSizePolicy::Fixed);
 	}
 	
-
-	mainlayout->setRowSpacing(0, (FullMax)?0:FRAMESIZE);
+	mainlayout->setRowSpacing(0, (FullMax)?0:1);
 	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
 		button[i]->resetSize(FullMax);
 	widget()->layout()->activate();
@@ -510,8 +566,9 @@ void CrystalClient::updateLayout()
 
 int CrystalClient::borderSpacing()
 {
-	if (!::factory->roundCorners)return (::factory->borderwidth<=2)?1: ::factory->borderwidth-1;
-	return (::factory->borderwidth<=6)?5: ::factory->borderwidth-1;
+	if (::factory->roundCorners)
+		return (::factory->borderwidth<=6)?5: ::factory->borderwidth-1;
+	return (::factory->borderwidth<=2)?1: ::factory->borderwidth-1;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -824,42 +881,47 @@ void CrystalClient::paintEvent(QPaintEvent*)
     	// outline the frame
 		painter.setPen(wndcfg->frameColor);
 		painter.drawRect(widget()->rect());
-		if (::factory->roundCorners && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
+		if ((::factory->roundCorners) && !(!options()->moveResizeMaximizedWindows() && maximizeMode() & MaximizeFull))
 		{
+			int cornersFlag = ::factory->roundCorners;
 			int r(width());
 			int b(height());
   
-			// Draw edge of top-left corner inside the area removed by the mask.
-  
-			painter.drawPoint(3, 1);
-			painter.drawPoint(4, 1);
-			painter.drawPoint(2, 2);
-			painter.drawPoint(1, 3);
-			painter.drawPoint(1, 4);
+            // Draw edge of top-left corner inside the area removed by the mask.
+            if(cornersFlag & TOP_LEFT) {
+                painter.drawPoint(3, 1);
+                painter.drawPoint(4, 1);
+                painter.drawPoint(2, 2);
+                painter.drawPoint(1, 3);
+                painter.drawPoint(1, 4);
+            }
 
-			// Draw edge of top-right corner inside the area removed by the mask.
+            // Draw edge of top-right corner inside the area removed by the mask.
+            if(cornersFlag & TOP_RIGHT) {
+                painter.drawPoint(r - 5, 1);
+                painter.drawPoint(r - 4, 1);
+                painter.drawPoint(r - 3, 2);
+                painter.drawPoint(r - 2, 3);
+                painter.drawPoint(r - 2, 4);
+            }
 
-			painter.drawPoint(r - 5, 1);
-			painter.drawPoint(r - 4, 1);
-			painter.drawPoint(r - 3, 2);
-			painter.drawPoint(r - 2, 3);
-			painter.drawPoint(r - 2, 4);
-  
-			// Draw edge of bottom-left corner inside the area removed by the mask.
-  
-			painter.drawPoint(1, b - 5);
-			painter.drawPoint(1, b - 4);
-			painter.drawPoint(2, b - 3);
-			painter.drawPoint(3, b - 2);
-			painter.drawPoint(4, b - 2);
+            // Draw edge of bottom-left corner inside the area removed by the mask.
+            if(cornersFlag & BOT_LEFT) {
+                painter.drawPoint(1, b - 5);
+                painter.drawPoint(1, b - 4);
+                painter.drawPoint(2, b - 3);
+                painter.drawPoint(3, b - 2);
+                painter.drawPoint(4, b - 2);
+            }
 
-			// Draw edge of bottom-right corner inside the area removed by the mask.
-  
-			painter.drawPoint(r - 2, b - 5);
-			painter.drawPoint(r - 2, b - 4);
-			painter.drawPoint(r - 3, b - 3);
-			painter.drawPoint(r - 4, b - 2);
-			painter.drawPoint(r - 5, b - 2);
+            // Draw edge of bottom-right corner inside the area removed by the mask.
+            if(cornersFlag & BOT_RIGHT) {
+                painter.drawPoint(r - 2, b - 5);
+                painter.drawPoint(r - 2, b - 4);
+                painter.drawPoint(r - 3, b - 3);
+                painter.drawPoint(r - 4, b - 2);
+                painter.drawPoint(r - 5, b - 2);
+            }
 		}
 	}
 }

@@ -78,10 +78,6 @@ QPixmap *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
 	case 4: dst=src;
 		KImageEffect::solarize(dst,cfg->amount*100.0);
 		break;
-//	case 5:dst=KImageEffect::emboss(src);
-//		break;
-//	case 6:dst=KImageEffect::charcoal(src);
-//		break;
 
 	default:dst=src;
 		break;	
@@ -105,11 +101,7 @@ void QImageHolder::BackgroundUpdated(const QImage *src)
 	
 	if (src && !src->isNull())
 	{
-		src->scale(1024,768);
 		QImage tmp=src->copy();
-
-//		if (!img_active)img_active=new QImage;
-//		if (!img_inactive)img_inactive=new QImage;
 
 		img_inactive=ApplyEffect(tmp,&::factory->inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false));
 		tmp=src->copy();

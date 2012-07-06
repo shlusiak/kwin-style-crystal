@@ -48,6 +48,10 @@ class ButtonImage;
 extern CrystalFactory *factory;
 
 
+#define TOP_LEFT 1
+#define TOP_RIGHT 2
+#define BOT_LEFT 4
+#define BOT_RIGHT 8
 
 struct WND_CONFIG
 {
@@ -108,14 +112,15 @@ public:
 	QImageHolder *image_holder;
 	
 	int titlesize;
-	bool hovereffect;
+	bool hovereffect,tintButtons;
+	QColor buttonColor;
 	int borderwidth;
 	bool textshadow;
 	bool trackdesktop;
-	bool roundCorners;
-	QColor buttonColor;
+	int roundCorners;
 	int repaintMode,repaintTime;
 	WND_CONFIG active,inactive;
+	int buttontheme;
 	
 	
 	ButtonImage *buttonImages[ButtonImageCount];
@@ -186,6 +191,7 @@ private:
     CrystalButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
 	QGridLayout *mainlayout;
+	QHBoxLayout *titlelayout;
     QTimer timer;
 	
 public:
