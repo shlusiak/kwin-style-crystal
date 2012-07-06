@@ -30,7 +30,7 @@
 #include <qbutton.h>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
-#include <krootpixmap.h>
+#include "myrootpixmap.h"
 #include <kwinmodule.h>
 
 class QSpacerItem;
@@ -149,17 +149,19 @@ private:
 private slots:
     void maxButtonPressed();
     void menuButtonPressed();
-    void BackgroundUpdated(const QPixmap&);
+    void BackgroundUpdated(const QImage&);
     void DesktopChanged(int desktop);
+    void applyEffect(QImage &src,QImage &dst);
+    
 
 private:
     ExampleButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
-    KRootPixmap *wallpaper;
+    KMyRootPixmap *wallpaper;
     KWinModule *kWinModule;
     
 public:
-    QPixmap *background;
+    QImage *background;
 };
 
 } // namespace Example

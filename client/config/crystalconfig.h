@@ -46,6 +46,7 @@ public slots:
     void load(KConfig*);
     void save(KConfig*);
     void defaults();
+    void updateStack(QWidgetStack* stack,int selected);
 
 protected slots:
     void selectionChanged(int);

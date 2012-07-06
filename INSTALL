@@ -11,7 +11,7 @@ Basic Installation (from the console):
 If configure fails, check that you have both
 the Qt and KDE development headers installed.
 
-You need at least KDE 3.2.
+You need at least KDE 3.2 and QT 3.3.
 
 Debian note: You may need to append
 --with-qt-includes=/usr/include/qt3

@@ -266,7 +266,7 @@ kwin_DATA = crystal.desktop
 noinst_HEADERS = crystalclient.h
 
 kde_module_LTLIBRARIES = kwin3_crystal.la
-kwin3_crystal_la_SOURCES = crystalclient.cc
+kwin3_crystal_la_SOURCES = crystalclient.cc myrootpixmap.cc
 kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la
 kwin3_crystal_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -lkdecore -lkdeui -module
 #>- kwin3_crystal_la_METASOURCES = AUTO
@@ -279,10 +279,14 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(kde_module_LTLIBRARIES)
 
 kwin3_crystal_la_DEPENDENCIES = $(kde_libraries)/libkdecorations.la
-am_kwin3_crystal_la_OBJECTS = crystalclient.lo
+am_kwin3_crystal_la_OBJECTS = crystalclient.lo myrootpixmap.lo
 #>- kwin3_crystal_la_OBJECTS = $(am_kwin3_crystal_la_OBJECTS)
-#>+ 1
-kwin3_crystal_la_OBJECTS = crystalclient.lo
+#>+ 5
+kwin3_crystal_la_final_OBJECTS = kwin3_crystal_la.all_cc.lo 
+kwin3_crystal_la_nofinal_OBJECTS = crystalclient.lo myrootpixmap.lo\
+myrootpixmap.moc.lo 
+@KDE_USE_FINAL_FALSE@kwin3_crystal_la_OBJECTS = $(kwin3_crystal_la_nofinal_OBJECTS)
+@KDE_USE_FINAL_TRUE@kwin3_crystal_la_OBJECTS = $(kwin3_crystal_la_final_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -291,9 +295,13 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
 am__depfiles_maybe = depfiles
-#>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/crystalclient.Plo
-#>+ 2
-@AMDEP_TRUE@DEP_FILES =   ./$(DEPDIR)/crystalclient.Plo
+#>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/crystalclient.Plo \
+#>- @AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
+#>+ 5
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P  $(DEPDIR)/kwin3_crystal_la.all_cc.P  ./$(DEPDIR)/crystalclient.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P  ./$(DEPDIR)/crystalclient.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
 
 #>- CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 #>- 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -394,6 +402,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crystalclient.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/myrootpixmap.Plo@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
@@ -542,7 +551,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=crystal.desktop kwin3_crystal.la.closure tiles.h 
+KDE_DIST=crystal.desktop myrootpixmap.h kwin3_crystal.la.closure tiles.h 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -623,7 +632,7 @@ clean: kde-rpo-clean  clean-recursive
 #>- clean-am: clean-generic clean-kde_moduleLTLIBRARIES clean-libtool \
 #>- 	mostlyclean-am
 #>+ 2
-clean-am: clean-metasources clean-closures clean-bcheck  clean-generic clean-kde_moduleLTLIBRARIES clean-libtool \
+clean-am: clean-metasources clean-closures clean-bcheck clean-final  clean-generic clean-kde_moduleLTLIBRARIES clean-libtool \
 	mostlyclean-am
 
 distclean: distclean-recursive
@@ -699,6 +708,12 @@ kwin3_crystal.la.closure: $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_DEPENDE
 
 
 #>+ 3
+myrootpixmap.moc.cc: $(srcdir)/myrootpixmap.h
+	$(MOC) $(srcdir)/myrootpixmap.h -o myrootpixmap.moc.cc
+
+#>+ 1
+mocs: myrootpixmap.moc.cc
+#>+ 3
 crystalclient.moc: $(srcdir)/crystalclient.h
 	$(MOC) $(srcdir)/crystalclient.h -o crystalclient.moc
 
@@ -706,7 +721,7 @@ crystalclient.moc: $(srcdir)/crystalclient.h
 mocs: crystalclient.moc
 #>+ 3
 clean-metasources:
-	-rm -f  crystalclient.moc
+	-rm -f  myrootpixmap.moc.cc crystalclient.moc
 
 #>+ 3
 clean-closures:
@@ -743,18 +758,34 @@ bcheck-am:
 	done
 
 
+#>+ 11
+kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc myrootpixmap.moc.cc  crystalclient.moc
+	@echo 'creating kwin3_crystal_la.all_cc.cc ...'; \
+	rm -f kwin3_crystal_la.all_cc.files kwin3_crystal_la.all_cc.final; \
+	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cc.final; \
+	for file in crystalclient.cc myrootpixmap.cc myrootpixmap.moc.cc ; do \
+	  echo "#include \"$$file\"" >> kwin3_crystal_la.all_cc.files; \
+	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin3_crystal_la.all_cc.final; \
+	done; \
+	cat kwin3_crystal_la.all_cc.final kwin3_crystal_la.all_cc.files > kwin3_crystal_la.all_cc.cc; \
+	rm -f kwin3_crystal_la.all_cc.final kwin3_crystal_la.all_cc.files
+
+#>+ 3
+clean-final:
+	-rm -f kwin3_crystal_la.all_cc.cc
+
 #>+ 2
 final:
-	$(MAKE) all-am
+	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_final_OBJECTS)" all-am
 #>+ 2
 final-install:
-	$(MAKE) install-am
+	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_final_OBJECTS)" install-am
 #>+ 2
 no-final:
-	$(MAKE) all-am
+	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_nofinal_OBJECTS)" all-am
 #>+ 2
 no-final-install:
-	$(MAKE) install-am
+	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_nofinal_OBJECTS)" install-am
 #>+ 3
 cvs-clean:
 	$(MAKE) admindir=$(top_srcdir)/admin -f $(top_srcdir)/admin/Makefile.common cvs-clean

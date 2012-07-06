@@ -12,6 +12,7 @@
 #include <kglobalsettings.h>
 #include <klocale.h>
 #include <kimageeffect.h>
+#include <kdebug.h>
 
 #include <qbitmap.h>
 #include <qlabel.h>
@@ -32,8 +33,16 @@ static const int BUTTONSIZE      = 18;
 static const int TITLESIZE       = 24;
 static const int FRAMESIZE       = 1;
 
-static double active_shade	 = 0.5;
-static double inactive_shade	 = 0.5;
+struct WND_CONFIG
+{
+	int mode;	// The mode (fade, emboss, ...)
+	
+	double amount;
+	bool frame;
+
+}active,inactive;
+
+int borderwidth=1;
 
 
 
@@ -129,18 +138,22 @@ bool ExampleFactory::readConfig()
 
     // grab settings
     Qt::AlignmentFlags oldalign = titlealign_;
+        
+    
     QString value = config.readEntry("TitleAlignment", "AlignHCenter");
     if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
     else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
-    active_shade=(double)config.readNumEntry("ActiveShade",50)/100.0;
-    inactive_shade=(double)config.readNumEntry("InactiveShade",50)/100.0;
+    active.mode=config.readNumEntry("ActiveMode",0);
+    inactive.mode=config.readNumEntry("InactiveMode",0);
+    active.amount=(double)config.readNumEntry("ActiveShade",50)/100.0;
+    inactive.amount=(double)config.readNumEntry("InactiveShade",50)/100.0;
+    active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
+    inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
+    borderwidth=config.readNumEntry("Borderwidth",4);
     
-    if (oldalign == titlealign_)
-        return false;
-    else
-        return true;
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -265,10 +278,10 @@ void ExampleButton::drawButton(QPainter *painter)
     if (client_->background)
     {
     	QRect r=rect();
-	QPoint p(0,0);
+//	QPoint p(0,0);
 	r.moveBy(pos().x(),pos().y());
 	
-	pufferPainter.drawPixmap(p,*client_->background,r);
+	pufferPainter.drawImage(QPoint(0,0),*client_->background,r);
     }
 
 
@@ -384,11 +397,11 @@ void ExampleClient::init()
 
     QColorGroup group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
     background=NULL;
-    wallpaper=new KRootPixmap(widget());
-    wallpaper->setFadeEffect(isActive()?active_shade:inactive_shade,group.background());
-    wallpaper->setCustomPainting(true);
+    wallpaper=new KMyRootPixmap(widget());
+    wallpaper->repaint(true);
     wallpaper->start();
-    connect( wallpaper,SIGNAL(backgroundUpdated(const QPixmap&)),this, SLOT(BackgroundUpdated(const QPixmap&)));        
+    connect( wallpaper,SIGNAL(backgroundUpdated(const QImage&)),this, SLOT(BackgroundUpdated(const QImage&)));        
+    connect( wallpaper,SIGNAL(applyEffect(QImage&,QImage&)),this,SLOT(applyEffect(QImage&,QImage&)));
     
     // setup titlebar buttons
     for (int n=0; n<ButtonTypeCount; n++) button[n] = 0;
@@ -400,12 +413,12 @@ void ExampleClient::init()
     connect( kWinModule,SIGNAL(currentDesktopChanged(int)), this,SLOT(DesktopChanged(int)) );
 }
 
-void ExampleClient::BackgroundUpdated(const QPixmap &bg)
+void ExampleClient::BackgroundUpdated(const QImage &bg)
 {
 	if (background)delete background;
 	background=NULL;
 	
-	background=new QPixmap(bg);
+	background=new QImage(bg);
 	
 	widget()->repaint(false);
 	for (int n=0; n<ButtonTypeCount; n++) if (button[n])
@@ -418,6 +431,34 @@ void ExampleClient::DesktopChanged(int desk)
 		wallpaper->repaint(true);
 }
 
+void ExampleClient::applyEffect(QImage &src,QImage &dst)
+{
+	QColorGroup group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
+	WND_CONFIG* cfg=isActive()?&active:&inactive;
+	
+	switch(cfg->mode)
+	{
+	case 0:dst=KImageEffect::fade(src, cfg->amount, group.background());
+		break;
+	case 1:dst=KImageEffect::channelIntensity(src,cfg->amount,KImageEffect::All);
+		break;
+	case 2:dst=KImageEffect::intensity(src,cfg->amount);
+		break;
+	case 3:dst=KImageEffect::desaturate(src,cfg->amount);
+		break;
+	case 4: KImageEffect::solarize(src,cfg->amount*100.0);
+		dst=src;
+		break;
+	case 5:dst=KImageEffect::emboss(src);
+		break;
+	case 6:dst=KImageEffect::charcoal(src);
+		break;
+
+		
+	default:dst=src;
+		break;	
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // addButtons()
@@ -529,10 +570,7 @@ void ExampleClient::activeChange()
     for (int n=0; n<ButtonTypeCount; n++)
         if (button[n]) button[n]->reset();
 	
-    QColorGroup group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
-    wallpaper->setFadeEffect(isActive()?active_shade:inactive_shade,group.background());
     wallpaper->repaint(true);
-
     widget()->repaint(false);
 }
 
@@ -606,9 +644,9 @@ void ExampleClient::shadeChange()
 
 void ExampleClient::borders(int &l, int &r, int &t, int &b) const
 {
-    l = r = FRAMESIZE*4;
+    l = r = FRAMESIZE*borderwidth;
     t = TITLESIZE + FRAMESIZE;
-    b = FRAMESIZE * 4;
+    b = FRAMESIZE * borderwidth;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -640,9 +678,9 @@ KDecoration::Position ExampleClient::mousePosition(const QPoint &point) const
 {
     const int corner = 24;
     Position pos;
-    const int RESIZESIZE=FRAMESIZE*4;
+    const int RESIZESIZE=FRAMESIZE*borderwidth;
 
-    if (point.y() <= RESIZESIZE) {
+    if (point.y() <= FRAMESIZE*4) {
         // inside top frame
         if (point.x() <= corner)                 pos = PositionTopLeft;
         else if (point.x() >= (width()-corner))  pos = PositionTopRight;
@@ -741,12 +779,12 @@ void ExampleClient::paintEvent(QPaintEvent*)
     
     if (background!=NULL) 
     {    
-    	QPoint p(1,1);
-    	QRect src=title;
+    	QPoint p(0,0);
+/*    	QRect src=title;
     	src.moveBy(0,0);
-	src.rBottom()++;
+	src.rBottom()++;*/
 //    	painter.drawPixmap(p,*background,src);
-	painter.drawPixmap(0,0,*background);
+	painter.drawImage(p,*background);
     }else{
     	wallpaper->repaint(true);
     }
@@ -760,27 +798,14 @@ void ExampleClient::paintEvent(QPaintEvent*)
                      caption());
 
     // draw frame
-    group = options()->colorGroup(KDecoration::ColorFrame, isActive());
+    if ((isActive()&& active.frame)||(!isActive() && inactive.frame))
+    {
+    	group = options()->colorGroup(KDecoration::ColorFrame, isActive());
 
-    QRect frame(0, 0, width(), FRAMESIZE);
-//    painter.fillRect(frame, group.background());
-//    frame.setRect(0, 0, FRAMESIZE, height());
-//    painter.fillRect(frame, group.background());
-//    frame.setRect(0, height() - FRAMESIZE*2, width(), FRAMESIZE*2);
-//    painter.fillRect(frame, group.background());
-//    frame.setRect(width()-FRAMESIZE, 0, FRAMESIZE, height());
-//    painter.fillRect(frame, group.background());
-
-    // outline the frame
-    painter.setPen(group.dark());
-//    frame = QRect(1,1,width()-1,height()-1);
-    frame=widget()->rect();
-    painter.drawRect(frame);
-    frame.setRect(frame.x() + FRAMESIZE-1, frame.y() + FRAMESIZE-1,
-                  frame.width() - FRAMESIZE*2 +2,
-                  frame.height() - FRAMESIZE*3 +2);
-//    painter.drawRect(frame);
-
+    	// outline the frame
+    	painter.setPen(group.dark());
+    	painter.drawRect(widget()->rect());
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////

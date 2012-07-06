@@ -15,6 +15,9 @@
 #include <qradiobutton.h>
 #include <qwhatsthis.h>
 #include <qspinbox.h>
+#include <qcheckbox.h>
+#include <qcombobox.h>
+#include <qwidgetstack.h>
 
 #include "crystalconfig.h"
 #include "configdialog.h"
@@ -41,11 +44,22 @@ ExampleConfig::ExampleConfig(KConfig* config, QWidget* parent)
     // setup the connections
     connect(dialog_->titlealign, SIGNAL(clicked(int)),
             this, SLOT(selectionChanged(int)));
-    connect(dialog_->shadeactive, SIGNAL(valueChanged(int)),
+    connect(dialog_->shade1, SIGNAL(valueChanged(int)),
             this, SLOT(selectionChanged(int)));
-    connect(dialog_->shadeinactive, SIGNAL(valueChanged(int)),
+    connect(dialog_->shade2, SIGNAL(valueChanged(int)),
             this, SLOT(selectionChanged(int)));
 
+    connect(dialog_->frame1, SIGNAL(stateChanged(int)),
+            this, SLOT(selectionChanged(int)));
+    connect(dialog_->frame2, SIGNAL(stateChanged(int)),
+            this, SLOT(selectionChanged(int)));
+	    
+    connect(dialog_->type1,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->type2,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
+
+    connect(dialog_->borderwidth, SIGNAL(valueChanged(int)),
+            this, SLOT(selectionChanged(int)));
+    
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -64,8 +78,29 @@ ExampleConfig::~ExampleConfig()
 // ------------------
 // Selection has changed
 
+void ExampleConfig::updateStack(QWidgetStack* stack,int selected)
+{
+    switch(selected)
+    {
+    case 0: // Fade
+    case 1: // channelIntensity
+    case 2: // Brighten
+    case 3: // desaturate
+    case 4: // solarize
+    	stack->raiseWidget(0);
+    	break;
+    
+    default:stack->raiseWidget(1);
+    	break;
+    }
+}
+
 void ExampleConfig::selectionChanged(int)
 {
+    updateStack(dialog_->stack1,dialog_->type1->currentItem());
+    updateStack(dialog_->stack2,dialog_->type2->currentItem());
+
+
     emit changed();
 }
 
@@ -82,11 +117,23 @@ void ExampleConfig::load(KConfig*)
     QRadioButton *button = (QRadioButton*)dialog_->titlealign->child(value);
     if (button) button->setChecked(true);
     
-    int active=config_->readNumEntry("ActiveShade",0);
-    dialog_->shadeactive->setValue(active);
+    dialog_->frame1->setChecked(config_->readBoolEntry("ActiveFrame",true));
+    dialog_->frame2->setChecked(config_->readBoolEntry("InactiveFrame",true));
     
-    active=config_->readNumEntry("InactiveShade",0);
-    dialog_->shadeinactive->setValue(active);
+    dialog_->borderwidth->setValue(config_->readNumEntry("Borderwidth",4));
+    
+    int active=config_->readNumEntry("ActiveShade",40);
+    dialog_->shade1->setValue(active);
+    
+    active=config_->readNumEntry("InactiveShade",40);
+    dialog_->shade2->setValue(active);
+    
+    // Set the modus --> !!!! select new widget box !!!!
+    dialog_->type1->setCurrentItem(config_->readNumEntry("ActiveMode",0));
+    dialog_->type2->setCurrentItem(config_->readNumEntry("InactiveMode",0));
+
+    updateStack(dialog_->stack1,dialog_->type1->currentItem());
+    updateStack(dialog_->stack2,dialog_->type2->currentItem());
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -100,9 +147,13 @@ void ExampleConfig::save(KConfig*)
 
     QRadioButton *button = (QRadioButton*)dialog_->titlealign->selected();
     if (button) config_->writeEntry("TitleAlignment", QString(button->name()));
-    config_->writeEntry("ActiveShade",dialog_->shadeactive->value());
-    config_->writeEntry("InactiveShade",dialog_->shadeinactive->value());
-    
+    config_->writeEntry("ActiveShade",dialog_->shade1->value());
+    config_->writeEntry("InactiveShade",dialog_->shade2->value());
+    config_->writeEntry("ActiveFrame",dialog_->frame1->isChecked());
+    config_->writeEntry("InactiveFrame",dialog_->frame2->isChecked());
+    config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
+    config_->writeEntry("ActiveMode",dialog_->type1->currentItem());
+    config_->writeEntry("InactiveMode",dialog_->type2->currentItem());
     
     config_->sync();
 }
@@ -117,9 +168,8 @@ void ExampleConfig::defaults()
     QRadioButton *button =
         (QRadioButton*)dialog_->titlealign->child("AlignHCenter");
     if (button) button->setChecked(true);
-    dialog_->shadeactive->setValue(50);
-    dialog_->shadeinactive->setValue(50);
-    
+    dialog_->shade1->setValue(50);
+    dialog_->shade2->setValue(50);
 }
 
 //////////////////////////////////////////////////////////////////////////////
