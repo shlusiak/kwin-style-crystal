@@ -3,7 +3,7 @@
   <general>
     <author>Sascha Hlusiak</author>
     <email>Spam84@gmx.de</email>
-    <version>0.7.6</version>
+    <version/>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <keywords>
@@ -50,6 +50,9 @@
         <f77compiler>kdevg77options</f77compiler>
         <cxxflags>-O0 -g3</cxxflags>
       </debug>
+      <default>
+        <envvars/>
+      </default>
     </configurations>
     <make>
       <envvars>

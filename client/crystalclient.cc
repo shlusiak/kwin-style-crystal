@@ -14,6 +14,8 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <qworkspace.h>
+#include <kwin.h>
+#include <ksystemtray.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
@@ -23,6 +25,8 @@
 #include "tiles.h"
 #include "aqua.h"
 #include "knifty.h"
+#include "handpainted.h"
+#include "svg.h"
 
 
 
@@ -207,8 +211,38 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data,tintButtons);
 		buttonImages[ButtonImageUnBelow]->SetNormal(knifty_unbelow_data,tintButtons);
 		break;
-	}	
-
+	
+	case 3:	// Handpainted
+		buttonImages[ButtonImageHelp]->SetNormal(handpainted_help_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(handpainted_max_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(handpainted_restore_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(handpainted_min_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(handpainted_close_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(handpainted_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(handpainted_un_sticky_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(handpainted_shade_data,tintButtons);
+	
+		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
+		break;
+	case 4: // SVG
+		buttonImages[ButtonImageHelp]->SetNormal(svg_help_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(svg_max_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(svg_restore_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(svg_min_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(svg_close_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(svg_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(svg_unsticky_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(svg_shade_data,tintButtons);
+	
+		buttonImages[ButtonImageAbove]->SetNormal(svg_above_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(svg_above_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(svg_below_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(svg_below_data,tintButtons);
+		break;
+	}
 }
 
 
@@ -757,7 +791,7 @@ void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 
 void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 {
-	// FIXME: Make it good!
+	// Browse through all visible windows on current desktop
 	if (titlebar_->geometry().contains(e->pos()))
 	{
 		QPtrList <CrystalClient> *l=&(::factory->clients);
@@ -765,6 +799,7 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 		if (l->current()==NULL) for (unsigned int i=0;i<l->count();i++) if ((l->at(i))->isActive()) break;
 		
 		CrystalClient *n=this;
+		Window client,frame,wrapper;
 		
 		do
 		{
@@ -776,17 +811,13 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 				n=l->prev();
 				if (n==NULL)n=l->last();
 			}
-			if (n->desktop()==desktop())break;
+			
+			n->ClientWindows(&frame,&wrapper,&client);
+			KWin::WindowInfo info=KWin::windowInfo(client);
+			if (n->desktop()==desktop() && !info.isMinimized())break;
 		}while(n!=this);
 			
-		Window client,frame,wrapper;
-		n->ClientWindows(&frame,&wrapper,&client);
-//		int p=XRaiseWindow(qt_xdisplay(),frame);
-//		printf("%d\n",p);
-
-// 		XSetInputFocus(qt_xdisplay(),client,RevertToParent,CurrentTime);
-// 		XSetInputFocus(qt_xdisplay(),wrapper,RevertToParent,CurrentTime);
-// 		XSetInputFocus(qt_xdisplay(),frame,RevertToParent,CurrentTime);
+		KWin::activateWindow(client);
 	}
 }
 
@@ -1010,7 +1041,35 @@ void CrystalClient::minButtonPressed()
     if (button[ButtonMin]) {
         switch (button[ButtonMin]->lastMousePress()) {
           case MidButton:
-	  	performWindowOperation(LowerOp);
+		  {
+	  		performWindowOperation(LowerOp);
+/*			Window client,frame,wrapper;
+			ClientWindows(&frame,&wrapper,&client);
+			#define SYSTEM_TRAY_REQUEST_DOCK    0
+			
+			char buffer[128];
+			XEvent ev;
+
+  			snprintf(buffer, sizeof(buffer), "_NET_SYSTEM_TRAY_S%d", DefaultScreen(qt_xdisplay()));
+  			Atom a = XInternAtom(qt_xdisplay(), buffer, False);
+  			Window systray = XGetSelectionOwner(qt_xdisplay(), a);
+
+  			memset(&ev, 0, sizeof(ev));
+  			ev.xclient.type = ClientMessage;
+  			ev.xclient.window = systray;
+  			ev.xclient.message_type = XInternAtom(qt_xdisplay(), "_NET_SYSTEM_TRAY_OPCODE", False);
+  			ev.xclient.format = 32;
+  			ev.xclient.data.l[0] = CurrentTime;
+  			ev.xclient.data.l[1] = SYSTEM_TRAY_REQUEST_DOCK;
+  			ev.xclient.data.l[2] = widget()->winId();
+  			ev.xclient.data.l[3] = 0;
+  			ev.xclient.data.l[4] = 0;
+
+  			XSendEvent(qt_xdisplay(), systray, False, NoEventMask, &ev);
+  			XSync(qt_xdisplay(), False);
+			
+			XUnmapWindow(qt_xdisplay(),client);*/
+		}
 	  	break;
 	  case RightButton:
               if (isShadeable()) setShade(!isShade());

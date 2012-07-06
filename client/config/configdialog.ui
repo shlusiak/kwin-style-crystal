@@ -529,6 +529,22 @@
                                 <pixmap>image2</pixmap>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Handpainted</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image3</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>SVG</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image4</pixmap>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>buttonTheme</cstring>
                         </property>
@@ -817,6 +833,12 @@
     </image>
     <image name="image2">
         <data format="PNG" length="135">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd10000004e494441542891636018bae0ffffff55c4883161512087ac109b1803030303230ed3e51818181e4185e41818181e313232b6e1d588a699019b260ca79202a8e354644d3085d8c4b00262a363080100cc4636fd3ab4855a0000000049454e44ae426082</data>
+    </image>
+    <image name="image3">
+        <data format="PNG" length="362">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd1000001314944415428918dd2cf4bd4511405f0cf9d19b34cd32809a155b9904257b60bc2959b68511bffc69685d2b284224482ca8d08420b43fa852efc49745dcc9de13b430b2f3cde83c339f79e735fb86465660bd7d0c2713480366e16f803e71191857570178f7082f54e437402cf711fafb09999e718c72c9ed6bd8a6c128ff0a554574af91b9ee031c6b08677386a8e1ab88ac5221e60070bf8830ff884c388c83eb1213081677594c04b7cc471cf77678814e5691aff90f88caf4d928ab6499ac412e6f11edbb8875bc393b51aef9ebf256ce135d671030f75d73448ac3dcde1057ee30df67453dd2f6cea7f1d6f63195774f7b41b117f715802d3b83e402c6f3378800d6c45c459e1a7f88991215bfd544ff01d6fab4bafceca6f1bbf06d2c9ccc8ccd1ccbc535e87b191cc1caf4fdeaf0bba6b74becef91ce80000000049454e44ae426082</data>
+    </image>
+    <image name="image4">
+        <data format="PNG" length="667">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd1000002624944415428917dd231481b611806e0f7bf24975e72dc2584cb3581b40a2de5701221b64390165cba3a0822e85491802011119c1414cfa1a066398d838ea2838b43a7664a9084b6d2e14068a425d08628489bdc71ffff1b9768b7bcf3f7f07dbc7c8410128fc7e31fd2e9f42b499244f488e3386ea954fade6c360bc4308c7cb15854344dbbeb851e727575e51b1919f9e94fa7d3294dd39a8d46c3679aa69a4824f8ecececdf70387c0700d7d7d7be9d9d1d050072b9dc6d5f5f9f373838f84200400138ebebebe1c9c9c9c8f0f0706c7a7a5aafd7ebd4b66d9ecd669f8e8d8d4533994c747b7b3b08c001c0fd8c310ec09165b9dd6ab590c964904aa5a46c36fb2c180c0af97c3ea8691a8e8f8f1189441c000e638cfb19631480b3b8b8f86b6a6a4a89c56211c330605996248a22a2d128cae5324e4e4e1a0707077500e09c738131c600b41545f9675956756161e1c6b66de8bafe883636367eefeded7d1345b10da0cd18e302a594016803685f5c5c4055d5502291786cb1bfbf1f8220c89797979d8739c6d8ff8d954a45d8dfdf7fb3bbbbfb445555148b4554ab55e8ba0ecbb2e4959595d7b55a8d7721133ccf63001cd3349fafadad856459c6d9d919363737ede5e5e55ab95c86a669585a5a524cd34c027028a5dcdf3dd5098542b7a7a7a7705db7737e7efee5e8e8a8e4ba2e999898783b3a3a6ab45aad8ea228b75dc8c8d0d0d0c74aa5f289734eb6b6b692c964d21d1f1fbf218474ba0d92c3c343cdf33c323333f3a7d3e990818181774492a4dcfcfcfccdeaeaea0f9fcfd7f3dd1863646e6ece28140a7704801fc0fb4020f032100808bd20a594534abf02f87c0f638020102f4b25e50000000049454e44ae426082</data>
     </image>
 </images>
 <includes>
