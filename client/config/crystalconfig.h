@@ -56,6 +56,7 @@ public slots:
 protected slots:
     void selectionChanged(int);
     void colorChanged(const QColor&) { selectionChanged(0); }
+	void textChanged(const QString&) { selectionChanged(0); }
 	void loadOverlayActive();
 	void loadOverlayInactive();
 

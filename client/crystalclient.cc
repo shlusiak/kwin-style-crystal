@@ -45,6 +45,30 @@ extern "C" KDecorationFactory* create_factory()
 }
 
 
+
+/*****************
+ * Tooltip class for the titlebar
+ **/
+class CCrystalTooltip:public QToolTip
+{
+private:
+	CrystalClient *client;
+public:
+	CCrystalTooltip(QWidget *widget,CrystalClient *vc):QToolTip(widget),client(vc) {}
+	virtual void maybeTip(const QPoint& p)
+	{
+		if (client->titlebar_->geometry().contains(p))
+		{
+			tip(client->titlebar_->geometry(),client->caption());
+		}
+	}
+};
+
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////
 // CrystalFactory Class                                                     //
 //////////////////////////////////////////////////////////////////////////////
@@ -108,7 +132,7 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 		case 0:	break;
 		case 1:{
 			cfg->overlay.resize(0,0);
-			QImage img=QImage((uchar*)lighting_data,1,64,32,NULL,0,QImage::LittleEndian);
+			QImage img=QImage((uchar*)lighting_data,1,60,32,NULL,0,QImage::LittleEndian);
 			img.setAlphaBuffer(true);
 			cfg->overlay.convertFromImage(img.smoothScale(1,::factory->titlesize));
 			break;
@@ -145,6 +169,7 @@ bool CrystalFactory::readConfig()
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
     textshadow=(bool)config.readBoolEntry("TextShadow",true);
+	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
     trackdesktop=(bool)config.readBoolEntry("TrackDesktop",true);
     
     active.mode=config.readNumEntry("ActiveMode",0);
@@ -157,6 +182,9 @@ bool CrystalFactory::readConfig()
     active.frameColor=config.readColorEntry("FrameColor1",&buttonColor);
 	buttonColor=QColor(128,128,128);
     inactive.frameColor=config.readColorEntry("FrameColor2",&buttonColor);
+
+	active.blur=config.readNumEntry("ActiveBlur",0);
+	inactive.blur=config.readNumEntry("InactiveBlur",0);
     
     borderwidth=config.readNumEntry("Borderwidth",4);
     titlesize=config.readNumEntry("Titlebarheight",20);
@@ -353,7 +381,9 @@ void CrystalClient::init()
     CrystalButton* lastbutton=addButtons(titlelayout, options()->titleButtonsRight());
 	if (lastbutton)lastbutton->setFirstLast(false,true);
 //	titlelayout->insertSpacing(-1,borderSpacing());
-	
+
+	if (::factory->captiontooltip) new CCrystalTooltip(widget(),this);	
+
     connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
     connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 
@@ -552,6 +582,7 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 void CrystalClient::activeChange()
 {
 	Repaint();
+	if (isActive()) ::factory->clients.at(::factory->clients.find(this));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -906,17 +937,22 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		r=titlebar_->geometry();
 		r.moveBy(0,-1);
 	
+		int textalign=CrystalFactory::titleAlign();
+		QFontMetrics metrics(options()->font(isActive(), false));
+		if (metrics.width(caption())>titlebar_->geometry().width())
+			textalign=AlignLeft;
+		
 		if (::factory->textshadow)
 		{
 			pufferPainter.translate(1,1);
-			pufferPainter.setPen(color.dark(200));
-			pufferPainter.drawText(r,CrystalFactory::titleAlign() | AlignVCenter,caption());
+			pufferPainter.setPen(color.dark(300));
+			pufferPainter.drawText(r,textalign | AlignVCenter,caption());
 			pufferPainter.translate(-1,-1);
 		}
 	
 		pufferPainter.setPen(color);
 		pufferPainter.drawText(r,
-			CrystalFactory::titleAlign() | AlignVCenter,
+			textalign | AlignVCenter,
 			caption());
 
 		if (::factory->borderwidth>0 && background && !background->isNull())

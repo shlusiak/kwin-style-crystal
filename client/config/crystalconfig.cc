@@ -52,6 +52,8 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     
     connect(dialog_->textshadow, SIGNAL(stateChanged(int)),
             this, SLOT(selectionChanged(int)));
+	connect(dialog_->tooltip,SIGNAL(stateChanged(int)),
+			this,SLOT(selectionChanged(int)));
     connect(dialog_->trackdesktop, SIGNAL(stateChanged(int)),
             this, SLOT(selectionChanged(int)));
     
@@ -93,11 +95,18 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
 	
 	connect(dialog_->infoButton, SIGNAL(clicked(void)),this,SLOT(infoDialog(void)));
 
+    connect(dialog_->active_blur, SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->inactive_blur, SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
+
+
     connect(dialog_->overlay_active, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
     connect(dialog_->overlay_inactive, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
 
 	connect(dialog_->overlay_active_button,SIGNAL(clicked(void)),this,SLOT(loadOverlayActive(void)));
 	connect(dialog_->overlay_inactive_button,SIGNAL(clicked(void)),this,SLOT(loadOverlayInactive(void)));
+
+	connect(dialog_->overlay_active_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
+	connect(dialog_->overlay_inactive_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -138,6 +147,7 @@ void ExampleConfig::load(KConfig*)
     if (button) button->setChecked(true);
     
     dialog_->textshadow->setChecked(config_->readBoolEntry("TextShadow",true));
+	dialog_->tooltip->setChecked(config_->readBoolEntry("CaptionTooltip",true));
     dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",true));
     
     dialog_->frame1->setChecked(config_->readBoolEntry("ActiveFrame",true));
@@ -177,6 +187,11 @@ void ExampleConfig::load(KConfig*)
 	if (button)button->setChecked(true);
     dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
 
+	dialog_->active_blur->setValue(config_->readNumEntry("ActiveBlur",0));
+	dialog_->inactive_blur->setValue(config_->readNumEntry("InactiveBlur",0));
+
+
+
 	button=(QRadioButton*)dialog_->overlay_active->find(config_->readNumEntry("OverlayModeActive",0));
 	if (button)button->setChecked(true);
     dialog_->overlay_active_file->setText(config_->readEntry("OverlayFileActive",""));
@@ -198,6 +213,7 @@ void ExampleConfig::save(KConfig*)
     QRadioButton *button = (QRadioButton*)dialog_->titlealign->selected();
     if (button) config_->writeEntry("TitleAlignment", QString(button->name()));
     config_->writeEntry("TextShadow",dialog_->textshadow->isChecked());
+	config_->writeEntry("CaptionTooltip",dialog_->tooltip->isChecked());
     config_->writeEntry("TrackDesktop",dialog_->trackdesktop->isChecked());
     
     config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
@@ -228,6 +244,9 @@ void ExampleConfig::save(KConfig*)
 	config_->writeEntry("RepaintMode",dialog_->repaintMode->selectedId());
     config_->writeEntry("RepaintTime",dialog_->updateTime->value());
 
+	config_->writeEntry("ActiveBlur",dialog_->active_blur->value());
+	config_->writeEntry("InactiveBlur",dialog_->inactive_blur->value());
+
 	config_->writeEntry("OverlayModeActive",dialog_->overlay_active->selectedId());
 	config_->writeEntry("OverlayFileActive",dialog_->overlay_active_file->text());
 	config_->writeEntry("OverlayModeInactive",dialog_->overlay_inactive->selectedId());
@@ -248,6 +267,7 @@ void ExampleConfig::loadOverlayActive()
     if (!s.isEmpty())
 	{
 		dialog_->overlay_active_file->setText( s.path() );
+		dialog_->overlay_active_userdefined->setChecked(true);
         emit changed();
     }
 }
@@ -258,6 +278,7 @@ void ExampleConfig::loadOverlayInactive()
     if (!s.isEmpty())
 	{
 		dialog_->overlay_inactive_file->setText( s.path() );
+		dialog_->overlay_inactive_userdefined->setChecked(true);
         emit changed();
     }
 }

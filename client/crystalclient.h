@@ -61,6 +61,7 @@ struct WND_CONFIG
 	bool frame;
 	QColor frameColor;
 	QPixmap overlay;
+	int blur;
 };
 
 
@@ -116,7 +117,7 @@ public:
 	bool hovereffect,tintButtons;
 	QColor buttonColor;
 	int borderwidth;
-	bool textshadow;
+	bool textshadow,captiontooltip;
 	bool trackdesktop;
 	int roundCorners;
 	int repaintMode,repaintTime;
@@ -190,13 +191,13 @@ private slots:
 	void menuPopUp();
 private:
     CrystalButton *button[ButtonTypeCount];
-    QSpacerItem *titlebar_;
 	QGridLayout *mainlayout;
 	QHBoxLayout *titlelayout;
     QTimer timer;
 	
 public:
 	bool FullMax;
+    QSpacerItem *titlebar_;
 };
 
 

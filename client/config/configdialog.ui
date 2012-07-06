@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>446</width>
-            <height>295</height>
+            <height>287</height>
         </rect>
     </property>
     <property name="caption">
@@ -31,7 +31,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>General</string>
+                    <string>Ge&amp;neral</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -88,68 +88,12 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QLabel" row="2" column="0">
-                        <property name="name">
-                            <cstring>textLabel2_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>B&amp;order width:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>borderwidth</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="2" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textLabel2_2_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Titlebar height:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>titlebarheight</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QSpinBox" row="2" column="4">
-                        <property name="name">
-                            <cstring>titlebarheight</cstring>
-                        </property>
-                        <property name="prefix">
-                            <string></string>
-                        </property>
-                        <property name="minValue">
-                            <number>5</number>
-                        </property>
-                        <property name="value">
-                            <number>20</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Height of the title par (independend to border width)</string>
-                        </property>
-                    </widget>
-                    <spacer row="3" column="4">
-                        <property name="name">
-                            <cstring>spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>titlealign</cstring>
                         </property>
                         <property name="title">
-                            <string>Text &amp;Alignment</string>
+                            <string>Title &amp;Alignment</string>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string></string>
@@ -166,10 +110,10 @@
                                     <cstring>AlignLeft</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Left</string>
+                                    <string>Left</string>
                                 </property>
                                 <property name="accel">
-                                    <string>Alt+L</string>
+                                    <string></string>
                                 </property>
                                 <property name="toolTip" stdset="0">
                                     <string></string>
@@ -195,6 +139,9 @@
                                 </property>
                                 <property name="text">
                                     <string>Right</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
                                 </property>
                                 <property name="toolTip" stdset="0">
                                     <string></string>
@@ -240,10 +187,10 @@
                                     <cstring>radioButton4</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>I&amp;mmediately</string>
+                                    <string>Immediately</string>
                                 </property>
                                 <property name="accel">
-                                    <string>Alt+M</string>
+                                    <string></string>
                                 </property>
                                 <property name="buttonGroupId">
                                     <number>1</number>
@@ -433,7 +380,24 @@
                             </spacer>
                         </grid>
                     </widget>
-                    <widget class="QSpinBox" row="2" column="1">
+                    <spacer row="3" column="4">
+                        <property name="name">
+                            <cstring>spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QSpinBox" row="1" column="4">
                         <property name="name">
                             <cstring>borderwidth</cstring>
                         </property>
@@ -447,6 +411,59 @@
                             <string>Width of the borders</string>
                         </property>
                     </widget>
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>tooltip</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Show tooltip o&amp;ver caption</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+V</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Shows a tooltip, if the mouse pointer is over the caption.</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel2_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Border width:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>borderwidth</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel2_2_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Titlebar height:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>titlebarheight</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QSpinBox" row="2" column="4">
+                        <property name="name">
+                            <cstring>titlebarheight</cstring>
+                        </property>
+                        <property name="prefix">
+                            <string></string>
+                        </property>
+                        <property name="minValue">
+                            <number>5</number>
+                        </property>
+                        <property name="value">
+                            <number>20</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Height of the title par (independend to border width)</string>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -454,7 +471,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Bu&amp;ttons</string>
+                    <string>B&amp;uttons</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -482,10 +499,10 @@
                             <cstring>hover</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Hover effect</string>
+                            <string>Ho&amp;ver effect</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+H</string>
+                            <string>Alt+V</string>
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>Provides a mouse-over effect for the title bar buttons.</string>
@@ -727,6 +744,19 @@
                                     <number>50</number>
                                 </property>
                             </widget>
+                            <widget class="QSpinBox" row="3" column="1">
+                                <property name="name">
+                                    <cstring>inactive_blur</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>textLabel2_3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Blur Image:</string>
+                                </property>
+                            </widget>
                         </grid>
                     </widget>
                     <widget class="QGroupBox" row="1" column="0">
@@ -836,6 +866,19 @@
                                     <string>Amount:</string>
                                 </property>
                             </widget>
+                            <widget class="QSpinBox" row="3" column="1">
+                                <property name="name">
+                                    <cstring>active_blur</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="3" column="0">
+                                <property name="name">
+                                    <cstring>textLabel1_5</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Blur Image:</string>
+                                </property>
+                            </widget>
                         </grid>
                     </widget>
                     <widget class="QLabel" row="2" column="0" rowspan="1" colspan="2">
@@ -939,7 +982,7 @@
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
-                                    <cstring>radioButton15</cstring>
+                                    <cstring>overlay_active_userdefined</cstring>
                                 </property>
                                 <property name="text">
                                     <string>&amp;Userdefined:</string>
@@ -1016,7 +1059,7 @@
                             </widget>
                             <widget class="QRadioButton" row="2" column="0">
                                 <property name="name">
-                                    <cstring>radioButton15_2</cstring>
+                                    <cstring>overlay_inactive_userdefined</cstring>
                                 </property>
                                 <property name="text">
                                     <string>U&amp;serdefined</string>

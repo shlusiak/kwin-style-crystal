@@ -82,6 +82,8 @@ QPixmap *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
 	default:dst=src;
 		break;	
 	}
+
+	if (cfg->blur>0)dst=KImageEffect::blur(dst,0,cfg->blur);
 	
 	return new QPixmap(dst);
 }
