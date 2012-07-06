@@ -21,7 +21,6 @@
 
 #include <qimage.h>
 #include <math.h>
-#include <kimageeffect.h>
 
 #include "buttonimage.h"
 
@@ -58,8 +57,8 @@ ButtonImage::~ButtonImage()
 QImage ButtonImage::CreateImage(QRgb *data,QColor color)
 {
 	tint(data,color);
-	QImage img=QImage((uchar*)data,image_width,image_height,32,NULL,0,QImage::LittleEndian),img2;
-	img.setAlphaBuffer(true);
+	QImage img=QImage((uchar*)data,image_width,image_height,QImage::Format_ARGB32),img2;
+// 	img.setAlphaBuffer(true);
 	
 	return img;
 }
@@ -175,7 +174,6 @@ void ButtonImage::finish()
 		if (!org_hovered_data)
 		{
 			org_hovered_data=hovered_data;
-			printf("ERROR: %s (@%d)\n",__FILE__,__LINE__);
 		}
 
 		for (int i=0;i<image_width*image_height;i++)
@@ -189,8 +187,7 @@ void ButtonImage::finish()
 	if (!animated_data)animated_data=new QRgb[image_width*image_height];
 	if (!animated)
 	{
-		animated=new QImage((uchar*)animated_data,image_width,image_height,32,NULL,0,QImage::LittleEndian);
-		animated->setAlphaBuffer(true);
+		animated=new QImage((uchar*)animated_data,image_width,image_height,QImage::Format_ARGB32);
 	}
 }
 

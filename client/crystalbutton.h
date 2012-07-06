@@ -23,12 +23,13 @@
 #ifndef _CRYSTALBUTTON_INCLUDED_
 #define _CRYSTALBUTTON_INCLUDED_
 
-#include <qbutton.h>
+#include <qabstractbutton.h>
+#include <crystalclient.h>
 
 class CrystalClient;
 class ButtonImage;
 
-class CrystalButton : public QButton
+class CrystalButton : public QAbstractButton
 {
 	Q_OBJECT
 
@@ -42,7 +43,7 @@ public:
 	void setBitmap(ButtonImage *newimage);
 	QSize sizeHint() const;
 	int lastMousePress() const { return lastmouse_; }
-	void reset() { repaint(false); }
+	void reset() { repaint(); }
 	void setFirstLast(bool vfirst,bool vlast) { first|=vfirst; last|=vlast; }
 	void resetSize(bool FullSize);
 private:
@@ -51,6 +52,7 @@ private:
 	void mousePressEvent(QMouseEvent *e);
 	void mouseReleaseEvent(QMouseEvent *e);
 	void drawButton(QPainter *painter);
+	void paintEvent(QPaintEvent *event);
 	void drawMenuImage(QPainter *painter, QRect r);
 
 	int buttonSizeH() const;

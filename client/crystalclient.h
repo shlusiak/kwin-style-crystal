@@ -3,7 +3,7 @@
 // -------------------
 // Crystal window decoration for KDE
 // -------------------
-// Copyright (c) 2006 Sascha Hlusiak <spam84@gmx.de>
+// Copyright (c) 2006-2008 Sascha Hlusiak <spam84@gmx.de>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -31,7 +31,7 @@
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 #include <qtimer.h>
-#include <qptrlist.h>
+#include <qlist.h>
 #include <X11/Xlib.h>
 
 
@@ -41,8 +41,6 @@ class QPoint;
 class CrystalClient;
 class CrystalFactory;
 class CrystalButton;
-class CrystalTray;
-class QImageHolder;
 class ButtonImage;
 
 extern CrystalFactory *factory;
@@ -54,14 +52,9 @@ extern CrystalFactory *factory;
 
 struct WND_CONFIG
 {
-	int mode;	// The mode (fade, emboss, ...)
-	
-	double amount;
 	int outlineMode,inlineMode;
 	QColor frameColor,inlineColor;
 	QPixmap overlay;
-	QImage userdefinedPicture; // Userdefined background image, instead of wallpaper
-	int blur;
 };
 
 
@@ -105,13 +98,11 @@ public:
 	virtual ~CrystalFactory();
 	virtual KDecoration *createDecoration(KDecorationBridge *b);
 	virtual bool reset(unsigned long changed);
-	virtual bool supports(Ability ability);
+	virtual bool supports(Ability ability) const;
 
 	static bool initialized() { return initialized_; }
-	static Qt::AlignmentFlags titleAlign() { return titlealign_; }
+	static Qt::Alignment titleAlign() { return titlealign_; }
 public:
-	QImageHolder *image_holder;
-
 	QPixmap logo;
 	int logoEnabled,logoStretch,logoActive,logoDistance;
 	
@@ -125,20 +116,18 @@ public:
 
 	int borderwidth;
 	bool drawcaption,textshadow,captiontooltip;
-	bool trackdesktop,transparency;
 	int roundCorners;
-	int repaintMode,repaintTime;
 	WND_CONFIG active,inactive;
 	int buttontheme;
 	
 	ButtonImage *buttonImages[ButtonImageCount];
-	QPtrList <CrystalClient> clients;
+	QList <CrystalClient*> clients;
 private:
 	bool readConfig();
 	void CreateButtonImages();
 private:
 	static bool initialized_;
-	static Qt::AlignmentFlags titlealign_;
+	static Qt::AlignmentFlag titlealign_;
 };
 
 
@@ -195,7 +184,6 @@ private:
 	CrystalButton *button[ButtonTypeCount];
 	QGridLayout *mainlayout;
 	QHBoxLayout *titlelayout;
-	QTimer timer;
 public:
 	bool FullMax;
 	QSpacerItem *titlebar_;

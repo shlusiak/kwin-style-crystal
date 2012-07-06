@@ -1,0 +1,2 @@
+- Fix scrollwheel task scrolling
+??? - Fix Tooltips

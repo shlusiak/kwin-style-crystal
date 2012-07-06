@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006-2009 by Sascha Hlusiak                             *
+ *   Copyright (C) 2006-2008 by Sascha Hlusiak                                  *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "config.h"
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
@@ -31,14 +31,12 @@
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qimage.h>
-#include <qpopupmenu.h>
-#include <kwin.h>
+// #include <kwin.h>
 #include <kprocess.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
 #include "buttonimage.h"
-#include "imageholder.h"
 #include "overlays.h"
 
 // Button themes
@@ -48,33 +46,13 @@
 CrystalFactory* factory=NULL;
 
 bool CrystalFactory::initialized_              = false;
-Qt::AlignmentFlags CrystalFactory::titlealign_ = Qt::AlignHCenter;
+Qt::AlignmentFlag CrystalFactory::titlealign_ = Qt::AlignHCenter;
 
 
-extern "C" KDecorationFactory* create_factory()
+extern "C" KDE_EXPORT KDecorationFactory* create_factory()
 {
 	return new CrystalFactory();
 }
-
-
-/*****************
- * Tooltip class for the titlebar
- **/
-class CCrystalTooltip:public QToolTip
-{
-private:
-	CrystalClient *client;
-public:
-	CCrystalTooltip(QWidget *widget,CrystalClient *vc):QToolTip(widget),client(vc) {}
-	virtual void maybeTip(const QPoint& p)
-	{
-		if (client->titlebar_->geometry().contains(p))
-		{
-			tip(client->titlebar_->geometry(),client->caption());
-		}
-	}
-};
-
 
 
 
@@ -87,8 +65,6 @@ CrystalFactory::CrystalFactory()
 	readConfig();
 	initialized_ = true;
 
-	if (transparency)image_holder=new QImageHolder(active.userdefinedPicture,inactive.userdefinedPicture);
-		else image_holder=NULL;
 	CreateButtonImages();
 }
 
@@ -96,7 +72,6 @@ CrystalFactory::~CrystalFactory()
 {
 	initialized_ = false; 
 	::factory=NULL;
-	if (image_holder)delete image_holder;
 	for (int i=0;i<ButtonImageCount;i++)
 	{
 		if (buttonImages[i])delete buttonImages[i];
@@ -114,28 +89,16 @@ bool CrystalFactory::reset(unsigned long /*changed*/)
 	initialized_ = false;
 	readConfig();
 	initialized_ = true;
-
-	if (transparency)
-	{
-		if (!image_holder)image_holder=new QImageHolder(active.userdefinedPicture,inactive.userdefinedPicture);
-		image_holder->setUserdefinedPictures(active.userdefinedPicture,inactive.userdefinedPicture);
-		image_holder->repaint(true);
-	}else{
-		if (image_holder)delete image_holder;
-		image_holder=NULL;
-	}
 	CreateButtonImages();
 	
 	return true;
 }
 
-bool CrystalFactory::supports(Ability ability)
+bool CrystalFactory::supports(Ability ability) const
 {
 	switch (ability)
 	{
-#if KDE_IS_VERSION(3,4,0)
 	case AbilityButtonResize: return false;
-#endif
 	default:
 		return true;
 	}
@@ -143,37 +106,29 @@ bool CrystalFactory::supports(Ability ability)
 
 void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 {
-	cfg->overlay.resize(0,0);
 	switch(mode)
 	{
 		case 0:	break;
 		case 1:{
-			cfg->overlay.resize(0,0);
-			QImage img=QImage((uchar*)lighting_overlay_data,1,60,32,NULL,0,QImage::LittleEndian);
-			img.setAlphaBuffer(true);
-			cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
+			QImage img=QImage((uchar*)lighting_overlay_data,1,60,QImage::Format_ARGB32);
+			cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
 			break;
 		}
 		case 2:{
-			cfg->overlay.resize(0,0);
-			QImage img=QImage((uchar*)glass_overlay_data,20,64,32,NULL,0,QImage::LittleEndian);
-			img.setAlphaBuffer(true);
-			cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
+			QImage img=QImage((uchar*)glass_overlay_data,20,64,QImage::Format_ARGB32);
+			cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
 			break;
 		}
 		case 3:{
-			cfg->overlay.resize(0,0);
-			QImage img=QImage((uchar*)steel_overlay_data,28,64,32,NULL,0,QImage::LittleEndian);
-			img.setAlphaBuffer(true);
-			cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
+			QImage img=QImage((uchar*)steel_overlay_data,28,64,QImage::Format_ARGB32);
+			cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
 			break;
 		}
 		case 4:{
 			QImage img;
 			if (img.load(filename))
 			{
-				img.setAlphaBuffer(true);
-				cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
+				cfg->overlay = QPixmap::fromImage(img.scaled(256,::factory->titlesize));
 			}
 			break;
 		}
@@ -184,102 +139,79 @@ bool CrystalFactory::readConfig()
 {
     // create a config object
 	KConfig config("kwincrystalrc");
-	config.setGroup("General");
+	KConfigGroup cg(&config, "General");
 	QColor c;
 
-	QString value = config.readEntry("TitleAlignment", "AlignHCenter");
-	if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
-	else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
-	else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
+	int value = cg.readEntry("TitleAlignment", 0);
+	if (value == 0) titlealign_ = Qt::AlignLeft;
+	else if (value == 1) titlealign_ = Qt::AlignHCenter;
+	else if (value == 2) titlealign_ = Qt::AlignRight;
 	
-	drawcaption=(bool)config.readBoolEntry("DrawCaption",true);
-	textshadow=(bool)config.readBoolEntry("TextShadow",true);
-	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
-	wheelTask=(bool)config.readBoolEntry("WheelTask",false);
-	transparency=(bool)config.readBoolEntry("EnableTransparency",true);
-	trackdesktop=(bool)config.readBoolEntry("TrackDesktop",false);
+	drawcaption=(bool)cg.readEntry("DrawCaption",true);
+	textshadow=(bool)cg.readEntry("TextShadow",true);
+	captiontooltip=(bool)cg.readEntry("CaptionTooltip",true);
+	wheelTask=(bool)cg.readEntry("WheelTask",false);
 
-	active.mode=config.readNumEntry("ActiveMode",0);
-	inactive.mode=config.readNumEntry("InactiveMode",1);
-	active.amount=(double)config.readNumEntry("ActiveShade",30)/100.0;
-	inactive.amount=(double)config.readNumEntry("InactiveShade",-30)/100.0;
-	active.outlineMode=(int)config.readNumEntry("ActiveFrame",1);
-	inactive.outlineMode=(int)config.readNumEntry("InactiveFrame",1);
+	active.outlineMode=(int)cg.readEntry("ActiveFrame",1);
+	inactive.outlineMode=(int)cg.readEntry("InactiveFrame",1);
 	c=QColor(160,160,160);
-	active.frameColor=config.readColorEntry("FrameColor1",&c);
+	active.frameColor=cg.readEntry("FrameColor1",c);
 	c=QColor(128,128,128);
-	inactive.frameColor=config.readColorEntry("FrameColor2",&c);
+	inactive.frameColor=cg.readEntry("FrameColor2",c);
 
-	active.inlineMode=(int)config.readNumEntry("ActiveInline",0);
-	inactive.inlineMode=(int)config.readNumEntry("InactiveInline",0);
+	active.inlineMode=(int)cg.readEntry("ActiveInline",0);
+	inactive.inlineMode=(int)cg.readEntry("InactiveInline",0);
 	c=QColor(160,160,160);
-	active.inlineColor=config.readColorEntry("InlineColor1",&c);
+	active.inlineColor=cg.readEntry("InlineColor1",c);
 	c=QColor(160,160,160);
-	inactive.inlineColor=config.readColorEntry("InlineColor2",&c);
+	inactive.inlineColor=cg.readEntry("InlineColor2",c);
 
-	active.blur=config.readNumEntry("ActiveBlur",0);
-	inactive.blur=config.readNumEntry("InactiveBlur",0);
-
-	active.userdefinedPicture=QImage();
-	inactive.userdefinedPicture=QImage();
-	if ((bool)config.readBoolEntry("ActiveUserdefined",false))
-	{
-		active.userdefinedPicture.load(config.readEntry("ActiveUserdefinedPicture"));
-	}
-	if ((bool)config.readBoolEntry("InactiveUserdefined",false))
-	{
-		inactive.userdefinedPicture.load(config.readEntry("InactiveUserdefinedPicture"));
-	}
-
-	borderwidth=config.readNumEntry("Borderwidth",5);
-	titlesize=config.readNumEntry("Titlebarheight",21);
+	borderwidth=cg.readEntry("Borderwidth",5);
+	titlesize=cg.readEntry("Titlebarheight",21);
  
 	buttonColor_normal=QColor(255,255,255);
-	buttonColor_normal=config.readColorEntry("ButtonColor",&buttonColor_normal);
-	buttonColor_hovered=config.readColorEntry("ButtonColor2",&buttonColor_normal);
-	buttonColor_pressed=config.readColorEntry("ButtonColor3",&buttonColor_normal);
+	buttonColor_normal=cg.readEntry("ButtonColor",buttonColor_normal);
+	buttonColor_hovered=cg.readEntry("ButtonColor2",buttonColor_normal);
+	buttonColor_pressed=cg.readEntry("ButtonColor3",buttonColor_normal);
 	minColor_normal=QColor(255,255,255);
-	minColor_normal=config.readColorEntry("MinColor",&buttonColor_normal);
-	minColor_hovered=config.readColorEntry("MinColor2",&buttonColor_normal);
-	minColor_pressed=config.readColorEntry("MinColor3",&buttonColor_normal);
+	minColor_normal=cg.readEntry("MinColor",buttonColor_normal);
+	minColor_hovered=cg.readEntry("MinColor2",buttonColor_normal);
+	minColor_pressed=cg.readEntry("MinColor3",buttonColor_normal);
 	maxColor_normal=QColor(255,255,255);
-	maxColor_normal=config.readColorEntry("MaxColor",&buttonColor_normal);
-	maxColor_hovered=config.readColorEntry("MaxColor2",&buttonColor_normal);
-	maxColor_pressed=config.readColorEntry("MaxColor3",&buttonColor_normal);
+	maxColor_normal=cg.readEntry("MaxColor",buttonColor_normal);
+	maxColor_hovered=cg.readEntry("MaxColor2",buttonColor_normal);
+	maxColor_pressed=cg.readEntry("MaxColor3",buttonColor_normal);
 	closeColor_normal=QColor(255,255,255);
-	closeColor_normal=config.readColorEntry("CloseColor",&closeColor_normal);
-	closeColor_hovered=config.readColorEntry("CloseColor2",&closeColor_normal);
-	closeColor_pressed=config.readColorEntry("CloseColor3",&closeColor_normal);
+	closeColor_normal=cg.readEntry("CloseColor",closeColor_normal);
+	closeColor_hovered=cg.readEntry("CloseColor2",closeColor_normal);
+	closeColor_pressed=cg.readEntry("CloseColor3",closeColor_normal);
 
-	roundCorners=config.readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
+	roundCorners=cg.readEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
 
-	hovereffect=config.readBoolEntry("HoverEffect",true);
-	animateHover=config.readBoolEntry("AnimateHover",true);
-	tintButtons=config.readBoolEntry("TintButtons",false);
-	menuImage=config.readBoolEntry("MenuImage",true);
-	repaintMode=config.readNumEntry("RepaintMode",1);
-	repaintTime=config.readNumEntry("RepaintTime",200);
-	buttontheme=config.readNumEntry("ButtonTheme",8);
+	hovereffect=cg.readEntry("HoverEffect",true);
+	animateHover=cg.readEntry("AnimateHover",true);
+	tintButtons=cg.readEntry("TintButtons",false);
+	menuImage=cg.readEntry("MenuImage",true);
+	buttontheme=cg.readEntry("ButtonTheme",8);
 
+	setupOverlay(&active,cg.readEntry("OverlayModeActive",0),cg.readEntry("OverlayFileActive",""));
+	setupOverlay(&inactive,cg.readEntry("OverlayModeInactive",0),cg.readEntry("OverlayFileInactive",""));
 
-	setupOverlay(&active,config.readNumEntry("OverlayModeActive",2),config.readEntry("OverlayFileActive",""));
-	setupOverlay(&inactive,config.readNumEntry("OverlayModeInactive",2),config.readEntry("OverlayFileInactive",""));
-
-	logoEnabled=config.readNumEntry("LogoAlignment",1);
-	logoStretch=config.readNumEntry("LogoStretch",0);
-	logoActive=config.readBoolEntry("LogoActive",false);
-	logoDistance=config.readNumEntry("LogoDistance",0);
-	QString filename=config.readEntry("LogoFile","");
+	logoEnabled=cg.readEntry("LogoAlignment",1);
+	logoStretch=cg.readEntry("LogoStretch",0);
+	logoActive=cg.readEntry("LogoActive",0);
+	logoDistance=cg.readEntry("LogoDistance",0);
+	QString filename=cg.readEntry("LogoFile","");
 	if (!filename.isNull() && logoEnabled!=1)
 	{
 		if (logo.load(filename))
 		{
 			if (logoStretch==0)
 			{
-				logo=logo.convertToImage().smoothScale((titlesize*logo.width())/logo.height(),titlesize);
+				logo=logo.scaled((titlesize*logo.width())/logo.height(),titlesize);
 			}
 		}else logoEnabled=1;
-	}else logo.resize(0,0);
+	}else logo = QPixmap();
 	return true;
 }
 
@@ -656,69 +588,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageClose]->setSpace(0,0);
 
 		break;
-	case 9: // Kubuntu-hardy
-		buttonImages[ButtonImageMenu]->SetNormal(hardy_menu_data,28,17);
-		buttonImages[ButtonImageMenu]->SetHovered(hardy_menu_hovered_data);
-		buttonImages[ButtonImageMenu]->SetPressed(hardy_menu_pressed_data);
 
-		buttonImages[ButtonImageHelp]->SetNormal(hardy_help_data,28,17);
-		buttonImages[ButtonImageHelp]->SetHovered(hardy_help_hovered_data);
-		buttonImages[ButtonImageHelp]->SetPressed(hardy_help_pressed_data);
-
-		buttonImages[ButtonImageMax]->SetNormal(hardy_max_data,28,17);
-		buttonImages[ButtonImageMax]->SetHovered(hardy_max_hovered_data);
-		buttonImages[ButtonImageMax]->SetPressed(hardy_max_pressed_data);
-		buttonImages[ButtonImageRestore]->SetNormal(hardy_restore_data,28,17);
-		buttonImages[ButtonImageRestore]->SetHovered(hardy_restore_hovered_data);
-		buttonImages[ButtonImageRestore]->SetPressed(hardy_restore_pressed_data);
-		buttonImages[ButtonImageMin]->SetNormal(hardy_min_data,28,17);
-		buttonImages[ButtonImageMin]->SetHovered(hardy_min_hovered_data);
-		buttonImages[ButtonImageMin]->SetPressed(hardy_min_pressed_data);
-		buttonImages[ButtonImageClose]->SetNormal(hardy_close_data,28,17);
-		buttonImages[ButtonImageClose]->SetHovered(hardy_close_hovered_data);
-		buttonImages[ButtonImageClose]->SetPressed(hardy_close_pressed_data);
-
-		buttonImages[ButtonImageSticky]->SetNormal(hardy_sticky_data,28,17);
-		buttonImages[ButtonImageSticky]->SetHovered(hardy_sticky_hovered_data);
-		buttonImages[ButtonImageSticky]->SetPressed(hardy_sticky_pressed_data);
-		buttonImages[ButtonImageUnSticky]->SetNormal(hardy_un_sticky_data,28,17);
-		buttonImages[ButtonImageUnSticky]->SetHovered(hardy_un_sticky_hovered_data);
-		buttonImages[ButtonImageUnSticky]->SetPressed(hardy_un_sticky_pressed_data);
-
-		buttonImages[ButtonImageAbove]->SetNormal(hardy_above_data,28,17);
-		buttonImages[ButtonImageAbove]->SetHovered(hardy_above_hovered_data);
-		buttonImages[ButtonImageAbove]->SetPressed(hardy_above_pressed_data);
-		buttonImages[ButtonImageUnAbove]->SetNormal(hardy_un_above_data,28,17);
-		buttonImages[ButtonImageUnAbove]->SetHovered(hardy_un_above_hovered_data);
-		buttonImages[ButtonImageUnAbove]->SetPressed(hardy_un_above_pressed_data);
-
-
-		buttonImages[ButtonImageBelow]->SetNormal(hardy_below_data,28,17);
-		buttonImages[ButtonImageBelow]->SetHovered(hardy_below_hovered_data);
-		buttonImages[ButtonImageBelow]->SetPressed(hardy_below_pressed_data);
-
-		buttonImages[ButtonImageUnBelow]->SetNormal(hardy_un_below_data,28,17);
-		buttonImages[ButtonImageUnBelow]->SetHovered(hardy_un_below_hovered_data);
-		buttonImages[ButtonImageUnBelow]->SetPressed(hardy_un_below_pressed_data);
-
-		buttonImages[ButtonImageShade]->SetNormal(hardy_shade_data,28,17);
-		buttonImages[ButtonImageShade]->SetHovered(hardy_shade_hovered_data);
-		buttonImages[ButtonImageShade]->SetPressed(hardy_shade_pressed_data);
-		buttonImages[ButtonImageUnShade]->SetNormal(hardy_un_shade_data,28,17);
-		buttonImages[ButtonImageUnShade]->SetHovered(hardy_un_shade_hovered_data);
-		buttonImages[ButtonImageUnShade]->SetPressed(hardy_un_shade_pressed_data);
-
-		for (int i=0;i<ButtonImageCount;i++)
-		{
-			buttonImages[i]->setSpace(1,0);
-			buttonImages[i]->setDrawMode(0);
-		}
-		buttonImages[ButtonImageMax]->setSpace(0,0);
-		buttonImages[ButtonImageRestore]->setSpace(0,0);
-		buttonImages[ButtonImageMin]->setSpace(0,0);
-		buttonImages[ButtonImageClose]->setSpace(0,0);
-
-		break;
 	}
 
 
@@ -740,7 +610,7 @@ CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
 
 CrystalClient::~CrystalClient()
 {
-	::factory->clients.remove(this);
+	::factory->clients.removeAll(this);
 	for (int n=0; n<ButtonTypeCount; n++) {
 		if (button[n]) delete button[n];
 	}
@@ -748,61 +618,71 @@ CrystalClient::~CrystalClient()
 
 void CrystalClient::init()
 {
-	createMainWidget(WResizeNoErase | WRepaintNoErase);
+	createMainWidget();
 	widget()->installEventFilter(this);
 
+	widget()->setAttribute(Qt::WA_NoSystemBackground);
 	FullMax=false;
 	if (!options()->moveResizeMaximizedWindows())
 		FullMax=(maximizeMode()==MaximizeFull);
 	
-	// for flicker-free redraws
-	widget()->setBackgroundMode(NoBackground);
-
 	// setup layout
-	mainlayout = new QGridLayout(widget(), 4, 3); // 4x3 grid
+	mainlayout = new QGridLayout(widget()); // 4x3 grid
 	titlelayout = new QHBoxLayout();
 	titlebar_ = new QSpacerItem(1, ::factory->titlesize-1, QSizePolicy::Expanding,
 					QSizePolicy::Fixed);
+	titlelayout->setMargin(0);
+	titlelayout->setSpacing(0);
 
-	mainlayout->setResizeMode(QLayout::FreeResize);
-	mainlayout->setRowSpacing(0, (::factory->buttontheme==5)?0:1);
-	mainlayout->setRowSpacing(3, ::factory->borderwidth*1);
+	mainlayout->setSizeConstraint(QLayout::SetNoConstraint);
+	mainlayout->setRowMinimumHeight(0, (::factory->buttontheme==5)?0:1);
+	mainlayout->setRowMinimumHeight(1, 0);
+	mainlayout->setRowMinimumHeight(2, 0);
+	mainlayout->setRowMinimumHeight(3, 0/*::factory->borderwidth*1*/);
 
-	mainlayout->setColSpacing(2,borderSpacing());
-	mainlayout->setColSpacing(0,borderSpacing());
+	mainlayout->setColumnMinimumWidth(0,borderSpacing());
+	mainlayout->setColumnMinimumWidth(1,0);
+	mainlayout->setColumnMinimumWidth(2,borderSpacing());
+
+	mainlayout->setRowStretch(0,0);
+	mainlayout->setRowStretch(1,0);
+	mainlayout->setRowStretch(2,10);
+	mainlayout->setRowStretch(3,0);
+	mainlayout->setColumnStretch(1, 10);
+	
+	mainlayout->setMargin(0);
+	mainlayout->setSpacing(0);
 	mainlayout->addLayout(titlelayout, 1, 1);
 
 	if (isPreview()) {
 		char c[512];
+		QLabel *label;
+#define		VERSION "KWIN4-pre1"
 		sprintf(c,"<center><b>Crystal %s Preview</b><br>Built: %s</center>",VERSION,__DATE__);
 		mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
 		mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
-		mainlayout->addWidget(new QLabel(i18n(c),widget()), 2, 1);
+		label = new QLabel(i18n(c), widget());
+		label->setAutoFillBackground(true);
+		mainlayout->addWidget(label, 2, 1);
 	} else {
 		mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
 	}
 	
-	mainlayout->setRowStretch(2, 10);
-	mainlayout->setColStretch(1, 10);
-
 	updateMask();
 
 	for (int n=0; n<ButtonTypeCount; n++) button[n] = 0;
 	addButtons(titlelayout, options()->titleButtonsLeft());
+
 	titlelayout->addItem(titlebar_);
+
 	{
 		CrystalButton* lastbutton=addButtons(titlelayout, options()->titleButtonsRight());
 		if (lastbutton)lastbutton->setFirstLast(false,true);
 	}
 
-	if (::factory->captiontooltip) new CCrystalTooltip(widget(),this);	
-
 	connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
 	connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 	
-	if (::factory->transparency)connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
-	if (::factory->transparency)connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
-
 	updateLayout();
 }
 
@@ -861,10 +741,10 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 
 	if (s.length() > 0) 
 	{
-		for (unsigned n=0; n < s.length(); n++)
+		for (int n=0; n < s.length(); n++)
 		{
 			CrystalButton *current=NULL;
-			switch (s[n]) {
+			switch (s[n].toAscii()) {
 			case 'M': // Menu button
 				if (!button[ButtonMenu]) {
 					button[ButtonMenu] = current = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, ::factory->buttonImages[ButtonImageMenu]);
@@ -960,7 +840,7 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 			if (current)
 			{
 				layout->addWidget(current);
-				if (layout->findWidget(current)==0)current->setFirstLast(true,false);
+				if (layout->indexOf(current)==0)current->setFirstLast(true,false);
 			}
 			lastone=current;
 		}
@@ -971,12 +851,13 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 void CrystalClient::activeChange()
 {
 	Repaint();
-	if (isActive()) ::factory->clients.at(::factory->clients.find(this));
+	if (isActive()) ::factory->clients.at(::factory->clients.indexOf(this));
 }
 
 void CrystalClient::captionChange()
 {
-	if (::factory->drawcaption) widget()->repaint(titlebar_->geometry(), false);
+	if (::factory->drawcaption) widget()->repaint(titlebar_->geometry());
+	widget()->setToolTip(caption());
 }
 
 void CrystalClient::desktopChange()
@@ -984,8 +865,7 @@ void CrystalClient::desktopChange()
 	bool d = isOnAllDesktops();
 	if (button[ButtonSticky]) {
 		button[ButtonSticky]->setBitmap(::factory->buttonImages[d ? ButtonImageSticky : ButtonImageUnSticky ]);
-		QToolTip::remove(button[ButtonSticky]);
-		QToolTip::add(button[ButtonSticky], d ? i18n("Not on all desktops") : i18n("On All Desktops"));
+		button[ButtonSticky]->setToolTip(d ? i18n("Not on all desktops") : i18n("On All Desktops"));
 	}
 }
 
@@ -1001,8 +881,7 @@ void CrystalClient::maximizeChange()
 	bool m = (maximizeMode() == MaximizeFull);
 	if (button[ButtonMax]) {
 		button[ButtonMax]->setBitmap(::factory->buttonImages[ m ? ButtonImageRestore : ButtonImageMax ]);
-		QToolTip::remove(button[ButtonMax]);
-		QToolTip::add(button[ButtonMax], m ? i18n("Restore") : i18n("Maximize"));
+		button[ButtonMax]->setToolTip(m ? i18n("Restore") : i18n("Maximize"));
 	}
 		
 	if (!options()->moveResizeMaximizedWindows())
@@ -1017,14 +896,14 @@ void CrystalClient::updateLayout()
 {
 	if (FullMax)
 	{
-		mainlayout->setColSpacing(0,0);
-		mainlayout->setColSpacing(2,0);
+		mainlayout->setColumnMinimumWidth(0,0);
+		mainlayout->setColumnMinimumWidth(2,0);
 	}else{
-		mainlayout->setColSpacing(2,borderSpacing());
-		mainlayout->setColSpacing(0,borderSpacing());
+		mainlayout->setColumnMinimumWidth(2,borderSpacing());
+		mainlayout->setColumnMinimumWidth(0,borderSpacing());
 	}
 	
-	mainlayout->setRowSpacing(0, (FullMax||::factory->buttontheme==5)?0:1);
+	mainlayout->setRowMinimumHeight(0, (FullMax||::factory->buttontheme==5)?0:1);
 	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
 		button[i]->resetSize(FullMax);
 	widget()->layout()->activate();
@@ -1043,7 +922,7 @@ void CrystalClient::shadeChange()
 	{
 		button[ButtonShade]->setBitmap(::factory->buttonImages[isShade()?ButtonImageUnShade:ButtonImageShade]);
 	}
-	if (!::factory->transparency)Repaint();
+	Repaint();
 	return;
 }
 
@@ -1052,18 +931,17 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 	l = r = ::factory->borderwidth;
 	t = ::factory->titlesize;
 	if (!isShade())b = ::factory->borderwidth; else b=0;
-
+	
 	if (!options()->moveResizeMaximizedWindows() )
 	{
-/*		if ( maximizeMode() & MaximizeHorizontal )l=r=1;
+		if ( maximizeMode() & MaximizeHorizontal )l=r=1;
 		if ( maximizeMode() & MaximizeVertical )
 		{
 			b=isShade()?0:1;
 			if (!isShade() && ( maximizeMode() & MaximizeHorizontal ))b=0;
-		} */
-		if (isShade()) b = 0;
+		}
 		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
-			l=r=b=0;
+			l=r=0;
 	}
 }
 
@@ -1113,7 +991,9 @@ KDecoration::Position CrystalClient::mousePosition(const QPoint &point) const
 
 bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 {
-	if (obj != widget()) return false;
+	if (obj != widget()) {
+		return false;
+	}
 	
 	switch (e->type()) {
 	case QEvent::MouseButtonDblClick:
@@ -1147,12 +1027,14 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 
 void CrystalClient::ClientWindows(Window* v_frame,Window* v_wrapper,Window *v_client)
 {
-	Window root=0,frame=0,wrapper=0,client=0,parent=0,*children=NULL;
-	uint numc;
+// 	Window root=0,frame=0,wrapper=0,client=0,parent=0,*children=NULL;
+// 	uint numc;
 	if (v_frame) *v_frame=0;
 	if (v_wrapper) *v_wrapper=0;
 	if (v_client) *v_client=0;
 	// Our Deco is the child of a frame, get our parent
+	/* FIXME: Fix this!!! */
+/*
 	if (XQueryTree(qt_xdisplay(),widget()->winId(),&root,&frame,&children,&numc) == 0)
 		return;
 	if (children!=NULL)XFree(children);
@@ -1177,23 +1059,24 @@ void CrystalClient::ClientWindows(Window* v_frame,Window* v_wrapper,Window *v_cl
 	children=NULL;
 	if (v_client) *v_client=client;
 	if (v_wrapper) *v_wrapper=wrapper;
-	if (v_frame) *v_frame=frame;
+	if (v_frame) *v_frame=frame; */
 }
 
 void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 {
-	if (/*(titlebar_->geometry().contains(e->pos()))&&*/(e->button()==LeftButton)) titlebarDblClickOperation();
+	if (/*(titlebar_->geometry().contains(e->pos()))&&*/(e->button()==Qt::LeftButton)) titlebarDblClickOperation();
 	else {
-		QMouseEvent me(QEvent::MouseButtonPress,e->pos(),e->button(),e->state());
+		QMouseEvent me(QEvent::MouseButtonPress,e->pos(),e->button(),e->buttons(),e->modifiers());
 		processMousePressEvent(&me);
 	}
 }
 
 void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 {
-	if (::factory->wheelTask)
+	/* FIXME: Scrolling */
+/*	if (::factory->wheelTask)
 	{
-		QPtrList <CrystalClient> *l=&(::factory->clients);
+		QList <CrystalClient*> *l=&(::factory->clients);
 		
 		if (l->current()==NULL) for (unsigned int i=0;i<l->count();i++) if ((l->at(i))->isActive()) break;
 		
@@ -1211,10 +1094,8 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 			}
 			
 			n->ClientWindows(&frame,&wrapper,&client);
-			if (client == 0) { /* FALLBACK */
-#if KDE_IS_VERSION(3,5,0)
+			if (client == 0) { // FALLBACK
 				titlebarMouseWheelOperation(e->delta());
-#endif
 				return;
 			}
 			KWin::WindowInfo info=KWin::windowInfo(client);
@@ -1222,10 +1103,8 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 		}while(n!=this);
 			
 		KWin::activateWindow(client);
-	}else{
-#if KDE_IS_VERSION(3,5,0)
+	}else*/{
 		titlebarMouseWheelOperation(e->delta());
-#endif
 	}
 }
 
@@ -1233,16 +1112,11 @@ void CrystalClient::paintEvent(QPaintEvent*)
 {
 	if (!CrystalFactory::initialized()) return;
 
-	QColorGroup group;
 	QPainter painter(widget());
 
 	// draw the titlebar
-	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
-	if (::factory->transparency && ::factory->trackdesktop)
-		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
-	QPixmap *background=::factory->transparency?::factory->image_holder->image(isActive()):NULL;
 	int drawFrame;
 
 	{
@@ -1251,16 +1125,11 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		int bl,br,bt,bb;
 		borders(bl,br,bt,bb);
 	
-		QPixmap pufferPixmap;
-		pufferPixmap.resize(widget()->width(), bt);
+		QPixmap pufferPixmap(widget()->width(), bt);
 		QPainter pufferPainter(&pufferPixmap);
 
 		r=QRect(p.x(),p.y(),widget()->width(),bt);
- 		if (background && !background->isNull())pufferPainter.drawPixmap(QPoint(0,0),*background,r);
- 		else 
-		{
-			pufferPainter.fillRect(widget()->rect(),group.background());
-		}
+ 		pufferPainter.fillRect(widget()->rect(),options()->color(KDecoration::ColorTitleBar, isActive()));
 		if (!wndcfg->overlay.isNull())
 		{
 			pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
@@ -1273,7 +1142,6 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		
 			QColor color=options()->color(KDecoration::ColorFont, isActive());
 			r=titlebar_->geometry();
-			r.moveBy(0,-1);
 			int logowidth=::factory->logo.width()+::factory->logoDistance;
 			if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
 			{
@@ -1284,31 +1152,31 @@ void CrystalClient::paintEvent(QPaintEvent*)
 			int textwidth=metrics.width(caption());
 			int textalign=CrystalFactory::titleAlign();
 			if (textwidth>r.width())
-				textalign=AlignLeft, textwidth=r.width();			
-			if (::factory->textshadow && isActive())
+				textalign=Qt::AlignLeft, textwidth=r.width();			
+			if (::factory->textshadow)
 			{
 				pufferPainter.translate(1,1);
-				pufferPainter.setPen(color.dark(500));
-				pufferPainter.drawText(r,textalign | AlignVCenter,caption());
+				pufferPainter.setPen(color.dark(300));
+				pufferPainter.drawText(r,textalign | Qt::AlignVCenter,caption());
 				pufferPainter.translate(-1,-1);
 			}
 		
 			pufferPainter.setPen(color);
 			pufferPainter.drawText(r,
-				textalign | AlignVCenter,
+				textalign | Qt::AlignVCenter,
 				caption());
 
 			if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
 			{
 				int x=0;
-				if (::factory->logoEnabled==0 && textalign==AlignLeft)x=r.left()-logowidth;
-				if (::factory->logoEnabled==2 && textalign==AlignLeft)x=r.left()+textwidth+::factory->logoDistance;
+				if (::factory->logoEnabled==0 && textalign==Qt::AlignLeft)x=r.left()-logowidth;
+				if (::factory->logoEnabled==2 && textalign==Qt::AlignLeft)x=r.left()+textwidth+::factory->logoDistance;
 
-				if (::factory->logoEnabled==0 && textalign==AlignRight)x=r.right()-textwidth-logowidth;
-				if (::factory->logoEnabled==2 && textalign==AlignRight)x=r.right()+::factory->logoDistance;
+				if (::factory->logoEnabled==0 && textalign==Qt::AlignRight)x=r.right()-textwidth-logowidth;
+				if (::factory->logoEnabled==2 && textalign==Qt::AlignRight)x=r.right()+::factory->logoDistance;
 
-				if (::factory->logoEnabled==0 && textalign==AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
-				if (::factory->logoEnabled==2 && textalign==AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
+				if (::factory->logoEnabled==0 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
+				if (::factory->logoEnabled==2 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
 				pufferPainter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
 			}
 		}else if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive)) {
@@ -1329,29 +1197,14 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 		if (::factory->borderwidth>0)
 		{
-			if (background && !background->isNull())
-			{	// Draw the side and bottom of the window with transparency
-				// Left
-				r=QRect(p.x()+drawFrame,p.y()+bt,bl-drawFrame,widget()->height()-bt-drawFrame);
-				painter.drawPixmap(QPoint(drawFrame,bt),*background,r);
+			r=QRect(drawFrame,bt,bl-drawFrame,widget()->height()-bt-drawFrame);
+			painter.fillRect(r,options()->color(KDecoration::ColorTitleBar, isActive()));
+	
+			r=QRect(widget()->width()-br,bt,br-drawFrame,widget()->height()-bt-drawFrame);
+			painter.fillRect(r,options()->color(KDecoration::ColorTitleBar, isActive()));
 
-				// Right
-				r=QRect(widget()->width()-br+p.x(),p.y()+bt,br-drawFrame,widget()->height()-bt-drawFrame);
-				painter.drawPixmap(QPoint(widget()->width()-br,bt),*background,r);
-
-				// Bottom
-				r=QRect(p.x()+bl,p.y()+widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
-				painter.drawPixmap(QPoint(bl,widget()->height()-bb),*background,r);
-			}else{
-				r=QRect(drawFrame,bt,bl-drawFrame,widget()->height()-bt-drawFrame);
-				painter.fillRect(r,group.background());
-		
-				r=QRect(widget()->width()-br,bt,br-drawFrame,widget()->height()-bt-drawFrame);
-				painter.fillRect(r,group.background());
-
-				r=QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
-				painter.fillRect(r,group.background());
-			}
+			r=QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
+			painter.fillRect(r,options()->color(KDecoration::ColorTitleBar, isActive()));
 		}
 
 		if (!isShade())
@@ -1377,13 +1230,6 @@ void CrystalClient::paintEvent(QPaintEvent*)
 				painter.drawLine(bl-1,widget()->height()-bb,widget()->width()-br-1,widget()->height()-bb);
 			}
 		}
-	}
-	if (background==NULL && ::factory->transparency)
-	{	// We don't have a background image, draw a solid rectangle
-		// And notify image_holder that we need an update asap
-		if (::factory)if (::factory->image_holder)
-		// UnInit image_holder, on next Repaint it will be Init'ed again.
-		QTimer::singleShot(500,::factory->image_holder,SLOT(CheckSanity()));
 	}
 
 	if (drawFrame)
@@ -1454,22 +1300,9 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 void CrystalClient::resizeEvent(QResizeEvent *e)
 {
-	if (widget()->isShown()) 
+	if (!widget()->isHidden()) 
 	{
-		if (!::factory->transparency) ;
-		else if (::factory->repaintMode==1)
-		{
-			if (!timer.isActive())timer.start(0,true);
-// 			Repaint();
-		}
-		// repaint only every xxx ms
-		else if (::factory->repaintMode==3 || !timer.isActive())
-		{
-			// Repaint only, when mode!=fade || amount<100
-			WND_CONFIG* wnd=isActive()?&::factory->active:&::factory->inactive;
-			if (wnd->mode!=0 || wnd->amount<100)
-				timer.start(::factory->repaintTime,true);	
-		}
+// 			Repaint(); /* FIXME */
 	}
 	if (e->size()!=e->oldSize())
 	{
@@ -1479,33 +1312,18 @@ void CrystalClient::resizeEvent(QResizeEvent *e)
 
 void CrystalClient::moveEvent(QMoveEvent *)
 {
-	if (widget()->isShown())
-	{
-		if (!::factory->transparency) return;
-		else if (::factory->repaintMode==1)
-		{
-			Repaint();
-		}
-		// repaint every xxx ms, so constant moving does not take too much CPU
-		else if (::factory->repaintMode==3 || !timer.isActive())
-		{
-			// Repaint only, when mode!=fade || value<100, because otherwise it is a plain color
-			WND_CONFIG* wnd=isActive()?&::factory->active:&::factory->inactive;
-			if (wnd->mode!=0 || wnd->amount<100)
-				timer.start(::factory->repaintTime,true);
-		}
-	}
+// 	Repaint(); /* FIXME */
 }
 
 void CrystalClient::showEvent(QShowEvent *)
 {
-	if (widget()->isShown()) 
+	if (!widget()->isHidden()) 
 		Repaint();
 }
 
 void CrystalClient::Repaint()
 {
-	widget()->repaint(false);
+	widget()->repaint();
 	for (int n=0; n<ButtonTypeCount; n++)
 		if (button[n]) button[n]->reset();
 }
@@ -1516,10 +1334,10 @@ void CrystalClient::maxButtonPressed()
 	{
 		switch (button[ButtonMax]->lastMousePress()) 
 		{
-		case MidButton:
+		case Qt::MidButton:
 			maximize(maximizeMode() ^ MaximizeVertical);
 			break;
-		case RightButton:
+		case Qt::RightButton:
 			maximize(maximizeMode() ^ MaximizeHorizontal);
 			break;
 		default:
@@ -1532,11 +1350,11 @@ void CrystalClient::minButtonPressed()
 {
 	if (button[ButtonMin]) {
 		switch (button[ButtonMin]->lastMousePress()) {
-		case MidButton:{
+		case Qt::MidButton:{
 			performWindowOperation(LowerOp);
 			break;
 		}
-		case RightButton:
+		case Qt::RightButton:
 			if (isShadeable()) setShade(!isShade());
 			break;
 		default:
@@ -1575,7 +1393,7 @@ void CrystalClient::closeButtonPressed()
 {
 	if (button[ButtonClose])
 	switch (button[ButtonClose]->lastMousePress()) {
-		case RightButton:
+		case Qt::RightButton:
 		{
 			Window frame,wrapper,client;
 			char param[20];
@@ -1586,7 +1404,7 @@ void CrystalClient::closeButtonPressed()
 				*proc << "kdocker";
 				sprintf(param,"0x%lx",client);
 				*proc << "-d" << "-w" << param;
-				proc->start(KProcess::DontCare);
+				proc->start();
 			} else { /* Sorry man */ }
 			break;
 		}
@@ -1600,8 +1418,8 @@ void CrystalClient::shadeButtonPressed()
 {
 	if (button[ButtonShade]) {
 		switch (button[ButtonShade]->lastMousePress()) {
-		case MidButton:
-		case RightButton:
+		case Qt::MidButton:
+		case Qt::RightButton:
 			break;
 		default:
 			if (isShadeable()) setShade(!isShade());

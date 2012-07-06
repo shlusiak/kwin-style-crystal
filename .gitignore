@@ -1,0 +1,14 @@
+*~
+*.moc
+*.o
+CMakeCache.txt
+DartTestfile.txt
+Makefile
+*automoc*.files
+*automoc.cpp
+ui_*.h
+CMakeFiles
+CMakeTmp
+EnabledFeatures.txt
+*.cmake
+install_manifest.txt

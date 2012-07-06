@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Sascha Hlusiak                                  *
+ *   Copyright (C) 2006-2008 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -26,21 +26,19 @@
 #include "crystalclient.h"
 #include "crystalbutton.h"
 #include "buttonimage.h"
-#include "imageholder.h"
 
-
-CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
+CrystalButton::CrystalButton(CrystalClient *parent, const char */*name*/,
 				const QString& tip, ButtonType type,
 				ButtonImage *vimage)
-: QButton(parent->widget(), name), client_(parent), type_(type), image(vimage), lastmouse_(0)
+: QAbstractButton(parent->widget()), client_(parent), type_(type), image(vimage), lastmouse_(0)
 {
-	setBackgroundMode(NoBackground);
+	setAttribute(Qt::WA_NoSystemBackground);
 	resetSize(false);
-	setCursor(arrowCursor);
+	setCursor(Qt::ArrowCursor);
 	
 	hover=first=last=false;
 	animation=0.0;
-	QToolTip::add(this, tip);
+	setToolTip(tip);
 	connect ( &animation_timer,SIGNAL(timeout()),this,SLOT(animate()));
 }
 
@@ -53,13 +51,13 @@ void CrystalButton::resetSize(bool FullSize)
 	if (FullSize || (image && image->drawMode==1))
 	{
 		setFixedSize(buttonSizeH(),factory->titlesize);
-	}else setFixedSize(buttonSizeH(),buttonSizeV());
+	} else setFixedSize(buttonSizeH(),buttonSizeV());
 }
 
 void CrystalButton::setBitmap(ButtonImage *newimage)
 {
 	image=newimage;
-	repaint(false);
+	repaint();
 }
 
 QSize CrystalButton::sizeHint() const
@@ -88,98 +86,90 @@ int CrystalButton::buttonSizeV() const
 void CrystalButton::enterEvent(QEvent *e)
 {
 	hover=true;
-	if (factory->hovereffect)repaint(false);
+	if (factory->hovereffect)repaint();
 	if (factory->animateHover)animation_timer.start(60);
-	QButton::enterEvent(e);
+	QAbstractButton::enterEvent(e);
 }
 
 void CrystalButton::leaveEvent(QEvent *e)
 {
 	hover=false;
-	if (factory->hovereffect)repaint(false);
+	if (factory->hovereffect)repaint();
 	if (factory->animateHover)animation_timer.start(80);
-	QButton::leaveEvent(e);
+	QAbstractButton::leaveEvent(e);
 }
 
 void CrystalButton::mousePressEvent(QMouseEvent* e)
 {
 	lastmouse_ = e->button();
-	int button;
+	Qt::MouseButton button;
 	switch(e->button())
 	{
-	case LeftButton:
-		button=LeftButton;
+	case Qt::LeftButton:
+		button=Qt::LeftButton;
 		break;
-	case RightButton:
+	case Qt::RightButton:
 		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu) || (type_ == ButtonClose))
-			button=LeftButton; else button=NoButton;
+			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
-	case MidButton:
+	case Qt::MidButton:
 		if ((type_ == ButtonMax) || (type_ == ButtonMin))
-			button=LeftButton; else button=NoButton;
+			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
 
-	default:button=NoButton;
+	default:button=Qt::NoButton;
 		break;
 	}
-	QMouseEvent me(e->type(), e->pos(), e->globalPos(),button, e->state());
-	QButton::mousePressEvent(&me);
+	QMouseEvent me(e->type(), e->pos(), e->globalPos(),button, e->buttons(), e->modifiers());
+	QAbstractButton::mousePressEvent(&me);
 }
 
 void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 {
 	lastmouse_ = e->button();
-	int button;
+	Qt::MouseButton button;
 	switch(e->button())
 	{
-	case LeftButton:
-		button=LeftButton;
+	case Qt::LeftButton:
+		button=Qt::LeftButton;
 		break;
-	case RightButton:
+	case Qt::RightButton:
 		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu) || (type_==ButtonClose))
-			button=LeftButton; else button=NoButton;
+			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
-	case MidButton:
+	case Qt::MidButton:
 		if ((type_ == ButtonMax) || (type_ == ButtonMin))
-			button=LeftButton; else button=NoButton;
+			button=Qt::LeftButton; else button=Qt::NoButton;
 		break;
 	
-	default:button=NoButton;
+	default:button=Qt::NoButton;
 		break;
 	}
-	QMouseEvent me(e->type(), e->pos(), e->globalPos(), button, e->state());
-	QButton::mouseReleaseEvent(&me);
+	QMouseEvent me(e->type(), e->pos(), e->globalPos(), button, e->buttons(), e->modifiers());
+	QAbstractButton::mouseReleaseEvent(&me);
+}
+
+void CrystalButton::paintEvent(QPaintEvent* /*event*/)
+{
+	QPainter p(this);
+	drawButton(&p);
 }
 
 void CrystalButton::drawButton(QPainter *painter)
 {
 	if (!CrystalFactory::initialized()) return;
 
-	QColorGroup group;
 	float dx, dy;
 	int dm=0;
 
-	QPixmap pufferPixmap;
-	pufferPixmap.resize(width(), height());
+	QPixmap pufferPixmap(width(), height());
 	QPainter pufferPainter(&pufferPixmap);
 	
 	CrystalFactory *f=((CrystalFactory*)client_->factory());
-	QPixmap *background;
-	if (f->transparency)background=f->image_holder->image(client_->isActive());
-		else background=NULL;
 	WND_CONFIG *wndcfg=client_->isActive()?&f->active:&f->inactive;
 
-	if (background && !background->isNull())
-	{
-		QRect r=rect();
-		QPoint p=mapToGlobal(QPoint(0,0));
-		r.moveBy(p.x(),p.y());
-	
-		pufferPainter.drawPixmap(QPoint(0,0),*background,r);
-	}else{
-		group = client_->options()->colorGroup(KDecoration::ColorTitleBar, client_->isActive());
-		pufferPainter.fillRect(rect(), group.background());
-	}
+	QColor color = client_->options()->color(KDecoration::ColorTitleBar, client_->isActive());
+	pufferPainter.fillRect(rect(), color);
 
 	if (!wndcfg->overlay.isNull())
 	{
@@ -230,12 +220,10 @@ void CrystalButton::drawButton(QPainter *painter)
 			int m=(rect().width()-2<rect().height())?rect().width()-2:rect().height();
 			QRect r((rect().width()-m)/2,(rect().height()-m)/2,m,m);
 // 			if (isDown()) { r.moveBy(1,1); }
-        		pufferPainter.drawPixmap(r, client_->icon().pixmap(QIconSet::Small,
-                                                           QIconSet::Normal));
+        		pufferPainter.drawPixmap(r, client_->icon().pixmap(16));
 		}else{
 //         	if (isDown()) { dx++; dy++; }
-			pufferPainter.drawPixmap((int)dx, (int)dy, client_->icon().pixmap(QIconSet::Small,
-                                                           QIconSet::Normal));
+			pufferPainter.drawPixmap((int)dx, (int)dy, client_->icon().pixmap(16));
 		}
 	} else if (image && image->initialized()) {
 		// otherwise we paint the deco
@@ -305,11 +293,9 @@ void CrystalButton::drawMenuImage(QPainter* painter, QRect r)
 	{
 		int m=(r.width()-2<r.height())?r.width()-2:r.height();
 		QRect r2(r.left()+(r.width()-m)/2,r.top()+(r.height()-m)/2,m,m);
-		painter->drawPixmap(r2, client_->icon().pixmap(QIconSet::Small,
-								QIconSet::Normal));
+		painter->drawPixmap(r2, client_->icon().pixmap(16));
 	}else{
-		painter->drawPixmap(r.left()+(int)dx, r.top()+(int)dy, client_->icon().pixmap(QIconSet::Small,
-									QIconSet::Normal));
+		painter->drawPixmap(r.left()+(int)dx, r.top()+(int)dy, client_->icon().pixmap(16));
 	}
 }
 
@@ -331,7 +317,5 @@ void CrystalButton::animate()
 			animation_timer.stop();
 		}
 	}
-	repaint(false);
+	repaint();
 }
-
-#include "crystalbutton.moc"

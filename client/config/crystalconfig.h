@@ -22,15 +22,37 @@
 #ifndef CRYSTALCONFIG_H
 #define CRYSTALCONFIG_H
 
-#include <qobject.h>
-
 #define TOP_LEFT 1
 #define TOP_RIGHT 2
 #define BOT_LEFT 4
 #define BOT_RIGHT 8
 
-class KConfig;
-class ConfigDialog;
+#include <QObject>
+#include <kconfig.h>
+#include <kurlrequester.h>
+#include <kurllabel.h>
+#include <klocale.h>
+#include <kglobal.h>
+
+#include "ui_configdialog.h"
+#include "ui_infodialog.h"
+
+
+class ConfigDialog : public QWidget, public Ui::ConfigDialog
+{
+public:
+  ConfigDialog( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
+class InfoDialog : public QDialog, public Ui::InfoDialog
+{
+public:
+  InfoDialog( QWidget *parent ) : QDialog( parent ) {
+    setupUi( this );
+  }
+};
 
 class CrystalConfig : public QObject
 {
@@ -43,8 +65,8 @@ signals:
 	void changed();
 
 public slots:
-	void load(KConfig*);
-	void save(KConfig*);
+	void load(KConfigGroup&);
+	void save(KConfigGroup&);
 	void defaults();
 	void infoDialog();
 

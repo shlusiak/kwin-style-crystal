@@ -1,20 +1,10 @@
--- INSTALL -----------------------------------
+This software uses the CMake build system. General installation works like this:
 
-Basic Installation (from the console):
-  - Step 1
-      $ ./configure --prefix=`kde-config --prefix`
-  - Step 2
-      $ make
-  - Step 3 (as root)
-      # make install
+$ cd build/
+$ cmake ..
+$ make
+$ su -
+# make install
 
-If configure fails, check that you have both
-the Qt and KDE development headers installed.
 
-You need at least KDE 3.2 and QT 3.3.
-
-Debian note: You may need to append
---with-qt-includes=/usr/include/qt3
-to the configure line.
-
-----------------------------------------------
+Have fun!
