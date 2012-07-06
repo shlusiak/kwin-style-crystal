@@ -149,7 +149,7 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 			cfg->overlay.resize(0,0);
 			QImage img=QImage((uchar*)lighting_data,1,60,32,NULL,0,QImage::LittleEndian);
 			img.setAlphaBuffer(true);
-			cfg->overlay.convertFromImage(img.smoothScale(1,::factory->titlesize));
+			cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
 			break;
 		}
 		case 2:{
@@ -157,7 +157,7 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 			if (img.load(filename))
 			{
 				img.setAlphaBuffer(true);
-				cfg->overlay.convertFromImage(img.smoothScale(1,::factory->titlesize));
+				cfg->overlay.convertFromImage(img.smoothScale(256,::factory->titlesize));
 			}
 			break;
 		}
@@ -501,8 +501,69 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageRestore]->setSpace(0,0);
 		buttonImages[ButtonImageMin]->setSpace(0,0);
 		buttonImages[ButtonImageClose]->setSpace(0,0);
+		break;
+
+	case 7: // Kubuntu-Edgy
+		buttonImages[ButtonImageHelp]->SetNormal(edgy_help_data,28,17);
+		buttonImages[ButtonImageHelp]->SetHovered(edgy_help_hovered_data);
+		buttonImages[ButtonImageHelp]->SetPressed(edgy_help_pressed_data);
+
+		buttonImages[ButtonImageMax]->SetNormal(edgy_max_data,28,17);
+		buttonImages[ButtonImageMax]->SetHovered(edgy_max_hovered_data);
+		buttonImages[ButtonImageMax]->SetPressed(edgy_max_pressed_data);
+		buttonImages[ButtonImageRestore]->SetNormal(edgy_restore_data,28,17);
+		buttonImages[ButtonImageRestore]->SetHovered(edgy_restore_hovered_data);
+		buttonImages[ButtonImageRestore]->SetPressed(edgy_restore_pressed_data);
+		buttonImages[ButtonImageMin]->SetNormal(edgy_min_data,28,17);
+		buttonImages[ButtonImageMin]->SetHovered(edgy_min_hovered_data);
+		buttonImages[ButtonImageMin]->SetPressed(edgy_min_pressed_data);
+		buttonImages[ButtonImageClose]->SetNormal(edgy_close_data,28,17);
+		buttonImages[ButtonImageClose]->SetHovered(edgy_close_hovered_data);
+		buttonImages[ButtonImageClose]->SetPressed(edgy_close_pressed_data);
+
+		buttonImages[ButtonImageSticky]->SetNormal(edgy_sticky_data,28,17);
+		buttonImages[ButtonImageSticky]->SetHovered(edgy_sticky_hovered_data);
+		buttonImages[ButtonImageSticky]->SetPressed(edgy_sticky_pressed_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(edgy_un_sticky_data,28,17);
+		buttonImages[ButtonImageUnSticky]->SetHovered(edgy_un_sticky_hovered_data);
+		buttonImages[ButtonImageUnSticky]->SetPressed(edgy_un_sticky_pressed_data);
+
+		buttonImages[ButtonImageAbove]->SetNormal(edgy_above_data,28,17);
+		buttonImages[ButtonImageAbove]->SetHovered(edgy_above_hovered_data);
+		buttonImages[ButtonImageAbove]->SetPressed(edgy_above_pressed_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(edgy_un_above_data,28,17);
+		buttonImages[ButtonImageUnAbove]->SetHovered(edgy_un_above_hovered_data);
+		buttonImages[ButtonImageUnAbove]->SetPressed(edgy_un_above_pressed_data);
+
+
+		buttonImages[ButtonImageBelow]->SetNormal(edgy_below_data,28,17);
+		buttonImages[ButtonImageBelow]->SetHovered(edgy_below_hovered_data);
+		buttonImages[ButtonImageBelow]->SetPressed(edgy_below_pressed_data);
+
+		buttonImages[ButtonImageUnBelow]->SetNormal(edgy_un_below_data,28,17);
+		buttonImages[ButtonImageUnBelow]->SetHovered(edgy_un_below_hovered_data);
+		buttonImages[ButtonImageUnBelow]->SetPressed(edgy_un_below_pressed_data);
+
+		buttonImages[ButtonImageShade]->SetNormal(edgy_shade_data,28,17);
+		buttonImages[ButtonImageShade]->SetHovered(edgy_shade_hovered_data);
+		buttonImages[ButtonImageShade]->SetPressed(edgy_shade_pressed_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(edgy_un_shade_data,28,17);
+		buttonImages[ButtonImageUnShade]->SetHovered(edgy_un_shade_hovered_data);
+		buttonImages[ButtonImageUnShade]->SetPressed(edgy_un_shade_pressed_data);
+	
+		for (int i=0;i<ButtonImageCount;i++)
+		{
+			buttonImages[i]->setSpace(1,0);
+			buttonImages[i]->setDrawMode(0);
+		}
+		buttonImages[ButtonImageMax]->setSpace(0,0);
+		buttonImages[ButtonImageRestore]->setSpace(0,0);
+		buttonImages[ButtonImageMin]->setSpace(0,0);
+		buttonImages[ButtonImageClose]->setSpace(0,0);
 
 		break;
+
+
 	}
 
 	for (int i=0;i<ButtonImageCount;i++)buttonImages[i]->finish();
@@ -951,7 +1012,7 @@ void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
 
 void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 {
-	if ((titlebar_->geometry().contains(e->pos()))&&(e->button()==LeftButton)) titlebarDblClickOperation();
+	if (/*(titlebar_->geometry().contains(e->pos()))&&*/(e->button()==LeftButton)) titlebarDblClickOperation();
 	else {
 		QMouseEvent me(QEvent::MouseButtonPress,e->pos(),e->button(),e->state());
 		processMousePressEvent(&me);

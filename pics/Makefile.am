@@ -8,7 +8,8 @@ images = $(srcdir)/vista/*.png \
 	$(srcdir)/handpainted/*.png \
 	$(srcdir)/knifty/*.png \
 	$(srcdir)/svg/*.png \
-	$(srcdir)/kubuntu/*.png
+	$(srcdir)/kubuntu-dapper/*.png \
+	$(srcdir)/kubuntu-edgy/*.png
 
 noinst_PROGRAMS = embedtool tiles.h
 embedtool_SOURCES = embedtool.cpp
