@@ -30,8 +30,8 @@
 #include <qbutton.h>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
-#include "myrootpixmap.h"
 #include <kwinmodule.h>
+#include "myrootpixmap.h"
 
 class QSpacerItem;
 class QPoint;
@@ -39,6 +39,7 @@ class QPoint;
 namespace Example {
 
 class ExampleClient;
+class ExampleFactory;
 
 enum ButtonType {
     ButtonHelp=0,
@@ -52,6 +53,31 @@ enum ButtonType {
 
 // ExampleFactory /////////////////////////////////////////////////////////////
 
+class QImageHolder:public QObject
+{
+	Q_OBJECT
+public:
+	QImageHolder(ExampleFactory *vfactory);
+	virtual ~QImageHolder();
+	
+	void Init();
+	QImage *image(bool active) { Init(); return active?img_active:img_inactive; }
+	void repaint(bool force) { Init(); rootpixmap->repaint(force); }
+
+private:
+	ExampleFactory *factory;
+	bool initialized;
+	KMyRootPixmap *rootpixmap;
+	QImage *img_active,*img_inactive;
+	
+public slots:
+	void BackgroundUpdated(const QImage *);
+	void handleDesktopChanged(int desk);
+	
+signals:
+	void repaintNeeded();
+};
+
 class ExampleFactory: public KDecorationFactory
 {
 public:
@@ -62,7 +88,9 @@ public:
 
     static bool initialized();
     static Qt::AlignmentFlags titleAlign();
-
+public:
+	QImageHolder *image_holder;
+	
 private:
     bool readConfig();
 
@@ -119,7 +147,7 @@ class ExampleClient : public KDecoration
 {
     Q_OBJECT
 public:
-    ExampleClient(KDecorationBridge *b, KDecorationFactory *f);
+    ExampleClient(KDecorationBridge *b, ExampleFactory *f);
     virtual ~ExampleClient();
 
     virtual void init();
@@ -145,23 +173,19 @@ private:
     void resizeEvent(QResizeEvent *);
     void moveEvent(QMoveEvent *);
     void showEvent(QShowEvent *);
+    
 
 private slots:
+    void Repaint();
     void maxButtonPressed();
     void menuButtonPressed();
-    void BackgroundUpdated(const QImage&);
-    void DesktopChanged(int desktop);
-    void applyEffect(QImage &src,QImage &dst);
-    
+//    void BackgroundUpdated(const QImage&);
+//    void DesktopChanged(int desktop);    
 
 private:
     ExampleButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
-    KMyRootPixmap *wallpaper;
-    KWinModule *kWinModule;
-    
-public:
-    QImage *background;
+    ExampleFactory* my_factory;
 };
 
 } // namespace Example

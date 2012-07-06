@@ -30,13 +30,13 @@ class KMyRootPixmap: public QObject
     Q_OBJECT
 
 public:
-    KMyRootPixmap( QWidget *target, const char *name=0 );
+    KMyRootPixmap( QWidget *target=NULL, const char *name=0 );
 
     KMyRootPixmap( QWidget *target, QObject *parent, const char *name=0 );
 
     virtual ~KMyRootPixmap();
 
-    bool isAvailable() const;
+    bool isAvailable();
 
     bool isActive() const { return m_bActive; }
 
@@ -67,16 +67,15 @@ public slots:
     static QString pixmapName(int desk);
     
 signals:
-    void backgroundUpdated( const QImage &pm );
-    void applyEffect(QImage &src,QImage &dst);
+    void backgroundUpdated( const QImage *pm );
 
 protected:
-    virtual bool eventFilter(QObject *, QEvent *);
+//    virtual bool eventFilter(QObject *, QEvent *);
 
     virtual void updateBackground( KSharedPixmap * );
 
 private slots:
-    void slotBackgroundChanged(int);
+//    void slotBackgroundChanged(int);
     void slotDone(bool);
 
 private:
@@ -87,10 +86,10 @@ private:
 //    QColor m_FadeColor;
 
     QRect m_Rect;
-    QWidget *m_pWidget;
-    QTimer *m_pTimer;
+//    QWidget *m_pWidget;
+//    QTimer *m_pTimer;
     KSharedPixmap *m_pPixmap;
-    KMyRootPixmapData *d;
+//    KMyRootPixmapData *d;
 
     void init();
 };

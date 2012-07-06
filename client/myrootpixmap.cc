@@ -22,56 +22,51 @@
 #include <kimageeffect.h>
 #include <kpixmapio.h>
 #include <kwinmodule.h>
-//#include <kdebug.h>
+#include <kdebug.h>
 #include <netwm.h>
 #include <dcopclient.h>
+#include <qpainter.h>
 
 #include <ksharedpixmap.h>
 #include "myrootpixmap.h"
 
-class KMyRootPixmapData
-{
-public:
-    QWidget *toplevel;
-};
 
 
 KMyRootPixmap::KMyRootPixmap( QWidget *widget, const char *name )
-    : QObject(widget, name ? name : "KMyRootPixmap" ), m_pWidget(widget)
-{
+    : QObject(widget, name ? name : "KMyRootPixmap" ) {
     init();
 }
 
 KMyRootPixmap::KMyRootPixmap( QWidget *widget, QObject *parent, const char *name )
-    : QObject( parent, name ? name : "KMyRootPixmap" ), m_pWidget(widget)
+    : QObject( parent, name ? name : "KMyRootPixmap" ) 
 {
     init();
 }
 
 void KMyRootPixmap::init()
 {
-    d = new KMyRootPixmapData;
+//    d = new KMyRootPixmapData;
 //    m_Fade = 0;
     m_pPixmap = new KSharedPixmap;
-    m_pTimer = new QTimer( this );
+//    m_pTimer = new QTimer( this );
     m_bInit = false;
     m_bActive = false;
+    m_Desk=-1;
 //    m_bCustomPaint = false;
 
-    connect(kapp, SIGNAL(backgroundChanged(int)), SLOT(slotBackgroundChanged(int)));
+//    connect(kapp, SIGNAL(backgroundChanged(int)), SLOT(slotBackgroundChanged(int)));
     connect(m_pPixmap, SIGNAL(done(bool)), SLOT(slotDone(bool)));
-    connect(m_pTimer, SIGNAL(timeout()), SLOT(repaint()));
+//    connect(m_pTimer, SIGNAL(timeout()), SLOT(repaint()));
 
-    d->toplevel = m_pWidget->topLevelWidget();
-    d->toplevel->installEventFilter(this);
+//    d->toplevel = m_pWidget->topLevelWidget();
+//    d->toplevel->installEventFilter(this);
 }
 
 KMyRootPixmap::~KMyRootPixmap()
 {
     delete m_pPixmap;
-    delete d;
+//    delete d;
 }
-
 
 int KMyRootPixmap::currentDesktop() const
 {
@@ -80,79 +75,22 @@ int KMyRootPixmap::currentDesktop() const
     return rinfo.currentDesktop();
 }
 
-
 void KMyRootPixmap::start()
 {
     if (m_bActive)
     return;
 
     m_bActive = true;
-    if ( !isAvailable() )
-    {
-    // We will get a KIPC message when the shared pixmap is available.
     enableExports();
     return;
-    }
-    if (m_bInit)
-    repaint(true);
+//    if (m_bInit)
+//    repaint(true);
 }
-
 
 void KMyRootPixmap::stop()
 {
     m_bActive = false;
-    m_pTimer->stop();
-}
-
-
-/*void KMyRootPixmap::setFadeEffect(double fade, const QColor &color)
-{
-    if (fade < 0)
-    m_Fade = 0;
-    else if (fade > 1)
-    m_Fade = 1;
-    else
-    m_Fade = fade;
-    m_FadeColor = color;
-
-    if ( m_bActive && m_bInit ) repaint(true);
-}*/
-
-
-bool KMyRootPixmap::eventFilter(QObject *, QEvent *event)
-{
-    // Initialise after the first show or paint event on the managed widget.
-    if (!m_bInit && ((event->type() == QEvent::Show) || (event->type() == QEvent::Paint)))
-    {
-    m_bInit = true;
-    m_Desk = currentDesktop();
-    }
-
-    if (!m_bActive)
-    return false;
-
-    switch (event->type())
-    {
-    case QEvent::Resize:
-    case QEvent::Move:
-    m_pTimer->start(150, true);
-    break; 
-
-    case QEvent::Paint:
-    m_pTimer->start(0, true);
-    break;
-
-    case QEvent::Reparent:
-        d->toplevel->removeEventFilter(this);
-        d->toplevel = m_pWidget->topLevelWidget();
-        d->toplevel->installEventFilter(this);
-        break;
-
-    default:
-    break;
-    }
-
-    return false; // always continue processing
+//    m_pTimer->stop();
 }
 
 
@@ -161,33 +99,23 @@ void KMyRootPixmap::repaint()
     repaint(false);
 }
 
-
 void KMyRootPixmap::repaint(bool force)
 {
-    QPoint p1 = m_pWidget->mapToGlobal(m_pWidget->rect().topLeft());
-    QPoint p2 = m_pWidget->mapToGlobal(m_pWidget->rect().bottomRight());
-    if (!force && (m_Rect == QRect(p1, p2)))
-    return;
-
-    // Due to northwest bit gravity, we don't need to do anything if the
-    // bottom right corner of the widget is moved inward.
-    // That said, konsole clears the background when it is resized, so
-    // we have to reset the background pixmap.
-    if ((p1 == m_Rect.topLeft()) && (m_pWidget->width() < m_Rect.width()) &&
-    (m_pWidget->height() < m_Rect.height())
-       )
-    {
-    updateBackground( m_pPixmap );
-    return;
-    }
-    m_Rect = QRect(p1, p2);
+    if ((!force) && (m_Desk==currentDesktop()))return;
+    
     m_Desk = currentDesktop();
 
-    // KSharedPixmap will correctly generate a tile for us.
-    m_pPixmap->loadFromShared(pixmapName(m_Desk), m_Rect);
+    if (!isAvailable())
+    {
+    	emit backgroundUpdated(NULL);
+    }else{
+    	// KSharedPixmap will correctly generate a tile for us.
+    	m_pPixmap->loadFromShared(pixmapName(m_Desk));
+    	updateBackground( m_pPixmap );
+    }
 }
 
-bool KMyRootPixmap::isAvailable() const
+bool KMyRootPixmap::isAvailable() 
 {
     return m_pPixmap->isAvailable(pixmapName(m_Desk));
 }
@@ -226,8 +154,8 @@ void KMyRootPixmap::slotDone(bool success)
 {
     if (!success)
     {
-//    kdWarning(270) << k_lineinfo << "loading of desktop background failed.\n";
-    return;
+//    	kdWarning(270) << k_lineinfo << "loading of desktop background failed.\n";
+    	return;
     }
 
     // We need to test active as the pixmap might become available
@@ -238,21 +166,31 @@ void KMyRootPixmap::slotDone(bool success)
 
 void KMyRootPixmap::updateBackground( KSharedPixmap *spm )
 {
+    QPixmap *px=spm;
+    if (px->isNull() || px->width()==0 || px->height()==0) 
+    {	// This is NOT an image, something went wrong, update to plain
+    	emit backgroundUpdated(NULL);
+	return;
+    }
     KPixmapIO io;
-    QImage img = io.convertToImage(*spm);
+    QSize desktopsize=QApplication::desktop()->screenGeometry().size();
     
-    emit applyEffect(img,img);
-    emit backgroundUpdated(img);
-}
-
-
-void KMyRootPixmap::slotBackgroundChanged(int desk)
-{
-    if (!m_bInit || !m_bActive)
-    return;
-
-    if (desk == m_Desk)
-    repaint(true);
+    if (px->rect().size()==desktopsize)
+    {	// Image has already the right dimension, make a quick update
+    	QImage img = io.convertToImage(*spm);
+    	emit backgroundUpdated(&img);
+	return;  
+    }else{	// we need to create a tiled pixmap and then the image to update
+    	QPixmap pix(desktopsize,spm->depth());
+    	QPainter pufferPainter(&pix);
+    
+    	pufferPainter.drawTiledPixmap(pix.rect(),*spm);
+    
+    	pufferPainter.end();
+    
+    	QImage img=io.convertToImage(pix);
+    	emit backgroundUpdated(&img);
+    }
 }
 
 // #include "krootpixmap.moc"

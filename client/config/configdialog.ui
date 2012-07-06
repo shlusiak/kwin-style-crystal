@@ -73,16 +73,6 @@
                                     <string>Solarisation</string>
                                 </property>
                             </item>
-                            <item>
-                                <property name="text">
-                                    <string>Emboss</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Charcoal</string>
-                                </property>
-                            </item>
                             <property name="name">
                                 <cstring>type1</cstring>
                             </property>
@@ -272,16 +262,6 @@
                             <item>
                                 <property name="text">
                                     <string>Solarisation</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Emboss</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Charcoal</string>
                                 </property>
                             </item>
                             <property name="name">
