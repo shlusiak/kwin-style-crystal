@@ -14,7 +14,7 @@ noinst_HEADERS = crystalclient.h crystalbutton.h imageholder.h buttonimage.h til
 kde_module_LTLIBRARIES = kwin3_crystal.la
 kwin3_crystal_la_SOURCES = crystalclient.cc myrootpixmap.cc crystalbutton.cpp \
 	imageholder.cpp buttonimage.cpp tiles.h overlays.h
-kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la $(LIB_QT) $(LIB_KDEUI)
+kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la $(LIB_QT) $(LIB_KDEUI) $(LIB_KDECORE)
 kwin3_crystal_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN)
 kwin3_crystal_la_METASOURCES = AUTO
 

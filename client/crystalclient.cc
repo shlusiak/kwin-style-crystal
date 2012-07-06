@@ -990,17 +990,18 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 	l = r = ::factory->borderwidth;
 	t = ::factory->titlesize;
 	if (!isShade())b = ::factory->borderwidth; else b=0;
-	
+
 	if (!options()->moveResizeMaximizedWindows() )
 	{
-		if ( maximizeMode() & MaximizeHorizontal )l=r=1;
+/*		if ( maximizeMode() & MaximizeHorizontal )l=r=1;
 		if ( maximizeMode() & MaximizeVertical )
 		{
 			b=isShade()?0:1;
 			if (!isShade() && ( maximizeMode() & MaximizeHorizontal ))b=0;
-		}
+		} */
+		if (isShade()) b = 0;
 		if ( (maximizeMode() & MaximizeFull)==MaximizeFull)
-			l=r=0;
+			l=r=b=0;
 	}
 }
 
