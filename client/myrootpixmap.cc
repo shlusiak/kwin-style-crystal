@@ -101,6 +101,7 @@ void KMyRootPixmap::repaint()
 
 void KMyRootPixmap::repaint(bool force)
 {
+	printf("KMyRootPixmap::repaint(%s)\n",force?"true":"false");
     if ((!force) && (m_Desk==currentDesktop()))return;
     
     m_Desk = currentDesktop();
@@ -166,6 +167,7 @@ void KMyRootPixmap::slotDone(bool success)
 
 void KMyRootPixmap::updateBackground( KSharedPixmap *spm )
 {
+	printf("KMyRootPixmap::updateBackground(%p)\n",spm);
     QPixmap *px=spm;
     if (px->isNull() || px->width()==0 || px->height()==0) 
     {	// This is NOT an image, something went wrong, update to plain

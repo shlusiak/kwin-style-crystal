@@ -49,6 +49,7 @@ enum ButtonType {
     ButtonClose, 
     ButtonMenu,
     ButtonSticky,
+    ButtonShade,
     ButtonTypeCount
 };
 
@@ -63,7 +64,7 @@ public:
 	
 	void Init();
 	QImage *image(bool active) { Init(); return active?img_active:img_inactive; }
-	void repaint(bool force) { Init(); rootpixmap->repaint(force); }
+	void repaint(bool force);
 
 private:
 	ExampleFactory *factory;
@@ -74,6 +75,7 @@ private:
 public slots:
 	void BackgroundUpdated(const QImage *);
 	void handleDesktopChanged(int desk);
+	void CheckSanity();
 	
 signals:
 	void repaintNeeded();
@@ -182,6 +184,7 @@ private slots:
     void Repaint();
     void maxButtonPressed();
     void minButtonPressed();
+    void shadeButtonPressed();
     void menuButtonPressed();
 //    void BackgroundUpdated(const QImage&);
 //    void DesktopChanged(int desktop);    

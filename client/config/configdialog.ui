@@ -19,7 +19,115 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QFrame" row="3" column="0" rowspan="1" colspan="4">
+        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="5">
+            <property name="name">
+                <cstring>titlealign</cstring>
+            </property>
+            <property name="title">
+                <string>Title &amp;Alignment</string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string></string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Use these buttons to set the alignment of the window title</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QRadioButton" row="0" column="0">
+                    <property name="name">
+                        <cstring>AlignLeft</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Left</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="0" column="2">
+                    <property name="name">
+                        <cstring>AlignRight</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Right</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string></string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="0" column="1">
+                    <property name="name">
+                        <cstring>AlignHCenter</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Center</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string></string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QSpinBox" row="2" column="4">
+            <property name="name">
+                <cstring>titlebarheight</cstring>
+            </property>
+            <property name="prefix">
+                <string></string>
+            </property>
+            <property name="minValue">
+                <number>5</number>
+            </property>
+            <property name="value">
+                <number>20</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Height of the title par (independend to border width)</string>
+            </property>
+        </widget>
+        <widget class="QSpinBox" row="2" column="1">
+            <property name="name">
+                <cstring>borderwidth</cstring>
+            </property>
+            <property name="prefix">
+                <string></string>
+            </property>
+            <property name="value">
+                <number>5</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Width of the borders</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="0">
+            <property name="name">
+                <cstring>textLabel2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Border width:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>borderwidth</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>textLabel2_2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Titlebar height:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>titlebarheight</cstring>
+            </property>
+        </widget>
+        <widget class="QFrame" row="3" column="0" rowspan="1" colspan="5">
             <property name="name">
                 <cstring>frame7</cstring>
             </property>
@@ -146,6 +254,9 @@
                             <property name="text">
                                 <string>Frame</string>
                             </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Draws a very thin frame around the borders of the window</string>
+                            </property>
                         </widget>
                     </grid>
                 </widget>
@@ -237,6 +348,9 @@
                             <property name="text">
                                 <string>Frame</string>
                             </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Draws a very thin frame around the borders of the window</string>
+                            </property>
                         </widget>
                         <widget class="QComboBox" row="0" column="0">
                             <item>
@@ -272,61 +386,6 @@
                 </widget>
             </hbox>
         </widget>
-        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="4">
-            <property name="name">
-                <cstring>titlealign</cstring>
-            </property>
-            <property name="title">
-                <string>Title &amp;Alignment</string>
-            </property>
-            <property name="toolTip" stdset="0">
-                <string></string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Use these buttons to set the alignment of the window title</string>
-            </property>
-            <grid>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QRadioButton" row="0" column="0">
-                    <property name="name">
-                        <cstring>AlignLeft</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Left</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="QRadioButton" row="0" column="2">
-                    <property name="name">
-                        <cstring>AlignRight</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Right</string>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="QRadioButton" row="0" column="1">
-                    <property name="name">
-                        <cstring>AlignHCenter</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Center</string>
-                    </property>
-                    <property name="checked">
-                        <bool>true</bool>
-                    </property>
-                    <property name="toolTip" stdset="0">
-                        <string></string>
-                    </property>
-                </widget>
-            </grid>
-        </widget>
         <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="3">
             <property name="name">
                 <cstring>textshadow</cstring>
@@ -334,52 +393,22 @@
             <property name="text">
                 <string>Shadowed text</string>
             </property>
+            <property name="toolTip" stdset="0">
+                <string>Draws a nice shadowed title bar text to improve visibility.</string>
+            </property>
         </widget>
-        <widget class="QLabel" row="2" column="0">
+        <widget class="QCheckBox" row="1" column="3" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>textLabel2_2</cstring>
+                <cstring>trackdesktop</cstring>
             </property>
             <property name="text">
-                <string>Border width:</string>
+                <string>Track desktop changes</string>
             </property>
-            <property name="buddy" stdset="0">
-                <cstring>borderwidth</cstring>
+            <property name="toolTip" stdset="0">
+                <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
             </property>
-        </widget>
-        <widget class="QSpinBox" row="2" column="1">
-            <property name="name">
-                <cstring>borderwidth</cstring>
-            </property>
-            <property name="prefix">
-                <string></string>
-            </property>
-            <property name="value">
-                <number>5</number>
-            </property>
-        </widget>
-        <widget class="QLabel" row="2" column="2">
-            <property name="name">
-                <cstring>textLabel2_2_2</cstring>
-            </property>
-            <property name="text">
-                <string>Titlebar height:</string>
-            </property>
-            <property name="buddy" stdset="0">
-                <cstring>titlebarheight</cstring>
-            </property>
-        </widget>
-        <widget class="QSpinBox" row="2" column="3">
-            <property name="name">
-                <cstring>titlebarheight</cstring>
-            </property>
-            <property name="prefix">
-                <string></string>
-            </property>
-            <property name="minValue">
-                <number>5</number>
-            </property>
-            <property name="value">
-                <number>20</number>
+            <property name="whatsThis" stdset="0">
+                <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
             </property>
         </widget>
     </grid>

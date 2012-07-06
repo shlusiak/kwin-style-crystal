@@ -21,6 +21,7 @@
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qimage.h>
+#include <qtimer.h>
 #include <kapp.h>
 #include <netwm.h>
 
@@ -42,13 +43,13 @@ struct WND_CONFIG
 	
 	double amount;
 	bool frame;
-
 }active,inactive;
 
 
 static int borderwidth=1;
 static bool textshadow=true;
 static int titlesize = 20;
+static bool trackdesktop=true;
 
 static QImage deco_close((uchar*)crystal_close_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
 static QImage deco_min((uchar*)crystal_min_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
@@ -56,6 +57,7 @@ static QImage deco_sticky((uchar*)crystal_sticky_data,DECOSIZE,DECOSIZE,32,NULL,
 static QImage deco_un_sticky((uchar*)crystal_un_sticky_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
 static QImage deco_max((uchar*)crystal_max_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
 static QImage deco_restore((uchar*)crystal_restore_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_shade((uchar*)crystal_shade_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
 static QImage deco_help((uchar*)crystal_help_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
 
 
@@ -94,19 +96,42 @@ QImageHolder::~QImageHolder()
 void QImageHolder::Init()
 {
 	if (initialized)return;
-	initialized=true;
 	
+	printf("Calling Init\n");	
 	rootpixmap=new KMyRootPixmap(NULL/*,this*/);
 	rootpixmap->start();
 	rootpixmap->repaint(true);
 	connect( rootpixmap,SIGNAL(backgroundUpdated(const QImage*)),this, SLOT(BackgroundUpdated(const QImage*)));
 	connect(kapp, SIGNAL(backgroundChanged(int)),SLOT(handleDesktopChanged(int)));
+	
+	initialized=true;
+}
+
+void QImageHolder::repaint(bool force)
+{
+	Init(); 
+	rootpixmap->repaint(force);
 }
 
 void QImageHolder::handleDesktopChanged(int)
 {
-	rootpixmap->repaint(true);
+	repaint(true);
 }
+
+void QImageHolder::CheckSanity()
+{
+	if (!initialized)return;
+	if (img_active!=NULL)return;
+
+	printf("SanityCheck failed, uninitializing\n");	
+	delete rootpixmap;
+	rootpixmap=NULL;
+	
+	initialized=false;
+	printf("Uninitialized.\n");	
+	
+}
+
 
 void ApplyEffect(QImage &src,QImage &dst,WND_CONFIG* cfg,QColorGroup colorgroup)
 {
@@ -181,6 +206,7 @@ ExampleFactory::ExampleFactory()
     deco_sticky.setAlphaBuffer(true);
     deco_un_sticky.setAlphaBuffer(true);
     deco_min.setAlphaBuffer(true);
+    deco_shade.setAlphaBuffer(true);
     deco_help.setAlphaBuffer(true);
     
     image_holder=new QImageHolder(this);
@@ -253,6 +279,7 @@ bool ExampleFactory::readConfig()
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
     textshadow=(bool)config.readBoolEntry("TextShadow",true);
+    trackdesktop=(bool)config.readBoolEntry("TrackDesktop",true);
     
     active.mode=config.readNumEntry("ActiveMode",0);
     inactive.mode=config.readNumEntry("InactiveMode",0);
@@ -580,6 +607,17 @@ void ExampleClient::addButtons(QBoxLayout *layout, const QString& s)
                   }
                   break;
 
+              case 'L': // Shade button
+                  if ((!button[ButtonShade]) && isShadeable())  {
+                      button[ButtonShade] =
+                          new ExampleButton(this, "shade", i18n("Shade"),
+                                            ButtonShade, &deco_shade);
+                      connect(button[ButtonShade], SIGNAL(clicked()),
+                              this, SLOT(shadeButtonPressed()));
+                      layout->addWidget(button[ButtonShade]);
+                  }
+                  break;
+		  
               case 'A': // Maximize button
                   if ((!button[ButtonMax]) && isMaximizable()) {
               if (maximizeMode() == MaximizeFull) {
@@ -827,8 +865,10 @@ void ExampleClient::paintEvent(QPaintEvent*)
     // draw the titlebar
     group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
    
-    my_factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
+    if (trackdesktop)
+    	my_factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
     QImage *background=my_factory->image_holder->image(isActive());
+    
     if (background)
     {
 	QRect r;
@@ -878,10 +918,13 @@ void ExampleClient::paintEvent(QPaintEvent*)
 	
 	pufferPainter.end();
 	painter.drawPixmap(0,0,pufferPixmap);
-	
     }else{	// We don't have a background image, draw a solid rectangle
 	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
 	painter.fillRect(widget()->rect(), group.background());
+	// And notify image_holder that we need an update asap
+	if (my_factory)if (my_factory->image_holder)
+		// UnInit image_holder, on next Repaint it will be Init'ed again.
+		QTimer::singleShot(500,my_factory->image_holder,SLOT(CheckSanity()));
     }
 
     // draw frame
@@ -965,7 +1008,21 @@ void ExampleClient::minButtonPressed()
               if (isShadeable()) setShade(!isShade());
               break;
           default:
-              minimize();
+	  	minimize();
+	  }
+    }
+}
+
+void ExampleClient::shadeButtonPressed()
+{
+    if (button[ButtonShade]) {
+        switch (button[ButtonShade]->lastMousePress()) {
+          case MidButton:
+	  case RightButton:
+//              if (isShadeable()) setShade(!isShade());
+              break;
+          default:
+              if (isShadeable()) setShade(!isShade());
         }
     }
 }

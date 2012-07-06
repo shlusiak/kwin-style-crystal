@@ -47,6 +47,8 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     
     connect(dialog_->textshadow, SIGNAL(stateChanged(int)),
             this, SLOT(selectionChanged(int)));
+    connect(dialog_->trackdesktop, SIGNAL(stateChanged(int)),
+            this, SLOT(selectionChanged(int)));
     
     connect(dialog_->shade1, SIGNAL(valueChanged(int)),
             this, SLOT(selectionChanged(int)));
@@ -123,6 +125,7 @@ void ExampleConfig::load(KConfig*)
     if (button) button->setChecked(true);
     
     dialog_->textshadow->setChecked(config_->readBoolEntry("TextShadow",true));
+    dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",true));
     
     dialog_->frame1->setChecked(config_->readBoolEntry("ActiveFrame",true));
     dialog_->frame2->setChecked(config_->readBoolEntry("InactiveFrame",true));
@@ -156,6 +159,8 @@ void ExampleConfig::save(KConfig*)
     QRadioButton *button = (QRadioButton*)dialog_->titlealign->selected();
     if (button) config_->writeEntry("TitleAlignment", QString(button->name()));
     config_->writeEntry("TextShadow",dialog_->textshadow->isChecked());
+    config_->writeEntry("TrackDesktop",dialog_->trackdesktop->isChecked());
+    
     config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
     config_->writeEntry("Titlebarheight",dialog_->titlebarheight->value());
     
