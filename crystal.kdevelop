@@ -13,7 +13,10 @@
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
     <description/>
-    <ignoreparts/>
+    <ignoreparts>
+      <part>Unterstützung für Perforce (KDevelop)</part>
+      <part>Unterstützung für Subversion (KDevelop)</part>
+    </ignoreparts>
     <secondaryLanguages/>
   </general>
   <kdevautoproject>
@@ -25,6 +28,10 @@
       <mainprogram>src/crystal</mainprogram>
       <terminal>true</terminal>
       <directoryradio>executable</directoryradio>
+      <customdirectory>/</customdirectory>
+      <programargs/>
+      <autocompile>true</autocompile>
+      <envvars/>
     </run>
     <configurations>
       <optimized>
@@ -33,6 +40,7 @@
         <cxxcompiler>kdevgppoptions</cxxcompiler>
         <f77compiler>kdevg77options</f77compiler>
         <cxxflags>-O2 -g0</cxxflags>
+        <envvars/>
       </optimized>
       <debug>
         <configargs>--enable-debug=full</configargs>
@@ -48,6 +56,11 @@
         <envvar value="1" name="WANT_AUTOCONF_2_5" />
         <envvar value="1" name="WANT_AUTOMAKE_1_6" />
       </envvars>
+      <abortonerror>false</abortonerror>
+      <numberofjobs>1</numberofjobs>
+      <dontact>false</dontact>
+      <makebin/>
+      <prio>0</prio>
     </make>
   </kdevautoproject>
   <kdevdoctreeview>
@@ -160,4 +173,11 @@
       <outputradix>10</outputradix>
     </display>
   </kdevdebugger>
+  <kdevdocumentation>
+    <projectdoc>
+      <docsystem/>
+      <docurl/>
+      <usermanualurl/>
+    </projectdoc>
+  </kdevdocumentation>
 </kdevelop>

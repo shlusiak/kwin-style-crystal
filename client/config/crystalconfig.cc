@@ -60,6 +60,8 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
             this, SLOT(selectionChanged(int)));
     connect(dialog_->frame2, SIGNAL(stateChanged(int)),
             this, SLOT(selectionChanged(int)));
+    connect(dialog_->frameColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->frameColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	    
     connect(dialog_->type1,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->type2,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
@@ -71,6 +73,8 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
 
     connect(dialog_->roundCorners, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->buttonColor, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+
+    connect(dialog_->hover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -122,7 +126,9 @@ void ExampleConfig::selectionChanged(int)
 
 void ExampleConfig::load(KConfig*)
 {
-    config_->setGroup("General");
+    QColor color(255,255,255);
+    
+	config_->setGroup("General");
     
     QString value = config_->readEntry("TitleAlignment", "AlignHCenter");
     QRadioButton *button = (QRadioButton*)dialog_->titlealign->child(value);
@@ -132,7 +138,11 @@ void ExampleConfig::load(KConfig*)
     dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",true));
     
     dialog_->frame1->setChecked(config_->readBoolEntry("ActiveFrame",true));
+	color=QColor(192,192,192);
+    dialog_->frameColor1->setColor(config_->readColorEntry("FrameColor1",&color));
     dialog_->frame2->setChecked(config_->readBoolEntry("InactiveFrame",true));
+	color=QColor(192,192,192);
+    dialog_->frameColor2->setColor(config_->readColorEntry("FrameColor2",&color));
     
     dialog_->borderwidth->setValue(config_->readNumEntry("Borderwidth",4));
     dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",20));
@@ -150,9 +160,11 @@ void ExampleConfig::load(KConfig*)
     updateStack(dialog_->stack1,dialog_->type1->currentItem());
     updateStack(dialog_->stack2,dialog_->type2->currentItem());
     
-    QColor color(255,255,255);
+	color=QColor(255,255,255);
     dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
     dialog_->roundCorners->setChecked(config_->readBoolEntry("RoundCorners",false));
+	
+	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",false));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -175,12 +187,16 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("ActiveShade",dialog_->shade1->value());
     config_->writeEntry("InactiveShade",dialog_->shade2->value());
     config_->writeEntry("ActiveFrame",dialog_->frame1->isChecked());
+    config_->writeEntry("FrameColor1",dialog_->frameColor1->color());
     config_->writeEntry("InactiveFrame",dialog_->frame2->isChecked());
     config_->writeEntry("ActiveMode",dialog_->type1->currentItem());
     config_->writeEntry("InactiveMode",dialog_->type2->currentItem());
+    config_->writeEntry("FrameColor2",dialog_->frameColor2->color());
 
     config_->writeEntry("ButtonColor",dialog_->buttonColor->color());
     config_->writeEntry("RoundCorners",dialog_->roundCorners->isChecked());
+	
+	config_->writeEntry("HoverEffect",dialog_->hover->isChecked());
         
     config_->sync();
 }

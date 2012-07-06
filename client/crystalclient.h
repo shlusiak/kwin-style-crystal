@@ -135,6 +135,7 @@ private:
     int buttonSize() const;
 
 private:
+	bool hover;
     ExampleClient *client_;
     ButtonType type_;
     QImage *deco_;

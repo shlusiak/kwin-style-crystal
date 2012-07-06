@@ -49,6 +49,7 @@ struct WND_CONFIG
 	
 	double amount;
 	bool frame;
+	QColor frameColor;
 }active,inactive;
 
 
@@ -57,6 +58,7 @@ static bool textshadow=true;
 static int titlesize = 20;
 static bool trackdesktop=true;
 static bool roundCorners=false;
+static bool hovereffect=false;
 static QColor buttonColor(255,255,255);
 
 static QImage deco_close,deco_min,deco_sticky,deco_un_sticky,deco_max,deco_restore,deco_shade,deco_help;
@@ -125,6 +127,7 @@ void QImageHolder::CheckSanity()
 {
 	if (!initialized)return;
 	if (img_active!=NULL)return;
+	if (img_inactive!=NULL)return;
 
 //	printf("SanityCheck failed, uninitializing\n");	
 	delete rootpixmap;
@@ -136,11 +139,14 @@ void QImageHolder::CheckSanity()
 }
 
 
-void ApplyEffect(QImage &src,QImage &dst,WND_CONFIG* cfg,QColorGroup colorgroup)
+QImage *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
 {
+	QImage dst;
+	
 	switch(cfg->mode)
 	{
-	case 0:dst=KImageEffect::fade(src, cfg->amount, colorgroup.background());
+	case 0:	if (cfg->amount>0.99)return new QImage();
+		dst=KImageEffect::fade(src, cfg->amount, colorgroup.background());
 		break;
 	case 1:dst=KImageEffect::channelIntensity(src,cfg->amount,KImageEffect::All);
 		break;
@@ -159,6 +165,8 @@ void ApplyEffect(QImage &src,QImage &dst,WND_CONFIG* cfg,QColorGroup colorgroup)
 	default:dst=src;
 		break;	
 	}
+	
+	return new QImage(dst);
 }
 
 void QImageHolder::BackgroundUpdated(const QImage *src)
@@ -181,10 +189,10 @@ void QImageHolder::BackgroundUpdated(const QImage *src)
 
 		if (!img_active)img_active=new QImage;
 		if (!img_inactive)img_inactive=new QImage;
-	
-		ApplyEffect(tmp,*img_inactive,&inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false));
+
+		img_inactive=ApplyEffect(tmp,&inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false));
 		tmp=src->copy();
-		ApplyEffect(tmp,*img_active,&active,factory->options()->colorGroup(KDecoration::ColorTitleBar, true));
+		img_active=ApplyEffect(tmp,&active,factory->options()->colorGroup(KDecoration::ColorTitleBar, true));
 	}
 	
 	emit repaintNeeded();	
@@ -305,13 +313,19 @@ bool ExampleFactory::readConfig()
     inactive.amount=(double)config.readNumEntry("InactiveShade",50)/100.0;
     active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
     inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
+	buttonColor=QColor(192,192,192);
+    active.frameColor=config.readColorEntry("FrameColor1",&buttonColor);
+	buttonColor=QColor(192,192,192);
+    inactive.frameColor=config.readColorEntry("FrameColor2",&buttonColor);
     
     borderwidth=config.readNumEntry("Borderwidth",4);
     titlesize=config.readNumEntry("Titlebarheight",20);
  
+	buttonColor=QColor(255,255,255);
     buttonColor=config.readColorEntry("ButtonColor",&buttonColor);
     roundCorners=config.readBoolEntry("RoundCorners",false);
 
+	hovereffect=config.readBoolEntry("HoverEffect",false);
        
     return true;
 }
@@ -336,6 +350,8 @@ ExampleButton::ExampleButton(ExampleClient *parent, const char *name,
     setBackgroundMode(NoBackground);
     setFixedSize(buttonSize(), buttonSize());
     setCursor(arrowCursor);
+	
+	hover=false;
 
     if (bitmap==NULL || bitmap->isNull())deco_=NULL;
     	else deco_=bitmap;
@@ -371,6 +387,8 @@ int ExampleButton::buttonSize() const
 void ExampleButton::enterEvent(QEvent *e)
 {
     // if we wanted to do mouseovers, we would keep track of it here
+	hover=true;
+	if (hovereffect)repaint(false);
     QButton::enterEvent(e);
 }
 
@@ -382,6 +400,8 @@ void ExampleButton::enterEvent(QEvent *e)
 void ExampleButton::leaveEvent(QEvent *e)
 {
     // if we wanted to do mouseovers, we would keep track of it here
+	hover=false;
+	if (hovereffect)repaint(false);
     QButton::leaveEvent(e);
 }
 
@@ -468,7 +488,7 @@ void ExampleButton::drawButton(QPainter *painter)
     
     // paint a plain box with border
     QImage *background=((ExampleFactory*)client_->factory())->image_holder->image(client_->isActive());
-    if (background)
+    if (background && !background->isNull())
     {
     	QRect r=rect();
 	QPoint p=mapToGlobal(QPoint(0,0));
@@ -503,22 +523,36 @@ void ExampleButton::drawButton(QPainter *painter)
         dx = (width() - DECOSIZE) / 2;
         dy = (height() - DECOSIZE) / 2;
 	
+		if (hover && !isDown() && 0)
+		{
+			QWMatrix mat;
+			
+			mat.translate(rect().center().x(),rect().center().y());
+			mat.rotate(15);
+			mat.translate(-rect().center().x(),-rect().center().y());
+			
+			pufferPainter.setWorldMatrix(mat);
+		}
+		
 	if (dx<1 || dy<1)
 	{	// Deco size is smaller than image, we need to stretch it
 		
 		pufferPainter.drawImage(r,*deco_);
 		if (isDown())
 			pufferPainter.drawImage(r,*deco_);
+		if (hover && hovereffect)
+			pufferPainter.drawImage(r,*deco_);
 	}else{
 		// Otherwise we just paint it
 		pufferPainter.drawImage(QPoint(dx,dy),*deco_);
 		if (isDown())
 			pufferPainter.drawImage(QPoint(dx,dy),*deco_);
-	}
+		if (hover && hovereffect)
+			pufferPainter.drawImage(QPoint(dx,dy),*deco_);
     }
+	}
 	pufferPainter.end();
     	painter->drawPixmap(0,0, pufferPixmap);    
-
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -607,6 +641,7 @@ void ExampleClient::updateMask()
 //		clearMask();
 		return;
 	}
+	/*
 	// Two rects, which leave the four corners blank	
 	mask =QRegion(CORNER_EDGE_H,0,width()-CORNER_EDGE_H*2,height());
 	mask+=QRegion(0,CORNER_EDGE_V,width(),height()-CORNER_EDGE_V*2);
@@ -618,6 +653,40 @@ void ExampleClient::updateMask()
 	// Lower edges
 	mask+=QRegion(CORNER_EDGE_OFFSET,height()-CORNER_EDGE_V*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
 	mask+=QRegion(width()-CORNER_EDGE_H*2+1-CORNER_EDGE_OFFSET,height()-CORNER_EDGE_V*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
+	*/
+	
+  int r(width());
+  int b(height());
+
+  mask=QRegion(widget()->rect());
+	
+  // Remove top-left corner.
+
+  mask -= QRegion(0, 0, 5, 1);
+  mask -= QRegion(0, 1, 3, 1);
+  mask -= QRegion(0, 2, 2, 1);
+  mask -= QRegion(0, 3, 1, 2);
+
+  // Remove top-right corner.
+
+  mask -= QRegion(r - 5, 0, 5, 1);
+  mask -= QRegion(r - 3, 1, 3, 1);
+  mask -= QRegion(r - 2, 2, 2, 1);
+  mask -= QRegion(r - 1, 3, 1, 2);
+
+  // Remove bottom-left corner.
+
+  mask -= QRegion(0, b - 5, 1, 3);
+  mask -= QRegion(0, b - 3, 2, 1);
+  mask -= QRegion(0, b - 2, 3, 1);
+  mask -= QRegion(0, b - 1, 5, 1);
+
+  // Remove bottom-right corner.
+
+  mask -= QRegion(r - 5, b - 1, 5, 1);
+  mask -= QRegion(r - 3, b - 2, 3, 1);
+  mask -= QRegion(r - 2, b - 3, 2, 1);
+  mask -= QRegion(r - 1, b - 5, 1, 2);
 	
 	setMask(mask);
 }
@@ -936,89 +1005,127 @@ void ExampleClient::mouseDoubleClickEvent(QMouseEvent *e)
 
 void ExampleClient::paintEvent(QPaintEvent*)
 {
-    if (!ExampleFactory::initialized()) return;
+	if (!ExampleFactory::initialized()) return;
 
-    QColorGroup group;
-    QPainter painter(widget());
+	QColorGroup group;
+	QPainter painter(widget());
 
-    // draw the titlebar
-    group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
-   
-    if (trackdesktop)
-    	my_factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
-    QImage *background=my_factory->image_holder->image(isActive());
-    
-    if (background)
-    {
-	QRect r;
-	QPoint p=widget()->mapToGlobal(QPoint(0,0));
-    	int bl,br,bt,bb;
-	borders(bl,br,bt,bb);
-    	    
-	QPixmap pufferPixmap;
-    	pufferPixmap.resize(widget()->width(), bt);
-    	QPainter pufferPainter(&pufferPixmap);
-
-	r=QRect(p.x(),p.y(),widget()->width(),bt);
-	pufferPainter.drawImage(QPoint(0,0),*background,r);
-	
-    	// draw title text
-    	pufferPainter.setFont(options()->font(isActive(), false));
-	
-	QColor color=options()->color(KDecoration::ColorFont, isActive());
-//	r=QRect(FRAMESIZE + FRAMESIZE+BUTTONSIZE*2, FRAMESIZE, width() - FRAMESIZE - FRAMESIZE * 2-BUTTONSIZE*4, titlesize-1);
-	r=titlebar_->geometry();
-	
-	if (textshadow)
-	{
-		pufferPainter.translate(1,1);
-	    	pufferPainter.setPen(color.dark(200));
-    		pufferPainter.drawText(r,
-                     	ExampleFactory::titleAlign() | AlignVCenter,
-                     	caption());
-		pufferPainter.translate(-1,-1);
-	}
-	
-    	pufferPainter.setPen(color);
-    	pufferPainter.drawText(r,
-                     ExampleFactory::titleAlign() | AlignVCenter,
-                     caption());
-
-	if (borderwidth>0)
-	{	// Draw the side and bottom of the window with transparency
-		r=QRect(p.x(),p.y()+bt,bl,widget()->height()-bt);
-		painter.drawImage(QPoint(0,bt),*background,r);
-
-		r=QRect(widget()->width()-br+p.x(),p.y()+bt,widget()->width(),widget()->height()-bt);
-		painter.drawImage(QPoint(widget()->width()-br,bt),*background,r);
-
-		r=QRect(p.x()+bl,p.y()+widget()->height()-bb,widget()->width()-bl-br,bb);
-		painter.drawImage(QPoint(bl,widget()->height()-bb),*background,r);
-	}
-	
-	pufferPainter.end();
-	painter.drawPixmap(0,0,pufferPixmap);
-    }else{	// We don't have a background image, draw a solid rectangle
+	// draw the titlebar
 	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
-	painter.fillRect(widget()->rect(), group.background());
-	// And notify image_holder that we need an update asap
-	if (my_factory)if (my_factory->image_holder)
+   
+	if (trackdesktop)
+		my_factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
+	QImage *background=my_factory->image_holder->image(isActive());
+    
+	{
+		QRect r;
+		QPoint p=widget()->mapToGlobal(QPoint(0,0));
+		int bl,br,bt,bb;
+		borders(bl,br,bt,bb);
+	
+		QPixmap pufferPixmap;
+		pufferPixmap.resize(widget()->width(), bt);
+		QPainter pufferPainter(&pufferPixmap);
+
+		r=QRect(p.x(),p.y(),widget()->width(),bt);
+		if (background && !background->isNull())pufferPainter.drawImage(QPoint(0,0),*background,r);
+		else 
+		{
+			pufferPainter.fillRect(widget()->rect(),group.background());
+			painter.fillRect(widget()->rect(), group.background());
+		}
+	
+	// draw title text
+		pufferPainter.setFont(options()->font(isActive(), false));
+	
+		QColor color=options()->color(KDecoration::ColorFont, isActive());
+		r=titlebar_->geometry();
+	
+		if (textshadow)
+		{
+			pufferPainter.translate(1,1);
+			pufferPainter.setPen(color.dark(200));
+			pufferPainter.drawText(r,ExampleFactory::titleAlign() | AlignVCenter,caption());
+			pufferPainter.translate(-1,-1);
+		}
+	
+		pufferPainter.setPen(color);
+		pufferPainter.drawText(r,
+			ExampleFactory::titleAlign() | AlignVCenter,
+			caption());
+
+		if (borderwidth>0 && background && !background->isNull())
+		{	// Draw the side and bottom of the window with transparency
+			r=QRect(p.x(),p.y()+bt,bl,widget()->height()-bt);
+			painter.drawImage(QPoint(0,bt),*background,r);
+	
+			r=QRect(widget()->width()-br+p.x(),p.y()+bt,widget()->width(),widget()->height()-bt);
+			painter.drawImage(QPoint(widget()->width()-br,bt),*background,r);
+
+			r=QRect(p.x()+bl,p.y()+widget()->height()-bb,widget()->width()-bl-br,bb);
+			painter.drawImage(QPoint(bl,widget()->height()-bb),*background,r);
+		}
+	
+		pufferPainter.end();
+	
+	
+		painter.drawPixmap(0,0,pufferPixmap);
+	}
+	if (background==NULL)
+	{	// We don't have a background image, draw a solid rectangle
+		// And notify image_holder that we need an update asap
+		if (my_factory)if (my_factory->image_holder)
 		// UnInit image_holder, on next Repaint it will be Init'ed again.
 		QTimer::singleShot(500,my_factory->image_holder,SLOT(CheckSanity()));
-    }
+	}
 
-    // draw frame
-    if ((isActive()&& active.frame)||(!isActive() && inactive.frame))
-    {
-    	group = options()->colorGroup(KDecoration::ColorFrame, isActive());
+	WND_CONFIG* wndcfg=(isActive()?&active:&inactive);
+	// draw frame
+	if (wndcfg->frame)
+	{
+		group = options()->colorGroup(KDecoration::ColorFrame, isActive());
 
     	// outline the frame
-	if (!roundCorners)
-	{
-    		painter.setPen(group.dark());
+		painter.setPen(wndcfg->frameColor);
 		painter.drawRect(widget()->rect());
+		if (roundCorners)
+		{
+			int r(width());
+			int b(height());
+  
+			// Draw edge of top-left corner inside the area removed by the mask.
+  
+			painter.drawPoint(3, 1);
+			painter.drawPoint(4, 1);
+			painter.drawPoint(2, 2);
+			painter.drawPoint(1, 3);
+			painter.drawPoint(1, 4);
+
+			// Draw edge of top-right corner inside the area removed by the mask.
+
+			painter.drawPoint(r - 5, 1);
+			painter.drawPoint(r - 4, 1);
+			painter.drawPoint(r - 3, 2);
+			painter.drawPoint(r - 2, 3);
+			painter.drawPoint(r - 2, 4);
+  
+			// Draw edge of bottom-left corner inside the area removed by the mask.
+  
+			painter.drawPoint(1, b - 5);
+			painter.drawPoint(1, b - 4);
+			painter.drawPoint(2, b - 3);
+			painter.drawPoint(3, b - 2);
+			painter.drawPoint(4, b - 2);
+
+			// Draw edge of bottom-right corner inside the area removed by the mask.
+  
+			painter.drawPoint(r - 2, b - 5);
+			painter.drawPoint(r - 2, b - 4);
+			painter.drawPoint(r - 3, b - 3);
+			painter.drawPoint(r - 4, b - 2);
+			painter.drawPoint(r - 5, b - 2);
+		}
 	}
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1030,7 +1137,13 @@ void ExampleClient::resizeEvent(QResizeEvent *)
 {
     if (widget()->isShown()) {
         // repaint only every 200 ms
-	if (!timer.isActive())timer.start(200,true);
+	if (!timer.isActive())
+	{
+		// Repaint only, when mode!=fade || value<100
+		WND_CONFIG* wnd=isActive()?&active:&inactive;
+		if (wnd->mode!=0 || wnd->amount<100)
+			timer.start(200,true);	
+	}
 	updateMask();
     }
 }
@@ -1039,7 +1152,13 @@ void ExampleClient::moveEvent(QMoveEvent *)
 {
     if (widget()->isShown()) {
 	// repaint every 200 ms, so constant moving does not take too much CPU
-	if (!timer.isActive())timer.start(200,true);
+	if (!timer.isActive())
+	{
+		// Repaint only, when mode!=fade || value<100
+		WND_CONFIG* wnd=isActive()?&active:&inactive;
+		if (wnd->mode!=0 || wnd->amount<100)
+			timer.start(200,true);		
+	}
     }	
 }
 

@@ -32,12 +32,13 @@
 
 
 
-KMyRootPixmap::KMyRootPixmap( QWidget *widget, const char *name )
-    : QObject(widget, name ? name : "KMyRootPixmap" ) {
+KMyRootPixmap::KMyRootPixmap( QWidget * widget, const char *name )
+    : QObject(widget, name ? name : "KMyRootPixmap" ) 
+{
     init();
 }
 
-KMyRootPixmap::KMyRootPixmap( QWidget *widget, QObject *parent, const char *name )
+KMyRootPixmap::KMyRootPixmap( QWidget *, QObject *parent, const char *name )
     : QObject( parent, name ? name : "KMyRootPixmap" ) 
 {
     init();
