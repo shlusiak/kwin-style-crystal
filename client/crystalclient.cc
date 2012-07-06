@@ -444,6 +444,65 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageClose]->setSpace(0,0);
 
 		break;
+	case 6: // Kubuntu
+		buttonImages[ButtonImageHelp]->SetNormal(kubuntu_help_data,28,17);
+		buttonImages[ButtonImageHelp]->SetHovered(kubuntu_help_hovered_data);
+		buttonImages[ButtonImageHelp]->SetPressed(kubuntu_help_pressed_data);
+
+		buttonImages[ButtonImageMax]->SetNormal(kubuntu_max_data,28,17);
+		buttonImages[ButtonImageMax]->SetHovered(kubuntu_max_hovered_data);
+		buttonImages[ButtonImageMax]->SetPressed(kubuntu_max_pressed_data);
+		buttonImages[ButtonImageRestore]->SetNormal(kubuntu_restore_data,28,17);
+		buttonImages[ButtonImageRestore]->SetHovered(kubuntu_restore_hovered_data);
+		buttonImages[ButtonImageRestore]->SetPressed(kubuntu_restore_pressed_data);
+		buttonImages[ButtonImageMin]->SetNormal(kubuntu_min_data,28,17);
+		buttonImages[ButtonImageMin]->SetHovered(kubuntu_min_hovered_data);
+		buttonImages[ButtonImageMin]->SetPressed(kubuntu_min_pressed_data);
+		buttonImages[ButtonImageClose]->SetNormal(kubuntu_close_data,28,17);
+		buttonImages[ButtonImageClose]->SetHovered(kubuntu_close_hovered_data);
+		buttonImages[ButtonImageClose]->SetPressed(kubuntu_close_pressed_data);
+
+		buttonImages[ButtonImageSticky]->SetNormal(kubuntu_sticky_data,28,17);
+		buttonImages[ButtonImageSticky]->SetHovered(kubuntu_sticky_hovered_data);
+		buttonImages[ButtonImageSticky]->SetPressed(kubuntu_sticky_pressed_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(kubuntu_un_sticky_data,28,17);
+		buttonImages[ButtonImageUnSticky]->SetHovered(kubuntu_un_sticky_hovered_data);
+		buttonImages[ButtonImageUnSticky]->SetPressed(kubuntu_un_sticky_pressed_data);
+
+		buttonImages[ButtonImageAbove]->SetNormal(kubuntu_above_data,28,17);
+		buttonImages[ButtonImageAbove]->SetHovered(kubuntu_above_hovered_data);
+		buttonImages[ButtonImageAbove]->SetPressed(kubuntu_above_pressed_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(kubuntu_un_above_data,28,17);
+		buttonImages[ButtonImageUnAbove]->SetHovered(kubuntu_un_above_hovered_data);
+		buttonImages[ButtonImageUnAbove]->SetPressed(kubuntu_un_above_pressed_data);
+
+
+		buttonImages[ButtonImageBelow]->SetNormal(kubuntu_below_data,28,17);
+		buttonImages[ButtonImageBelow]->SetHovered(kubuntu_below_hovered_data);
+		buttonImages[ButtonImageBelow]->SetPressed(kubuntu_below_pressed_data);
+
+		buttonImages[ButtonImageUnBelow]->SetNormal(kubuntu_un_below_data,28,17);
+		buttonImages[ButtonImageUnBelow]->SetHovered(kubuntu_un_below_hovered_data);
+		buttonImages[ButtonImageUnBelow]->SetPressed(kubuntu_un_below_pressed_data);
+
+		buttonImages[ButtonImageShade]->SetNormal(kubuntu_shade_data,28,17);
+		buttonImages[ButtonImageShade]->SetHovered(kubuntu_shade_hovered_data);
+		buttonImages[ButtonImageShade]->SetPressed(kubuntu_shade_pressed_data);
+		buttonImages[ButtonImageUnShade]->SetNormal(kubuntu_un_shade_data,28,17);
+		buttonImages[ButtonImageUnShade]->SetHovered(kubuntu_un_shade_hovered_data);
+		buttonImages[ButtonImageUnShade]->SetPressed(kubuntu_un_shade_pressed_data);
+	
+		for (int i=0;i<ButtonImageCount;i++)
+		{
+			buttonImages[i]->setSpace(1,0);
+			buttonImages[i]->setDrawMode(0);
+		}
+		buttonImages[ButtonImageMax]->setSpace(0,0);
+		buttonImages[ButtonImageRestore]->setSpace(0,0);
+		buttonImages[ButtonImageMin]->setSpace(0,0);
+		buttonImages[ButtonImageClose]->setSpace(0,0);
+
+		break;
 	}
 
 	for (int i=0;i<ButtonImageCount;i++)buttonImages[i]->finish();
@@ -474,7 +533,10 @@ void CrystalClient::init()
 {
 	createMainWidget(WResizeNoErase | WRepaintNoErase);
 	widget()->installEventFilter(this);
+
 	FullMax=false;
+	if (!options()->moveResizeMaximizedWindows())
+		FullMax=(maximizeMode()==MaximizeFull);
 	
 	// for flicker-free redraws
 	widget()->setBackgroundMode(NoBackground);
@@ -523,6 +585,8 @@ void CrystalClient::init()
 	
 	if (::factory->transparency)connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
 	if (::factory->transparency)connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
+
+	updateLayout();
 }
 
 void CrystalClient::updateMask()
