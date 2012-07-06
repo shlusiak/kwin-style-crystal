@@ -173,7 +173,7 @@ void KMyRootPixmap::updateBackground( KSharedPixmap *spm )
 	return;
     }
     KPixmapIO io;
-    QSize desktopsize=QApplication::desktop()->screenGeometry().size();
+    QSize desktopsize(QApplication::desktop()->width(),QApplication::desktop()->height());
     
     if (px->rect().size()==desktopsize)
     {	// Image has already the right dimension, make a quick update
