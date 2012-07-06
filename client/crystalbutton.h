@@ -51,6 +51,7 @@ private:
 	void mousePressEvent(QMouseEvent *e);
 	void mouseReleaseEvent(QMouseEvent *e);
 	void drawButton(QPainter *painter);
+	void drawMenuImage(QPainter *painter, QRect r);
 
 	int buttonSizeH() const;
 	int buttonSizeV() const;

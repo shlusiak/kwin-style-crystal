@@ -32,6 +32,7 @@
 #include <qimage.h>
 #include <qpopupmenu.h>
 #include <kwin.h>
+#include <kprocess.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
@@ -254,9 +255,10 @@ bool CrystalFactory::readConfig()
 	hovereffect=config.readBoolEntry("HoverEffect",true);
 	animateHover=config.readBoolEntry("AnimateHover",true);
 	tintButtons=config.readBoolEntry("TintButtons",false);
+	menuImage=config.readBoolEntry("MenuImage",true);
 	repaintMode=config.readNumEntry("RepaintMode",1);
 	repaintTime=config.readNumEntry("RepaintTime",200);
-	buttontheme=config.readNumEntry("ButtonTheme",0);
+	buttontheme=config.readNumEntry("ButtonTheme",8);
 
 
 	setupOverlay(&active,config.readNumEntry("OverlayModeActive",0),config.readEntry("OverlayFileActive",""));
@@ -309,6 +311,7 @@ void CrystalFactory::CreateButtonImages()
 	{
 	default:
 	case 0:	// Crystal default
+		buttonImages[ButtonImageMenu]->SetNormal(crystal_menu_data);
 		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data);
 		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data);
 		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data);
@@ -325,6 +328,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data);
 		break;
 	case 1: // Aqua buttons
+		buttonImages[ButtonImageMenu]->SetNormal(aqua_default_data,16,16);
 		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,16,16);
 		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,16,16);
 		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,16,16);
@@ -385,6 +389,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageUnBelow]->SetNormal(handpainted_unbelow_data);
 		break;
 	case 4: // SVG
+		buttonImages[ButtonImageMenu]->SetNormal(svg_menu_data);
 		buttonImages[ButtonImageHelp]->SetNormal(svg_help_data);
 		buttonImages[ButtonImageMax]->SetNormal(svg_max_data);
 		buttonImages[ButtonImageRestore]->SetNormal(svg_restore_data);
@@ -401,6 +406,10 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageUnBelow]->SetNormal(svg_below_data);
 		break;
 	case 5: // Vista
+		buttonImages[ButtonImageMenu]->SetNormal(vista_menu_data,26,15);
+		buttonImages[ButtonImageMenu]->SetHovered(vista_menu_hovered_data);
+		buttonImages[ButtonImageMenu]->SetPressed(vista_menu_pressed_data);
+
 		buttonImages[ButtonImageHelp]->SetNormal(vista_help_data,26,15);
 		buttonImages[ButtonImageHelp]->SetHovered(vista_help_hovered_data);
 		buttonImages[ButtonImageHelp]->SetPressed(vista_help_pressed_data);
@@ -432,11 +441,9 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageUnAbove]->SetHovered(vista_un_above_hovered_data);
 		buttonImages[ButtonImageUnAbove]->SetPressed(vista_un_above_pressed_data);
 
-
 		buttonImages[ButtonImageBelow]->SetNormal(vista_below_data,26,15);
 		buttonImages[ButtonImageBelow]->SetHovered(vista_below_hovered_data);
 		buttonImages[ButtonImageBelow]->SetPressed(vista_below_pressed_data);
-
 		buttonImages[ButtonImageUnBelow]->SetNormal(vista_un_below_data,26,15);
 		buttonImages[ButtonImageUnBelow]->SetHovered(vista_un_below_hovered_data);
 		buttonImages[ButtonImageUnBelow]->SetPressed(vista_un_below_pressed_data);
@@ -460,6 +467,10 @@ void CrystalFactory::CreateButtonImages()
 
 		break;
 	case 6: // Kubuntu Dapper
+		buttonImages[ButtonImageMenu]->SetNormal(dapper_menu_data,28,17);
+		buttonImages[ButtonImageMenu]->SetHovered(dapper_menu_hovered_data);
+		buttonImages[ButtonImageMenu]->SetPressed(dapper_menu_pressed_data);
+
 		buttonImages[ButtonImageHelp]->SetNormal(dapper_help_data,28,17);
 		buttonImages[ButtonImageHelp]->SetHovered(dapper_help_hovered_data);
 		buttonImages[ButtonImageHelp]->SetPressed(dapper_help_pressed_data);
@@ -519,6 +530,10 @@ void CrystalFactory::CreateButtonImages()
 		break;
 
 	case 7: // Kubuntu-Edgy
+		buttonImages[ButtonImageMenu]->SetNormal(edgy_menu_data,28,17);
+		buttonImages[ButtonImageMenu]->SetHovered(edgy_menu_hovered_data);
+		buttonImages[ButtonImageMenu]->SetPressed(edgy_menu_pressed_data);
+
 		buttonImages[ButtonImageHelp]->SetNormal(edgy_help_data,28,17);
 		buttonImages[ButtonImageHelp]->SetHovered(edgy_help_hovered_data);
 		buttonImages[ButtonImageHelp]->SetPressed(edgy_help_pressed_data);
@@ -578,6 +593,10 @@ void CrystalFactory::CreateButtonImages()
 
 		break;
 	case 8: // Kubuntu-Feisty
+		buttonImages[ButtonImageMenu]->SetNormal(feisty_menu_data,21,17);
+		buttonImages[ButtonImageMenu]->SetHovered(feisty_menu_hovered_data);
+		buttonImages[ButtonImageMenu]->SetPressed(feisty_menu_pressed_data);
+
 		buttonImages[ButtonImageHelp]->SetNormal(feisty_help_data,28,17);
 		buttonImages[ButtonImageHelp]->SetHovered(feisty_help_hovered_data);
 		buttonImages[ButtonImageHelp]->SetPressed(feisty_help_pressed_data);
@@ -785,7 +804,7 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 			switch (s[n]) {
 			case 'M': // Menu button
 				if (!button[ButtonMenu]) {
-					button[ButtonMenu] = current = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, 0);
+					button[ButtonMenu] = current = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, ::factory->buttonImages[ButtonImageMenu]);
 					connect(button[ButtonMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
 				}
 				break;
@@ -910,7 +929,7 @@ void CrystalClient::desktopChange()
 void CrystalClient::iconChange()
 {
 	if (button[ButtonMenu]) {
-		button[ButtonMenu]->setBitmap(0);
+		button[ButtonMenu]->setBitmap(::factory->buttonImages[ButtonImageMenu]);
 	}
 }
 
@@ -1368,10 +1387,10 @@ void CrystalClient::resizeEvent(QResizeEvent *e)
 			if (wnd->mode!=0 || wnd->amount<100)
 				timer.start(::factory->repaintTime,true);	
 		}
-		if (e->size()!=e->oldSize())
-		{
-			updateMask();
-		}
+	}
+	if (e->size()!=e->oldSize())
+	{
+		updateMask();
 	}
 }
 
@@ -1432,32 +1451,6 @@ void CrystalClient::minButtonPressed()
 		switch (button[ButtonMin]->lastMousePress()) {
 		case MidButton:{
 			performWindowOperation(LowerOp);
-/*			Window client,frame,wrapper;
-			ClientWindows(&frame,&wrapper,&client);
-			#define SYSTEM_TRAY_REQUEST_DOCK    0
-			
-			char buffer[128];
-			XEvent ev;
-
-  			snprintf(buffer, sizeof(buffer), "_NET_SYSTEM_TRAY_S%d", DefaultScreen(qt_xdisplay()));
-  			Atom a = XInternAtom(qt_xdisplay(), buffer, False);
-  			Window systray = XGetSelectionOwner(qt_xdisplay(), a);
-
-  			memset(&ev, 0, sizeof(ev));
-  			ev.xclient.type = ClientMessage;
-  			ev.xclient.window = systray;
-  			ev.xclient.message_type = XInternAtom(qt_xdisplay(), "_NET_SYSTEM_TRAY_OPCODE", False);
-  			ev.xclient.format = 32;
-  			ev.xclient.data.l[0] = CurrentTime;
-  			ev.xclient.data.l[1] = SYSTEM_TRAY_REQUEST_DOCK;
-  			ev.xclient.data.l[2] = widget()->winId();
-  			ev.xclient.data.l[3] = 0;
-  			ev.xclient.data.l[4] = 0;
-
-  			XSendEvent(qt_xdisplay(), systray, False, NoEventMask, &ev);
-  			XSync(qt_xdisplay(), False);
-			
-			XUnmapWindow(qt_xdisplay(),client);*/
 			break;
 		}
 		case RightButton:
@@ -1501,6 +1494,16 @@ void CrystalClient::closeButtonPressed()
 	switch (button[ButtonClose]->lastMousePress()) {
 		case RightButton:
 		{
+			Window frame,wrapper,client;
+			char param[20];
+			ClientWindows(&frame,&wrapper,&client);
+
+			KProcess *proc = new KProcess;
+
+			*proc << "kdocker";
+			sprintf(param,"0x%lx",client);
+			*proc << "-d" << "-w" << param;
+			proc->start(KProcess::DontCare);
 			break;
 		}
 		default:
@@ -1546,7 +1549,7 @@ void CrystalClient::menuButtonPressed()
 void CrystalClient::menuPopUp()
 {
 	QPoint p(button[ButtonMenu]->rect().bottomLeft().x(),
-                 button[ButtonMenu]->rect().bottomLeft().y());
+                 button[ButtonMenu]->rect().bottomLeft().y()+2);
 	KDecorationFactory* f = factory();
 	showWindowMenu(button[ButtonMenu]->mapToGlobal(p));
 	if (!f->exists(this)) return; // decoration was destroyed

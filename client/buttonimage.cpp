@@ -142,11 +142,16 @@ void ButtonImage::SetPressed(const QRgb *d_pressed)
 	}
 }
 
+bool ButtonImage::initialized()
+{
+	return ((org_normal_data!=NULL)&&(normal_data!=NULL)&&(normal!=NULL));
+}
+
 void ButtonImage::finish()
 {
 	if (!org_normal_data)
 	{
-		printf("ERROR: No org_normal_data set!\n");
+/*		printf("ERROR: No org_normal_data set!\n"); */
 		return;
 	}
 

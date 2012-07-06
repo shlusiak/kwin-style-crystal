@@ -104,6 +104,7 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->animateHover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->buttonTheme, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->tintButtons, SIGNAL(toggled(bool)),this,SLOT(boolChanged(bool)));
+	connect(dialog_->menuimage, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	
 	connect(dialog_->repaintMode, SIGNAL(clicked(int)),this, SLOT(selectionChanged(int)));
 	
@@ -200,6 +201,7 @@ void CrystalConfig::load(KConfig*)
 
 	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",true));
 	dialog_->animateHover->setChecked(config_->readBoolEntry("AnimateHover",true));
+	dialog_->menuimage->setChecked(config_->readBoolEntry("MenuImage",true));
 
 	color=QColor(255,255,255);
 	dialog_->buttonColor1->setColor(config_->readColorEntry("ButtonColor",&color));
@@ -217,7 +219,7 @@ void CrystalConfig::load(KConfig*)
 
 	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor1->color()!=QColor(255,255,255)));
 
-	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",0));
+	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",8));
 	
 	dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
 	button=(QRadioButton*)dialog_->repaintMode->find(config_->readNumEntry("RepaintMode",1));
@@ -303,6 +305,7 @@ void CrystalConfig::save(KConfig*)
 	config_->writeEntry("HoverEffect",dialog_->hover->isChecked());
 	config_->writeEntry("AnimateHover",dialog_->animateHover->isChecked());
 	config_->writeEntry("TintButtons",dialog_->tintButtons->isChecked());
+	config_->writeEntry("MenuImage",dialog_->menuimage->isChecked());
 	
 	config_->writeEntry("ButtonTheme",dialog_->buttonTheme->currentItem());
 	config_->writeEntry("RepaintMode",dialog_->repaintMode->selectedId());

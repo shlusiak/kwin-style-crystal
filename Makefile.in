@@ -327,7 +327,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  Makefile
-	cd $(top_srcdir) && perl admin/am_edit -padmin Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)
 
@@ -743,9 +743,8 @@ dist-hook:
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
-
 #>+ 2
-KDE_DIST=stamp-h.in crystal.kdevelop.pcs subdirs Makefile.in configure.files crystal.kdevses crystal-1.0.3.tar.gz Doxyfile configure.in.in crystal.kdevelop 
+KDE_DIST=stamp-h.in crystal.kdevelop.pcs subdirs Makefile.in configure.files crystal.kdevses Doxyfile configure.in.in crystal.kdevelop 
 
 #>+ 2
 docs-am:
@@ -754,7 +753,7 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  Makefile
-	cd $(top_srcdir) && perl admin/am_edit -padmin Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit Makefile.in
 
 
 #>+ 21

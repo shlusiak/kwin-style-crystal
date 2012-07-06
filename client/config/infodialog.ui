@@ -203,12 +203,15 @@ You may look for the most recent version at kde-look.org:</string>
             </property>
             <property name="text">
                 <string>Besides default features of most window decorations:
-- Doubleclick the systemmenu button closes the window
-- Middleclick on the minimize button to send it below
-- Rightclick the minimize button shades the window
-- Scroll over the title bar selects next/prev window
+- Doubleclick the systemmenu button closes the window.
+- Middleclick on the minimize button to send it below.
+- Rightclick the minimize button shades the window.
+- Rightclick on close button runs kdocker for this window to
+  dock it to the systemtray. kdocker needs to be installed 
+  for this to work.
+- Scroll over the title bar selects next/prev window.
   If this is disabled AND the deco is compiled against
-  KDE-3.5, the default behaviour is used</string>
+  KDE-3.5, the default behaviour is used.</string>
             </property>
             <property name="textFormat">
                 <enum>PlainText</enum>

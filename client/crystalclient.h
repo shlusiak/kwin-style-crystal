@@ -80,7 +80,8 @@ enum ButtonType {
 
 
 enum ButtonImageTypes {
-	ButtonImageHelp=0,
+	ButtonImageMenu=0,
+	ButtonImageHelp,
 	ButtonImageMax,
 	ButtonImageRestore,
 	ButtonImageMin,
@@ -115,7 +116,7 @@ public:
 	int logoEnabled,logoStretch,logoActive,logoDistance;
 	
 	int titlesize;
-	bool hovereffect,tintButtons,animateHover,wheelTask;
+	bool hovereffect,tintButtons,animateHover,menuImage,wheelTask;
 
 	QColor buttonColor_normal,buttonColor_hovered,buttonColor_pressed;
 	QColor minColor_normal,minColor_hovered,minColor_pressed;
@@ -162,6 +163,7 @@ public:
 	virtual QSize minimumSize() const;
 	virtual Position mousePosition(const QPoint &point) const;
 	
+	void ClientWindows(Window* frame,Window* wrapper,Window* client);
 private:
 	CrystalButton* addButtons(QBoxLayout* layout, const QString& buttons);
 	void updateMask();
@@ -176,7 +178,6 @@ private:
 	void showEvent(QShowEvent *);
 	void mouseWheelEvent(QWheelEvent *e);
 	
-	void ClientWindows(Window* frame,Window* wrapper,Window* client);
 private slots:
 	void Repaint();
 	void maxButtonPressed();

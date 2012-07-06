@@ -111,7 +111,7 @@ void CrystalButton::mousePressEvent(QMouseEvent* e)
 		button=LeftButton;
 		break;
 	case RightButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu) /*|| (type_ == ButtonClose)*/)
+		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu) || (type_ == ButtonClose))
 			button=LeftButton; else button=NoButton;
 		break;
 	case MidButton:
@@ -136,7 +136,7 @@ void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 		button=LeftButton;
 		break;
 	case RightButton:
-		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu)/* || (type_==ButtonClose)*/)
+		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu) || (type_==ButtonClose))
 			button=LeftButton; else button=NoButton;
 		break;
 	case MidButton:
@@ -220,7 +220,7 @@ void CrystalButton::drawButton(QPainter *painter)
 	}
 
 
-	if (type_ == ButtonMenu) {
+	if (type_ == ButtonMenu && (!::factory->menuImage || image==NULL || (image!=NULL && !image->initialized()))) {
 		// we paint the mini icon (which is 16 pixels high)
 		dx = float(width() - 16) / 2.0;
 		dy = float(height() - 16) / 2.0;
@@ -237,7 +237,7 @@ void CrystalButton::drawButton(QPainter *painter)
 			pufferPainter.drawPixmap((int)dx, (int)dy, client_->icon().pixmap(QIconSet::Small,
                                                            QIconSet::Normal));
 		}
-	} else if (image) {
+	} else if (image && image->initialized()) {
 		// otherwise we paint the deco
 		dx = float(width() - image->image_width) / 2.0;
 		dy = float(height() - image->image_height) / 2.0;
@@ -277,15 +277,40 @@ void CrystalButton::drawButton(QPainter *painter)
 			QRect r((rect().width()-w)/2,(rect().height()-h)/2,w,h);
 
 			pufferPainter.drawImage(r,*img);
+			if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, r);
 		}else{
 			// Otherwise we just paint it
 			if (image->drawMode==1)dy=0;
 			pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
+
+			if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, 
+				QRect((int)dx,(int)dy,image->image_width,image->image_height));
 	    }
 	}
 	
 	pufferPainter.end();
 	painter->drawPixmap(0,0, pufferPixmap);
+}
+
+void CrystalButton::drawMenuImage(QPainter* painter, QRect r)
+{
+	if (type_ != ButtonMenu) return;
+	// we paint the mini icon (which is 16 pixels high)
+	r.setTop(r.top()+1);
+	r.setBottom(r.bottom()-1);
+	float dx = float(r.width() - 16) / 2.0;
+	float dy = float(r.height() - 16) / 2.0;
+		
+	if (dx<1 || dy<=1)
+	{
+		int m=(r.width()-2<r.height())?r.width()-2:r.height();
+		QRect r2(r.left()+(r.width()-m)/2,r.top()+(r.height()-m)/2,m,m);
+		painter->drawPixmap(r2, client_->icon().pixmap(QIconSet::Small,
+								QIconSet::Normal));
+	}else{
+		painter->drawPixmap(r.left()+(int)dx, r.top()+(int)dy, client_->icon().pixmap(QIconSet::Small,
+									QIconSet::Normal));
+	}
 }
 
 void CrystalButton::animate()

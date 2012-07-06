@@ -50,6 +50,7 @@ public:
 	void SetPressed(const QRgb *d_pressed=NULL);
 	void reset();
 	void finish();
+	bool initialized();
 
 	void setSpace(int hS,int vS) { hSpace=hS; vSpace=vS; }
 	void setDrawMode(int dm) { drawMode=dm; }

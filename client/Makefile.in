@@ -399,7 +399,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  client/Makefile
-	cd $(top_srcdir) && perl admin/am_edit -padmin client/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit client/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 kde_moduleLTLIBRARIES_INSTALL = $(INSTALL)
@@ -830,7 +830,6 @@ uninstall-info: uninstall-info-recursive
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
-
 #>+ 8
 kwin3_crystal.la.closure: $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_DEPENDENCIES)
 	@echo "int main() {return 0;}" > kwin3_crystal_la_closure.cc
@@ -886,7 +885,7 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  client/Makefile
-	cd $(top_srcdir) && perl admin/am_edit -padmin client/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit client/Makefile.in
 
 
 #>+ 21
@@ -912,7 +911,7 @@ bcheck-am:
 
 
 #>+ 11
-kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc $(srcdir)/myrootpixmap.moc.cc $(srcdir)/imageholder.moc.cc  crystalbutton.moc crystalclient.moc
+kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc myrootpixmap.moc.cc imageholder.moc.cc  crystalbutton.moc crystalclient.moc
 	@echo 'creating kwin3_crystal_la.all_cc.cc ...'; \
 	rm -f kwin3_crystal_la.all_cc.files kwin3_crystal_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cc.final; \

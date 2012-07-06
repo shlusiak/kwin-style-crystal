@@ -364,7 +364,7 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 #>+ 3
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  client/config/Makefile
-	cd $(top_srcdir) && perl admin/am_edit -padmin client/config/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit client/config/Makefile.in
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 kde_moduleLTLIBRARIES_INSTALL = $(INSTALL)
@@ -650,7 +650,6 @@ messages:
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
-
 #>+ 8
 kwin_crystal_config.la.closure: $(kwin_crystal_config_la_OBJECTS) $(kwin_crystal_config_la_DEPENDENCIES)
 	@echo "int main() {return 0;}" > kwin_crystal_config_la_closure.cc
@@ -672,7 +671,7 @@ clean-metasources:
 	-rm -f  crystalconfig.moc
 
 #>+ 2
-KDE_DIST=infodialog.ui Makefile.in infodialog.h configdialog.ui configdialog.h 
+KDE_DIST=infodialog.ui Makefile.in configdialog.ui 
 
 #>+ 5
 clean-ui:
@@ -691,7 +690,7 @@ docs-am:
 force-reedit:
 		cd $(top_srcdir) && \
 	  $(AUTOMAKE) --foreign  client/config/Makefile
-	cd $(top_srcdir) && perl admin/am_edit -padmin client/config/Makefile.in
+	cd $(top_srcdir) && perl admin/am_edit client/config/Makefile.in
 
 
 #>+ 21
@@ -717,7 +716,7 @@ bcheck-am:
 
 
 #>+ 11
-kwin_crystal_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc $(srcdir)/configdialog.cc $(srcdir)/infodialog.cc  crystalconfig.moc
+kwin_crystal_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc configdialog.cc infodialog.cc  crystalconfig.moc
 	@echo 'creating kwin_crystal_config_la.all_cc.cc ...'; \
 	rm -f kwin_crystal_config_la.all_cc.files kwin_crystal_config_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin_crystal_config_la.all_cc.final; \

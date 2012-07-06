@@ -71,50 +71,6 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
-                        <property name="name">
-                            <cstring>wheelTask</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>3</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="text">
-                            <string>C&amp;ycle tasks with mouse wheel</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+Y</string>
-                        </property>
-                    </widget>
-                    <widget class="QPushButton" row="3" column="3" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>infoButton</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>0</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>80</width>
-                                <height>0</height>
-                            </size>
-                        </property>
-                        <property name="text">
-                            <string>I&amp;nfo...</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+N</string>
-                        </property>
-                    </widget>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>titlealign</cstring>
@@ -273,7 +229,7 @@
                             </widget>
                         </grid>
                     </widget>
-                    <widget class="QGroupBox" row="0" column="2" rowspan="1" colspan="3">
+                    <widget class="QGroupBox" row="0" column="2" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>roundCorners</cstring>
                         </property>
@@ -429,7 +385,7 @@
                             <cstring>borderwidth</cstring>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="2" column="2" rowspan="1" colspan="2">
+                    <widget class="QLabel" row="2" column="2">
                         <property name="name">
                             <cstring>textLabel2_2_2</cstring>
                         </property>
@@ -448,7 +404,7 @@
                             <cstring>titlebarheight</cstring>
                         </property>
                     </widget>
-                    <widget class="QSpinBox" row="1" column="4">
+                    <widget class="QSpinBox" row="1" column="3">
                         <property name="name">
                             <cstring>borderwidth</cstring>
                         </property>
@@ -462,7 +418,7 @@
                             <string>Width of the borders</string>
                         </property>
                     </widget>
-                    <widget class="QSpinBox" row="2" column="4">
+                    <widget class="QSpinBox" row="2" column="3">
                         <property name="name">
                             <cstring>titlebarheight</cstring>
                         </property>
@@ -505,6 +461,50 @@
                         </property>
                         <property name="checked">
                             <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>wheelTask</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>3</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="text">
+                            <string>C&amp;ycle tasks with mouse wheel</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+Y</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="3" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>infoButton</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>1</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>80</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>I&amp;nfo...</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+N</string>
                         </property>
                     </widget>
                 </grid>
@@ -565,94 +565,6 @@
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>Provides a mouse-over effect for the title bar buttons.</string>
-                        </property>
-                    </widget>
-                    <widget class="QComboBox" row="0" column="0" rowspan="1" colspan="2">
-                        <item>
-                            <property name="text">
-                                <string>Crystal Default</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image0</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Crystal Aqua</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image1</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Crystal Knifty</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image2</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Handpainted</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image3</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>SVG</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image4</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Vista</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image5</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Kubuntu Dapper</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image6</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Kubuntu Edgy</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image7</pixmap>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Kubuntu Feisty</string>
-                            </property>
-                            <property name="pixmap">
-                                <pixmap>image8</pixmap>
-                            </property>
-                        </item>
-                        <property name="name">
-                            <cstring>buttonTheme</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>5</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Select your favourite button theme here</string>
                         </property>
                     </widget>
                     <spacer row="3" column="0">
@@ -1106,6 +1018,111 @@
                                 </property>
                             </widget>
                         </grid>
+                    </widget>
+                    <widget class="QComboBox" row="0" column="0">
+                        <item>
+                            <property name="text">
+                                <string>Crystal Default</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image0</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Crystal Aqua</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image1</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Crystal Knifty</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image2</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Handpainted</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image3</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>SVG</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image4</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Vista</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image5</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Kubuntu Dapper</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image6</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Kubuntu Edgy</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image7</pixmap>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Kubuntu Feisty</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image8</pixmap>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>buttonTheme</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Select your favourite button theme here</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="0" column="1">
+                        <property name="name">
+                            <cstring>menuimage</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Theme &amp;menu button</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+M</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>The window menu is a button, if possible, or just an icon</string>
+                        </property>
                     </widget>
                 </grid>
             </widget>
