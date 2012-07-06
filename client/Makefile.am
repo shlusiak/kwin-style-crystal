@@ -15,7 +15,7 @@ kde_module_LTLIBRARIES = kwin3_crystal.la
 kwin3_crystal_la_SOURCES = crystalclient.cc myrootpixmap.cc crystalbutton.cpp \
 	imageholder.cpp
 kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la
-kwin3_crystal_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdecore -lkdeui
+kwin3_crystal_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdeui
 kwin3_crystal_la_METASOURCES = AUTO
 
 DISTCLEANFILES = $(kwin3_crystal_la_METASOURCES)

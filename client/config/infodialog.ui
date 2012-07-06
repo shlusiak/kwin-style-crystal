@@ -12,7 +12,7 @@
             <x>0</x>
             <y>0</y>
             <width>412</width>
-            <height>267</height>
+            <height>297</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -148,7 +148,9 @@
 - Doubleclick the systemmenu button closes the window
 - Middleclick on the minimize button to send it below
 - Rightclick the minimize button shades the window
-- Scroll over the title bar selects next/prev window</string>
+- Scroll over the title bar selects next/prev window
+  If this is disabled AND the deco is compiled against
+  KDE-3.5, the default behaviour is used</string>
             </property>
             <property name="textFormat">
                 <enum>PlainText</enum>

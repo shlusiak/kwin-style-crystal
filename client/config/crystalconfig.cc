@@ -75,6 +75,13 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
             this, SLOT(selectionChanged(int)));
     connect(dialog_->frameColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
     connect(dialog_->frameColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+
+    connect(dialog_->inline1, SIGNAL(stateChanged(int)),
+            this, SLOT(selectionChanged(int)));
+    connect(dialog_->inline2, SIGNAL(stateChanged(int)),
+            this, SLOT(selectionChanged(int)));
+    connect(dialog_->inlineColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->inlineColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	    
     connect(dialog_->type1,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->type2,SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
@@ -177,6 +184,14 @@ void ExampleConfig::load(KConfig*)
     dialog_->frame2->setChecked(config_->readBoolEntry("InactiveFrame",true));
 	color=QColor(192,192,192);
     dialog_->frameColor2->setColor(config_->readColorEntry("FrameColor2",&color));
+
+    dialog_->inline1->setChecked(config_->readBoolEntry("ActiveInline",false));
+	color=QColor(192,192,192);
+    dialog_->inlineColor1->setColor(config_->readColorEntry("InlineColor1",&color));
+    dialog_->inline2->setChecked(config_->readBoolEntry("InactiveInline",false));
+	color=QColor(192,192,192);
+    dialog_->inlineColor2->setColor(config_->readColorEntry("InlineColor2",&color));
+    
     
     dialog_->borderwidth->setValue(config_->readNumEntry("Borderwidth",5));
     dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",19));
@@ -253,6 +268,11 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("ActiveMode",dialog_->type1->currentItem());
     config_->writeEntry("InactiveMode",dialog_->type2->currentItem());
     config_->writeEntry("FrameColor2",dialog_->frameColor2->color());
+
+    config_->writeEntry("ActiveInline",dialog_->inline1->isChecked());
+    config_->writeEntry("InlineColor1",dialog_->inlineColor1->color());
+    config_->writeEntry("InactiveInline",dialog_->inline2->isChecked());
+    config_->writeEntry("InlineColor2",dialog_->inlineColor2->color());
 
     config_->writeEntry("ButtonColor",dialog_->buttonColor->color());
 	

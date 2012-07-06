@@ -58,8 +58,8 @@ struct WND_CONFIG
 	int mode;	// The mode (fade, emboss, ...)
 	
 	double amount;
-	bool frame;
-	QColor frameColor;
+	bool frame,inlineFrame;
+	QColor frameColor,inlineColor;
 	QPixmap overlay;
 	int blur;
 };
@@ -88,6 +88,7 @@ enum ButtonImageTypes {
     ButtonImageSticky,
 	ButtonImageUnSticky,
     ButtonImageShade,
+	ButtonImageUnShade,
 	ButtonImageBelow,
 	ButtonImageUnBelow,
 	ButtonImageAbove,

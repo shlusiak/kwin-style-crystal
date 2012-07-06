@@ -89,7 +89,8 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
 }
 
 CrystalButton::~CrystalButton()
-{ }
+{
+}
 
 void CrystalButton::resetSize(bool FullSize)
 {
@@ -112,7 +113,6 @@ QSize CrystalButton::sizeHint() const
 
 int CrystalButton::buttonSizeH() const
 {
-	//return (factory->titlesize-1-FRAMESIZE>DECOSIZE)?BUTTONSIZE:factory->titlesize-1-FRAMESIZE+(BUTTONSIZE-DECOSIZE);
 	return (factory->titlesize-1-FRAMESIZE>=DECOSIZE)?BUTTONSIZE:buttonSizeV()+2;
 }
 
@@ -227,7 +227,7 @@ void CrystalButton::drawButton(QPainter *painter)
     QPixmap pufferPixmap;
     pufferPixmap.resize(width(), height());
     QPainter pufferPainter(&pufferPixmap);
-    
+
     // paint a plain box with border
 	CrystalFactory *f=((CrystalFactory*)client_->factory());
     QPixmap *background=f->image_holder->image(client_->isActive());
@@ -273,9 +273,9 @@ void CrystalButton::drawButton(QPainter *painter)
         // otherwise we paint the deco
         dx = float(width() - DECOSIZE) / 2.0;
         dy = float(height() - DECOSIZE) / 2.0;
-//		if (client_->FullMax)dy+=1;
 		
 		QImage *img=image->normal;
+
 		int count=1;
 		if (hover && ::factory->hovereffect)
 		{
@@ -286,7 +286,7 @@ void CrystalButton::drawButton(QPainter *painter)
 		{
 			if (image->pressed)img=image->pressed; else count=3;
 		}
-		
+	
 		if (dx<1 || dy<0)
 		{	// Deco size is smaller than image, we need to stretch it
 			for (int i=0;i<count;i++)
@@ -301,8 +301,6 @@ void CrystalButton::drawButton(QPainter *painter)
 
 	if (wndcfg->frame && client_->FullMax && client_->isShade())
 	{
-		group = client_->options()->colorGroup(KDecoration::ColorFrame, client_->isActive());
-
     	// outline the frame
 		pufferPainter.setPen(wndcfg->frameColor);
 		pufferPainter.drawLine(0,0,width(),0);
@@ -311,9 +309,42 @@ void CrystalButton::drawButton(QPainter *painter)
 		if (first)pufferPainter.drawLine(0,0,0,height());
 		if (last)pufferPainter.drawLine(width()-1,0,width()-1,height());
 	}
+	if (wndcfg->inlineFrame && client_->FullMax && !client_->isShade())
+	{
+    	// outline the frame
+		pufferPainter.setPen(wndcfg->inlineColor);
+		pufferPainter.drawLine(0,height()-2,width(),height()-2);
+	}
 	
 	pufferPainter.end();
 	painter->drawPixmap(0,0, pufferPixmap);    
 }
 
+/*
+void CrystalButton::updateTempImage()
+{
+	QImage *img=image->normal;
+
+	
+	int count=1;
+	if (hover && ::factory->hovereffect)
+	{
+		count=1;
+		if (image->hovered)img=image->hovered; else count=2;
+	}
+	if (isDown())
+	{
+		if (image->pressed)img=image->pressed; else count=3;
+	}
+	
+	if (dx<1 || dy<0)
+	{	// Deco size is smaller than image, we need to stretch it
+		for (int i=0;i<count;i++)
+			pufferPainter.drawImage(r,*img);
+	}else{
+		// Otherwise we just paint it
+		for (int i=0;i<count;i++)
+			pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
+    }
+}*/
 

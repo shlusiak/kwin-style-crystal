@@ -139,10 +139,8 @@ void setupOverlay(WND_CONFIG *cfg,int mode,QString filename)
 		}
 		case 2:{
 			QImage img;
-			printf("loading\n");
 			if (img.load(filename))
 			{
-				printf("loaded\n");
 				img.setAlphaBuffer(true);
 				cfg->overlay.convertFromImage(img.smoothScale(1,::factory->titlesize));
 			}
@@ -172,7 +170,7 @@ bool CrystalFactory::readConfig()
 	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
 	wheelTask=(bool)config.readBoolEntry("WheelTask",true);
     trackdesktop=(bool)config.readBoolEntry("TrackDesktop",false);
-    
+
     active.mode=config.readNumEntry("ActiveMode",0);
     inactive.mode=config.readNumEntry("InactiveMode",1);
     active.amount=(double)config.readNumEntry("ActiveShade",30)/100.0;
@@ -183,6 +181,13 @@ bool CrystalFactory::readConfig()
     active.frameColor=config.readColorEntry("FrameColor1",&buttonColor);
 	buttonColor=QColor(128,128,128);
     inactive.frameColor=config.readColorEntry("FrameColor2",&buttonColor);
+
+    active.inlineFrame=(bool)config.readBoolEntry("ActiveInline",false);
+    inactive.inlineFrame=(bool)config.readBoolEntry("InactiveInline",false);
+	buttonColor=QColor(160,160,160);
+    active.inlineColor=config.readColorEntry("InlineColor1",&buttonColor);
+	buttonColor=QColor(160,160,160);
+    inactive.inlineColor=config.readColorEntry("InlineColor2",&buttonColor);
 
 	active.blur=config.readNumEntry("ActiveBlur",0);
 	inactive.blur=config.readNumEntry("InactiveBlur",0);
@@ -244,6 +249,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,tintButtons);
 		buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,tintButtons);
 		buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,tintButtons);
+		buttonImages[ButtonImageUnShade]->SetNormal(crystal_shade_data,tintButtons);
 	
 		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,tintButtons);
 		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
@@ -259,6 +265,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data,tintButtons);
 		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data,tintButtons);
 		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageUnShade]->SetNormal(aqua_default_data,tintButtons);
 	
 		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data,tintButtons);
 		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data,tintButtons);
@@ -275,6 +282,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data,tintButtons);
 		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data,tintButtons);
 		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data,tintButtons);
+		buttonImages[ButtonImageUnShade]->SetHovered(aqua_shade_data,tintButtons);
 		break;
 	case 2: // Knifty buttons
 		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data,tintButtons);
@@ -285,7 +293,8 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageSticky]->SetNormal(knifty_sticky_data,tintButtons);
 		buttonImages[ButtonImageUnSticky]->SetNormal(knifty_un_sticky_data,tintButtons);
 		buttonImages[ButtonImageShade]->SetNormal(knifty_shade_data,tintButtons);
-        
+		buttonImages[ButtonImageUnShade]->SetNormal(knifty_shade_data,tintButtons);
+
 		buttonImages[ButtonImageAbove]->SetNormal(knifty_above_data,tintButtons);
 		buttonImages[ButtonImageUnAbove]->SetNormal(knifty_unabove_data,tintButtons);
 		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data,tintButtons);
@@ -301,11 +310,12 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageSticky]->SetNormal(handpainted_sticky_data,tintButtons);
 		buttonImages[ButtonImageUnSticky]->SetNormal(handpainted_un_sticky_data,tintButtons);
 		buttonImages[ButtonImageShade]->SetNormal(handpainted_shade_data,tintButtons);
+		buttonImages[ButtonImageUnShade]->SetNormal(handpainted_un_shade_data,tintButtons);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(handpainted_above_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(handpainted_unabove_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(handpainted_below_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(handpainted_unbelow_data,tintButtons);
 		break;
 	case 4: // SVG
 		buttonImages[ButtonImageHelp]->SetNormal(svg_help_data,tintButtons);
@@ -316,6 +326,7 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageSticky]->SetNormal(svg_sticky_data,tintButtons);
 		buttonImages[ButtonImageUnSticky]->SetNormal(svg_unsticky_data,tintButtons);
 		buttonImages[ButtonImageShade]->SetNormal(svg_shade_data,tintButtons);
+		buttonImages[ButtonImageUnShade]->SetNormal(svg_shade_data,tintButtons);
 	
 		buttonImages[ButtonImageAbove]->SetNormal(svg_above_data,tintButtons);
 		buttonImages[ButtonImageUnAbove]->SetNormal(svg_above_data,tintButtons);
@@ -362,23 +373,23 @@ void CrystalClient::init()
     // setup layout
     mainlayout = new QGridLayout(widget(), 4, 3); // 4x3 grid
     titlelayout = new QHBoxLayout();
-    titlebar_ = new QSpacerItem(1, ::factory->titlesize, QSizePolicy::Expanding,
+    titlebar_ = new QSpacerItem(1, ::factory->titlesize-1, QSizePolicy::Expanding,
                                 QSizePolicy::Fixed);
 
     mainlayout->setResizeMode(QLayout::FreeResize);
     mainlayout->setRowSpacing(0, 1);
-	mainlayout->setRowSpacing(3, ::factory->borderwidth*2);
+	mainlayout->setRowSpacing(3, ::factory->borderwidth*1);
 
 	mainlayout->setColSpacing(2,borderSpacing());
 	mainlayout->setColSpacing(0,borderSpacing());
     mainlayout->addLayout(titlelayout, 1, 1);
 
-	
     if (isPreview()) {
+		char c[512];
+		sprintf(c,"<center><b>Crystal Preview</b><br>Built: %s</center",__DATE__);
         mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
         mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
-		mainlayout->addWidget(
-        new QLabel(i18n("<b><center>Crystal Preview</center></b>"),widget()), 2, 1);
+		mainlayout->addWidget(new QLabel(i18n(c),widget()), 2, 1);
     } else {
         mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
     }
@@ -684,8 +695,8 @@ void CrystalClient::updateLayout()
 int CrystalClient::borderSpacing()
 {
 	if (::factory->roundCorners)
-		return (::factory->borderwidth<=6)?5: ::factory->borderwidth-1;
-	return (::factory->borderwidth<=2)?1: ::factory->borderwidth-1;
+		return (::factory->borderwidth<=5)?5: ::factory->borderwidth;
+	return (::factory->borderwidth<=1)?1: ::factory->borderwidth;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -695,6 +706,10 @@ int CrystalClient::borderSpacing()
 
 void CrystalClient::shadeChange()
 { 
+	if (button[ButtonShade])
+	{
+		button[ButtonShade]->setBitmap(::factory->buttonImages[isShade()?ButtonImageUnShade:ButtonImageShade]);
+	}
 	return;
 	updateLayout(); 
 	updateMask();
@@ -825,7 +840,7 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
           return true;
 	  }
       case QEvent::Move: {
-          moveEvent(static_cast<QMoveEvent *>(e));	  
+          moveEvent(static_cast<QMoveEvent *>(e));
 	      return true;
 	  }
       default: {
@@ -876,8 +891,6 @@ void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 
 void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 {
-	// Browse through all visible windows on current desktop
-// 	if (titlebar_->geometry().contains(e->pos()))
 	if (::factory->wheelTask)
 	{
 		QPtrList <CrystalClient> *l=&(::factory->clients);
@@ -904,6 +917,10 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 		}while(n!=this);
 			
 		KWin::activateWindow(client);
+	}else{
+#if KDE_IS_VERSION(3,5,0)
+		titlebarMouseWheelOperation(e->delta());
+#endif
 	}
 }
 
@@ -922,7 +939,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	// draw the titlebar
 	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
-   
+
 	if (::factory->trackdesktop)
 		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
 	QPixmap *background=::factory->image_holder->image(isActive());
@@ -942,14 +959,13 @@ void CrystalClient::paintEvent(QPaintEvent*)
  		else 
 		{
 			pufferPainter.fillRect(widget()->rect(),group.background());
-// 			painter.fillRect(widget()->rect(), group.background());
 		}
 		if (!wndcfg->overlay.isNull())
 		{
 			pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
 		}
 	
-	// draw title text
+		// draw title text
 		pufferPainter.setFont(options()->font(isActive(), false));
 	
 		QColor color=options()->color(KDecoration::ColorFont, isActive());
@@ -1010,6 +1026,13 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	
 	
 		painter.drawPixmap(0,0,pufferPixmap);
+
+
+		if (wndcfg->inlineFrame && !isShade())
+		{
+			painter.setPen(wndcfg->inlineColor);
+			painter.drawRect(bl-1,bt-1,widget()->width()-bl-br+2,widget()->height()-bt-bb+2);
+		}
 	}
 	if (background==NULL)
 	{	// We don't have a background image, draw a solid rectangle
@@ -1019,11 +1042,11 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		QTimer::singleShot(500,::factory->image_holder,SLOT(CheckSanity()));
 	}
 
+
+
 	// draw frame
 	if (wndcfg->frame)
 	{
-		group = options()->colorGroup(KDecoration::ColorFrame, isActive());
-
     	// outline the frame
 		QRect r=widget()->rect();
 		painter.setPen(wndcfg->frameColor);
@@ -1083,11 +1106,14 @@ void CrystalClient::paintEvent(QPaintEvent*)
 // -------------
 // Window is being resized
 
-void CrystalClient::resizeEvent(QResizeEvent *)
+void CrystalClient::resizeEvent(QResizeEvent *e)
 {
 	if (widget()->isShown()) 
 	{
-		if (::factory->repaintMode==1)Repaint();
+		if (::factory->repaintMode==1)
+		{
+			if (!timer.isActive())timer.start(0,true);
+		}
 		// repaint only every xxx ms
 		else if (::factory->repaintMode==3 || !timer.isActive())
 		{
@@ -1096,15 +1122,21 @@ void CrystalClient::resizeEvent(QResizeEvent *)
 			if (wnd->mode!=0 || wnd->amount<100)
 				timer.start(::factory->repaintTime,true);	
 		}
-		updateMask();
+		if (e->size()!=e->oldSize())
+		{
+			updateMask();
+		}
 	}
 }
 
 void CrystalClient::moveEvent(QMoveEvent *)
 {
-	if (widget()->isShown()) 
+	if (widget()->isShown())
 	{
-		if (::factory->repaintMode==1)Repaint();
+		if (::factory->repaintMode==1)
+		{
+			Repaint();
+		}
 		// repaint every xxx ms, so constant moving does not take too much CPU
 		else if (::factory->repaintMode==3 || !timer.isActive())
 		{
@@ -1278,11 +1310,10 @@ void CrystalClient::menuPopUp()
 	button[ButtonMenu]->setDown(false);
 }
 
-void CrystalClient::ShowTabMenu(QMouseEvent *me)
+void CrystalClient::ShowTabMenu(QMouseEvent* /*me*/)
 {	
 	// FIXME This stuff does not work at all!
-	return;
-	QPopupMenu p(widget());
+/*	QPopupMenu p(widget());
 	for (uint i=0;i<(::factory->clients.count());i++)
 	{
 		CrystalClient* c=::factory->clients.at(i);
@@ -1328,8 +1359,7 @@ void CrystalClient::ShowTabMenu(QMouseEvent *me)
 
 //	XMoveResizeWindow( qt_xdisplay(), w_wrapper, 0, 0, attr.width, attr.height);
 //	XMoveResizeWindow( qt_xdisplay(), w_client, 0, 0, attr.width, attr.height);
-
-
+*/
 }
 
 

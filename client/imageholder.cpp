@@ -24,8 +24,6 @@ void QImageHolder::Init()
 {
 	if (initialized)return;
 	
-//	printf("Calling Init\n");	
-	
 	rootpixmap=new KMyRootPixmap(NULL/*,this*/);
 	rootpixmap->start();
 	rootpixmap->repaint(true);
@@ -52,12 +50,10 @@ void QImageHolder::CheckSanity()
 	if (img_active!=NULL)return;
 	if (img_inactive!=NULL)return;
 
-//	printf("SanityCheck failed, uninitializing\n");	
 	delete rootpixmap;
 	rootpixmap=NULL;
 	
 	initialized=false;
-//	printf("Uninitialized.\n");	
 }
 
 QPixmap *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
