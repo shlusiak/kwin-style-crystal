@@ -551,7 +551,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=crystal.desktop myrootpixmap.h tiles.h 
+KDE_DIST=tiles.h crystal.desktop myrootpixmap.h kwin3_crystal.la.closure 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -759,7 +759,7 @@ bcheck-am:
 
 
 #>+ 11
-kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc myrootpixmap.moc.cc  crystalclient.moc
+kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc $(srcdir)/myrootpixmap.moc.cc  crystalclient.moc
 	@echo 'creating kwin3_crystal_la.all_cc.cc ...'; \
 	rm -f kwin3_crystal_la.all_cc.files kwin3_crystal_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cc.final; \

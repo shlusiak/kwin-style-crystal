@@ -37,6 +37,12 @@ static const int BUTTONSIZE      = 18;
 static const int FRAMESIZE       = 1;
 static const int DECOSIZE	 = 14;
 
+static const int CORNER_EDGE_H=7;
+static const int CORNER_EDGE_V=7;
+static const int CORNER_EDGE_OFFSET=1;
+
+
+
 struct WND_CONFIG
 {
 	int mode;	// The mode (fade, emboss, ...)
@@ -50,15 +56,11 @@ static int borderwidth=1;
 static bool textshadow=true;
 static int titlesize = 20;
 static bool trackdesktop=true;
+static bool roundCorners=false;
+static QColor buttonColor(255,255,255);
 
-static QImage deco_close((uchar*)crystal_close_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-static QImage deco_min((uchar*)crystal_min_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-static QImage deco_sticky((uchar*)crystal_sticky_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-static QImage deco_un_sticky((uchar*)crystal_un_sticky_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-static QImage deco_max((uchar*)crystal_max_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-static QImage deco_restore((uchar*)crystal_restore_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-static QImage deco_shade((uchar*)crystal_shade_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
-static QImage deco_help((uchar*)crystal_help_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_close,deco_min,deco_sticky,deco_un_sticky,deco_max,deco_restore,deco_shade,deco_help;
+
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -97,7 +99,8 @@ void QImageHolder::Init()
 {
 	if (initialized)return;
 	
-	printf("Calling Init\n");	
+//	printf("Calling Init\n");	
+	
 	rootpixmap=new KMyRootPixmap(NULL/*,this*/);
 	rootpixmap->start();
 	rootpixmap->repaint(true);
@@ -123,12 +126,12 @@ void QImageHolder::CheckSanity()
 	if (!initialized)return;
 	if (img_active!=NULL)return;
 
-	printf("SanityCheck failed, uninitializing\n");	
+//	printf("SanityCheck failed, uninitializing\n");	
 	delete rootpixmap;
 	rootpixmap=NULL;
 	
 	initialized=false;
-	printf("Uninitialized.\n");	
+//	printf("Uninitialized.\n");	
 	
 }
 
@@ -199,15 +202,7 @@ ExampleFactory::ExampleFactory()
 {
     readConfig();
     initialized_ = true;
-    
-    deco_close.setAlphaBuffer(true);
-    deco_max.setAlphaBuffer(true);
-    deco_restore.setAlphaBuffer(true);
-    deco_sticky.setAlphaBuffer(true);
-    deco_un_sticky.setAlphaBuffer(true);
-    deco_min.setAlphaBuffer(true);
-    deco_shade.setAlphaBuffer(true);
-    deco_help.setAlphaBuffer(true);
+    initButtonPixmaps();
     
     image_holder=new QImageHolder(this);
 }
@@ -240,11 +235,34 @@ KDecoration* ExampleFactory::createDecoration(KDecorationBridge* b)
 // Reset the handler. Returns true if decorations need to be remade, false if
 // only a repaint is necessary
 
+QImage makeButtonImage(uchar* data)
+{
+	QImage img=QImage(data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+	img.setAlphaBuffer(true);
+	
+	img=img.copy();
+	return KImageEffect::blend(buttonColor,img,1.0f);
+}
+
+void ExampleFactory::initButtonPixmaps()
+{
+	deco_close=makeButtonImage((uchar*)crystal_close_data);
+	deco_min=makeButtonImage((uchar*)crystal_min_data);
+	deco_sticky=makeButtonImage((uchar*)crystal_sticky_data);
+	deco_un_sticky=makeButtonImage((uchar*)crystal_un_sticky_data);
+	deco_max=makeButtonImage((uchar*)crystal_max_data);
+	deco_restore=makeButtonImage((uchar*)crystal_restore_data);
+	deco_shade=makeButtonImage((uchar*)crystal_shade_data);
+	deco_help=makeButtonImage((uchar*)crystal_help_data);
+}
+
 bool ExampleFactory::reset(unsigned long changed)
 {
     // read in the configuration
     initialized_ = false;
     bool confchange = readConfig();
+    initButtonPixmaps();
+        
     initialized_ = true;
 
     image_holder->repaint(true);
@@ -290,7 +308,11 @@ bool ExampleFactory::readConfig()
     
     borderwidth=config.readNumEntry("Borderwidth",4);
     titlesize=config.readNumEntry("Titlebarheight",20);
-    
+ 
+    buttonColor=config.readColorEntry("ButtonColor",&buttonColor);
+    roundCorners=config.readBoolEntry("RoundCorners",false);
+
+       
     return true;
 }
 
@@ -371,12 +393,27 @@ void ExampleButton::leaveEvent(QEvent *e)
 void ExampleButton::mousePressEvent(QMouseEvent* e)
 {
     lastmouse_ = e->button();
-
+    int button;
     // translate and pass on mouse event
-    int button = LeftButton;
-    if ((type_ != ButtonMax) && (type_ != ButtonMin) && (e->button() != LeftButton)) {
-        button = NoButton; // middle & right buttons inappropriate
+    switch(e->button())
+    {
+    	case LeftButton:
+		button=LeftButton;
+		break;
+	case RightButton:
+		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu))
+			button=LeftButton; else button=NoButton;
+		break;
+	case MidButton:
+		if ((type_ == ButtonMax) || (type_ == ButtonMin))
+			button=LeftButton; else button=NoButton;
+		break;
+	
+	default:button=NoButton;
+		break;
     }
+    
+    
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
                    button, e->state());
     QButton::mousePressEvent(&me);
@@ -390,11 +427,24 @@ void ExampleButton::mousePressEvent(QMouseEvent* e)
 void ExampleButton::mouseReleaseEvent(QMouseEvent* e)
 {
     lastmouse_ = e->button();
-
+    int button;
     // translate and pass on mouse event
-    int button = LeftButton;
-    if ((type_ != ButtonMax) && (type_ != ButtonMin) && (e->button() != LeftButton)) {
-        button = NoButton; // middle & right buttons inappropriate
+    switch(e->button())
+    {
+    	case LeftButton:
+		button=LeftButton;
+		break;
+	case RightButton:
+		if ((type_ == ButtonMax) || (type_ == ButtonMin) || (type_ == ButtonMenu))
+			button=LeftButton; else button=NoButton;
+		break;
+	case MidButton:
+		if ((type_ == ButtonMax) || (type_ == ButtonMin))
+			button=LeftButton; else button=NoButton;
+		break;
+	
+	default:button=NoButton;
+		break;
     }
     QMouseEvent me(e->type(), e->pos(), e->globalPos(), button, e->state());
     QButton::mouseReleaseEvent(&me);
@@ -532,15 +582,44 @@ void ExampleClient::init()
     // the window should stretch
     mainlayout->setRowStretch(2, 10);
     mainlayout->setColStretch(1, 10);
-
+    
+    updateMask();    
+    
     // setup titlebar buttons
+    titlelayout->addItem(new QSpacerItem(borderwidth/2,0));
+    
     for (int n=0; n<ButtonTypeCount; n++) button[n] = 0;
     addButtons(titlelayout, options()->titleButtonsLeft());
     titlelayout->addItem(titlebar_);
     addButtons(titlelayout, options()->titleButtonsRight());
+    titlelayout->addItem(new QSpacerItem(borderwidth/2,0));
 
     connect ( my_factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
     connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
+}
+
+void ExampleClient::updateMask()
+{
+	if (!roundCorners)
+	{
+		mask=QRegion(widget()->rect());
+		setMask(mask);
+//		clearMask();
+		return;
+	}
+	// Two rects, which leave the four corners blank	
+	mask =QRegion(CORNER_EDGE_H,0,width()-CORNER_EDGE_H*2,height());
+	mask+=QRegion(0,CORNER_EDGE_V,width(),height()-CORNER_EDGE_V*2);
+	
+	// Two upper edges
+	mask+=QRegion(CORNER_EDGE_OFFSET,CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
+	mask+=QRegion(width()-CORNER_EDGE_H*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
+
+	// Lower edges
+	mask+=QRegion(CORNER_EDGE_OFFSET,height()-CORNER_EDGE_V*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
+	mask+=QRegion(width()-CORNER_EDGE_H*2+1-CORNER_EDGE_OFFSET,height()-CORNER_EDGE_V*2+1-CORNER_EDGE_OFFSET,CORNER_EDGE_H*2,CORNER_EDGE_V*2,QRegion::Ellipse);
+	
+	setMask(mask);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -887,7 +966,8 @@ void ExampleClient::paintEvent(QPaintEvent*)
     	pufferPainter.setFont(options()->font(isActive(), false));
 	
 	QColor color=options()->color(KDecoration::ColorFont, isActive());
-	r=QRect(FRAMESIZE + FRAMESIZE+BUTTONSIZE*2, FRAMESIZE, width() - FRAMESIZE - FRAMESIZE * 2-BUTTONSIZE*4, titlesize-1);
+//	r=QRect(FRAMESIZE + FRAMESIZE+BUTTONSIZE*2, FRAMESIZE, width() - FRAMESIZE - FRAMESIZE * 2-BUTTONSIZE*4, titlesize-1);
+	r=titlebar_->geometry();
 	
 	if (textshadow)
 	{
@@ -933,8 +1013,11 @@ void ExampleClient::paintEvent(QPaintEvent*)
     	group = options()->colorGroup(KDecoration::ColorFrame, isActive());
 
     	// outline the frame
-    	painter.setPen(group.dark());
-    	painter.drawRect(widget()->rect());
+	if (!roundCorners)
+	{
+    		painter.setPen(group.dark());
+		painter.drawRect(widget()->rect());
+	}
     }
 }
 
@@ -948,6 +1031,7 @@ void ExampleClient::resizeEvent(QResizeEvent *)
     if (widget()->isShown()) {
         // repaint only every 200 ms
 	if (!timer.isActive())timer.start(200,true);
+	updateMask();
     }
 }
 
@@ -1004,6 +1088,8 @@ void ExampleClient::minButtonPressed()
     if (button[ButtonMin]) {
         switch (button[ButtonMin]->lastMousePress()) {
           case MidButton:
+	  	performWindowOperation(LowerOp);
+	  	break;
 	  case RightButton:
               if (isShadeable()) setShade(!isShade());
               break;

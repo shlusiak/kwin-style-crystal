@@ -95,6 +95,7 @@ public:
 	QImageHolder *image_holder;
 	
 private:
+    void initButtonPixmaps();
     bool readConfig();
 
 private:
@@ -171,6 +172,7 @@ public:
 
 private:
     void addButtons(QBoxLayout* layout, const QString& buttons);
+    void updateMask();
 
     bool eventFilter(QObject *obj, QEvent *e);
     void mouseDoubleClickEvent(QMouseEvent *e);
@@ -192,6 +194,7 @@ private slots:
 private:
     ExampleButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
+    QRegion mask;
     ExampleFactory* my_factory;
     QTimer timer;
 };

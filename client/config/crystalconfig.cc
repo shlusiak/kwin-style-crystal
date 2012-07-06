@@ -18,6 +18,7 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qwidgetstack.h>
+#include <kcolorbutton.h>
 
 #include "crystalconfig.h"
 #include "configdialog.h"
@@ -67,6 +68,9 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
             this, SLOT(selectionChanged(int)));
     connect(dialog_->titlebarheight, SIGNAL(valueChanged(int)),
             this, SLOT(selectionChanged(int)));
+
+    connect(dialog_->roundCorners, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->buttonColor, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -145,6 +149,10 @@ void ExampleConfig::load(KConfig*)
 
     updateStack(dialog_->stack1,dialog_->type1->currentItem());
     updateStack(dialog_->stack2,dialog_->type2->currentItem());
+    
+    QColor color(255,255,255);
+    dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
+    dialog_->roundCorners->setChecked(config_->readBoolEntry("RoundCorners",false));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -170,7 +178,10 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("InactiveFrame",dialog_->frame2->isChecked());
     config_->writeEntry("ActiveMode",dialog_->type1->currentItem());
     config_->writeEntry("InactiveMode",dialog_->type2->currentItem());
-    
+
+    config_->writeEntry("ButtonColor",dialog_->buttonColor->color());
+    config_->writeEntry("RoundCorners",dialog_->roundCorners->isChecked());
+        
     config_->sync();
 }
 

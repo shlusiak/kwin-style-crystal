@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>439</width>
-            <height>286</height>
+            <height>275</height>
         </rect>
     </property>
     <property name="caption">
@@ -19,7 +19,65 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="5">
+        <widget class="QLabel" row="3" column="0">
+            <property name="name">
+                <cstring>textLabel2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Border width:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>borderwidth</cstring>
+            </property>
+        </widget>
+        <widget class="QSpinBox" row="3" column="3">
+            <property name="name">
+                <cstring>titlebarheight</cstring>
+            </property>
+            <property name="prefix">
+                <string></string>
+            </property>
+            <property name="minValue">
+                <number>5</number>
+            </property>
+            <property name="value">
+                <number>20</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Height of the title par (independend to border width)</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="2" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>roundCorners</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Round Corners</string>
+            </property>
+            <property name="accel">
+                <string>Alt+R</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="0">
+            <property name="name">
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>Button color:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="2">
+            <property name="name">
+                <cstring>textLabel2_2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Titlebar height:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>titlebarheight</cstring>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="4">
             <property name="name">
                 <cstring>titlealign</cstring>
             </property>
@@ -74,24 +132,21 @@
                 </widget>
             </grid>
         </widget>
-        <widget class="QSpinBox" row="2" column="4">
+        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>titlebarheight</cstring>
+                <cstring>textshadow</cstring>
             </property>
-            <property name="prefix">
-                <string></string>
+            <property name="text">
+                <string>&amp;Shadowed text</string>
             </property>
-            <property name="minValue">
-                <number>5</number>
-            </property>
-            <property name="value">
-                <number>20</number>
+            <property name="accel">
+                <string>Alt+S</string>
             </property>
             <property name="toolTip" stdset="0">
-                <string>Height of the title par (independend to border width)</string>
+                <string>Draws a nice shadowed title bar text to improve visibility.</string>
             </property>
         </widget>
-        <widget class="QSpinBox" row="2" column="1">
+        <widget class="QSpinBox" row="3" column="1">
             <property name="name">
                 <cstring>borderwidth</cstring>
             </property>
@@ -105,29 +160,45 @@
                 <string>Width of the borders</string>
             </property>
         </widget>
-        <widget class="QLabel" row="2" column="0">
+        <widget class="QCheckBox" row="1" column="2" rowspan="1" colspan="2">
             <property name="name">
-                <cstring>textLabel2_2</cstring>
+                <cstring>trackdesktop</cstring>
             </property>
             <property name="text">
-                <string>Border width:</string>
+                <string>&amp;Track desktop changes</string>
             </property>
-            <property name="buddy" stdset="0">
-                <cstring>borderwidth</cstring>
+            <property name="accel">
+                <string>Alt+T</string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
             </property>
         </widget>
-        <widget class="QLabel" row="2" column="2" rowspan="1" colspan="2">
+        <widget class="KColorButton" row="2" column="1">
             <property name="name">
-                <cstring>textLabel2_2_2</cstring>
+                <cstring>buttonColor</cstring>
             </property>
             <property name="text">
-                <string>Titlebar height:</string>
+                <string></string>
             </property>
-            <property name="buddy" stdset="0">
-                <cstring>titlebarheight</cstring>
+            <property name="toggleButton">
+                <bool>false</bool>
+            </property>
+            <property name="color">
+                <color>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>255</blue>
+                </color>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
             </property>
         </widget>
-        <widget class="QFrame" row="3" column="0" rowspan="1" colspan="5">
+        <widget class="QFrame" row="4" column="0" rowspan="1" colspan="4">
             <property name="name">
                 <cstring>frame7</cstring>
             </property>
@@ -252,7 +323,10 @@
                                 </sizepolicy>
                             </property>
                             <property name="text">
-                                <string>Frame</string>
+                                <string>&amp;Frame</string>
+                            </property>
+                            <property name="accel">
+                                <string>Alt+F</string>
                             </property>
                             <property name="toolTip" stdset="0">
                                 <string>Draws a very thin frame around the borders of the window</string>
@@ -346,7 +420,10 @@
                                 </sizepolicy>
                             </property>
                             <property name="text">
-                                <string>Frame</string>
+                                <string>Fr&amp;ame</string>
+                            </property>
+                            <property name="accel">
+                                <string>Alt+A</string>
                             </property>
                             <property name="toolTip" stdset="0">
                                 <string>Draws a very thin frame around the borders of the window</string>
@@ -386,35 +463,13 @@
                 </widget>
             </hbox>
         </widget>
-        <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>textshadow</cstring>
-            </property>
-            <property name="text">
-                <string>Shadowed text</string>
-            </property>
-            <property name="toolTip" stdset="0">
-                <string>Draws a nice shadowed title bar text to improve visibility.</string>
-            </property>
-        </widget>
-        <widget class="QCheckBox" row="1" column="3" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>trackdesktop</cstring>
-            </property>
-            <property name="text">
-                <string>Track desktop changes</string>
-            </property>
-            <property name="toolTip" stdset="0">
-                <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
-            </property>
-        </widget>
     </grid>
 </widget>
 <includes>
     <include location="local" impldecl="in implementation">configdialog.ui.h</include>
 </includes>
-<layoutdefaults spacing="6" margin="11"/>
+<layoutdefaults spacing="6" margin="7"/>
+<includehints>
+    <includehint>kcolorbutton.h</includehint>
+</includehints>
 </UI>
