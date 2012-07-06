@@ -28,6 +28,7 @@
 #define EXAMPLECLIENT_H
 
 #include <qbutton.h>
+#include <qtimer.h>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 #include <kwinmodule.h>
@@ -36,7 +37,7 @@
 class QSpacerItem;
 class QPoint;
 
-namespace Example {
+namespace Crystal {
 
 class ExampleClient;
 class ExampleFactory;
@@ -127,6 +128,8 @@ private:
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
     void drawButton(QPainter *painter);
+    
+    int buttonSize() const;
 
 private:
     ExampleClient *client_;
@@ -178,6 +181,7 @@ private:
 private slots:
     void Repaint();
     void maxButtonPressed();
+    void minButtonPressed();
     void menuButtonPressed();
 //    void BackgroundUpdated(const QImage&);
 //    void DesktopChanged(int desktop);    
@@ -186,6 +190,7 @@ private:
     ExampleButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
     ExampleFactory* my_factory;
+    QTimer timer;
 };
 
 } // namespace Example

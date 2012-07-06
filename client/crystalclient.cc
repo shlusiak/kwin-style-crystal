@@ -28,13 +28,13 @@
 #include "tiles.h"
 
 
-using namespace Example;
+using namespace Crystal;
 
 // global constants
 
 static const int BUTTONSIZE      = 18;
-static const int TITLESIZE       = 24;
 static const int FRAMESIZE       = 1;
+static const int DECOSIZE	 = 14;
 
 struct WND_CONFIG
 {
@@ -46,15 +46,17 @@ struct WND_CONFIG
 }active,inactive;
 
 
-int borderwidth=1;
+static int borderwidth=1;
+static bool textshadow=true;
+static int titlesize = 20;
 
-static QImage deco_close((uchar*)crystal_close_data,18,18,32,NULL,0,QImage::LittleEndian);
-static QImage deco_min((uchar*)crystal_min_data,18,18,32,NULL,0,QImage::LittleEndian);
-static QImage deco_sticky((uchar*)crystal_sticky_data,18,18,32,NULL,0,QImage::LittleEndian);
-static QImage deco_un_sticky((uchar*)crystal_un_sticky_data,18,18,32,NULL,0,QImage::LittleEndian);
-static QImage deco_max((uchar*)crystal_max_data,18,18,32,NULL,0,QImage::LittleEndian);
-static QImage deco_restore((uchar*)crystal_restore_data,18,18,32,NULL,0,QImage::LittleEndian);
-static QImage deco_help((uchar*)crystal_help_data,18,18,32,NULL,0,QImage::LittleEndian);
+static QImage deco_close((uchar*)crystal_close_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_min((uchar*)crystal_min_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_sticky((uchar*)crystal_sticky_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_un_sticky((uchar*)crystal_un_sticky_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_max((uchar*)crystal_max_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_restore((uchar*)crystal_restore_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
+static QImage deco_help((uchar*)crystal_help_data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian);
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -67,7 +69,7 @@ Qt::AlignmentFlags ExampleFactory::titlealign_ = Qt::AlignHCenter;
 
 extern "C" KDecorationFactory* create_factory()
 {
-    return new Example::ExampleFactory();
+    return new ExampleFactory();
 }
 
 //////////////////////////////////////////////////////
@@ -79,7 +81,7 @@ QImageHolder::QImageHolder(ExampleFactory *vfactory)
 :factory(vfactory),img_active(NULL),img_inactive(NULL)
 {
 	rootpixmap=NULL;
-	initialized=NULL;
+	initialized=false;
 }
 
 QImageHolder::~QImageHolder()
@@ -250,13 +252,17 @@ bool ExampleFactory::readConfig()
     else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
+    textshadow=(bool)config.readBoolEntry("TextShadow",true);
+    
     active.mode=config.readNumEntry("ActiveMode",0);
     inactive.mode=config.readNumEntry("InactiveMode",0);
     active.amount=(double)config.readNumEntry("ActiveShade",50)/100.0;
     inactive.amount=(double)config.readNumEntry("InactiveShade",50)/100.0;
     active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
     inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
+    
     borderwidth=config.readNumEntry("Borderwidth",4);
+    titlesize=config.readNumEntry("Titlebarheight",20);
     
     return true;
 }
@@ -279,7 +285,7 @@ ExampleButton::ExampleButton(ExampleClient *parent, const char *name,
       deco_(0), lastmouse_(0)
 {
     setBackgroundMode(NoBackground);
-    setFixedSize(BUTTONSIZE, BUTTONSIZE);
+    setFixedSize(buttonSize(), buttonSize());
     setCursor(arrowCursor);
 
     if (bitmap==NULL || bitmap->isNull())deco_=NULL;
@@ -300,7 +306,12 @@ ExampleButton::~ExampleButton()
 
 QSize ExampleButton::sizeHint() const
 {
-    return QSize(BUTTONSIZE, BUTTONSIZE);
+	return QSize(buttonSize(),buttonSize());
+}
+
+int ExampleButton::buttonSize() const
+{
+	return (titlesize>BUTTONSIZE)?BUTTONSIZE:titlesize;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -336,7 +347,7 @@ void ExampleButton::mousePressEvent(QMouseEvent* e)
 
     // translate and pass on mouse event
     int button = LeftButton;
-    if ((type_ != ButtonMax) && (e->button() != LeftButton)) {
+    if ((type_ != ButtonMax) && (type_ != ButtonMin) && (e->button() != LeftButton)) {
         button = NoButton; // middle & right buttons inappropriate
     }
     QMouseEvent me(e->type(), e->pos(), e->globalPos(),
@@ -355,7 +366,7 @@ void ExampleButton::mouseReleaseEvent(QMouseEvent* e)
 
     // translate and pass on mouse event
     int button = LeftButton;
-    if ((type_ != ButtonMax) && (e->button() != LeftButton)) {
+    if ((type_ != ButtonMax) && (type_ != ButtonMin) && (e->button() != LeftButton)) {
         button = NoButton; // middle & right buttons inappropriate
     }
     QMouseEvent me(e->type(), e->pos(), e->globalPos(), button, e->state());
@@ -392,52 +403,44 @@ void ExampleButton::drawButton(QPainter *painter)
 	pufferPainter.fillRect(rect(), group.background());
     }
 
+    QRect r(1,1,rect().width()-2,rect().height()-2);
 
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
         dx = (width() - 16) / 2;
         dy = (height() - 16) / 2;
-        if (isDown()) { dx++; dy++; }
 
-//	const QPixmap px(client_->icon().pixmap(QIconSet::Small,QIconSet::Normal));
-//	QImage img(px.convertToImage().copy(0,0,BUTTONSIZE,BUTTONSIZE));
-	
-//	dst=KImageEffect::blend(img,dst,0.4);
-
-        pufferPainter.drawPixmap(dx, dy, client_->icon().pixmap(QIconSet::Small,
+	if (dx<1 || dy<1)
+	{
+		if (isDown()) { r.moveBy(1,1); }
+        	pufferPainter.drawPixmap(r, client_->icon().pixmap(QIconSet::Small,
                                                            QIconSet::Normal));
-
-	pufferPainter.end();
-    	painter->drawPixmap(0,0, pufferPixmap);    
+	}else{
+        	if (isDown()) { dx++; dy++; }
+		pufferPainter.drawPixmap(dx, dy, client_->icon().pixmap(QIconSet::Small,
+                                                           QIconSet::Normal));
+	}
     } else if (deco_) {
         // otherwise we paint the deco
-//    	pufferPainter.end();
-
-//    	QImage dst(pufferPixmap.convertToImage());
-//	QImage img(deco_->convertToImage().copy(0,0,BUTTONSIZE,BUTTONSIZE));
-//	img.setMask(img);
-
-//        dx = (width() - DECOSIZE) / 2;
-//        dy = (height() - DECOSIZE) / 2;
-	dx=0;
-	dy=0;
-//        if (isDown()) { dx++; dy++; }
-//        pufferPainter.setPen(group.light());
-//        pufferPainter.drawPixmap(dx, dy, *deco_);
-//	dst=KImageEffect::blend(img,dst,0.7);
 	
-//    	painter->drawImage(QPoint(0,0), dst);
-
-//        pufferPainter.drawImage(QPoint(dx, dy), *deco_);
-	pufferPainter.drawImage(QPoint(dx,dy),*deco_);
+        dx = (width() - DECOSIZE) / 2;
+        dy = (height() - DECOSIZE) / 2;
 	
-	if (isDown())
+	if (dx<1 || dy<1)
+	{	// Deco size is smaller than image, we need to stretch it
+		
+		pufferPainter.drawImage(r,*deco_);
+		if (isDown())
+			pufferPainter.drawImage(r,*deco_);
+	}else{
+		// Otherwise we just paint it
 		pufferPainter.drawImage(QPoint(dx,dy),*deco_);
-
-
+		if (isDown())
+			pufferPainter.drawImage(QPoint(dx,dy),*deco_);
+	}
+    }
 	pufferPainter.end();
     	painter->drawPixmap(0,0, pufferPixmap);    
-    }
 
 }
 
@@ -481,7 +484,7 @@ void ExampleClient::init()
     // setup layout
     QGridLayout *mainlayout = new QGridLayout(widget(), 4, 3); // 4x3 grid
     QHBoxLayout *titlelayout = new QHBoxLayout();
-    titlebar_ = new QSpacerItem(1, TITLESIZE, QSizePolicy::Expanding,
+    titlebar_ = new QSpacerItem(1, titlesize, QSizePolicy::Expanding,
                                 QSizePolicy::Fixed);
 
     mainlayout->setResizeMode(QLayout::FreeResize);
@@ -510,6 +513,7 @@ void ExampleClient::init()
     addButtons(titlelayout, options()->titleButtonsRight());
 
     connect ( my_factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
+    connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -571,7 +575,7 @@ void ExampleClient::addButtons(QBoxLayout *layout, const QString& s)
                           new ExampleButton(this, "iconify", i18n("Minimize"),
                                             ButtonMin, &deco_min);
                       connect(button[ButtonMin], SIGNAL(clicked()),
-                              this, SLOT(minimize()));
+                              this, SLOT(minButtonPressed()));
                       layout->addWidget(button[ButtonMin]);
                   }
                   break;
@@ -693,8 +697,8 @@ void ExampleClient::shadeChange()
 void ExampleClient::borders(int &l, int &r, int &t, int &b) const
 {
     l = r = FRAMESIZE*borderwidth;
-    t = TITLESIZE + FRAMESIZE;
-    b = FRAMESIZE * borderwidth;
+    t = titlesize + FRAMESIZE;
+    if (!isShade())b = FRAMESIZE * borderwidth; else b=FRAMESIZE;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -728,7 +732,8 @@ KDecoration::Position ExampleClient::mousePosition(const QPoint &point) const
     Position pos;
     const int RESIZESIZE=FRAMESIZE*borderwidth;
 
-    if (point.y() <= FRAMESIZE*4) {
+    if (isShade()) pos=PositionCenter; 
+    else if (point.y() <= FRAMESIZE*3) {
         // inside top frame
         if (point.x() <= corner)                 pos = PositionTopLeft;
         else if (point.x() >= (width()-corner))  pos = PositionTopRight;
@@ -820,7 +825,6 @@ void ExampleClient::paintEvent(QPaintEvent*)
     QPainter painter(widget());
 
     // draw the titlebar
-    QRect title(FRAMESIZE,FRAMESIZE,width()-FRAMESIZE,TITLESIZE-FRAMESIZE);
     group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
    
     my_factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
@@ -841,14 +845,24 @@ void ExampleClient::paintEvent(QPaintEvent*)
 	
     	// draw title text
     	pufferPainter.setFont(options()->font(isActive(), false));
-    	pufferPainter.setPen(options()->color(KDecoration::ColorFont, isActive()));
-    	pufferPainter.drawText(title.x() + FRAMESIZE+BUTTONSIZE*2, title.y(),
-                     title.width() - FRAMESIZE * 2-BUTTONSIZE*4, title.height(),
+	
+	QColor color=options()->color(KDecoration::ColorFont, isActive());
+	r=QRect(FRAMESIZE + FRAMESIZE+BUTTONSIZE*2, FRAMESIZE, width() - FRAMESIZE - FRAMESIZE * 2-BUTTONSIZE*4, titlesize-1);
+	
+	if (textshadow)
+	{
+		pufferPainter.translate(1,1);
+	    	pufferPainter.setPen(color.dark(200));
+    		pufferPainter.drawText(r,
+                     	ExampleFactory::titleAlign() | AlignVCenter,
+                     	caption());
+		pufferPainter.translate(-1,-1);
+	}
+	
+    	pufferPainter.setPen(color);
+    	pufferPainter.drawText(r,
                      ExampleFactory::titleAlign() | AlignVCenter,
                      caption());
-	pufferPainter.end();
-	     
-	painter.drawPixmap(0,0,pufferPixmap);
 
 	if (borderwidth>0)
 	{	// Draw the side and bottom of the window with transparency
@@ -861,6 +875,10 @@ void ExampleClient::paintEvent(QPaintEvent*)
 		r=QRect(p.x()+bl,p.y()+widget()->height()-bb,widget()->width()-bl-br,bb);
 		painter.drawImage(QPoint(bl,widget()->height()-bb),*background,r);
 	}
+	
+	pufferPainter.end();
+	painter.drawPixmap(0,0,pufferPixmap);
+	
     }else{	// We don't have a background image, draw a solid rectangle
 	group = options()->colorGroup(KDecoration::ColorTitleBar, isActive());
 	painter.fillRect(widget()->rect(), group.background());
@@ -885,20 +903,16 @@ void ExampleClient::paintEvent(QPaintEvent*)
 void ExampleClient::resizeEvent(QResizeEvent *)
 {
     if (widget()->isShown()) {
-//        QRegion region = widget()->rect();
-//        region = region.subtract(titlebar_->geometry());
-//    widget()->erase(region);
-	Repaint();
+        // repaint only every 200 ms
+	if (!timer.isActive())timer.start(200,true);
     }
 }
 
 void ExampleClient::moveEvent(QMoveEvent *)
 {
     if (widget()->isShown()) {
-//        QRegion region = widget()->rect();
-//        region = region.subtract(titlebar_->geometry());
-//    widget()->erase(region);
-	Repaint();
+	// repaint every 200 ms, so constant moving does not take too much CPU
+	if (!timer.isActive())timer.start(200,true);
     }	
 }
 
@@ -918,7 +932,6 @@ void ExampleClient::Repaint()
 	widget()->repaint(false);
         for (int n=0; n<ButtonTypeCount; n++)
               if (button[n]) button[n]->reset();
-	
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -939,6 +952,20 @@ void ExampleClient::maxButtonPressed()
           default:
               (maximizeMode() == MaximizeFull) ? maximize(MaximizeRestore)
                   : maximize(MaximizeFull);
+        }
+    }
+}
+
+void ExampleClient::minButtonPressed()
+{
+    if (button[ButtonMin]) {
+        switch (button[ButtonMin]->lastMousePress()) {
+          case MidButton:
+	  case RightButton:
+              if (isShadeable()) setShade(!isShade());
+              break;
+          default:
+              minimize();
         }
     }
 }

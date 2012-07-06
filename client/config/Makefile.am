@@ -16,3 +16,4 @@ DISTCLEANFILES = $(kwin_crystal_config_la_METASOURCES)
 
 messages:
 	$(XGETTEXT) *.cpp -o $(podir)/kwin_crystal_config.pot
+METASOURCES = AUTO

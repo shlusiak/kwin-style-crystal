@@ -27,7 +27,7 @@
 // -------------
 // Constructor
 
-ExampleConfig::ExampleConfig(KConfig* config, QWidget* parent)
+ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     : QObject(parent), config_(0), dialog_(0)
 {
     // create the configuration object
@@ -44,6 +44,10 @@ ExampleConfig::ExampleConfig(KConfig* config, QWidget* parent)
     // setup the connections
     connect(dialog_->titlealign, SIGNAL(clicked(int)),
             this, SLOT(selectionChanged(int)));
+    
+    connect(dialog_->textshadow, SIGNAL(stateChanged(int)),
+            this, SLOT(selectionChanged(int)));
+    
     connect(dialog_->shade1, SIGNAL(valueChanged(int)),
             this, SLOT(selectionChanged(int)));
     connect(dialog_->shade2, SIGNAL(valueChanged(int)),
@@ -59,7 +63,8 @@ ExampleConfig::ExampleConfig(KConfig* config, QWidget* parent)
 
     connect(dialog_->borderwidth, SIGNAL(valueChanged(int)),
             this, SLOT(selectionChanged(int)));
-    
+    connect(dialog_->titlebarheight, SIGNAL(valueChanged(int)),
+            this, SLOT(selectionChanged(int)));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -117,10 +122,13 @@ void ExampleConfig::load(KConfig*)
     QRadioButton *button = (QRadioButton*)dialog_->titlealign->child(value);
     if (button) button->setChecked(true);
     
+    dialog_->textshadow->setChecked(config_->readBoolEntry("TextShadow",true));
+    
     dialog_->frame1->setChecked(config_->readBoolEntry("ActiveFrame",true));
     dialog_->frame2->setChecked(config_->readBoolEntry("InactiveFrame",true));
     
     dialog_->borderwidth->setValue(config_->readNumEntry("Borderwidth",4));
+    dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",20));
     
     int active=config_->readNumEntry("ActiveShade",40);
     dialog_->shade1->setValue(active);
@@ -147,11 +155,14 @@ void ExampleConfig::save(KConfig*)
 
     QRadioButton *button = (QRadioButton*)dialog_->titlealign->selected();
     if (button) config_->writeEntry("TitleAlignment", QString(button->name()));
+    config_->writeEntry("TextShadow",dialog_->textshadow->isChecked());
+    config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
+    config_->writeEntry("Titlebarheight",dialog_->titlebarheight->value());
+    
     config_->writeEntry("ActiveShade",dialog_->shade1->value());
     config_->writeEntry("InactiveShade",dialog_->shade2->value());
     config_->writeEntry("ActiveFrame",dialog_->frame1->isChecked());
     config_->writeEntry("InactiveFrame",dialog_->frame2->isChecked());
-    config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
     config_->writeEntry("ActiveMode",dialog_->type1->currentItem());
     config_->writeEntry("InactiveMode",dialog_->type2->currentItem());
     

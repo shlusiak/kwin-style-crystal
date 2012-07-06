@@ -252,7 +252,7 @@ x_includes = @x_includes@
 x_libraries = @x_libraries@
 xdg_appsdir = @xdg_appsdir@
 xdg_directorydir = @xdg_directorydir@
-SUBDIRS = $(TOPSUBDIRS)
+SUBDIRS = client
 
 MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 configure.files
 
@@ -439,7 +439,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=stamp-h.in subdirs configure.files configure.in.in 
+KDE_DIST=stamp-h.in crystal.kdevelop.pcs subdirs configure.files crystal.kdevses Doxyfile configure.in.in crystal.kdevelop 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
