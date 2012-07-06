@@ -11,7 +11,10 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <qbuttongroup.h>
+#include <qlabel.h>
 #include <qgroupbox.h>
+#include <qbuttongroup.h>
+#include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qwhatsthis.h>
 #include <qspinbox.h>
@@ -22,6 +25,7 @@
 #include <qfiledialog.h>
 #include <kcolorbutton.h>
 #include <kfiledialog.h>
+#include <qpicture.h>
 
 #include "crystalconfig.h"
 #include "configdialog.h"
@@ -37,7 +41,7 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
 {
     // create the configuration object
     config_ = new KConfig("kwincrystalrc");
-    KGlobal::locale()->insertCatalogue("kwin_crystal_config");
+//     KGlobal::locale()->insertCatalogue("kwin_crystal_config");
 
     // create and show the configuration dialog
     dialog_ = new ConfigDialog(parent);
@@ -54,6 +58,9 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
             this, SLOT(selectionChanged(int)));
 	connect(dialog_->tooltip,SIGNAL(stateChanged(int)),
 			this,SLOT(selectionChanged(int)));
+	connect(dialog_->wheelTask,SIGNAL(stateChanged(int)),
+			this,SLOT(selectionChanged(int)));
+
     connect(dialog_->trackdesktop, SIGNAL(stateChanged(int)),
             this, SLOT(selectionChanged(int)));
     
@@ -107,6 +114,18 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
 
 	connect(dialog_->overlay_active_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
 	connect(dialog_->overlay_inactive_file,SIGNAL(textChanged(const QString&)),this,SLOT(textChanged(const QString &)));
+
+
+    connect(dialog_->logoEnabled, SIGNAL(clicked(int)),
+            this, SLOT(selectionChanged(int)));
+    connect(dialog_->logoFile, SIGNAL(textChanged(const QString &)),
+            this, SLOT(logoTextChanged(const QString&)));
+    connect(dialog_->logoStretch, SIGNAL(activated(int)),
+            this, SLOT(selectionChanged(int)));
+    connect(dialog_->logoActive, SIGNAL(stateChanged(int)),
+            this, SLOT(selectionChanged(int)));
+	connect(dialog_->logoButton,SIGNAL(clicked(void)),this,SLOT(loadLogo(void)));
+	connect(dialog_->logoDistance,SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -148,7 +167,9 @@ void ExampleConfig::load(KConfig*)
     
     dialog_->textshadow->setChecked(config_->readBoolEntry("TextShadow",true));
 	dialog_->tooltip->setChecked(config_->readBoolEntry("CaptionTooltip",true));
-    dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",true));
+	dialog_->wheelTask->setChecked(config_->readBoolEntry("WheelTask",true));
+
+    dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",false));
     
     dialog_->frame1->setChecked(config_->readBoolEntry("ActiveFrame",true));
 	color=QColor(192,192,192);
@@ -157,18 +178,17 @@ void ExampleConfig::load(KConfig*)
 	color=QColor(192,192,192);
     dialog_->frameColor2->setColor(config_->readColorEntry("FrameColor2",&color));
     
-    dialog_->borderwidth->setValue(config_->readNumEntry("Borderwidth",4));
-    dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",20));
+    dialog_->borderwidth->setValue(config_->readNumEntry("Borderwidth",5));
+    dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",19));
     
-    int active=config_->readNumEntry("ActiveShade",40);
+    int active=config_->readNumEntry("ActiveShade",30);
     dialog_->shade1->setValue(active);
     
-    active=config_->readNumEntry("InactiveShade",40);
+    active=config_->readNumEntry("InactiveShade",-30);
     dialog_->shade2->setValue(active);
     
-    // Set the modus --> !!!! select new widget box !!!!
     dialog_->type1->setCurrentItem(config_->readNumEntry("ActiveMode",0));
-    dialog_->type2->setCurrentItem(config_->readNumEntry("InactiveMode",0));
+    dialog_->type2->setCurrentItem(config_->readNumEntry("InactiveMode",2));
 
 	color=QColor(255,255,255);
     dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
@@ -178,19 +198,17 @@ void ExampleConfig::load(KConfig*)
     dialog_->blc->setChecked( cornersFlag & BOT_LEFT );
     dialog_->brc->setChecked( cornersFlag & BOT_RIGHT );
 	
-	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",false));
+	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",true));
 	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor->color()!=QColor(255,255,255)));
 	
 	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",0));
 	
-	button=(QRadioButton*)dialog_->repaintMode->find(config_->readNumEntry("RepaintMode",2));
-	if (button)button->setChecked(true);
     dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
+	button=(QRadioButton*)dialog_->repaintMode->find(config_->readNumEntry("RepaintMode",1));
+	if (button)button->setChecked(true);
 
 	dialog_->active_blur->setValue(config_->readNumEntry("ActiveBlur",0));
 	dialog_->inactive_blur->setValue(config_->readNumEntry("InactiveBlur",0));
-
-
 
 	button=(QRadioButton*)dialog_->overlay_active->find(config_->readNumEntry("OverlayModeActive",0));
 	if (button)button->setChecked(true);
@@ -199,6 +217,13 @@ void ExampleConfig::load(KConfig*)
 	button=(QRadioButton*)dialog_->overlay_inactive->find(config_->readNumEntry("OverlayModeInactive",0));
 	if (button)button->setChecked(true);
     dialog_->overlay_inactive_file->setText(config_->readEntry("OverlayFileInactive",""));
+
+	dialog_->logoEnabled->setButton(config_->readNumEntry("LogoAlignment",1));
+	dialog_->logoFile->setText(config_->readEntry("LogoFile",""));
+	dialog_->logoActive->setChecked(config_->readBoolEntry("LogoActive",1));
+	dialog_->logoStretch->setCurrentItem(config_->readNumEntry("LogoStretch",0));
+	dialog_->logoDistance->setValue(config_->readNumEntry("LogoDistance",0));
+	updateLogo();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -214,6 +239,7 @@ void ExampleConfig::save(KConfig*)
     if (button) config_->writeEntry("TitleAlignment", QString(button->name()));
     config_->writeEntry("TextShadow",dialog_->textshadow->isChecked());
 	config_->writeEntry("CaptionTooltip",dialog_->tooltip->isChecked());
+	config_->writeEntry("WheelTask",dialog_->wheelTask->isChecked());
     config_->writeEntry("TrackDesktop",dialog_->trackdesktop->isChecked());
     
     config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
@@ -252,6 +278,12 @@ void ExampleConfig::save(KConfig*)
 	config_->writeEntry("OverlayModeInactive",dialog_->overlay_inactive->selectedId());
 	config_->writeEntry("OverlayFileInactive",dialog_->overlay_inactive_file->text());
 
+	config_->writeEntry("LogoAlignment",dialog_->logoEnabled->selectedId());
+	config_->writeEntry("LogoFile",dialog_->logoFile->text());
+	config_->writeEntry("LogoActive",dialog_->logoActive->isChecked());
+	config_->writeEntry("LogoStretch",dialog_->logoStretch->currentItem());
+	config_->writeEntry("LogoDistance",dialog_->logoDistance->value());
+
     config_->sync();
 }
 
@@ -283,6 +315,29 @@ void ExampleConfig::loadOverlayInactive()
     }
 }
 
+void ExampleConfig::loadLogo()
+{
+	KURL s=KFileDialog::getImageOpenURL();
+    if (!s.isEmpty())
+	{
+		dialog_->logoFile->setText( s.path() );
+        emit changed();
+		updateLogo();
+    }
+}
+
+void ExampleConfig::logoTextChanged(const QString&)
+{
+	updateLogo();
+	emit changed();
+}
+
+void ExampleConfig::updateLogo()
+{
+	QPixmap pic;
+	pic.load(dialog_->logoFile->text());
+	dialog_->logoPreview->setPixmap(pic);
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // defaults()

@@ -3,7 +3,7 @@
   <general>
     <author>Sascha Hlusiak</author>
     <email>Spam84@gmx.de</email>
-    <version/>
+    <version></version>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <keywords>
@@ -12,11 +12,8 @@
     </keywords>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description/>
-    <ignoreparts>
-      <part>Unterstützung für Perforce (KDevelop)</part>
-      <part>Unterstützung für Subversion (KDevelop)</part>
-    </ignoreparts>
+    <description></description>
+    <ignoreparts/>
     <secondaryLanguages/>
   </general>
   <kdevautoproject>
@@ -157,15 +154,23 @@
       <headerCompletionDelay>250</headerCompletionDelay>
     </codecompletion>
     <references/>
+    <creategettersetter>
+      <prefixGet></prefixGet>
+      <prefixSet>set</prefixSet>
+      <prefixVariable>m_,_</prefixVariable>
+      <parameterName>theValue</parameterName>
+      <inlineGet>true</inlineGet>
+      <inlineSet>true</inlineSet>
+    </creategettersetter>
   </kdevcppsupport>
   <kdevdebugger>
     <general>
-      <programargs/>
-      <gdbpath/>
+      <programargs></programargs>
+      <gdbpath></gdbpath>
       <dbgshell>libtool</dbgshell>
-      <configGdbScript/>
-      <runShellScript/>
-      <runGdbScript/>
+      <configGdbScript></configGdbScript>
+      <runShellScript></runShellScript>
+      <runGdbScript></runGdbScript>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>

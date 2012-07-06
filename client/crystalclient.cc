@@ -170,12 +170,13 @@ bool CrystalFactory::readConfig()
 
     textshadow=(bool)config.readBoolEntry("TextShadow",true);
 	captiontooltip=(bool)config.readBoolEntry("CaptionTooltip",true);
-    trackdesktop=(bool)config.readBoolEntry("TrackDesktop",true);
+	wheelTask=(bool)config.readBoolEntry("WheelTask",true);
+    trackdesktop=(bool)config.readBoolEntry("TrackDesktop",false);
     
     active.mode=config.readNumEntry("ActiveMode",0);
-    inactive.mode=config.readNumEntry("InactiveMode",0);
-    active.amount=(double)config.readNumEntry("ActiveShade",50)/100.0;
-    inactive.amount=(double)config.readNumEntry("InactiveShade",50)/100.0;
+    inactive.mode=config.readNumEntry("InactiveMode",1);
+    active.amount=(double)config.readNumEntry("ActiveShade",30)/100.0;
+    inactive.amount=(double)config.readNumEntry("InactiveShade",-30)/100.0;
     active.frame=(bool)config.readBoolEntry("ActiveFrame",true);
     inactive.frame=(bool)config.readBoolEntry("InactiveFrame",true);
 	buttonColor=QColor(160,160,160);
@@ -186,22 +187,39 @@ bool CrystalFactory::readConfig()
 	active.blur=config.readNumEntry("ActiveBlur",0);
 	inactive.blur=config.readNumEntry("InactiveBlur",0);
     
-    borderwidth=config.readNumEntry("Borderwidth",4);
-    titlesize=config.readNumEntry("Titlebarheight",20);
+    borderwidth=config.readNumEntry("Borderwidth",5);
+    titlesize=config.readNumEntry("Titlebarheight",21);
  
 	buttonColor=QColor(255,255,255);
     buttonColor=config.readColorEntry("ButtonColor",&buttonColor);
     roundCorners=config.readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
 
-	hovereffect=config.readBoolEntry("HoverEffect",false);
+	hovereffect=config.readBoolEntry("HoverEffect",true);
 	tintButtons=config.readBoolEntry("TintButtons",buttonColor!=QColor(255,255,255));
-	repaintMode=config.readNumEntry("RepaintMode",2);
+	repaintMode=config.readNumEntry("RepaintMode",1);
 	repaintTime=config.readNumEntry("RepaintTime",200);
 	buttontheme=config.readNumEntry("ButtonTheme",0);
 
 
 	setupOverlay(&active,config.readNumEntry("OverlayModeActive",0),config.readEntry("OverlayFileActive",""));
 	setupOverlay(&inactive,config.readNumEntry("OverlayModeInactive",0),config.readEntry("OverlayFileInactive",""));
+
+	logoEnabled=config.readNumEntry("LogoAlignment",1);
+	logoStretch=config.readNumEntry("LogoStretch",0);
+	logoActive=config.readBoolEntry("LogoActive",0);
+	logoDistance=config.readNumEntry("LogoDistance",0);
+	QString filename=config.readEntry("LogoFile","");
+	if (!filename.isNull() && logoEnabled!=1)
+	{
+		if (logo.load(filename))
+		{
+			if (logoStretch==0)
+			{
+				logo=logo.convertToImage().smoothScale((titlesize*logo.width())/logo.height(),titlesize);
+			}
+		}else logoEnabled=1;
+	}else logo.resize(0,0);
+
 
     return true;
 }
@@ -859,7 +877,8 @@ void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 void CrystalClient::mouseWheelEvent(QWheelEvent *e)
 {
 	// Browse through all visible windows on current desktop
-	if (titlebar_->geometry().contains(e->pos()))
+// 	if (titlebar_->geometry().contains(e->pos()))
+	if (::factory->wheelTask)
 	{
 		QPtrList <CrystalClient> *l=&(::factory->clients);
 		
@@ -936,11 +955,17 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		QColor color=options()->color(KDecoration::ColorFont, isActive());
 		r=titlebar_->geometry();
 		r.moveBy(0,-1);
-	
+		int logowidth=::factory->logo.width()+::factory->logoDistance;
+		if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
+		{
+			r.setWidth(r.width()-logowidth);
+			if (::factory->logoEnabled==0)r.moveLeft(r.left()+logowidth);
+		}
 		int textalign=CrystalFactory::titleAlign();
 		QFontMetrics metrics(options()->font(isActive(), false));
-		if (metrics.width(caption())>titlebar_->geometry().width())
-			textalign=AlignLeft;
+		int textwidth=metrics.width(caption());
+		if (textwidth>r.width())
+			textalign=AlignLeft, textwidth=r.width();
 		
 		if (::factory->textshadow)
 		{
@@ -954,6 +979,20 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		pufferPainter.drawText(r,
 			textalign | AlignVCenter,
 			caption());
+		if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive))
+		{
+			int x=0;
+			if (::factory->logoEnabled==0 && textalign==AlignLeft)x=r.left()-logowidth;
+			if (::factory->logoEnabled==2 && textalign==AlignLeft)x=r.left()+textwidth+::factory->logoDistance;
+
+			if (::factory->logoEnabled==0 && textalign==AlignRight)x=r.right()-textwidth-logowidth;
+			if (::factory->logoEnabled==2 && textalign==AlignRight)x=r.right()+::factory->logoDistance;
+
+			if (::factory->logoEnabled==0 && textalign==AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
+			if (::factory->logoEnabled==2 && textalign==AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
+
+			pufferPainter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
+		}
 
 		if (::factory->borderwidth>0 && background && !background->isNull())
 		{	// Draw the side and bottom of the window with transparency

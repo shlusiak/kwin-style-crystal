@@ -11,29 +11,17 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>365</width>
-            <height>280</height>
+            <width>412</width>
+            <height>267</height>
         </rect>
     </property>
     <property name="sizePolicy">
         <sizepolicy>
-            <hsizetype>5</hsizetype>
-            <vsizetype>5</vsizetype>
+            <hsizetype>1</hsizetype>
+            <vsizetype>1</vsizetype>
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
         </sizepolicy>
-    </property>
-    <property name="minimumSize">
-        <size>
-            <width>150</width>
-            <height>120</height>
-        </size>
-    </property>
-    <property name="baseSize">
-        <size>
-            <width>0</width>
-            <height>0</height>
-        </size>
     </property>
     <property name="caption">
         <string>Info about Crystal...</string>
@@ -51,84 +39,7 @@
         <property name="resizeMode">
             <enum>Minimum</enum>
         </property>
-        <widget class="QGroupBox" row="0" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>groupBox3</cstring>
-            </property>
-            <property name="enabled">
-                <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>5</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>0</width>
-                    <height>20</height>
-                </size>
-            </property>
-            <property name="maximumSize">
-                <size>
-                    <width>32767</width>
-                    <height>20</height>
-                </size>
-            </property>
-            <property name="frameShape">
-                <enum>ToolBarPanel</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="lineWidth">
-                <number>1</number>
-            </property>
-            <property name="title">
-                <string>About:</string>
-            </property>
-            <property name="alignment">
-                <set>AlignCenter</set>
-            </property>
-            <property name="flat">
-                <bool>true</bool>
-            </property>
-        </widget>
-        <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>textLabel1</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>5</hsizetype>
-                    <vsizetype>5</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="backgroundMode">
-                <enum>PaletteBackground</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Plain</enum>
-            </property>
-            <property name="text">
-                <string>&lt;p&gt;&lt;b&gt;Crystal&lt;/b&gt; kwin decoration theme,&lt;br&gt;&lt;b&gt;Author:&lt;/b&gt; Sascha Hlusiak, 2005.&lt;br&gt;Email: &lt;a href="mailto:spam84@gmx.de"&gt;Spam84@gmx.de&lt;/a&gt;&lt;br&gt;&lt;i&gt;You may look for the most recent version at kde-look.org!&lt;/i&gt;&lt;/p&gt;</string>
-            </property>
-            <property name="textFormat">
-                <enum>AutoText</enum>
-            </property>
-            <property name="scaledContents">
-                <bool>false</bool>
-            </property>
-            <property name="alignment">
-                <set>WordBreak|AlignTop</set>
-            </property>
-        </widget>
-        <widget class="QGroupBox" row="2" column="0" rowspan="1" colspan="3">
+        <widget class="QGroupBox" row="2" column="0" rowspan="1" colspan="4">
             <property name="name">
                 <cstring>groupBox3_2</cstring>
             </property>
@@ -174,6 +85,78 @@
                 <bool>true</bool>
             </property>
         </widget>
+        <widget class="QGroupBox" row="0" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>groupBox3</cstring>
+            </property>
+            <property name="enabled">
+                <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>20</height>
+                </size>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>32767</width>
+                    <height>20</height>
+                </size>
+            </property>
+            <property name="frameShape">
+                <enum>ToolBarPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="lineWidth">
+                <number>1</number>
+            </property>
+            <property name="title">
+                <string>About:</string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+            <property name="flat">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>textLabel1_2</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="text">
+                <string>Besides default features of most window decorations:
+- Doubleclick the systemmenu button closes the window
+- Middleclick on the minimize button to send it below
+- Rightclick the minimize button shades the window
+- Scroll over the title bar selects next/prev window</string>
+            </property>
+            <property name="textFormat">
+                <enum>PlainText</enum>
+            </property>
+            <property name="alignment">
+                <set>AlignVCenter|AlignLeft</set>
+            </property>
+        </widget>
         <widget class="QPushButton" row="6" column="1">
             <property name="name">
                 <cstring>pushButton1</cstring>
@@ -199,6 +182,23 @@
                 <bool>true</bool>
             </property>
         </widget>
+        <spacer row="6" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacer7</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>150</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
         <spacer row="6" column="0">
             <property name="name">
                 <cstring>spacer6</cstring>
@@ -211,29 +211,12 @@
             </property>
             <property name="sizeHint">
                 <size>
-                    <width>40</width>
+                    <width>170</width>
                     <height>20</height>
                 </size>
             </property>
         </spacer>
-        <spacer row="6" column="2">
-            <property name="name">
-                <cstring>spacer7</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>16</width>
-                    <height>20</height>
-                </size>
-            </property>
-        </spacer>
-        <widget class="Line" row="5" column="0" rowspan="1" colspan="3">
+        <widget class="Line" row="5" column="0" rowspan="1" colspan="4">
             <property name="name">
                 <cstring>line2</cstring>
             </property>
@@ -247,7 +230,7 @@
                 <enum>Horizontal</enum>
             </property>
         </widget>
-        <spacer row="4" column="0">
+        <spacer row="4" column="1">
             <property name="name">
                 <cstring>spacer5</cstring>
             </property>
@@ -260,24 +243,64 @@
             <property name="sizeHint">
                 <size>
                     <width>20</width>
-                    <height>16</height>
+                    <height>50</height>
                 </size>
             </property>
         </spacer>
-        <widget class="QLabel" row="3" column="0" rowspan="1" colspan="3">
+        <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
             <property name="name">
-                <cstring>textLabel1_2</cstring>
+                <cstring>textLabel1</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>1</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="backgroundMode">
+                <enum>PaletteBackground</enum>
             </property>
             <property name="text">
-                <string>&lt;p&gt;&lt;u&gt;Besides default features of most window decorations:&lt;/u&gt;&lt;br&gt;
-- Doubleclick the systemmenu button closes the window&lt;br&gt;
-- Middleclick on the minimize button sends it below all windows&lt;br&gt;
-- Rightclick the minimize button shades the window&lt;br&gt;
-- Scroll over the title bar selects next/prev window</string>
+                <string>Crystal kwin decoration theme,
+Sascha Hlusiak &lt;spam84@gmx.de&gt;, 2004-2005.
+
+You may look for the most recent version at kde-look.org!</string>
+            </property>
+            <property name="textFormat">
+                <enum>PlainText</enum>
+            </property>
+            <property name="alignment">
+                <set>AlignTop|AlignLeft</set>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="3">
+            <property name="name">
+                <cstring>pixmapLabel2</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>1</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="pixmap">
+                <pixmap>image0</pixmap>
+            </property>
+            <property name="scaledContents">
+                <bool>false</bool>
             </property>
         </widget>
     </grid>
 </widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="5016">89504e470d0a1a0a0000000d4948445200000040000000400806000000aa6971de0000135f49444154789ced9b7b90e54775df3fa7bb7fbfdf7dce9dbbf3ded5ae9ee805228838066c4a084b162fa172253138b812aa30211563ec98522284ed601720d9048c6c0bd90ec93f8a31a4302104139c3260a8540436108c4158c5eab5ab7dce3e66e63e7fafee933fface2c244215b123f99f3d5577666edd7bfb9ef3edeeef39e7db3dc2df815d73c9c7ddd5ab9f586ca6a7e61233d5efaedf7af8cbdf7967b1fdfa4bae795fa30eedf4ece439c5234fdc523cd558e76bf24c0ebe6d2fbbfe573acf5bfdcfaf0cbefa1167ab9786505f6e4db12282f8a038936d95a1fb512bd39eaa7fb111bf2652377cb095e08e7bcd3eb5951ff8bd8f7ce97f1ddc6ddf9e3100f65df157f29397bcfd475af6b15fcbdcf455950faef61e1121044544a8bc923a415569a40e1f02a8e21554015574e6a635e2cb30fffef5f10b7ffd530f7c32df2d3f9f1100de74f3d5cf4dcdf077123bfa0941c507a10e1054f15e29aac09e8e65522a45a5749b86d21b0c01d5803186da2b8282083e28cdd4224090f61787d5c5affbc817be7c6a377cdd7500def2aa17fe64c6a18f9755d9abe3849258a883e055484c20286c8e3d958f5fdfca0411031a489de0ac90971e6785a0608cc108180111c5d9f4f1adf2e2d77cf48bfffb3baf7ed99bdaabd9d75f90dae2ca41b9fc9d2073dffad8e7fe74f27702c0eb6fbaf1f2a5f4db5f0fa1ec1565400c5435648920224c4b383df478aff81067da1a6865061183150f44005403ce1a5421c485803511046b40697cd7d8ce7d991dff1bb45c4a6c48820a5548cee661f903037ff9bd7ff2f94f0f9e5500de72cbbe7b8c0e7ea9ac95466a101423c2a961e0ec2806570783aac708a4ce90ba38c3edcc50d73588c187803371f69ba94181aa0e34530328650da913ac51ac8149a104153a0da1ac94c48198e663a52cff8bfff867dffef3a7f2d9ec2600d69a7d4660b16b67b32c3c71a66663e4292b286bc588e2acc11941647b8b188246d0b244986b1a1aa9214d2cd34a094149ac50d681a29aad000d84009517da0d432381e1d493570a08dee79726e1c89ffed39bafbef55903605a9b53751006d3c0a4504e6cd68c0a25af14453102a0586b9059f48a2046e2521489c487608ca19509bd56dcff75d85e0d8a0f4a50435ec1b4089c1d7ace8e021b6365942ba70635651dc88b3a6d9b13f7df78f3cff77fe0a4ed260057ec5fca08d39b6aafadbc544685527b09d6b9c21975424c7f4604e72c469434b191ec424089dbc6594b50f03e50d511a474e6a9b586c40a950f941e8a2a3ec645a0a8b6c18610226f8868b3c3a1e9df3c36f8d2330ec0770e9dfddbab2edb9f0c8ae4c834b41e1c27cfb9bbb4cbbfbb365757a9e43f2a1267d019c1398711c518217596080e2006110b048c1104c199084215e2aaf141f021eefdbc0c9475c0cf320ec4d5e26c7c4fa76140acffebc7c6f73f99cf6e370100f8f85f1cbcebdcb3c3005cf2f203afc1084602a93591d125e05c021a08c4341854499cc3071f3f3e63fc489c31bab2061f3c65ad4c4b9d650999cd36c0f6fb945ecbb035099026277f90bfbbca014f66d7bceec30631a9b106672dc92ccf1b14630dd61a8c18bc0ac62668880138137920102bc7b20a9495a7f681cac3c8b7bf5993e4ca76e0f1b711c11899116504b0d2e49b3fc8bf5ddd02ffb7fdf46b7e74e9b2e19ffc775f0c7e4644b14630c6628cd9c900eb932647361d0b1d83314a50b03b1922507b0585c233ab26859cf667bf7ec5276ee84cbef529abe55e6364cd4add30337e49acc41a02b02e3d3a6e5cfed6871f3d3c7a560178fdab9fdf6be58f7dae288a174fcab8efbdc67258101043ee1d8f6eb468cfafe95c56496603cec61510338601114a0f2707d048a0d6e478d93a70eb839fb97b78f4c813eb878e0f3e36ffdcdb3ea198e3364c178cc139139ad62585bae65f4d1b17bfe1b39ffbcb477e909fcf482f70fd1bef36d71fbfe7cf7d31f989711167156245a8c4aa10b1189b52772eaffee1ebde98fc8f3fbe8b3a1f61c4a321c4bdef953a28a706ca83c78417ecd7f1245dbbe58b5f39f8c0937d6ffb5f3e24d73cfaaebd597dba2bae218757de70f0f0fd3f5b3f95afcf08003ff78ad53bb51cdf55d630cc637d5f79217186666651353bdf6c6d42bb3b47594cf15501a1c6fb0a34327b592b473714044dfb17bde22f1ef8ee5356764fd7763d0bfccc6b9f7f9d991efe0d358257a5915a820a69221851c6d39a34892db0b306b186c97003d42362f0413126c18780570f1258ec2841556868b6dbfeee7a16e816477f4f5513626627b6f801434d5e7a2a1fd81cd5a882eaace5554f5d1580620c785fa3aa310ba8a1f00218b2f2cc5b76dbdf5d05e00db75e73b984fa650ae4b3b465c483c6a6c81940155bd74c4625c1eb391000f525d64406170255eda97dfcac220495175fffd6bb77d5e75d1dac596dfcb4aa42f084a031df8b600c80b2d416ae48a71c68d42c9902198e29f32acef62ced897a14f02a4ccb80ce54226b04138aa54b1ffcd04b77d3e7dd453314571bd159f102a98d85486a63cfdfd182d40a4e3ccdc4d04994b4c8990c4b1e598f6c3f9c54f8a06c4d02aa82b5dbdd9f8f636afe925df5793707c3d8c7ea10ff744e081a4bd5c4496475e370043227a446c92cb49dd2d382665d309c7a4e8c931387cfea5835d6f32282c8ac6b4421544fd9de3e6d977773b0e0ebc3d648accf7d9c419148878aa1c002b1b77746492ca4466958e5caf9c062c730d1ec84f8a21d9b23c588c1c4fd11e5310d7fef675f79c9dc6ef9bcab00884b0f8928551d7b51632075c416d808a5c2148735e044e376304a6294d4415a1658d1534600f55863081a76401081da87aee6c39b76cbe75da9033ef4d9076df2e8fffcc7270f7de386c7bff691a8e90133511791a8f806a06834709309891154888dbb0183d04b02890f9b6656396af0883118892df0763641c32dc02777c3f75d5901d36f7ee683a74e1efd58eeb39fb7d6c64626446d4e35aabd319d811acb28c928c36c6510653223b1914d9cfdb48a9d465123be26b0a31d0455ace8aef1c07903f0dbeffbc09badfab7a92afdfe322eed466142228125169c8d84b6adf1db66c2a66930aa842a282140e9e174e530d5f81d187b687bf5a0bab39d42887259f07edf1b5eb1ffeaf38e9ef3dc02ef79d7bb6edc3873e2f743803449d91a6c61b279c27083cc19ac11bc0f33198cb825664d4ea39352fa94ad418e0f4a298ecd3aa0d4d73a0b38d98e9da081cc19f22a3649828af5f92b8087ce17801f7a05bce38e77bed4c0674208aed7ede2aca1d968d0ec2c90d8487a551d83df113c2596bfa58f4d8e8a2169a768236558098138e121c45e49663d9370ae8df6b36335adca1bce37f81f1a803bde7efbb5ad24f96fe3f1b095b884c9648c9d05ea3a179126861094562a339d8f9d931dd5a8f6d45ec9abc0d971e0f8869f49e6329bf1f83d02d441b7671d13e5012a1f70465f7edbcfbdfed907e0f65ffca555217c3e4bd37e963666c205e465c9783261e4db68ba883150f918849d9157981d7a96b552d6ca6012256d9911e0395d8f9d03522351de0270263e4fe3c9517feec4d7ae7dd60108c1dfee5cb69ae7138ab2e6c8b1e3e4458100455545d576fe45547462c0c440343093b2a398b9358d87a4db41cbecdc60fb11c2b6bcb90d440400d85925aedcbafc5905e09ef7fff62f589bbe294d125485f17884b506671de3e9145fd75455854d5b5a79cfd62430ce95e1d433cc637dbf310a8c8a10f7768c3c3a22e7023533ae80738a4d98c969d628dbe5b6f8eac7ce1780ffef2cf0efdef3dedf6c27e91df37373ac9f3a41236be01287d2a4aa3dce6594554996660c07eb62fc242ab23e9ee4c06cffdb188c11a1d436c80423752436b6f5c0a804ebf60a22cebe88ec748eb136e0b9cf0a00effed53bef9450dd31186cb1b1718a6ebbcbe98d332c2fae70727892b2289829f45296158978828184a80128f13204c4d4b6adc42a2d346b63fd8918b8156a7f8e0bb69b29d55835eaac2d0e211645b5ca330bc03b6e7ffb7556c3bdd3c9e486d3a7cfb0d85fa4d96891650de6e77ab49a6d3aed0ebeae08c14b5955a46946b1758ad40a38282afdbe31839e3b13748d259d4e6ad1fa7824d36d069cad101ff89e0c22e73861f6c31a73dee5f09302f02b77de79739d8fdfd46b37ffd174324df3b2a2d3ee00b0bcbc97f17844bbd5e5ccc63a2230994ee8b43b8ca793a8eb6149b789cac6a0b6f7b89fe5f980219839b1694928529ca90076183fd6038acf3da1e930b30c202849f010ccc70ad37cc7ae0270fbedb7efabf3f11732d12b3b73f33cfce8412e5a5b63aedd623ccdc91a2d4288faddcad20a4539a5ae6b82af3976e21849e2c89294b2cc69cc8291593ad36db20302504997c97412753fd346d84424d608019d919f5095e04605cd464a926434e75769ae5d477bedcabb7ef5ddef7d4ac9fb6903d06f37ff79d2ceae440c93e9984b0e5cc6daf222478e3e41236b31cdc784e079e4f0e33cf8f0432ccecf6310ba9d391acd26c3d19866b38d1f8c63ddbe53d844e2f2dfb31b4c368fad9d66492a65d945fc6694cfac5287197728d074d438cce21a8b57bd8aa04ab3d1c057e51b81dbcf17809d34f86fdf79c77e138a7f65ad90b88403fbaf60756989c3471ec7b894e9748c88a12c26ec5b5de1a2d535e63a7338e7989fefd16db559595ac1b804a7d338b8d9beda223b854eacef053119cd46432aef83a4fd59ff14492eb1f1bd8985a6513ae2d1d180808de78465c9703c7aedf906ff7d002ccd757f2b4db25e23cbf0be646b739dc3471ec52bf8bac487c0bebd9750d615ad669bb5e535ac312c2fafa22aecd9b3ccdcdc7c24c5640f003ee8cee94e08e74a5c004f82af2bca323773f34b12481155a86b92aac24e0bccd463dd326ee5456497df8215e8b6bbb45a1dacc8fedd0060e76cf0a61b6ff88daa2c977d883738469309e3f198e1704a9aa4382b4c260312e768341ad441e9f71729cb9c4eab4350613c1e321a0f50d7a3181e4542be13f476190c50983eda3c8088d06c34190eb790e63ea653d5dacc8be95d4ee85f45e85f4977ef9574f6ecc5584bd05801f9bac63ae35f78fd0bfee82b5ffdfad6f900b0b3021a493699eff6485d8aaf3da973d4c1d3ed7628aa82da7beaaaa4d5ee6004aa7c4cb7dd62aed363301a90a68ea2cc198dc64ca663dafb6f82e6a554b5a1ac95e0959a26637719dabd16eb2ccd761711a1ddead0ebcdb3ffea174b67ef35e4b6cb99c198aa2aa9eb9abacc71d68106da8d26755d93e765a3d99e5b3d9fe0e17b56c08ffff88f0527e1b6aa2e99e6535acd0e8a50e453ba733d16e617d81c6c505405894b11312c2eac103490a6295555b16ff5224e9f3941bbd5a637bf4cd6bb18e95ec1c9a1a3cc0e60e7af266b2d689236a4d96820409a25582334d226ad76076b0ddd6e97d5854582065acd16ed76170d817eafcf649a93650daabafee5dffae03d9fd83500aebff195df6ee1ff497f7e61cf643a66fdec2996165768365bcccfcdb37eea1869d6249f8ce9f7faacadac8108599a9126c9ec5647acf6faf30bece92fd09fdf83b10eeb1cad5687b2aab5dd4c64b1d7a5ae6bc43a8c111a59834060ffde031c5f3f810fb1436c351b24899bd50e1e631d18a92679f1e6f7dffba13f38dfe0bf0f802f7fe9f3e1ee5f7f5f7773b071d3e66093229f329e8cc98b8276b3c1743261cf9e65aad919dec507aee0c4fa31d64faf73ece4517a733d9c31648d260ffeed5f53e423ce9e5da72c26f4e6e640a0dd6eab4b5239be7e8a7633e3ece6064684acd1e4c8b1a32cee59c05a4b963a504f508f7316f59eb96e171feae1349fbcf683f7fde1ae08a2df0700c0ab6ebd75b27976fd2d0bfd65f27cca427f916bae7c1ef97442abd9e2d4a963b45a2d5acd0e478e1da6d168b17efa180bfd45bef2d507c0087931a6dbee70f8e8218e9f381aeb8050b3391830994e25491cc65af2b2644fbf4fb3d5c60a9465c9f2d20a7be61798e6633687035a598356b3459666283c80753ff5817bffe02f772b787892fb01bff6af7ff958234dd63add1ee574843196c17848963631c690a50d7a737b489c63341e53d51eef2b4e9e3e41236b322d7236b6061c3ffe04fb5656b8feaaabf89b83079159b7381a4f585a5ca1aa72ca624a6f7e81507bac8bc01c3cf8104559f0bc6b9f5f9f3d73fc8bed56fbcf3686a34fdfffd18f7f773703dfb6ffa717e8f457df3fda3cf55e379d34961656f0de3337b787cde1805eb787b50921047abd3de44541b73bcf7832e01f5cff12f27ccae6600bf430a2957632270f3df6300bfd792695d26874b0ceea249f905a91b96e8fe170405595ac2cef656df50004add74f9fb8ffece6e9f77ce19b071f7bf45bdf7826e2deb127bd2172dfefdcf3bca3871f7ff7457bf7dfec8c7436079ba449c6818b2ee589a387a8eb8256abc36038c058c3e1238731c6b2b6b2c66432a1dd9a636b70868db3a759585c6530dca4d9ecd26a77180cce801826c301fdfe0283c1164962e9efd95bf77a8b7f24c6dcf5b6db7f61d7ff31e26901b06d7ff8fb1fce2ed9bfffd55ffbea03cf5d595c34a7cf9c90d5a5bd4c2723716966b7865ba3b31b1b997a7f5bf0f5dfaf8332df9da333b7c064b48907e6fb0b6c6e9c654f7f0541387aec112aef91a04ccb92f94e6778fcd4c90f369aed0fdffbefffc3916729ee1ddbb53b426ffbc5b71eb86475ff6d755dfed4683878b9af0b332d4a2e3970194b0bab646993339b6778e2c8c3f8a0386b0e3b97ddf78d871efcdd4ffe97ff3add2d3f9eae3d2397a4defce67fb6908fa72fbaeedaebaebbf4e22bae3ff2c4a1ebfabdfe73368783ada3c79f78a43fdfbfefa1470efef17ffac847cfbb9dbd6017ec825db00b76c12ed805bb6017ec87b3ff030b93d4562350d1a70000000049454e44ae426082</data>
+    </image>
+</images>
 <connections>
     <connection>
         <sender>pushButton1</sender>

@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////////////////////////////////
-// exampleconfig.h
+// crystalconfig.h
 // -------------------
-// Config module for Example window decoration
+// Config module for the Crystal window decoration
 // -------------------
-// Copyright (c) 2003 David Johnson <david@usermode.org>
+// Copyright (c) 2005 Sascha Hlusiak <spam84@gmx.de>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -59,10 +59,14 @@ protected slots:
 	void textChanged(const QString&) { selectionChanged(0); }
 	void loadOverlayActive();
 	void loadOverlayInactive();
+	void loadLogo();
+	void logoTextChanged(const QString&);
 
 private:
     KConfig *config_;
     ConfigDialog *dialog_;
+
+	void updateLogo();
 };
 
 #endif // EXAMPLECONFIG_H

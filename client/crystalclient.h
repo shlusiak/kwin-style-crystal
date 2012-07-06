@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////////////////////////////////
-// exampleclient.h
+// crystalclient.h
 // -------------------
-// Example window decoration for KDE
+// Crystal window decoration for KDE
 // -------------------
-// Copyright (c) 2003, 2004 David Johnson <david@usermode.org>
+// Copyright (c) 2005 Sascha Hlusiak <spam84@gmx.de>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -24,8 +24,8 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef EXAMPLECLIENT_H
-#define EXAMPLECLIENT_H
+#ifndef CRYSTALCLIENT_H
+#define CRYSTALCLIENT_H
 
 #include <qlayout.h>
 #include <kdecoration.h>
@@ -97,9 +97,6 @@ enum ButtonImageTypes {
 
 
 
-// ExampleFactory /////////////////////////////////////////////////////////////
-
-
 class CrystalFactory: public KDecorationFactory
 {
 public:
@@ -112,9 +109,12 @@ public:
     static Qt::AlignmentFlags titleAlign() { return titlealign_; }
 public:
 	QImageHolder *image_holder;
+
+	QPixmap logo;
+	int logoEnabled,logoStretch,logoActive,logoDistance;
 	
 	int titlesize;
-	bool hovereffect,tintButtons;
+	bool hovereffect,tintButtons,wheelTask;
 	QColor buttonColor;
 	int borderwidth;
 	bool textshadow,captiontooltip;
@@ -201,4 +201,4 @@ public:
 };
 
 
-#endif // EXAMPLECLIENT_H
+#endif
