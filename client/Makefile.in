@@ -280,11 +280,11 @@ INCLUDES = $(all_includes) -I$(kde_includes)/kwin
 kwindir = $(kde_datadir)/kwin/
 kwin_DATA = crystal.desktop
 
-noinst_HEADERS = crystalclient.h crystalbutton.h imageholder.h
+noinst_HEADERS = crystalclient.h crystalbutton.h imageholder.h buttonimage.h
 
 kde_module_LTLIBRARIES = kwin3_crystal.la
 kwin3_crystal_la_SOURCES = crystalclient.cc myrootpixmap.cc crystalbutton.cpp \
-	imageholder.cpp
+		imageholder.cpp buttonimage.cpp
 
 kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la
 kwin3_crystal_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdeui
@@ -300,12 +300,12 @@ LTLIBRARIES = $(kde_module_LTLIBRARIES)
 
 kwin3_crystal_la_DEPENDENCIES = $(kde_libraries)/libkdecorations.la
 am_kwin3_crystal_la_OBJECTS = crystalclient.lo myrootpixmap.lo \
-	crystalbutton.lo imageholder.lo
+	crystalbutton.lo imageholder.lo buttonimage.lo
 #>- kwin3_crystal_la_OBJECTS = $(am_kwin3_crystal_la_OBJECTS)
 #>+ 6
 kwin3_crystal_la_final_OBJECTS = kwin3_crystal_la.all_cc.lo kwin3_crystal_la.all_cpp.lo 
 kwin3_crystal_la_nofinal_OBJECTS = crystalclient.lo myrootpixmap.lo \
-	crystalbutton.lo imageholder.lo\
+	crystalbutton.lo imageholder.lo buttonimage.lo\
 myrootpixmap.moc.lo imageholder.moc.lo 
 @KDE_USE_FINAL_FALSE@kwin3_crystal_la_OBJECTS = $(kwin3_crystal_la_nofinal_OBJECTS)
 @KDE_USE_FINAL_TRUE@kwin3_crystal_la_OBJECTS = $(kwin3_crystal_la_final_OBJECTS)
@@ -313,16 +313,19 @@ myrootpixmap.moc.lo imageholder.moc.lo
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
 am__depfiles_maybe = depfiles
-#>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/crystalbutton.Plo \
+#>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/buttonimage.Plo \
+#>- @AMDEP_TRUE@	./$(DEPDIR)/crystalbutton.Plo \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/crystalclient.Plo \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/imageholder.Plo \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
-#>+ 8
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P  $(DEPDIR)/kwin3_crystal_la.all_cc.P $(DEPDIR)/kwin3_crystal_la.all_cpp.P ./$(DEPDIR)/crystalbutton.Plo \
+#>+ 10
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P  $(DEPDIR)/kwin3_crystal_la.all_cc.P $(DEPDIR)/kwin3_crystal_la.all_cpp.P ./$(DEPDIR)/buttonimage.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/crystalbutton.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/crystalclient.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/imageholder.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P ./$(DEPDIR)/crystalbutton.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P ./$(DEPDIR)/buttonimage.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/crystalbutton.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/crystalclient.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/imageholder.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
@@ -420,6 +423,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buttonimage.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crystalbutton.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crystalclient.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imageholder.Plo@am__quote@
@@ -816,6 +820,13 @@ kwin3_crystal.la.closure: $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_DEPENDE
 
 
 #>+ 3
+crystalbutton.moc: $(srcdir)/crystalbutton.h
+	$(MOC) $(srcdir)/crystalbutton.h -o crystalbutton.moc
+
+#>+ 2
+mocs: crystalbutton.moc
+
+#>+ 3
 myrootpixmap.moc.cc: $(srcdir)/myrootpixmap.h
 	$(MOC) $(srcdir)/myrootpixmap.h -o myrootpixmap.moc.cc
 
@@ -838,7 +849,7 @@ mocs: imageholder.moc.cc
 
 #>+ 3
 clean-metasources:
-	-rm -f  myrootpixmap.moc.cc crystalclient.moc imageholder.moc.cc
+	-rm -f  crystalbutton.moc myrootpixmap.moc.cc crystalclient.moc imageholder.moc.cc
 
 #>+ 2
 KDE_DIST=crystal.desktop myrootpixmap.h Makefile.in svg.h aqua.h knifty.h tiles.h overlays.h handpainted.h 
@@ -880,7 +891,7 @@ bcheck-am:
 
 
 #>+ 11
-kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc $(srcdir)/myrootpixmap.moc.cc $(srcdir)/imageholder.moc.cc  crystalclient.moc
+kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc $(srcdir)/myrootpixmap.moc.cc $(srcdir)/imageholder.moc.cc  crystalbutton.moc crystalclient.moc
 	@echo 'creating kwin3_crystal_la.all_cc.cc ...'; \
 	rm -f kwin3_crystal_la.all_cc.files kwin3_crystal_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cc.final; \
@@ -892,11 +903,11 @@ kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(s
 	rm -f kwin3_crystal_la.all_cc.final kwin3_crystal_la.all_cc.files
 
 #>+ 11
-kwin3_crystal_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/crystalbutton.cpp $(srcdir)/imageholder.cpp  crystalclient.moc
+kwin3_crystal_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/crystalbutton.cpp $(srcdir)/imageholder.cpp $(srcdir)/buttonimage.cpp  crystalbutton.moc crystalclient.moc
 	@echo 'creating kwin3_crystal_la.all_cpp.cpp ...'; \
 	rm -f kwin3_crystal_la.all_cpp.files kwin3_crystal_la.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cpp.final; \
-	for file in crystalbutton.cpp imageholder.cpp ; do \
+	for file in crystalbutton.cpp imageholder.cpp buttonimage.cpp ; do \
 	  echo "#include \"$$file\"" >> kwin3_crystal_la.all_cpp.files; \
 	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin3_crystal_la.all_cpp.final; \
 	done; \
@@ -931,8 +942,10 @@ cvs-clean:
 kde-rpo-clean:
 	-rm -f *.rpo
 
-#>+ 5
+#>+ 7
 nmcheck: 
 nmcheck-am: nmcheck
+crystalbutton.o: crystalbutton.moc 
 crystalclient.lo: crystalclient.moc 
+crystalbutton.lo: crystalbutton.moc 
 crystalclient.o: crystalclient.moc 

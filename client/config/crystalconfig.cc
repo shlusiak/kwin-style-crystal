@@ -98,6 +98,7 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     connect(dialog_->buttonColor, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 
     connect(dialog_->hover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->animateHover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 	connect(dialog_->buttonTheme, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->tintButtons, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 
@@ -205,8 +206,6 @@ void ExampleConfig::load(KConfig*)
     dialog_->type1->setCurrentItem(config_->readNumEntry("ActiveMode",0));
     dialog_->type2->setCurrentItem(config_->readNumEntry("InactiveMode",2));
 
-	color=QColor(255,255,255);
-    dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
     int cornersFlag = config_->readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT );
     dialog_->tlc->setChecked( cornersFlag & TOP_LEFT );
     dialog_->trc->setChecked( cornersFlag & TOP_RIGHT );
@@ -214,7 +213,12 @@ void ExampleConfig::load(KConfig*)
     dialog_->brc->setChecked( cornersFlag & BOT_RIGHT );
 	
 	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",true));
+	dialog_->animateHover->setChecked(config_->readBoolEntry("AnimateHover",true));
+	dialog_->animateHover->setEnabled(dialog_->hover->isChecked());
 	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor->color()!=QColor(255,255,255)));
+	color=QColor(255,255,255);
+    dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
+	dialog_->buttonColor->setEnabled(dialog_->tintButtons->isChecked());
 	
 	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",0));
 	
@@ -284,6 +288,7 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("RoundCorners", cornersFlag );
 	
 	config_->writeEntry("HoverEffect",dialog_->hover->isChecked());
+	config_->writeEntry("AnimateHover",dialog_->animateHover->isChecked());
 	config_->writeEntry("TintButtons",dialog_->tintButtons->isChecked());
 	
 	config_->writeEntry("ButtonTheme",dialog_->buttonTheme->currentItem());

@@ -115,7 +115,7 @@ public:
 	int logoEnabled,logoStretch,logoActive,logoDistance;
 	
 	int titlesize;
-	bool hovereffect,tintButtons,wheelTask;
+	bool hovereffect,tintButtons,animateHover,wheelTask;
 	QColor buttonColor;
 	int borderwidth;
 	bool textshadow,captiontooltip;

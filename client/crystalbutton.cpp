@@ -1,77 +1,14 @@
 #include <qimage.h>
 #include <qtooltip.h>
 #include <qpainter.h>
-#include <kimageeffect.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
+#include "buttonimage.h"
 #include "imageholder.h"
 
 
-
-
-
-ButtonImage::ButtonImage(const QRgb *d_normal,bool blend,QColor color)
-{ 
-	normal=hovered=pressed=NULL;
-	if (d_normal)SetNormal(d_normal,blend,color);
-}
-
-ButtonImage::~ButtonImage()
-{
-	if (normal)delete normal;
-	if (hovered)delete hovered;
-	if (pressed)delete pressed;
-}
-
-QImage ButtonImage::CreateImage(const QRgb *data,bool blend,QColor color)
-{
-	QImage img=QImage((uchar*)data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian),img2;
-	img.setAlphaBuffer(true);
-	
-	if (!blend)return img;
-	img2=img.copy();
-	return KImageEffect::blend(color,img2,1.0f);
-}
-
-void ButtonImage::reset()
-{
-	if (normal)delete normal;
-	if (hovered)delete hovered;
-	if (pressed)delete pressed;
-	normal=hovered=pressed=NULL;
-}
-
-void ButtonImage::SetNormal(const QRgb *d_normal,bool blend,QColor color)
-{
-	if (normal)delete normal;
-	normal=new QImage(CreateImage(d_normal,blend,color));
-}
-
-void ButtonImage::SetHovered(const QRgb *d_hovered,bool blend,QColor color)
-{
-	if (hovered)delete hovered;
-	if (d_hovered)
-	{
-		hovered=new QImage(CreateImage(d_hovered,blend,color));
-	}else{
-		hovered=NULL;
-	}
-}
-
-void ButtonImage::SetPressed(const QRgb *d_pressed,bool blend,QColor color)
-{
-	if (pressed)delete pressed;
-	if (d_pressed)
-	{
-		pressed=new QImage(CreateImage(d_pressed,blend,color));
-	}else{
-		pressed=NULL;
-	}
-}
-
-
-
+#define FRAMESIZE 2
 
 
 CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
@@ -85,7 +22,9 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
     setCursor(arrowCursor);
 	
 	hover=first=last=false;
+	animation=0.0;
     QToolTip::add(this, tip);
+    connect ( &animation_timer,SIGNAL(timeout()),this,SLOT(animate()));
 }
 
 CrystalButton::~CrystalButton()
@@ -113,12 +52,17 @@ QSize CrystalButton::sizeHint() const
 
 int CrystalButton::buttonSizeH() const
 {
-	return (factory->titlesize-1-FRAMESIZE>=DECOSIZE)?BUTTONSIZE:buttonSizeV()+2;
+	int w=image?image->image_width:DEFAULT_IMAGE_SIZE;
+	int h=image?image->image_height:DEFAULT_IMAGE_SIZE;
+	return (factory->titlesize-1-FRAMESIZE>=h)?
+		w+4:
+		(int)(((float)buttonSizeV()/(float)h)*(float)w)+2;
 }
 
 int CrystalButton::buttonSizeV() const
 {
-	return (factory->titlesize-1-FRAMESIZE>DECOSIZE)?DECOSIZE:factory->titlesize-1-FRAMESIZE;
+	int h=image?image->image_height:DEFAULT_IMAGE_SIZE;
+	return (factory->titlesize-1-FRAMESIZE>h)?h:factory->titlesize-1-FRAMESIZE;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -131,6 +75,7 @@ void CrystalButton::enterEvent(QEvent *e)
     // if we wanted to do mouseovers, we would keep track of it here
 	hover=true;
 	if (factory->hovereffect)repaint(false);
+	if (factory->animateHover)animation_timer.start(60);
     QButton::enterEvent(e);
 }
 
@@ -144,6 +89,7 @@ void CrystalButton::leaveEvent(QEvent *e)
     // if we wanted to do mouseovers, we would keep track of it here
 	hover=false;
 	if (factory->hovereffect)repaint(false);
+	if (factory->animateHover)animation_timer.start(80);
     QButton::leaveEvent(e);
 }
 
@@ -250,8 +196,6 @@ void CrystalButton::drawButton(QPainter *painter)
 		pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
 	}
 
-	int m=(rect().width()-2<rect().height())?rect().width()-2:rect().height();
-    QRect r((rect().width()-m)/2,(rect().height()-m)/2,m,m);
 
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
@@ -260,6 +204,8 @@ void CrystalButton::drawButton(QPainter *painter)
 
 		if (dx<1 || dy<=1)
 		{
+			int m=(rect().width()-2<rect().height())?rect().width()-2:rect().height();
+    		QRect r((rect().width()-m)/2,(rect().height()-m)/2,m,m);
 // 			if (isDown()) { r.moveBy(1,1); }
         		pufferPainter.drawPixmap(r, client_->icon().pixmap(QIconSet::Small,
                                                            QIconSet::Normal));
@@ -271,24 +217,50 @@ void CrystalButton::drawButton(QPainter *painter)
     } else if (image) 
 	{
         // otherwise we paint the deco
-        dx = float(width() - DECOSIZE) / 2.0;
-        dy = float(height() - DECOSIZE) / 2.0;
+        dx = float(width() - image->image_width) / 2.0;
+        dy = float(height() - image->image_height) / 2.0;
 		
 		QImage *img=image->normal;
 
 		int count=1;
-		if (hover && ::factory->hovereffect)
+		if (::factory->hovereffect)
 		{
 			count=1;
-			if (image->hovered)img=image->hovered; else count=2;
+			if (hover)
+			{
+				if (image->hovered)img=image->hovered; else count=2;
+			}
+			if (::factory->animateHover)
+			{
+				img=image->getAnimated(animation);
+				count=1;
+			}
 		}
 		if (isDown())
 		{
-			if (image->pressed)img=image->pressed; else count=3;
+			count=1;
+			if (image->pressed)img=image->pressed; else 
+			{
+				if (::factory->animateHover)count=2;
+				else count=3;
+			}
 		}
 	
 		if (dx<1 || dy<0)
 		{	// Deco size is smaller than image, we need to stretch it
+			int w,h;
+
+			if (rect().width()-2<rect().height())
+			{
+				w=rect().width()-2;
+				h=(int)((float)w*(float)image->image_height/(float)image->image_width);
+			}else{
+				h=rect().height();
+				w=(int)((float)h*(float)image->image_width/(float)image->image_height);
+			}
+
+			QRect r((rect().width()-w)/2,(rect().height()-h)/2,w,h);
+
 			for (int i=0;i<count;i++)
 				pufferPainter.drawImage(r,*img);
 		}else{
@@ -320,6 +292,29 @@ void CrystalButton::drawButton(QPainter *painter)
 	painter->drawPixmap(0,0, pufferPixmap);    
 }
 
+void CrystalButton::animate()
+{
+	if (hover)
+	{
+		animation+=0.25;
+		if (animation>1.0)
+		{
+			animation=1.0;
+			animation_timer.stop();
+		}
+	}else{
+		animation-=0.15;
+		if (animation<0.0)
+		{
+			animation=0.0;
+			animation_timer.stop();
+		}
+	}
+	repaint(false);
+}
+
+
+
 /*
 void CrystalButton::updateTempImage()
 {
@@ -347,4 +342,6 @@ void CrystalButton::updateTempImage()
 			pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
     }
 }*/
+
+#include "crystalbutton.moc"
 

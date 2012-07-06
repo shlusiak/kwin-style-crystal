@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>429</width>
-            <height>257</height>
+            <height>273</height>
         </rect>
     </property>
     <property name="caption">
@@ -485,7 +485,15 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <spacer row="2" column="1">
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Button theme:</string>
+                        </property>
+                    </widget>
+                    <spacer row="3" column="1">
                         <property name="name">
                             <cstring>spacer2</cstring>
                         </property>
@@ -498,19 +506,33 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>50</height>
+                                <height>90</height>
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QCheckBox" row="2" column="0">
                         <property name="name">
-                            <cstring>textLabel1_3</cstring>
+                            <cstring>hover</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>7</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
                         <property name="text">
-                            <string>Button theme:</string>
+                            <string>Ho&amp;ver effect</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+V</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Provides a mouse-over effect for the title bar buttons.</string>
                         </property>
                     </widget>
-                    <widget class="QComboBox" row="0" column="1" rowspan="1" colspan="2">
+                    <widget class="QComboBox" row="0" column="1">
                         <item>
                             <property name="text">
                                 <string>Crystal Default</string>
@@ -558,7 +580,7 @@
                             <string>Select your favourite button theme here</string>
                         </property>
                     </widget>
-                    <widget class="KColorButton" row="1" column="2">
+                    <widget class="KColorButton" row="1" column="1">
                         <property name="name">
                             <cstring>buttonColor</cstring>
                         </property>
@@ -587,7 +609,7 @@
                             <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="1" column="1">
+                    <widget class="QCheckBox" row="1" column="0">
                         <property name="name">
                             <cstring>tintButtons</cstring>
                         </property>
@@ -609,26 +631,18 @@
                             <string>Tint the buttons in this color, or leave them with original colors (recommended for some themes)</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="1" column="0">
+                    <widget class="QCheckBox" row="2" column="1">
                         <property name="name">
-                            <cstring>hover</cstring>
-                        </property>
-                        <property name="sizePolicy">
-                            <sizepolicy>
-                                <hsizetype>7</hsizetype>
-                                <vsizetype>0</vsizetype>
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                            </sizepolicy>
+                            <cstring>animateHover</cstring>
                         </property>
                         <property name="text">
-                            <string>Ho&amp;ver effect</string>
+                            <string>Ani&amp;mate hover</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+V</string>
+                            <string>Alt+M</string>
                         </property>
                         <property name="toolTip" stdset="0">
-                            <string>Provides a mouse-over effect for the title bar buttons.</string>
+                            <string>Smoothly animate the hover effect of the buttons</string>
                         </property>
                     </widget>
                 </grid>
@@ -1443,6 +1457,20 @@
         <data format="PNG" length="667">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd1000002624944415428917dd231481b611806e0f7bf24975e72dc2584cb3581b40a2de5701221b64390165cba3a0822e85491802011119c1414cfa1a066398d838ea2838b43a7664a9084b6d2e14068a425d08628489bdc71ffff1b9768b7bcf3f7f07dbc7c8410128fc7e31fd2e9f42b499244f488e3386ea954fade6c360bc4308c7cb15854344dbbeb851e727575e51b1919f9e94fa7d3294dd39a8d46c3679aa69a4824f8ecececdf70387c0700d7d7d7be9d9d1d050072b9dc6d5f5f9f373838f84200400138ebebebe1c9c9c9c8f0f0706c7a7a5aafd7ebd4b66d9ecd669f8e8d8d4533994c747b7b3b08c001c0fd8c310ec09165b9dd6ab590c964904aa5a46c36fb2c180c0af97c3ea8691a8e8f8f1189441c000e638cfb19631480b3b8b8f86b6a6a4a89c56211c330605996248a22a2d128cae5324e4e4e1a0707077500e09c738131c600b41545f9675956756161e1c6b66de8bafe883636367eefeded7d1345b10da0cd18e302a594016803685f5c5c4055d5502291786cb1bfbf1f8220c89797979d8739c6d8ff8d954a45d8dfdf7fb3bbbbfb445555148b4554ab55e8ba0ecbb2e4959595d7b55a8d7721133ccf63001cd3349fafadad856459c6d9d919363737ede5e5e55ab95c86a669585a5a524cd34c027028a5dcdf3dd5098542b7a7a7a7705db7737e7efee5e8e8a8e4ba2e999898783b3a3a6ab45aad8ea228b75dc8c8d0d0d0c74aa5f289734eb6b6b692c964d21d1f1fbf218474ba0d92c3c343cdf33c323333f3a7d3e990818181774492a4dcfcfcfccdeaeaea0f9fcfd7f3dd1863646e6ece28140a7704801fc0fb4020f032100808bd20a594534abf02f87c0f638020102f4b25e50000000049454e44ae426082</data>
     </image>
 </images>
+<connections>
+    <connection>
+        <sender>hover</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>animateHover</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>tintButtons</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>buttonColor</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
 <includes>
     <include location="local" impldecl="in implementation">configdialog.ui.h</include>
 </includes>
