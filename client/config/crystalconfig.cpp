@@ -23,8 +23,6 @@
 
 #include "crystalconfig.h"
 
-#include "../logos.h"
-
 
 CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
     : QObject(parent), config_(0), dialog_(0)
