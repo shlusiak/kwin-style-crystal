@@ -601,9 +601,9 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 		else
 			painter.drawPixmap(rect, wndcfg->overlay, wndcfg->overlay.rect());
 	}
-		
-		
-		
+	
+	
+	
 	/* Draw caption */
 	if (::factory->drawcaption && item!=NULL)
 	{
@@ -622,7 +622,7 @@ void CrystalClient::paintTab(QPainter &painter, const QRect &rect, ClientGroupIt
 		int textwidth=metrics.width(item->title());
 		int textalign=CrystalFactory::titleAlign();
 		if (textwidth>r.width())
-			textalign=Qt::AlignLeft, textwidth=r.width();			
+			textalign=Qt::AlignLeft, textwidth=r.width();
 		if (::factory->textshadow && active)
 		{
 			painter.translate(1,1);

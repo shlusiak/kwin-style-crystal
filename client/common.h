@@ -24,7 +24,6 @@
 #ifndef COMMON_H_INCLUDED_
 #define COMMON_H_INCLUDED_
 
-
 #define TOP_LEFT 1
 #define TOP_RIGHT 2
 #define BOT_LEFT 4
