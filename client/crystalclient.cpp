@@ -191,6 +191,9 @@ bool CrystalFactory::readConfig()
 	captiontooltip=(bool)cg.readEntry("CaptionTooltip",true);
 	wheelTask=(bool)cg.readEntry("WheelTask",false);
 
+	active.transparency=(int)cg.readEntry("ActiveTransparency", 80);
+	inactive.transparency=(int)cg.readEntry("InactiveTransparency", 60);
+	
 	active.outlineMode=(int)cg.readEntry("ActiveFrame",1);
 	inactive.outlineMode=(int)cg.readEntry("InactiveFrame",1);
 	c=QColor(160,160,160);
@@ -763,7 +766,7 @@ void CrystalFactory::CreateButtonImages()
 
 
 CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
-: KDecoration(b,f)
+: KDecorationUnstable(b,f)
 {
 	::factory->clients.append(this);
 }
@@ -1256,33 +1259,39 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	WND_CONFIG* wndcfg=(isActive()?&::factory->active:&::factory->inactive);
 
 	int drawFrame;
-	
+	QColor color = options()->color(KDecoration::ColorTitleBar, isActive());
+	if (compositingActive())
+		color.setAlpha((wndcfg->transparency*255)/100);
+
 	{
 		QRect r;
 		QPoint p=widget()->mapToGlobal(QPoint(0,0));
 		int bl,br,bt,bb;
 		borders(bl,br,bt,bb);
 	
-		QPixmap pufferPixmap(widget()->width(), bt);
-		QPainter pufferPainter(&pufferPixmap);
+// 		QPixmap pufferPixmap(widget()->width(), bt), alphamask(widget()->width(), bt);
+// 		pufferPixmap.set
+// 		QPainter pufferPainter(&pufferPixmap);
+
 
 		r=QRect(p.x(),p.y(),widget()->width(),bt);
- 		pufferPainter.fillRect(widget()->rect(),options()->color(KDecoration::ColorTitleBar, isActive()));
+ 		painter.fillRect(widget()->rect(),color);
+
 		if (!wndcfg->overlay.isNull())
 		{
 		// -----------------------------------------------------------------------------------------------
 		// Stretching of userdefined overlay
 			if (wndcfg->stretch_overlay == false)
-				pufferPainter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
+				painter.drawTiledPixmap(0,0,widget()->width(),bt,wndcfg->overlay);
 			else
-				pufferPainter.drawPixmap(QRect(0,0,widget()->width(),bt), wndcfg->overlay,wndcfg->overlay.rect());
+				painter.drawPixmap(QRect(0,0,widget()->width(),bt), wndcfg->overlay,wndcfg->overlay.rect());
 		// -----------------------------------------------------------------------------------------------
 		}
 
 		if (::factory->drawcaption)
 		{
 			// draw title text
-			pufferPainter.setFont(options()->font(isActive(), false));
+			painter.setFont(options()->font(isActive(), false));
 		
 			QColor color=options()->color(KDecoration::ColorFont, isActive());
 			r=titlebar_->geometry();
@@ -1299,14 +1308,14 @@ void CrystalClient::paintEvent(QPaintEvent*)
 				textalign=Qt::AlignLeft, textwidth=r.width();			
 			if (::factory->textshadow && isActive())
 			{
-				pufferPainter.translate(1,1);
-				pufferPainter.setPen(color.dark(500));
-				pufferPainter.drawText(r,textalign | Qt::AlignVCenter,caption());
-				pufferPainter.translate(-1,-1);
+				painter.translate(1,1);
+				painter.setPen(color.dark(500));
+				painter.drawText(r,textalign | Qt::AlignVCenter,caption());
+				painter.translate(-1,-1);
 			}
 		
-			pufferPainter.setPen(color);
-			pufferPainter.drawText(r,
+			painter.setPen(color);
+			painter.drawText(r,
 				textalign | Qt::AlignVCenter,
 				caption());
 
@@ -1321,35 +1330,37 @@ void CrystalClient::paintEvent(QPaintEvent*)
 
 				if (::factory->logoEnabled==0 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()-textwidth)/2-logowidth;
 				if (::factory->logoEnabled==2 && textalign==Qt::AlignHCenter)x=(r.right()+r.left()+textwidth)/2+::factory->logoDistance;
-				pufferPainter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
+				painter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
 			}
 		}else if (::factory->logoEnabled!=1 && (isActive()||!::factory->logoActive)) {
-			int x=0;	
+			int x=0;
 			r=titlebar_->geometry();
 			if (::factory->logoEnabled==0) x=r.left();
 			if (::factory->logoEnabled==2) x=r.right()-::factory->logo.width();
-			pufferPainter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
+			painter.drawPixmap(x,(::factory->titlesize-::factory->logo.height())/2,::factory->logo);
 
 		}
 
-		pufferPainter.end();
-		painter.drawPixmap(0,0,pufferPixmap);
+// 		pufferPainter.end();
+// 		painter.drawPixmap(0,0,pufferPixmap);
+		
+
 
 		drawFrame=0;
 		if (wndcfg->outlineMode && (options()->moveResizeMaximizedWindows() || isShade() || (maximizeMode() & MaximizeFull)!=MaximizeFull))
 			drawFrame=1;
 
-		if (::factory->borderwidth>0)
-		{
-			r=QRect(drawFrame,bt,bl-drawFrame,widget()->height()-bt-drawFrame);
-			painter.fillRect(r,options()->color(KDecoration::ColorTitleBar, isActive()));
-	
-			r=QRect(widget()->width()-br,bt,br-drawFrame,widget()->height()-bt-drawFrame);
-			painter.fillRect(r,options()->color(KDecoration::ColorTitleBar, isActive()));
-
-			r=QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
-			painter.fillRect(r,options()->color(KDecoration::ColorTitleBar, isActive()));
-		}
+// 		if (::factory->borderwidth>0)
+// 		{
+// 			r=QRect(drawFrame,bt,bl-drawFrame,widget()->height()-bt-drawFrame);
+// 			painter.fillRect(r,color);
+// 	
+// 			r=QRect(widget()->width()-br,bt,br-drawFrame,widget()->height()-bt-drawFrame);
+// 			painter.fillRect(r,color);
+// 
+// 			r=QRect(bl,widget()->height()-bb,widget()->width()-bl-br,bb-drawFrame);
+// 			painter.fillRect(r,color);
+// 		}
 
 		if (!isShade())
 		{

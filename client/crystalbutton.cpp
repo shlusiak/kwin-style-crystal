@@ -163,63 +163,63 @@ void CrystalButton::drawButton(QPainter *painter)
 	float dx, dy;
 	int dm=0;
 
-	QPixmap pufferPixmap(width(), height());
-	QPainter pufferPainter(&pufferPixmap);
+// 	QPixmap pufferPixmap(width(), height());
+// 	QPainter pufferPainter(&pufferPixmap);
 	
 	CrystalFactory *f=((CrystalFactory*)client_->factory());
 	WND_CONFIG *wndcfg=client_->isActive()?&f->active:&f->inactive;
 
-	QColor color = client_->options()->color(KDecoration::ColorTitleBar, client_->isActive());
-	pufferPainter.fillRect(rect(), color);
+// 	QColor color = client_->options()->color(KDecoration::ColorTitleBar, client_->isActive());
+// 	color.setAlpha(96);
+// 	painter->fillRect(rect(), color);
 
-// .......................................................
-	if (!wndcfg->overlay.isNull())
-	{
-		if (wndcfg->stretch_overlay == false)
-			pufferPainter.drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
-		else
-		{
-			QRectF src(
-				(float)x() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
-				(float)y(),
-				(float)width() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
-				(float)height()
-			);
-			pufferPainter.drawPixmap(pufferPixmap.rect(), wndcfg->overlay, src);
-		}
-	}
+// 	if (!wndcfg->overlay.isNull())
+// 	{
+// 		if (wndcfg->stretch_overlay == false)
+// 			painter->drawTiledPixmap(rect(),wndcfg->overlay,QPoint(x(),y()));
+// 		else
+// 		{
+// 			QRectF src(
+// 				(float)x() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
+// 				(float)y(),
+// 				(float)width() * (float)wndcfg->overlay.width() / (float)client_->widget()->width(),
+// 				(float)height()
+// 			);
+// 			painter->drawPixmap(QRect(0,0,width(),height()), wndcfg->overlay, src);
+// 		}
+// 	}
 
 	dm=0;
 	if (image && (image->drawMode==1))dm=1;
 	if (wndcfg->outlineMode)
 	{
 		// outline the frame
-		pufferPainter.setPen(wndcfg->frameColor);
+		painter->setPen(wndcfg->frameColor);
 
-		if (wndcfg->outlineMode==2)pufferPainter.setPen(wndcfg->frameColor.dark(150));
-		if (wndcfg->outlineMode==3)pufferPainter.setPen(wndcfg->frameColor.light(150));
+		if (wndcfg->outlineMode==2)painter->setPen(wndcfg->frameColor.dark(150));
+		if (wndcfg->outlineMode==3)painter->setPen(wndcfg->frameColor.light(150));
 		// top
 		if ((client_->FullMax && client_->isShade() && (dm==0)) ||
-			((dm==1)&&(!client_->FullMax || client_->isShade()))) pufferPainter.drawLine(0,0,width(),0);
+			((dm==1)&&(!client_->FullMax || client_->isShade()))) painter->drawLine(0,0,width(),0);
 		// left
-		if (first && client_->FullMax && client_->isShade())pufferPainter.drawLine(0,0,0,height());
+		if (first && client_->FullMax && client_->isShade()) painter->drawLine(0,0,0,height());
 
-		if (wndcfg->outlineMode==2)pufferPainter.setPen(wndcfg->frameColor.light(150));
-		if (wndcfg->outlineMode==3)pufferPainter.setPen(wndcfg->frameColor.dark(150));
+		if (wndcfg->outlineMode==2)painter->setPen(wndcfg->frameColor.light(150));
+		if (wndcfg->outlineMode==3)painter->setPen(wndcfg->frameColor.dark(150));
 		// bottom
-		if (client_->isShade() && ((dm==1)||(client_->FullMax)))pufferPainter.drawLine(0,height()-1,width(),height()-1);
+		if (client_->isShade() && ((dm==1)||(client_->FullMax))) painter->drawLine(0,height()-1,width(),height()-1);
 		
 		// right
-		if (last && client_->FullMax && client_->isShade())pufferPainter.drawLine(width()-1,0,width()-1,height());
+		if (last && client_->FullMax && client_->isShade()) painter->drawLine(width()-1,0,width()-1,height());
 	}
 	if (wndcfg->inlineMode && (client_->FullMax||dm==1) && !client_->isShade())
 	{
 		// inline the frame
-		if (wndcfg->inlineMode==1)pufferPainter.setPen(wndcfg->inlineColor);
-		if (wndcfg->inlineMode==2)pufferPainter.setPen(wndcfg->inlineColor.dark(150));
-		if (wndcfg->inlineMode==3)pufferPainter.setPen(wndcfg->inlineColor.light(150));
+		if (wndcfg->inlineMode==1) painter->setPen(wndcfg->inlineColor);
+		if (wndcfg->inlineMode==2) painter->setPen(wndcfg->inlineColor.dark(150));
+		if (wndcfg->inlineMode==3) painter->setPen(wndcfg->inlineColor.light(150));
 		// buttons just need to draw the bottom line
-		pufferPainter.drawLine(0,height()-1,width(),height()-1);
+		painter->drawLine(0,height()-1,width(),height()-1);
 	}
 
 
@@ -233,10 +233,10 @@ void CrystalButton::drawButton(QPainter *painter)
 			int m=(rect().width()-2<rect().height())?rect().width()-2:rect().height();
 			QRect r((rect().width()-m)/2,(rect().height()-m)/2,m,m);
 // 			if (isDown()) { r.moveBy(1,1); }
-        		pufferPainter.drawPixmap(r, client_->icon().pixmap(16));
+        		 painter->drawPixmap(r, client_->icon().pixmap(16));
 		}else{
 //         	if (isDown()) { dx++; dy++; }
-			pufferPainter.drawPixmap((int)dx, (int)dy, client_->icon().pixmap(16));
+			 painter->drawPixmap((int)dx, (int)dy, client_->icon().pixmap(16));
 		}
 	} else if (image && image->initialized()) {
 		// otherwise we paint the deco
@@ -277,21 +277,21 @@ void CrystalButton::drawButton(QPainter *painter)
 
 				QRect r((rect().width()-w)/2,(rect().height()-h)/2,w,h);
 
-				pufferPainter.drawImage(r,*img);
-				if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, r);
+				painter->drawImage(r,*img);
+				if (type_ == ButtonMenu) drawMenuImage(painter, r);
 			}else{
 				// Otherwise we just paint it
 				if (image->drawMode==1)dy=0;
-				pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
+				painter->drawImage(QPoint((int)dx,(int)dy),*img);
 
-				if (type_ == ButtonMenu) drawMenuImage(&pufferPainter, 
+				if (type_ == ButtonMenu) drawMenuImage(painter, 
 					QRect((int)dx,(int)dy,image->image_width,image->image_height));
 			}
 		}
 	}
 	
-	pufferPainter.end();
-	painter->drawPixmap(0,0, pufferPixmap);
+// 	pufferPainter.end();
+// 	painter->drawPixmap(0,0, pufferPixmap);
 }
 
 void CrystalButton::drawMenuImage(QPainter* painter, QRect r)

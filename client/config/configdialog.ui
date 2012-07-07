@@ -970,7 +970,7 @@
        <string>Bac&amp;kground</string>
       </attribute>
       <layout class="QGridLayout">
-       <item row="1" column="0" colspan="2">
+       <item row="0" column="0">
         <widget class="QTabWidget" name="tabWidget4">
          <property name="currentIndex">
           <number>0</number>
@@ -979,8 +979,34 @@
           <attribute name="title">
            <string>A&amp;ctive</string>
           </attribute>
-          <layout class="QGridLayout">
+          <layout class="QGridLayout" name="gridLayout_3">
            <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Transparency:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="active_transparency">
+             <property name="suffix">
+              <string>%</string>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="singleStep">
+              <number>5</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
             <widget class="QComboBox" name="frame1">
              <property name="toolTip">
               <string>Draw outline frame</string>
@@ -1007,7 +1033,7 @@
              </item>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="1" column="1">
             <widget class="KColorButton" name="frameColor1">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1023,7 +1049,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="2" column="0">
             <widget class="QComboBox" name="inline1">
              <property name="toolTip">
               <string>Draw inline frame around the window content</string>
@@ -1050,7 +1076,7 @@
              </item>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="2" column="1">
             <widget class="KColorButton" name="inlineColor1">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1066,7 +1092,7 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="0">
             <spacer>
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -1085,8 +1111,34 @@
           <attribute name="title">
            <string>Inacti&amp;ve</string>
           </attribute>
-          <layout class="QGridLayout">
+          <layout class="QGridLayout" name="gridLayout_4">
            <item row="0" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Transparency:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="inactive_transparency">
+             <property name="suffix">
+              <string>%</string>
+             </property>
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="singleStep">
+              <number>5</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
             <widget class="QComboBox" name="frame2">
              <property name="toolTip">
               <string>Draw outline frame</string>
@@ -1113,7 +1165,7 @@
              </item>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="1" column="1">
             <widget class="KColorButton" name="frameColor2">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1129,7 +1181,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="2" column="0">
             <widget class="QComboBox" name="inline2">
              <property name="toolTip">
               <string>Draw inline frame around the window content</string>
@@ -1156,7 +1208,7 @@
              </item>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="2" column="1">
             <widget class="KColorButton" name="inlineColor2">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1172,7 +1224,7 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="0">
             <spacer>
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -1189,39 +1241,14 @@
          </widget>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="enableTransparency">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string>no, noo, nooooooooooo!</string>
-         </property>
-         <property name="text">
-          <string>Enable Transparency</string>
-         </property>
-         <property name="shortcut">
-          <string/>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="TabPage">
       <attribute name="title">
        <string>&amp;Logo</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="0" rowspan="2" colspan="2">
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0" rowspan="2">
         <widget class="Q3ButtonGroup" name="logoEnabled">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -1275,33 +1302,7 @@
          </layout>
         </widget>
        </item>
-       <item row="4" column="1">
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>30</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="3" column="0" colspan="4">
-        <widget class="KUrlRequester" name="logoFile">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
+       <item row="0" column="1">
         <widget class="QLabel" name="textLabel1_6">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1317,7 +1318,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item row="0" column="2">
         <widget class="QSpinBox" name="logoDistance">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1336,7 +1337,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2" colspan="2">
+       <item row="1" column="1" colspan="2">
         <widget class="QCheckBox" name="logoActive">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1355,7 +1356,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item row="2" column="0">
         <widget class="QComboBox" name="logoList">
          <item>
           <property name="text">
@@ -1427,7 +1428,7 @@
          </item>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="2" column="1">
         <widget class="QComboBox" name="logoStretch">
          <item>
           <property name="text">
@@ -1441,7 +1442,7 @@
          </item>
         </widget>
        </item>
-       <item row="2" column="3">
+       <item row="2" column="2">
         <widget class="QLabel" name="logoPreview">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1477,6 +1478,32 @@
           <bool>false</bool>
          </property>
         </widget>
+       </item>
+       <item row="3" column="0" colspan="3">
+        <widget class="KUrlRequester" name="logoFile">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -1540,41 +1567,6 @@
              <item>
               <property name="text">
                <string>Steel</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective blue</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective red</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective green</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective orange</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective yellow</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective white</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective pink</string>
               </property>
              </item>
              <item>
@@ -1703,41 +1695,6 @@ on active window</string>
              <item>
               <property name="text">
                <string>Steel</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective blue</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective red</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective green</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective orange</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective yellow</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective white</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Reflective pink</string>
               </property>
              </item>
              <item>
@@ -1948,22 +1905,6 @@ on active window</string>
    <sender>radioButton14_3</sender>
    <signal>toggled(bool)</signal>
    <receiver>logoFile</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton14_3</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>logoStretch</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">

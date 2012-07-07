@@ -52,7 +52,8 @@ CrystalConfig::CrystalConfig(KConfig*, QWidget* parent)
 	connect(dialog_->inlineColor1, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 	connect(dialog_->inlineColor2, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 		
-	connect(dialog_->enableTransparency,SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+	connect(dialog_->active_transparency,SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
+	connect(dialog_->inactive_transparency,SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
 	
 	connect(dialog_->borderwidth, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
 	connect(dialog_->titlebarheight, SIGNAL(valueChanged(int)),this, SLOT(selectionChanged(int)));
@@ -137,7 +138,8 @@ void CrystalConfig::load(KConfigGroup&)
 	dialog_->tooltip->setChecked(cg.readEntry("CaptionTooltip",true));
 	dialog_->wheelTask->setChecked(cg.readEntry("WheelTask",false));
 
-	dialog_->enableTransparency->setChecked(cg.readEntry("EnableTransparency",true));
+	dialog_->active_transparency->setValue(cg.readEntry("ActiveTransparency",80));
+	dialog_->inactive_transparency->setValue(cg.readEntry("InactiveTransparency",60));
 
 	dialog_->frame1->setCurrentIndex(cg.readEntry("ActiveFrame",1));
 	color=QColor(192,192,192);
@@ -219,7 +221,8 @@ void CrystalConfig::save(KConfigGroup&)
 	cg.writeEntry("CaptionTooltip",dialog_->tooltip->isChecked());
 	cg.writeEntry("WheelTask",dialog_->wheelTask->isChecked());
 
-	cg.writeEntry("EnableTransparency",dialog_->enableTransparency->isChecked());
+	cg.writeEntry("ActiveTransparency",dialog_->active_transparency->value());
+	cg.writeEntry("InactiveTransparency",dialog_->inactive_transparency->value());
 
 	cg.writeEntry("Borderwidth",dialog_->borderwidth->value());
 	cg.writeEntry("Titlebarheight",dialog_->titlebarheight->value());

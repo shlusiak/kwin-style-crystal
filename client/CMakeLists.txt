@@ -52,7 +52,7 @@ add_custom_command (
    DEPENDS ${OVERLAY_SOURCES}
    )
 
-##### Geneates logos.h from logo images. List files in $top/pics/Logos that are to be used as overlay
+##### Geneates logos.h from logo images. List files in $top/pics/logos that are to be used as overlay
 set (LOGOS_SOURCES)
 foreach(file ${LOGOS})
    set (LOGOS_SOURCES ${LOGOS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/../pics/logos/${file}.png)
@@ -63,7 +63,6 @@ add_custom_command (
    COMMAND embedtool ${LOGOS_SOURCES} > ${CMAKE_CURRENT_BINARY_DIR}/logos.h
    DEPENDS ${LOGOS_SOURCES}
    )
-
 
 ##### Target #####
 set(kwin3_crystal_PART_SRCS

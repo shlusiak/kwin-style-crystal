@@ -55,6 +55,7 @@ struct WND_CONFIG
 	int outlineMode,inlineMode;
 	QColor frameColor,inlineColor;
 	QPixmap overlay;
+	int transparency;
 	bool stretch_overlay;
 };
 
@@ -132,7 +133,7 @@ private:
 };
 
 
-class CrystalClient : public KDecoration
+class CrystalClient : public KDecorationUnstable
 {
 	Q_OBJECT
 public:
