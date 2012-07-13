@@ -61,7 +61,7 @@ void QImageHolder::BackgroundUpdated(const QImage *src)
 {
 	if (src==NULL)return;
 	if (src->isNull())return;
-	textureimg=CrystalFactory::convertToGLFormat(src->smoothScale(512,512));
+	textureimg=CrystalFactory::convertToGLFormat(src->smoothScale(::factory->textureSize,::factory->textureSize));
 	vscreenwidth=src->width();
 	vscreenheight=src->height();
 	textureupdate=true;
@@ -85,9 +85,6 @@ void QImageHolder::activateTexture()
 		
 		glTexImage2D( GL_TEXTURE_2D, 0, 3, textureimg.width(), textureimg.height(), 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, textureimg.bits() );
-			
-		// Now that our texture is created, repaint again
-		emit repaintNeeded();
 	}
 	glBindTexture(GL_TEXTURE_2D,mytexture);
 }

@@ -93,6 +93,7 @@ public:
 	int repaintMode,repaintTime;
 	bool useRefraction,useLighting,animateActivate;
 	double iorActive,iorInactive;
+	int textureSize;
 	
 	ButtonImage *buttonImages[ButtonImageCount];
 	QPtrList <CrystalClient> clients;

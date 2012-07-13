@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>446</width>
-            <height>258</height>
+            <height>269</height>
         </rect>
     </property>
     <property name="caption">
@@ -596,29 +596,35 @@
                             <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="4">
+                    <spacer row="6" column="2">
                         <property name="name">
-                            <cstring>useRefraction</cstring>
+                            <cstring>spacer7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="4">
+                        <property name="name">
+                            <cstring>animateActivate</cstring>
                         </property>
                         <property name="text">
-                            <string>Simulate &amp;Refraction</string>
+                            <string>&amp;Animate activation/deactivation of windows</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+R</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Causes only very little overhead</string>
+                            <string>Alt+A</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="2" column="2">
-                        <property name="name">
-                            <cstring>textLabel2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>inactive:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="0">
+                    <widget class="QLabel" row="3" column="0">
                         <property name="name">
                             <cstring>textLabel1_2</cstring>
                         </property>
@@ -626,27 +632,7 @@
                             <string>IOR active:</string>
                         </property>
                     </widget>
-                    <widget class="QSpinBox" row="2" column="3">
-                        <property name="name">
-                            <cstring>iorInactive</cstring>
-                        </property>
-                        <property name="suffix">
-                            <string>/10</string>
-                        </property>
-                        <property name="maxValue">
-                            <number>100</number>
-                        </property>
-                        <property name="minValue">
-                            <number>5</number>
-                        </property>
-                        <property name="lineStep">
-                            <number>1</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Index Of Refraction for the inactive window</string>
-                        </property>
-                    </widget>
-                    <widget class="QSpinBox" row="2" column="1">
+                    <widget class="QSpinBox" row="3" column="1">
                         <property name="name">
                             <cstring>iorActive</cstring>
                         </property>
@@ -666,35 +652,49 @@
                             <string>Index Of Refraction for the active window</string>
                         </property>
                     </widget>
-                    <spacer row="5" column="2">
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="4">
                         <property name="name">
-                            <cstring>spacer7</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>70</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="4">
-                        <property name="name">
-                            <cstring>animateActivate</cstring>
+                            <cstring>useRefraction</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Animate activation/deactivation of windows</string>
+                            <string>Simulate &amp;Refraction</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+A</string>
+                            <string>Alt+R</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Causes only very little overhead</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="4">
+                    <widget class="QSpinBox" row="3" column="3">
+                        <property name="name">
+                            <cstring>iorInactive</cstring>
+                        </property>
+                        <property name="suffix">
+                            <string>/10</string>
+                        </property>
+                        <property name="maxValue">
+                            <number>100</number>
+                        </property>
+                        <property name="minValue">
+                            <number>5</number>
+                        </property>
+                        <property name="lineStep">
+                            <number>1</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Index Of Refraction for the inactive window</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="2">
+                        <property name="name">
+                            <cstring>textLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>inactive:</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="4" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>useLighting</cstring>
                         </property>
@@ -706,6 +706,45 @@
                         </property>
                         <property name="toolTip" stdset="0">
                             <string>You do *not* want to disable this</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Background texture size:</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="1" column="2" rowspan="1" colspan="2">
+                        <item>
+                            <property name="text">
+                                <string>128x128</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>256x256</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>512x512</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>1024x1024</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>textureSize</cstring>
+                        </property>
+                        <property name="editable">
+                            <bool>false</bool>
+                        </property>
+                        <property name="currentItem">
+                            <number>2</number>
                         </property>
                     </widget>
                 </grid>

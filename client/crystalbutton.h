@@ -51,7 +51,7 @@ public:
     ~CrystalButton();
 
     void setBitmap(ButtonImage *newimage);
-    int lastMousePress() const { return lastmouse_; }
+    int lastMousePress() const { return lastmouse; }
 	void resetSize(bool FullSize);
 
     void drawButton(double alpha);
@@ -76,7 +76,7 @@ private:
     ButtonType type_;
     ButtonImage *image,menuimage;
 
-    int lastmouse_;
+    int _lastmouse,lastmouse;
 	
 	
 signals:

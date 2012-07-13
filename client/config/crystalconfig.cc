@@ -68,6 +68,7 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     connect(dialog_->tintButtons, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->fadeButtons, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 
+	connect(dialog_->textureSize, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->useRefraction, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->useLighting, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 
@@ -149,6 +150,7 @@ void ExampleConfig::load(KConfig*)
     dialog_->updateTime->setValue(config_->readNumEntry("RepaintTime",200));
 
 	dialog_->fadeButtons->setChecked(config_->readBoolEntry("FadeButtons",true));
+	dialog_->textureSize->setCurrentItem(config_->readNumEntry("TextureSize",2));
 	dialog_->useRefraction->setChecked(config_->readBoolEntry("SimulateRefraction",true));
 	dialog_->useLighting->setChecked(config_->readBoolEntry("SimulateLighting",true));
 
@@ -192,6 +194,7 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("RepaintTime",dialog_->updateTime->value());
         
 	
+	config_->writeEntry("TextureSize",dialog_->textureSize->currentItem());
 	config_->writeEntry("SimulateRefraction",dialog_->useRefraction->isChecked());
 	config_->writeEntry("SimulateLighting",dialog_->useLighting->isChecked());
 	config_->writeEntry("AnimateActivate",dialog_->animateActivate->isChecked());

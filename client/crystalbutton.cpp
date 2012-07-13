@@ -41,7 +41,14 @@ GLuint ButtonImage::CreateTexture(QImage *img)
 	GLuint texture;
 	glGenTextures(1,&texture);
 	
-	activate(img,texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D( GL_TEXTURE_2D, 0, 4, img->width(), img->height(), 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, img->bits() );
+	
+	
 	return texture;
 }
 
@@ -108,10 +115,11 @@ void ButtonImage::activate(QImage *img,GLuint texture)
 {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	
+/*
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D( GL_TEXTURE_2D, 0, 4, img->width(), img->height(), 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, img->bits() );
+		GL_RGBA, GL_UNSIGNED_BYTE, img->bits() );*/
 }
 
 void ButtonImage::check()
@@ -133,11 +141,11 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
   : QObject(parent->widget(),name),
 	QSpacerItem(buttonSizeH(),buttonSizeV()),
 	client_(parent), type_(type),
-	image(vimage), lastmouse_(0)
+	image(vimage)
 {
 //    QToolTip::add(this, tip);
 	hover=false;
-	lastmouse_=NoButton;
+	lastmouse=_lastmouse=NoButton;
 	
 	if (image==NULL)
 	{
@@ -231,9 +239,9 @@ bool CrystalButton::mousePressEvent(QMouseEvent* e)
 {
 	if (!isInside(e->pos()))return false;
 	if (!handleMouseButton(e->button()))return true;
-	if (lastmouse_!=NoButton)return true;
+	if (_lastmouse!=NoButton)return true;
 	
-	lastmouse_=e->button();
+	_lastmouse=e->button();
 	repaint();
 	emit pressed();
 	return true;
@@ -243,14 +251,15 @@ void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 {
 	if (!isInside(e->pos()))
 	{
-		lastmouse_=NoButton;
+		_lastmouse=NoButton;
 		repaint();
 		return;
 	}
-	if (lastmouse_==NoButton)return;
-	repaint();
+	if (_lastmouse==NoButton)return;
+// 	repaint();
+	lastmouse=_lastmouse;
+	_lastmouse=NoButton;
 	emit clicked();
-	lastmouse_=NoButton;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -284,7 +293,7 @@ void CrystalButton::drawButton(double alpha)
 				image->activate(image->hovered,image->t_hovered);
 				else count=2;
 		}
-		if (lastmouse_!=NoButton && hover)
+		if (_lastmouse!=NoButton && hover)
 		{
 			if (image->pressed)
 				image->activate(image->pressed,image->t_pressed);

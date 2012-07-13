@@ -42,6 +42,7 @@ extern "C" KDecorationFactory* create_factory()
 
 CrystalFactory::CrystalFactory()
 {
+	// TODO: Move this stuff, where it is save and no longer locks the X-Server on certain machines!
 	glInitialized=false;
 	for (int i=0;i<ButtonImageCount;i++)
 		buttonImages[i]=NULL;
@@ -63,7 +64,7 @@ CrystalFactory::CrystalFactory()
         GLX_GREEN_SIZE, 1,
         GLX_BLUE_SIZE, 1,
         GLX_DOUBLEBUFFER,
-        GLX_DEPTH_SIZE, 1,
+        GLX_DEPTH_SIZE, 0,
         None };
    int scrnum;
    XVisualInfo *visinfo;
@@ -163,6 +164,7 @@ bool CrystalFactory::readConfig()
 	
 	
 	fadeButtons=config.readBoolEntry("FadeButtons",true);
+	textureSize=1<<(config.readNumEntry("TextureSize",2)+7);
 	useRefraction=config.readBoolEntry("SimulateRefraction",true);
 	useLighting=config.readBoolEntry("SimulateLighting",true);
 	animateActivate=config.readBoolEntry("AnimateActivate",true);
@@ -265,10 +267,8 @@ CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
 
 CrystalClient::~CrystalClient()
 {
+    glXMakeCurrent(qt_xdisplay(),None,NULL);	// release glXContext
 	::factory->clients.remove(this);
-    for (int n=0; n<ButtonTypeCount; n++) {
-        if (button[n]) delete button[n];
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -948,7 +948,8 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	glEnable(GL_TEXTURE_2D);
 	::factory->image_holder->activateTexture();
 
-	double myanimation=sin(animation*M_PI/2.0);
+//	double myanimation=sin(animation*M_PI/2.0);
+	double myanimation=animation;
 	
 	QColor color1=::factory->options()->colorGroup(KDecoration::ColorTitleBar, false).background();
 	QColor color2=::factory->options()->colorGroup(KDecoration::ColorTitleBar, true).background();
@@ -958,22 +959,21 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	int bl,bt,br,bb;
 	borders(bl,br,bt,bb);
 
+	
 	// tint the title bar
 	glColorQ(color);
-	
-	
 	
 	if (::factory->useRefraction)
 	{
 		const double ior=(::factory->iorActive-::factory->iorInactive)*myanimation+(::factory->iorInactive);
 		// Top
-		renderGlassRect(0,0,width(),bt,ior,10,true);
+		renderGlassRect(0,0,width(),bt,ior,7,true);
 		// Left
-		renderGlassRect(0,bt,bl,height()-bb-bt,ior/2.0,5,false);
+		renderGlassRect(0,bt,bl,height()-bb-bt,ior/1.2,5,false);
 		// Right
-		renderGlassRect(width()-br,bt,br,height()-bb-bt,ior/2.0,5,false);
+		renderGlassRect(width()-br,bt,br,height()-bb-bt,ior/1.2,5,false);
 		// Bottom
-		renderGlassRect(0,height()-bb,width(),bb,ior/2.0,5,true);
+		renderGlassRect(0,height()-bb,width(),bb,ior/1.2,5,true);
 	}else{
 		drawBar(0,0,width(),bt);
 		// Left
@@ -983,53 +983,100 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		// Bottom
 		drawBar(0,height()-bb,width(),bb);
 	}
-	
+
 	
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,0);
 	
 	if (::factory->useLighting)
 	{
+		const double light=1.0;
+		const double lightalpha=0.15;
+		const double dark=0.0;
+		const double darkalpha=0.3;
+		
+		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	
 		glBegin(GL_QUADS);
 		// Lighten top 
-		glColor4f(1.0,1.0,1.0,0.2);	
+		glColor4f(light,light,light,lightalpha);	
     	glVertex3f(width(),0,   0);		// Top right
-    	glVertex3f(0,0,     0);		// Top left
+    	glVertex3f(0,0,     0);			// Top left
 
-		glColor4f(1.0,1.0,1.0,0.00);	
-    	glVertex3f(0,bt/2.0,  0);		// Bottom left
-		glVertex3f(width(),bt/2.0, 0);		// Bottom right
+		glColor4f(light,light,light,0.00);	
+    	glVertex3f(isShade()?0:bl/2.0,bt/2.0,  0);		// Bottom left
+		glVertex3f(width()-(isShade()?0:br/2.0),bt/2.0, 0);		// Bottom right
 
-		glColor4f(0.0,0.0,0.0,0.00);	
-    	glVertex3f(width(),bt/2.0, 0);		// Bottom right
-		glVertex3f(0,bt/2.0,  0);		// Bottom left
+		glColor4f(dark,dark,dark,0.00);	
+    	glVertex3f(width()-(isShade()?0:br/2.0),bt/2.0, 0);		// Bottom right
+		glVertex3f(isShade()?0:bl/2.0,bt/2.0,  0);		// Bottom left
 	
-		glColor4f(0,0,0,0.4);	
+		glColor4f(dark,dark,dark,darkalpha);	
     	glVertex3f(isShade()?0:bl,bt,  0);		// Bottom left
 		glVertex3f(width()-(isShade()?0:br),bt, 0);		// Bottom right
-    
-
-		// Lighten bottom
-		glColor4f(1.0,1.0,1.0,0.15);	
-    	glVertex3f(width()-br,height()-bb,   0);		// Top right
-    	glVertex3f(bl,height()-bb,     0);		// Top left
-
-		glColor4f(1.0,1.0,1.0,0.00);	
-    	glVertex3f(0,height()-bb/2.0,  0);		// Bottom left
-		glVertex3f(width(),height()-bb/2.0, 0);		// Bottom right
-
-		glColor4f(0.0,0.0,0.0,0.00);	
-    	glVertex3f(width(),height()-bb/2.0, 0);		// Bottom right
-		glVertex3f(0,height()-bb/2.0,  0);		// Bottom left
-	
-		glColor4f(0,0,0,0.4);	
-    	glVertex3f(0,height(),  0);		// Bottom left
-		glVertex3f(width(),height(), 0);		// Bottom right
-    
 		glEnd();
+    
+
+		if (!isShade())
+		{
+			// Lighten bottom
+			glBegin(GL_QUADS);
+			glColor4f(light,light,light,lightalpha);
+    		glVertex3f(width()-br,height()-bb,   0);
+    		glVertex3f(bl,height()-bb,     0);
+
+			glColor4f(light,light,light,0.00);
+    		glVertex3f(bl/2.0,height()-bb/2.0,  0);
+			glVertex3f(width()-br/2.0,height()-bb/2.0, 0);
+
+			glColor4f(dark,dark,dark,0.00);
+    		glVertex3f(width()-br/2.0,height()-bb/2.0, 0);
+			glVertex3f(bl/2.0,height()-bb/2.0,  0);
+	
+			glColor4f(dark,dark,dark,darkalpha);
+    		glVertex3f(0,height(),  0);
+			glVertex3f(width(),height(), 0);
+			
+			
+			// Enlighten left side
+			glColor4f(light,light,light,lightalpha);	
+    		glVertex3f(0,0,   0);
+    		glVertex3f(0,height(),     0);
+
+			glColor4f(light,light,light,0.00);	
+    		glVertex3f(bl/2.0,height()-bb/2.0,  0);
+			glVertex3f(bl/2.0,bt/2.0, 0);
+
+			glColor4f(dark,dark,dark,0.00);	
+    		glVertex3f(bl/2.0,bt/2.0, 0);
+			glVertex3f(bl/2.0,height()-bb/2.0,  0);
+	
+			glColor4f(dark,dark,dark,darkalpha);	
+    		glVertex3f(bl,height()-bb,  0);
+			glVertex3f(bl,bt, 0);
+			
+			
+			// Enlighten right side
+			glColor4f(light,light,light,lightalpha);
+    		glVertex3f(width()-br,bt,   0);
+    		glVertex3f(width()-br,height()-bb,     0);
+
+			glColor4f(light,light,light,0.0);	
+    		glVertex3f(width()-br/2.0,height()-bb/2.0,  0);
+			glVertex3f(width()-br/2.0,bt/2.0, 0);
+
+			glColor4f(dark,dark,dark,0.00);	
+    		glVertex3f(width()-br/2.0,bt/2.0, 0);
+			glVertex3f(width()-br/2.0,height()-bb/2.0,  0);
+	
+			glColor4f(dark,dark,dark,darkalpha);	
+    		glVertex3f(width(),height(),  0);
+			glVertex3f(width(),0, 0);
+			glEnd();
+		}
+   
 	}
 	
 	glMatrixMode(GL_TEXTURE);
@@ -1037,7 +1084,6 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	
 	if (!caption().isNull())
 	{   // Render caption 
-		char* title=strdup(caption().ascii());
 		QRect r=titlebar_->geometry();
 		r.moveBy(-1,-1);
 		QColor color1=options()->color(KDecoration::ColorFont, false);
@@ -1045,13 +1091,12 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		if (::factory->textshadow)
 		{	// First draw shadow
 			r.moveBy(1,1);
-			glColorQ(blendColor(color1.dark(200),color2.dark(200),myanimation));
-			::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),title);
+			glColorQ(blendColor(color1.dark(300),color2.dark(300),myanimation));
+			::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
 			r.moveBy(-1,-1);
 		}
 		glColorQ(blendColor(color1,color2,myanimation));
-		::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),title);
-		free(title);
+		::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
 	}
 
 	double buttonFade=(::factory->fadeButtons?0.5+0.5*myanimation:1.0);
@@ -1226,6 +1271,7 @@ void CrystalClient::menuPopUp()
 	showWindowMenu(widget()->mapToGlobal(p));
 	if (!f->exists(this)) return; // decoration was destroyed
 }
+
 void CrystalClient::animate()
 {
 	if (isActive())
