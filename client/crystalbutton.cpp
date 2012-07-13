@@ -114,12 +114,6 @@ void ButtonImage::SetPressed(const QRgb *d_pressed,bool blend,QColor color)
 void ButtonImage::activate(QImage *img,GLuint texture)
 {
 	glBindTexture(GL_TEXTURE_2D, texture);
-	
-/*
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D( GL_TEXTURE_2D, 0, 4, img->width(), img->height(), 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, img->bits() );*/
 }
 
 void ButtonImage::check()
@@ -138,14 +132,15 @@ void ButtonImage::check()
 CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
                              const QString& tip, ButtonType type,
                              ButtonImage *vimage)
-  : QObject(parent->widget(),name),
-	QSpacerItem(buttonSizeH(),buttonSizeV()),
+  : QObject(/*parent->widget()*/NULL,name),
 	client_(parent), type_(type),
 	image(vimage)
 {
 //    QToolTip::add(this, tip);
 	hover=false;
 	lastmouse=_lastmouse=NoButton;
+	
+	spacer=new QSpacerItem(buttonSizeH(),buttonSizeV());
 	
 	if (image==NULL)
 	{
@@ -161,8 +156,8 @@ void CrystalButton::resetSize(bool FullSize)
 {
 	if (FullSize)
 	{
-		changeSize(buttonSizeH(),factory->titlesize+1);
-	}else changeSize(buttonSizeH(),buttonSizeV());
+		spacer->changeSize(buttonSizeH(),factory->titlesize+1);
+	}else spacer->changeSize(buttonSizeH(),buttonSizeV());
 }
 
 void CrystalButton::setBitmap(ButtonImage *newimage)
@@ -256,7 +251,7 @@ void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 		return;
 	}
 	if (_lastmouse==NoButton)return;
-// 	repaint();
+ 	repaint();
 	lastmouse=_lastmouse;
 	_lastmouse=NoButton;
 	emit clicked();
@@ -323,103 +318,6 @@ void CrystalButton::drawButton(double alpha)
 	glDisable(GL_BLEND);
 
 	glBindTexture(GL_TEXTURE_2D,0);
-
-/*    QColorGroup group;
-    float dx, dy;
-
-    QPixmap pufferPixmap;
-    pufferPixmap.resize(width(), height());
-    QPainter pufferPainter(&pufferPixmap);
-    
-    // paint a plain box with border
-    QPixmap *background=((CrystalFactory*)client_->factory())->image_holder->image(client_->isActive());
-	
-    if (background && !background->isNull())
-    {
-    	QRect r=rect();
-		QPoint p=mapToGlobal(QPoint(0,0));
-		r.moveBy(p.x(),p.y());
-	
-		pufferPainter.drawPixmap(QPoint(0,0),*background,r);
-    }else{
-		group = client_->options()->colorGroup(KDecoration::ColorTitleBar, client_->isActive());
-		pufferPainter.fillRect(rect(), group.background());
-    }
-
-	int m=(rect().width()-2<rect().height())?rect().width()-2:rect().height();
-    QRect r((rect().width()-m)/2,(rect().height()-m)/2,m,m);
-
-// TODO: Das hier richtig machen, wenn maximiert!
-
-//	if (client_->FullMax)
-//	{
-//		r.setSize(
-//		r.moveBy(0,FRAMESIZE);
-//	}
-	
-    if (type_ == ButtonMenu) {
-        // we paint the mini icon (which is 16 pixels high)
-        dx = float(width() - 16) / 2.0;
-        dy = float(height() - 16) / 2.0;
-
-		if (dx<1 || dy<=1)
-		{
-			if (isDown()) { r.moveBy(1,1); }
-        		pufferPainter.drawPixmap(r, client_->icon().pixmap(QIconSet::Small,
-                                                           QIconSet::Normal));
-		}else{
-        	if (isDown()) { dx++; dy++; }
-			pufferPainter.drawPixmap((int)dx, (int)dy, client_->icon().pixmap(QIconSet::Small,
-                                                           QIconSet::Normal));
-		}
-    } else if (image) 
-	{
-        // otherwise we paint the deco
-        dx = float(width() - DECOSIZE) / 2.0;
-        dy = float(height() - DECOSIZE) / 2.0;
-//		if (client_->FullMax)dy+=1;
-		
-		QImage *img=image->normal;
-		int count=1;
-		if (hover && ::factory->hovereffect)
-		{
-			count=1;
-			if (image->hovered)img=image->hovered; else count=2;
-		}
-		if (isDown())
-		{
-			if (image->pressed)img=image->pressed; else count=3;
-		}
-		
-		if (dx<1 || dy<0)
-		{	// Deco size is smaller than image, we need to stretch it
-			for (int i=0;i<count;i++)
-				pufferPainter.drawImage(r,*img);
-		}else{
-			// Otherwise we just paint it
-			for (int i=0;i<count;i++)
-				pufferPainter.drawImage(QPoint((int)dx,(int)dy),*img);
-	    }
-	}
-	
-	WND_CONFIG* wndcfg=(client_->isActive()?&::factory->active:&::factory->inactive);
-	// draw frame
-	
-	if (wndcfg->frame && client_->FullMax)
-	{
-		group = client_->options()->colorGroup(KDecoration::ColorFrame, client_->isActive());
-
-    	// outline the frame
-		pufferPainter.setPen(wndcfg->frameColor);
-		pufferPainter.drawLine(0,0,width(),0);
-		pufferPainter.drawLine(0,height()-1,width(),height()-1);
-		
-		if (first)pufferPainter.drawLine(0,0,0,height());
-		if (last)pufferPainter.drawLine(width()-1,0,width()-1,height());
-	}
-	
-	pufferPainter.end();
-	painter->drawPixmap(0,0, pufferPixmap);    */
 }
 
 

@@ -55,6 +55,7 @@ public slots:
 
 protected slots:
     void selectionChanged(int);
+	void selectionChanged(double);
     void colorChanged(const QColor&) { selectionChanged(0); }
 
 private:

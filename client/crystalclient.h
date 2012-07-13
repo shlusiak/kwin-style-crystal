@@ -6,7 +6,7 @@
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 #include <qtimer.h>
-#include <qptrlist.h>
+// #include <qptrlist.h>
 #include <X11/Xlib.h>
 
 class QSpacerItem;
@@ -77,7 +77,7 @@ public:
     static bool initialized() { return initialized_; }
     static Qt::AlignmentFlags titleAlign() { return titlealign_; }
 	
-	void initGL();
+	bool initGL(Window winId);
 public:
 	QImageHolder *image_holder;
 	GLFont *gl_font;
@@ -94,9 +94,10 @@ public:
 	bool useRefraction,useLighting,animateActivate;
 	double iorActive,iorInactive;
 	int textureSize;
+	QColor activeColor,inactiveColor;
 	
 	ButtonImage *buttonImages[ButtonImageCount];
-	QPtrList <CrystalClient> clients;
+// 	QPtrList <CrystalClient> clients;
 	
 	static QImage convertToGLFormat(const QImage &);
 private:
@@ -135,7 +136,7 @@ public:
 	
 	void renderText(QString str);
 private:
-    CrystalButton* addButtons(QBoxLayout* layout, const QString& buttons);
+    void addButtons(QBoxLayout* layout, const QString& buttons);
     void updateMask();
 	int borderSpacing();
 	void updateLayout();

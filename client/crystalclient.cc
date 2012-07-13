@@ -1,6 +1,6 @@
-#define QT_CLEAN_NAMESPACE
+// #define QT_CLEAN_NAMESPACE
 #include <kconfig.h>
-#include <kglobal.h>
+//#include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -54,39 +54,8 @@ CrystalFactory::CrystalFactory()
     image_holder=new QImageHolder();
 	gl_font=NULL;
 	
-	
-	// Initialize GLX
-    Display *dpy=qt_xdisplay();
     glxcontext=NULL;
 
-    int attrib[] = { GLX_RGBA,
-        GLX_RED_SIZE, 1,
-        GLX_GREEN_SIZE, 1,
-        GLX_BLUE_SIZE, 1,
-        GLX_DOUBLEBUFFER,
-        GLX_DEPTH_SIZE, 0,
-        None };
-   int scrnum;
-   XVisualInfo *visinfo;
-
-   scrnum = DefaultScreen( dpy );
-
-   visinfo = glXChooseVisual( dpy, scrnum, attrib );
-   if (!visinfo) {
-      printf("Error: couldn't get an RGB, Double-buffered visual\n");
-      goto proceed;
-   }
-
-   glxcontext = glXCreateContext( dpy, visinfo, NULL, True );
-   if (!glxcontext) {
-      printf("Error: glXCreateContext failed\n");
-      goto proceed;
-   }
-   
-proceed:
-   
-   XFree(visinfo);
-   
 	CreateButtonImages();
 }
 
@@ -101,13 +70,14 @@ CrystalFactory::~CrystalFactory()
 		if (buttonImages[i])delete buttonImages[i];
 		buttonImages[i]=NULL;
 	}
-	glXDestroyContext(qt_xdisplay(),glxcontext);
+	if (glxcontext)glXDestroyContext(qt_xdisplay(),glxcontext);
 }
 
 KDecoration* CrystalFactory::createDecoration(KDecorationBridge* b)
 {
     return new CrystalClient(b,factory );
 }
+
 
 //////////////////////////////////////////////////////////////////////////////
 // reset()
@@ -162,14 +132,18 @@ bool CrystalFactory::readConfig()
 	repaintMode=config.readNumEntry("RepaintMode",1);
 	repaintTime=config.readNumEntry("RepaintTime",200);
 	
-	
 	fadeButtons=config.readBoolEntry("FadeButtons",true);
 	textureSize=1<<(config.readNumEntry("TextureSize",2)+7);
 	useRefraction=config.readBoolEntry("SimulateRefraction",true);
 	useLighting=config.readBoolEntry("SimulateLighting",true);
 	animateActivate=config.readBoolEntry("AnimateActivate",true);
-    iorActive=(double)config.readNumEntry("IORActive",24)/10.0;
-    iorInactive=(double)config.readNumEntry("IORInactive",12)/10.0;
+    iorActive=(double)config.readDoubleNumEntry("IORActive",2.4);
+    iorInactive=(double)config.readDoubleNumEntry("IORInactive",1.2);
+	
+	activeColor=QColor(150,160,255);
+    activeColor=config.readColorEntry("ActiveColor",&activeColor);
+	inactiveColor=QColor(160,160,160);
+    inactiveColor=config.readColorEntry("InactiveColor",&inactiveColor);
 
        
     return true;
@@ -198,10 +172,47 @@ void CrystalFactory::CreateButtonImages()
 	buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
 }
 
-void CrystalFactory::initGL()
+bool CrystalFactory::initGL(Window winId)
 {
-	if (glInitialized)return;
-	glInitialized=true;
+	if (glInitialized)
+	{
+		if (!glXMakeCurrent(qt_xdisplay(),winId,glxcontext))return false;
+		return true;
+	}
+	
+    Display *dpy=qt_xdisplay();
+    int attrib[] = { GLX_RGBA,
+        GLX_RED_SIZE, 1,
+        GLX_GREEN_SIZE, 1,
+        GLX_BLUE_SIZE, 1,
+        GLX_DOUBLEBUFFER,
+        GLX_DEPTH_SIZE, 0,
+        None };
+   int scrnum;
+   XVisualInfo *visinfo;
+
+   scrnum = DefaultScreen( dpy );
+
+   visinfo = glXChooseVisual( dpy, scrnum, attrib );
+   if (!visinfo) {
+      printf("Error: couldn't get an RGB, Double-buffered visual\n");
+      return false;
+   }
+
+   glxcontext = glXCreateContext( dpy, visinfo, NULL, True );
+   if (!glxcontext) {
+      printf("Error: glXCreateContext failed\n");
+	  XFree(visinfo);
+	  return false;
+      
+   }
+   XFree(visinfo);	
+   
+   
+   
+   
+   // GL initialized fine, now setup rendering states
+   glXMakeCurrent(qt_xdisplay(),winId,glxcontext);
 	
     glDisable( GL_CULL_FACE );
     glDisable( GL_LIGHTING );
@@ -223,6 +234,9 @@ void CrystalFactory::initGL()
 	gl_font=new GLFont(font);
 	
 	gl_font->init();
+	glInitialized=true;
+	
+	return true;
 }
 
 /* Borrowed from the Qt source code */
@@ -262,13 +276,18 @@ QImage CrystalFactory::convertToGLFormat( const QImage& img )
 CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
     : KDecoration(b,f)
 {
-	::factory->clients.append(this);
+// 	::factory->clients.append(this);
 }
 
 CrystalClient::~CrystalClient()
 {
+	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
+	{
+		delete button[i];
+		button[i]=NULL;
+	}
     glXMakeCurrent(qt_xdisplay(),None,NULL);	// release glXContext
-	::factory->clients.remove(this);
+// 	::factory->clients.remove(this);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -330,7 +349,6 @@ void CrystalClient::init()
     connect ( ::factory->image_holder,SIGNAL(repaintNeeded()),this,SLOT(Repaint()));
     connect ( &timer,SIGNAL(timeout()),this,SLOT(Repaint()));
 	connect (&animationtimer,SIGNAL(timeout()),this,SLOT(animate()));
-//	QTimer::singleShot(0,this,SLOT(createCrystalWidget()));
 
 	animation=isActive()?1.0:0.0;
 
@@ -389,21 +407,20 @@ void CrystalClient::updateMask()
 // ------------
 // Add buttons to title layout
 
-CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
+void CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
 {
     ButtonImage *bitmap;
     QString tip;
-	CrystalButton *lastone=NULL;
 
     if (s.length() > 0) {
         for (unsigned n=0; n < s.length(); n++) {
-			CrystalButton *current=NULL;
             switch (s[n]) {
               case 'M': // Menu button
                   if (!button[ButtonMenu]) 
 				  {
-                      button[ButtonMenu] = current = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, 0);
+                      button[ButtonMenu] = new CrystalButton(this, "menu", i18n("Menu"), ButtonMenu, 0);
                       connect(button[ButtonMenu], SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
+					  layout->addItem(button[ButtonMenu]->layout());
                   }
                   break;
 
@@ -418,61 +435,67 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
               				bitmap = ::factory->buttonImages[ButtonImageUnSticky];
 							tip = i18n("On All Desktops");
 						}
-                      	button[ButtonSticky] =current=new CrystalButton(this, "sticky", tip,ButtonSticky, bitmap);
+                      	button[ButtonSticky] =new CrystalButton(this, "sticky", tip,ButtonSticky, bitmap);
                       	connect(button[ButtonSticky], SIGNAL(clicked()),this, SLOT(toggleOnAllDesktops()));
+						layout->addItem(button[ButtonSticky]->layout());
                   }
                   break;
 
               case 'H': // Help button
                   if (providesContextHelp()) {
-                      button[ButtonHelp] =current=
+                      button[ButtonHelp] =
                           new CrystalButton(this, "help", i18n("Help"),
                                             ButtonHelp, ::factory->buttonImages[ButtonImageHelp]);
                       connect(button[ButtonHelp], SIGNAL(clicked()),
                               this, SLOT(showContextHelp()));
+					  layout->addItem(button[ButtonHelp]->layout());
                   }
                   break;
 
               case 'I': // Minimize button
                   if ((!button[ButtonMin]) && isMinimizable())  {
-                      button[ButtonMin] =current=
+                      button[ButtonMin] =
                           new CrystalButton(this, "iconify", i18n("Minimize"),
                                             ButtonMin, ::factory->buttonImages[ButtonImageMin]);
                       connect(button[ButtonMin], SIGNAL(clicked()),
                               this, SLOT(minButtonPressed()));
+						layout->addItem(button[ButtonMin]->layout());
                   }
                   break;
 
 
               case 'F': // Above button
                   if ((!button[ButtonAbove]))  {
-                      button[ButtonAbove] =current=
+                      button[ButtonAbove] =
                           new CrystalButton(this, "above", i18n("Keep Above Others"),
                                             ButtonAbove, ::factory->buttonImages[keepAbove()?ButtonImageUnAbove:ButtonImageAbove]);
                       connect(button[ButtonAbove], SIGNAL(clicked()),
                               this, SLOT(aboveButtonPressed()));
+					layout->addItem(button[ButtonAbove]->layout());
                   }
                   break;
 
               case 'B': // Below button
                   if ((!button[ButtonBelow]))  {
-                      button[ButtonBelow] =current=
+                      button[ButtonBelow] =
                           new CrystalButton(this, "below", i18n("Keep Below Others"),
                                             ButtonBelow, ::factory->buttonImages[keepBelow()?ButtonImageUnBelow:ButtonImageBelow]);
                       connect(button[ButtonBelow], SIGNAL(clicked()),
                               this, SLOT(belowButtonPressed()));
+						layout->addItem(button[ButtonBelow]->layout());
                   }
                   break;
 
 				  
               case 'L': // Shade button
                   if ((!button[ButtonShade]) && isShadeable())  {
-                      button[ButtonShade] =current=
+                      button[ButtonShade] =
                           new CrystalButton(this, "shade", i18n("Shade"),
                                             ButtonShade, ::factory->buttonImages[ButtonImageShade]);
                       connect(button[ButtonShade], SIGNAL(clicked()),
                               this, SLOT(shadeButtonPressed()));
-                  }
+                  	layout->addItem(button[ButtonShade]->layout());
+				  }
                   break;
 		  
               case 'A': // Maximize button
@@ -484,38 +507,33 @@ CrystalButton* CrystalClient::addButtons(QBoxLayout *layout, const QString& s)
               bitmap = ::factory->buttonImages[ButtonImageMax];
               tip = i18n("Maximize");
               }
-                      button[ButtonMax]  =current=
+                      button[ButtonMax]  =
                           new CrystalButton(this, "maximize", tip,
                                             ButtonMax, bitmap);
                       connect(button[ButtonMax], SIGNAL(clicked()),
                               this, SLOT(maxButtonPressed()));
+					layout->addItem(button[ButtonMax]->layout());
                   }
                   break;
 
               case 'X': // Close button
                   if (isCloseable()) {
-                      button[ButtonClose] =current=
+                      button[ButtonClose] =
                           new CrystalButton(this, "close", i18n("Close"),
                                             ButtonClose, ::factory->buttonImages[ButtonImageClose]);
                       connect(button[ButtonClose], SIGNAL(clicked()),
                               this, SLOT(closeWindow()));
+					  layout->addItem(button[ButtonClose]->layout());
                   }
                   break;
 
               case '_': // Spacer item
                   layout->addSpacing(4);
-				  current=NULL;
 				  break;
-            }
-			
-			if (current)
-			{
-				layout->addItem(current);
 			}
-			lastone=current;
 		}
     }
-	return lastone;
+
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -530,8 +548,8 @@ void CrystalClient::activeChange()
 		if (!animationtimer.isActive())animationtimer.start(80);
 	}else{
 		animation=isActive()?1.0:0.0;
+		Repaint();
 	}
-	Repaint();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -692,6 +710,8 @@ KDecoration::Position CrystalClient::mousePosition(const QPoint &point) const
     Position pos;
     const int RESIZESIZE=::factory->borderwidth;
 
+	for (int i=0;i<ButtonTypeCount;i++)if(button[i])if (button[i]->isHover())return PositionCenter;
+	
     if (isShade() || !isResizable()) pos=PositionCenter; 
     else if (point.y() <= 3) {
         // inside top frame
@@ -827,40 +847,8 @@ void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 	}
 }
 
-void CrystalClient::mouseWheelEvent(QWheelEvent *e)
-{
-	// FIXME: Make it good!
-	if (titlebar_->geometry().contains(e->pos()))
-	{
-		QPtrList <CrystalClient> *l=&(::factory->clients);
-		
-		if (l->current()==NULL) for (unsigned int i=0;i<l->count();i++) if ((l->at(i))->isActive()) break;
-		
-		CrystalClient *n=this;
-		
-		do
-		{
-			if(e->delta()>0)
-			{
-				n=l->next();
-				if (n==NULL)n=l->first();
-			}else{
-				n=l->prev();
-				if (n==NULL)n=l->last();
-			}
-			if (n->desktop()==desktop())break;
-		}while(n!=this);
-			
-		Window client,frame,wrapper;
-		n->ClientWindows(&frame,&wrapper,&client);
-//		int p=XRaiseWindow(qt_xdisplay(),frame);
-//		printf("%d\n",p);
-
-// 		XSetInputFocus(qt_xdisplay(),client,RevertToParent,CurrentTime);
-// 		XSetInputFocus(qt_xdisplay(),wrapper,RevertToParent,CurrentTime);
-// 		XSetInputFocus(qt_xdisplay(),frame,RevertToParent,CurrentTime);
-	}
-}
+void CrystalClient::mouseWheelEvent(QWheelEvent *)
+{ }
 
 //////////////////////////////////////////////////////////////////////////////
 // paintEvent()
@@ -921,12 +909,12 @@ void CrystalClient::paintEvent(QPaintEvent*)
 {
 #define glColorQ(x) glColor3b(x.red()/2,x.green()/2,x.blue()/2)
 	if (!CrystalFactory::initialized()) return;
-	
-	if (::factory->trackdesktop)
-		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
 
-	if (!glXMakeCurrent(qt_xdisplay(),widget()->winId(),::factory->glxcontext))return;
-	::factory->initGL();
+	// This sets up the rendering state, if not already done, and attaches the glxcontext to the winId
+	if (!::factory->initGL(widget()->winId()))return;
+
+	if (::factory->trackdesktop)
+	::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
 
 	glViewport(0,0,(GLint)width(),(GLint)height());
 
@@ -951,9 +939,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 //	double myanimation=sin(animation*M_PI/2.0);
 	double myanimation=animation;
 	
-	QColor color1=::factory->options()->colorGroup(KDecoration::ColorTitleBar, false).background();
-	QColor color2=::factory->options()->colorGroup(KDecoration::ColorTitleBar, true).background();
-	QColor color=blendColor(color1,color2,myanimation);
+	QColor color=blendColor(::factory->inactiveColor,::factory->activeColor,myanimation);
 	
 	
 	int bl,bt,br,bb;
@@ -1260,7 +1246,14 @@ void CrystalClient::menuButtonPressed()
 	}
 
 	// Do not show menu immediately, so a double click to close the window does not cause flicker
-	QTimer::singleShot(150,this,SLOT(menuPopUp()));
+// 	QTimer::singleShot(150,this,SLOT(menuPopUp()));
+
+	QPoint p(button[ButtonMenu]->geometry().bottomLeft().x(),
+                 button[ButtonMenu]->geometry().bottomLeft().y());
+	KDecorationFactory* f = factory();
+	showWindowMenu(widget()->mapToGlobal(p));
+	if (!f->exists(this)) return; // decoration was destroyed
+
 }
 
 void CrystalClient::menuPopUp()

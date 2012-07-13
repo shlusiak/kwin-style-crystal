@@ -19,6 +19,7 @@
 #include <qcombobox.h>
 #include <qwidgetstack.h>
 #include <kcolorbutton.h>
+#include <knuminput.h>
 
 #include "crystalconfig.h"
 #include "configdialog.h"
@@ -73,11 +74,13 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     connect(dialog_->useLighting, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 
     connect(dialog_->animateActivate, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
-    connect(dialog_->iorActive, SIGNAL(valueChanged(int)),
-            this, SLOT(selectionChanged(int)));
-    connect(dialog_->iorInactive, SIGNAL(valueChanged(int)),
-            this, SLOT(selectionChanged(int)));
-			
+    connect(dialog_->iorActive, SIGNAL(valueChanged(double)),
+            this, SLOT(selectionChanged(double)));
+    connect(dialog_->iorInactive, SIGNAL(valueChanged(double)),
+            this, SLOT(selectionChanged(double)));
+    connect(dialog_->colorActive, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    connect(dialog_->colorInactive, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+
 	
     connect(dialog_->repaintMode, SIGNAL(clicked(int)),
             this, SLOT(selectionChanged(int)));
@@ -108,6 +111,11 @@ ExampleConfig::~ExampleConfig()
 void ExampleConfig::selectionChanged(int)
 {
     emit changed();
+}
+
+void ExampleConfig::selectionChanged(double)
+{
+	emit changed();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -155,8 +163,13 @@ void ExampleConfig::load(KConfig*)
 	dialog_->useLighting->setChecked(config_->readBoolEntry("SimulateLighting",true));
 
 	dialog_->animateActivate->setChecked(config_->readBoolEntry("AnimateActivate",true));
-    dialog_->iorActive->setValue(config_->readNumEntry("IORActive",24));
-    dialog_->iorInactive->setValue(config_->readNumEntry("IORInactive",12));
+    dialog_->iorActive->setValue(config_->readDoubleNumEntry("IORActive",2.4));
+    dialog_->iorInactive->setValue(config_->readDoubleNumEntry("IORInactive",1.2));
+	
+	color=QColor(150,160,255);
+    dialog_->colorActive->setColor(config_->readColorEntry("ActiveColor",&color));
+	color=QColor(160,160,160);
+    dialog_->colorInactive->setColor(config_->readColorEntry("InactiveColor",&color));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -201,6 +214,10 @@ void ExampleConfig::save(KConfig*)
 	config_->writeEntry("TintButtons",dialog_->tintButtons->isChecked());
     config_->writeEntry("IORActive",dialog_->iorActive->value());
     config_->writeEntry("IORInactive",dialog_->iorInactive->value());
+	
+	config_->writeEntry("ActiveColor",dialog_->colorActive->color());
+	config_->writeEntry("InactiveColor",dialog_->colorInactive->color());
+	
     config_->sync();
 }
 

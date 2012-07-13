@@ -40,7 +40,7 @@ private:
 
 
 
-class CrystalButton : public QObject,public QSpacerItem
+class CrystalButton : public QObject
 {
 	Q_OBJECT
 public:
@@ -55,8 +55,11 @@ public:
 	void resetSize(bool FullSize);
 
     void drawButton(double alpha);
+	QLayoutItem* layout() { return spacer; }
+	QRect geometry() { return layout()->geometry(); }
 	
 	bool isInside(QPoint point);
+	bool isHover() { return hover; }
 
     void enterEvent();
     void leaveEvent();
@@ -71,6 +74,7 @@ private:
 	
 	void repaint();
 private:
+	QSpacerItem *spacer;
 	bool hover;
     CrystalClient *client_;
     ButtonType type_;
