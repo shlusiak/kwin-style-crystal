@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>455</width>
-            <height>313</height>
+            <width>456</width>
+            <height>277</height>
         </rect>
     </property>
     <property name="caption">
@@ -507,6 +507,14 @@
                                 <pixmap>image0</pixmap>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Crystal Aqua</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image1</pixmap>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>buttonTheme</cstring>
                         </property>
@@ -660,37 +668,6 @@
                             <number>2</number>
                         </property>
                     </widget>
-                    <spacer row="7" column="1">
-                        <property name="name">
-                            <cstring>spacer7</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="4">
-                        <property name="name">
-                            <cstring>useLighting</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Simulate &amp;Lighting</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+L</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>You do *not* want to disable this</string>
-                        </property>
-                    </widget>
                     <widget class="QCheckBox" row="6" column="0" rowspan="1" colspan="4">
                         <property name="name">
                             <cstring>animateActivate</cstring>
@@ -784,6 +761,65 @@
                             <string></string>
                         </property>
                     </widget>
+                    <spacer row="7" column="1">
+                        <property name="name">
+                            <cstring>spacer7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>30</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>useLighting</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Simulate &amp;Lighting</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+L</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>You do *not* want to disable this</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="2">
+                        <property name="name">
+                            <cstring>textLabel1_6</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Image brightness:</string>
+                        </property>
+                    </widget>
+                    <widget class="QSpinBox" row="5" column="3">
+                        <property name="name">
+                            <cstring>brightness</cstring>
+                        </property>
+                        <property name="suffix">
+                            <string> %</string>
+                        </property>
+                        <property name="maxValue">
+                            <number>500</number>
+                        </property>
+                        <property name="minValue">
+                            <number>10</number>
+                        </property>
+                        <property name="lineStep">
+                            <number>5</number>
+                        </property>
+                        <property name="value">
+                            <number>100</number>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </widget>
@@ -793,7 +829,39 @@
     <image name="image0">
         <data format="PNG" length="161">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd100000068494441542891a590d10d80200c444fe3201d85c99ccd51ba49fd41adf5d0824d08c90b2fc77532b31503b3d47bebf4ca3c9206004c940c8ba2b8f3c6ce8ec7284990cad53f8c22931f12c03ba686250aaeefc5e4a6e8250dfc26b796a31f8c76d40cfbbd9cd22bee402315e540bd33360000000049454e44ae426082</data>
     </image>
+    <image name="image1">
+        <data format="PNG" length="591">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd100000216494441542891a592cf4b22011cc53fcd0823e368fe6098694a919c43e7d883a742bc749405fd03f2909d82404f5debb687258822eabcb9b0cc1f90e665170f4be7f0071d461651ca91a2d440f7d4d4b27bdb77fa7ee17d79ef7d7973fc03b95caedc6eb71104814422c1eaeaea9752a9f4ed3d67eefd522814ca8661904c26595a5a4214453a9d0eb55a8d7ebfcff1f171ee952bbe0ef97cbeacaa2aebebeb2c2f2f130804f07abdc8b24c2412a1dbedb2b2b292bdbebefe0a2000eceeee7e0288c7e3a4d3692b9148588787871c1d1d619aa6954aa5ace170882008ececec6c0278006e6f6fa36b6b6b048341d7f6c1c181f53e462814627e7e9e7abdbe019c7b000281008b8b8b4892c4e9e969c6711c8ac5a205b0b7b79789c5623c3d3d611806373737b88ae170185555f1f97c8c46231cc7719566b319c160104551585858409665dc8c9224319d4ef1fbfd0c0603570d607f7fdfbabbbb431445c6e331a150e8ed5051141cc7c1ebf55228142c80cbcbcb4cb55acd006c6f6f5bcfcfcf0c87433c1ecf9b55599669b55a689ac6d9d959261a8da2eb3a822070757595b16d9b9797179acd268aa2d8aea2a669955eaf47a55241d775e2f1388661a0eb3a8661a0aa2add6e97fbfb7b344dfbf947734e4e4e361b8dc6c66834429224f7098f8f8f4c26137c3e1fa6697edfdadafafc57e52e2e2e3edab6fd613018980f0f0fcc6633fc7e3f9148e4472c16fb95cd66cbfc2f7e035bb1b6a88d8b5fa80000000049454e44ae426082</data>
+    </image>
 </images>
+<tabstops>
+    <tabstop>tabWidget2</tabstop>
+    <tabstop>AlignHCenter</tabstop>
+    <tabstop>radioButton5</tabstop>
+    <tabstop>updateTime</tabstop>
+    <tabstop>textshadow</tabstop>
+    <tabstop>antialiaseCaption</tabstop>
+    <tabstop>borderwidth</tabstop>
+    <tabstop>titlebarheight</tabstop>
+    <tabstop>tlc</tabstop>
+    <tabstop>trc</tabstop>
+    <tabstop>blc</tabstop>
+    <tabstop>brc</tabstop>
+    <tabstop>infoButton</tabstop>
+    <tabstop>buttonTheme</tabstop>
+    <tabstop>tintButtons</tabstop>
+    <tabstop>buttonColor</tabstop>
+    <tabstop>hover</tabstop>
+    <tabstop>fadeButtons</tabstop>
+    <tabstop>trackdesktop</tabstop>
+    <tabstop>textureSize</tabstop>
+    <tabstop>useRefraction</tabstop>
+    <tabstop>iorActive</tabstop>
+    <tabstop>iorInactive</tabstop>
+    <tabstop>colorActive</tabstop>
+    <tabstop>colorInactive</tabstop>
+    <tabstop>useLighting</tabstop>
+    <tabstop>animateActivate</tabstop>
+</tabstops>
 <includes>
     <include location="local" impldecl="in implementation">configdialog.ui.h</include>
 </includes>

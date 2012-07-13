@@ -77,7 +77,8 @@ public:
     static bool initialized() { return initialized_; }
     static Qt::AlignmentFlags titleAlign() { return titlealign_; }
 	
-	bool initGL(Window winId);
+	bool initGL();
+	bool setupGL(Window winId);
 public:
 	QImageHolder *image_holder;
 	GLFont *gl_font;
@@ -94,6 +95,8 @@ public:
 	bool useRefraction,useLighting,animateActivate;
 	double iorActive,iorInactive;
 	int textureSize;
+	int buttontheme;
+	int brightness;
 	QColor activeColor,inactiveColor;
 	
 	ButtonImage *buttonImages[ButtonImageCount];

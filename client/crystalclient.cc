@@ -20,6 +20,8 @@
 
 // Our button images
 #include "tiles.h"
+#include "aqua.h"
+
 
 
 inline double max(double a,double b)
@@ -63,6 +65,7 @@ CrystalFactory::CrystalFactory()
     glxcontext=NULL;
 
 	CreateButtonImages();
+	initGL();
 }
 
 CrystalFactory::~CrystalFactory() 
@@ -154,6 +157,9 @@ bool CrystalFactory::readConfig()
     activeColor=config.readColorEntry("ActiveColor",&activeColor);
 	inactiveColor=QColor(160,160,160);
     inactiveColor=config.readColorEntry("InactiveColor",&inactiveColor);
+	brightness=config.readNumEntry("Brightness",100);
+		
+	buttontheme=config.readNumEntry("ButtonTheme",0);
 
        
     return true;
@@ -167,34 +173,52 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[i]=new ButtonImage;
 	}
 
-	buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,tintButtons);
-	buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,tintButtons);
-	buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,tintButtons);
-	buttonImages[ButtonImageMin]->SetNormal(crystal_min_data,tintButtons);
-	buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,tintButtons);
-	buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,tintButtons);
-	buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,tintButtons);
-	buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,tintButtons);
+	if (buttontheme==0)
+	{	// Crystal default
+		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(crystal_min_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,tintButtons);
 	
-	buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,tintButtons);
-	buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
-	buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,tintButtons);
-	buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
+	}else if (buttontheme==1)
+	{
+		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data,tintButtons);
+	
+		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data,tintButtons);
+		
+		
+		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetHovered(aqua_maximize_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetHovered(aqua_minimize_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetHovered(aqua_maximize_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data,tintButtons);
+		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data,tintButtons);
+		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data,tintButtons);
+	}
 }
 
-bool CrystalFactory::initGL(Window winId)
+bool CrystalFactory::initGL()
 {
-	if (glInitialized)
-	{
-		if (!glXMakeCurrent(qt_xdisplay(),winId,glxcontext))return false;
-		if (!gl_font)
-		{
-			gl_font=new GLFont(options()->font(false, false));
-			gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
-		}
-		return true;
-	}
-	
     Display *dpy=qt_xdisplay();
     int attrib[] = { GLX_RGBA,
         GLX_RED_SIZE, 1,
@@ -202,6 +226,7 @@ bool CrystalFactory::initGL(Window winId)
         GLX_BLUE_SIZE, 1,
         GLX_DOUBLEBUFFER,
         GLX_DEPTH_SIZE, 1,
+// 		GLX_STENCIL_SIZE,1,
         None };
    int scrnum;
    XVisualInfo *visinfo;
@@ -222,13 +247,23 @@ bool CrystalFactory::initGL(Window winId)
       
    }
    XFree(visinfo);	
-   
-   
-   
-   
-   // GL initialized fine, now setup rendering states
-   glXMakeCurrent(qt_xdisplay(),winId,glxcontext);
-	
+   return true;
+}
+
+bool CrystalFactory::setupGL(Window winId)
+{
+	if (!glxcontext)return false;
+	if (!glXMakeCurrent(qt_xdisplay(),winId,glxcontext))return false;
+	if (glInitialized)
+	{
+		if (!gl_font)
+		{
+			gl_font=new GLFont(options()->font(false, false));
+			gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
+		}
+		return true;
+	}
+  
     glDisable( GL_CULL_FACE );
     glDisable( GL_LIGHTING );
     glDisable( GL_LIGHT0 );
@@ -244,6 +279,7 @@ bool CrystalFactory::initGL(Window winId)
 
 
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
+	glClearStencil(0);
 
 	QFont font=options()->font(false, false);
 	gl_font=new GLFont(font);
@@ -700,8 +736,6 @@ void CrystalClient::borders(int &l, int &r, int &t, int &b) const
 void CrystalClient::resize(const QSize &size)
 {
     widget()->resize(size);
-// 	if (crystalwidget)
-// 		crystalwidget->resize(size);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -927,7 +961,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	if (!CrystalFactory::initialized()) return;
 
 	// This sets up the rendering state, if not already done, and attaches the glxcontext to the winId
-	if (!::factory->initGL(widget()->winId()))return;
+	if (!::factory->setupGL(widget()->winId()))return;
 
 	if (::factory->trackdesktop)
 	::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
@@ -948,9 +982,13 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	glScaled(1.0/::factory->image_holder->screenwidth(),-1.0/::factory->image_holder->screenheight(),0);
 	glTranslated(tl.x(),tl.y(),0);
 	
+	glClear(GL_COLOR_BUFFER_BIT);	// For debugging
 	
 	glEnable(GL_TEXTURE_2D);
 	::factory->image_holder->activateTexture();
+
+	
+	QRect r=titlebar_->geometry();
 
 //	double myanimation=sin(animation*M_PI/2.0);
 	double myanimation=animation;
@@ -1085,30 +1123,88 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	if (!caption().isNull())
 	{   // Render caption 
 		QRect r=titlebar_->geometry();
-		// Clip text, if outside our scissor box (the titlebar)
-		// Some terminals cause the clip to rum amok, add 100px, just to be safe...
+//		glClear(GL_STENCIL_BUFFER_BIT);	// Clear stencil
+//		glEnable(GL_STENCIL_TEST);		// Enable stencil and write everything with 1 to the stencil
+//		glStencilFunc (GL_ALWAYS, 0x1, 0x1);
+//		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+//		glEnable(GL_DEPTH_TEST);	// Set up depth test and let it fail always, so no pixels are actually drawn
+//		glDepthFunc(GL_NEVER);
+//		glEnable(GL_ALPHA_TEST);	// Alpha test is neccessary, because the font has alpha channel
+//		glAlphaFunc (GL_GREATER,0.0f);
+
 		glEnable(GL_SCISSOR_TEST);
-		glScissor(r.left(),0,r.width(),widget()->height()+100);
-		
+		glScissor(r.left(),height()-bt,r.width(),bt);
+
 		r.moveBy(-1,-1);
 		QColor color1=options()->color(KDecoration::ColorFont, false);
 		QColor color2=options()->color(KDecoration::ColorFont, true);
 		QColor color=blendColor(color1,color2,myanimation);
+
+
 		if (::factory->textshadow)
 		{	// First draw shadow
 			if (max(color.red(),color.green(),color.blue())>75)
-			{	// If color is bright enough draw a dark shadow to improve readability
-				r.moveBy(1,1);
+			{	// Only if color is bright enough draw a dark shadow to improve readability
+//				glColor3f(1.0,1.0,1.0);
 				glColor4f(0.0,0.0,0.0,0.5);
-				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
+				r.moveBy(1,1);
+				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption());
 				r.moveBy(-2,0);
-				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
+				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption());
 				r.moveBy(1,-1);
+
+				/*
+				glDepthFunc(GL_ALWAYS);
+				glDisable(GL_DEPTH_TEST);
+		
+				glStencilFunc (GL_EQUAL, 0x1, 0x1);
+				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+				glDisable(GL_ALPHA_TEST);
+		
+				glColor4f(0.0,0.0,0.0,0.5);
+				glBegin(GL_QUADS);
+				glVertex3f(r.left(),r.top(),0.0);
+				glVertex3f(r.right(),r.top(),0.0);
+				glVertex3f(r.right(),r.bottom(),0.0);
+				glVertex3f(r.left(),r.bottom(),0.0);
+				glEnd();
+
+				glDepthFunc(GL_NEVER);
+				glEnable(GL_DEPTH_TEST);
+		
+				glStencilFunc (GL_ALWAYS, 0x1, 0x1);
+				glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+				glEnable(GL_ALPHA_TEST);
+						
+				glClear(GL_STENCIL_BUFFER_BIT);	// Clear stencil*/
 			}
 		}
+
+		
+//		glColor3f(1.0,1.0,1.0);
+		glColorQ(color);
+		::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption());
+		
+/*		glDepthFunc(GL_ALWAYS);
+		glDisable(GL_DEPTH_TEST);
+		
+		glStencilFunc (GL_EQUAL, 0x1, 0x1);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+		glDisable(GL_ALPHA_TEST);
+		
 		glColorQ(color);
 		
-		::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
+		glBegin(GL_QUADS);
+		glVertex3f(r.left(),r.top(),0.0);
+		glVertex3f(r.right(),r.top(),0.0);
+		glVertex3f(r.right(),r.bottom(),0.0);
+		glVertex3f(r.left(),r.bottom(),0.0);
+		glEnd();
+		
+		glDisable(GL_STENCIL_TEST);*/
 		glDisable(GL_SCISSOR_TEST);
 	}
 

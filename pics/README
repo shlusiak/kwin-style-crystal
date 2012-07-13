@@ -1,9 +1,11 @@
 These are the button themes.
 
 embedtool: Tool wich converts the png files into source code. Make with "make".
-Use with 'embedtool file1 file2 > tiles.h', or 'embedtool default/* > tiles.h'. The tiles.h must be included properly, you may overwrite the "tiles.h" in the client subdir.
 
-Recompile crystal and you have your modified buttons used.
+Use with 'embedtool file1 file2 > tiles.h', or 'embedtool default/* > tiles.h'. The tiles.h must be included properly, you may overwrite the "tiles.h" in the client subdir.
+Then recompile crystal and you have your modified buttons used.
 
 Please send me overwhelming button themes. :)
+
+I take care of implementation.
  

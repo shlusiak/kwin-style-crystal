@@ -82,7 +82,8 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
             this, SLOT(selectionChanged(double)));
     connect(dialog_->colorActive, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
     connect(dialog_->colorInactive, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
-
+	connect(dialog_->brightness,SIGNAL(valueChanged(int)),this,SLOT(selectionChanged(int)));
+	
 	
     connect(dialog_->repaintMode, SIGNAL(clicked(int)),
             this, SLOT(selectionChanged(int)));
@@ -173,6 +174,7 @@ void ExampleConfig::load(KConfig*)
     dialog_->colorActive->setColor(config_->readColorEntry("ActiveColor",&color));
 	color=QColor(160,160,160);
     dialog_->colorInactive->setColor(config_->readColorEntry("InactiveColor",&color));
+	dialog_->brightness->setValue(config_->readNumEntry("Brightness",100));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -221,7 +223,7 @@ void ExampleConfig::save(KConfig*)
 	
 	config_->writeEntry("ActiveColor",dialog_->colorActive->color());
 	config_->writeEntry("InactiveColor",dialog_->colorInactive->color());
-	
+	config_->writeEntry("Brightness",dialog_->brightness->value());
     config_->sync();
 }
 

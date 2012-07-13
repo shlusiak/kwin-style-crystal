@@ -16,17 +16,19 @@ public:
 	~GLFont();
 
 	void init(GLint mappingmode);
-	void renderChar(double x,double y,int chr);
-	void renderText(double x,double y,const char *text);
-	void renderText(QRect r,Qt::AlignmentFlags align,const char *text);
+//	void renderChar(double x,double y,int chr);
+	void renderText(double x,double y,QString text);
+	void renderText(QRect r,Qt::AlignmentFlags align,QString text);
 	
 	int height;
 private:
 	QFont font;
 	QFontMetrics metrics;
-	GLuint textures[255];
+	GLuint textures[65535];		// Damn unicode
 	GLuint list_base;
-
+	GLint mappingmode;
+		
+	void checkText(QString text);
 };
 
 
