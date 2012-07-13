@@ -15,10 +15,10 @@ public:
 	GLFont(QFont vfont);
 	~GLFont();
 
-	void init(GLint mappingmode);
+	void init(bool antialiase);
 //	void renderChar(double x,double y,int chr);
-	void renderText(double x,double y,QString text);
-	void renderText(QRect r,Qt::AlignmentFlags align,QString text);
+	void renderText(double x,double y,QString text,bool fade,double maxw);
+	void renderText(QRect r,Qt::AlignmentFlags align,QString text,bool fade);
 	
 	int height;
 private:
@@ -26,9 +26,10 @@ private:
 	QFontMetrics metrics;
 	GLuint textures[65536];		// Damn unicode
 	GLuint list_base;
-	GLint mappingmode;
+	bool aa;
 		
 	void checkText(QString text);
+	QImage adjustAlphaBuffer(QImage img);
 };
 
 

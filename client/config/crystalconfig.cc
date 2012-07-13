@@ -51,6 +51,7 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     connect(dialog_->textshadow, SIGNAL(stateChanged(int)),
             this, SLOT(selectionChanged(int)));
     connect(dialog_->antialiaseCaption, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+	connect(dialog_->scrollWindows,SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 			
     connect(dialog_->trackdesktop, SIGNAL(stateChanged(int)),
             this, SLOT(selectionChanged(int)));
@@ -171,7 +172,8 @@ void ExampleConfig::load(KConfig*)
     if (button) button->setChecked(true);
     
     dialog_->textshadow->setChecked(config_->readBoolEntry("TextShadow",true));
-    dialog_->antialiaseCaption->setChecked(config_->readBoolEntry("AntialiaseCaption",false));
+    dialog_->antialiaseCaption->setChecked(config_->readBoolEntry("AntialiaseCaption",true));
+	dialog_->scrollWindows->setChecked(config_->readBoolEntry("ScrollWindows",true));
     dialog_->trackdesktop->setChecked(config_->readBoolEntry("TrackDesktop",true));
     
     
@@ -236,6 +238,7 @@ void ExampleConfig::save(KConfig*)
     if (button) config_->writeEntry("TitleAlignment", QString(button->name()));
     config_->writeEntry("TextShadow",dialog_->textshadow->isChecked());
     config_->writeEntry("AntialiaseCaption",dialog_->antialiaseCaption->isChecked());
+	config_->writeEntry("ScrollWindows",dialog_->scrollWindows->isChecked());
     config_->writeEntry("TrackDesktop",dialog_->trackdesktop->isChecked());
     
     config_->writeEntry("Borderwidth",dialog_->borderwidth->value());

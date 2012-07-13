@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>477</width>
-            <height>304</height>
+            <height>262</height>
         </rect>
     </property>
     <property name="caption">
@@ -37,113 +37,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textshadow</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Use shadowed &amp;text</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+T</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Draws a nice shadowed title bar text to improve visibility.</string>
-                        </property>
-                    </widget>
-                    <widget class="QPushButton" row="4" column="4">
-                        <property name="name">
-                            <cstring>infoButton</cstring>
-                        </property>
-                        <property name="minimumSize">
-                            <size>
-                                <width>80</width>
-                                <height>0</height>
-                            </size>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Info...</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+I</string>
-                        </property>
-                        <property name="flat">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <spacer row="4" column="0" rowspan="1" colspan="4">
-                        <property name="name">
-                            <cstring>spacer3</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>300</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QLabel" row="2" column="0">
-                        <property name="name">
-                            <cstring>textLabel2_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Border width:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>borderwidth</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="2" column="2" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>textLabel2_2_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Titlebar height:</string>
-                        </property>
-                        <property name="buddy" stdset="0">
-                            <cstring>titlebarheight</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QSpinBox" row="2" column="4">
-                        <property name="name">
-                            <cstring>titlebarheight</cstring>
-                        </property>
-                        <property name="prefix">
-                            <string></string>
-                        </property>
-                        <property name="minValue">
-                            <number>5</number>
-                        </property>
-                        <property name="value">
-                            <number>20</number>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Height of the title par (independend to border width)</string>
-                        </property>
-                    </widget>
-                    <spacer row="3" column="4">
-                        <property name="name">
-                            <cstring>spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>16</height>
-                            </size>
-                        </property>
-                    </spacer>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>titlealign</cstring>
@@ -315,12 +208,12 @@
                                     <enum>Vertical</enum>
                                 </property>
                                 <property name="sizeType">
-                                    <enum>Expanding</enum>
+                                    <enum>Minimum</enum>
                                 </property>
                                 <property name="sizeHint">
                                     <size>
                                         <width>20</width>
-                                        <height>20</height>
+                                        <height>26</height>
                                     </size>
                                 </property>
                             </spacer>
@@ -430,7 +323,7 @@
                             </spacer>
                         </grid>
                     </widget>
-                    <widget class="QSpinBox" row="2" column="1">
+                    <widget class="QSpinBox" row="1" column="1">
                         <property name="name">
                             <cstring>borderwidth</cstring>
                         </property>
@@ -444,7 +337,32 @@
                             <string>Width of the borders</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="1" column="2" rowspan="1" colspan="3">
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>textLabel2_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Border width:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>borderwidth</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textshadow</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Use shadowed &amp;text</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+T</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Draws a nice shadowed title bar text to improve visibility.</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="2" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>antialiaseCaption</cstring>
                         </property>
@@ -453,6 +371,99 @@
                         </property>
                         <property name="accel">
                             <string>Alt+A</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>scrollWindows</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable mouse wheel tab-switch</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Using the mouse wheel on a title bar activates next window (in creation order)</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="3" column="4">
+                        <property name="name">
+                            <cstring>infoButton</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>80</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Info...</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+I</string>
+                        </property>
+                        <property name="flat">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="0">
+                        <property name="name">
+                            <cstring>spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>0</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <spacer row="3" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>90</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLabel" row="1" column="2" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>textLabel2_2_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Titlebar height:</string>
+                        </property>
+                        <property name="buddy" stdset="0">
+                            <cstring>titlebarheight</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QSpinBox" row="1" column="4">
+                        <property name="name">
+                            <cstring>titlebarheight</cstring>
+                        </property>
+                        <property name="prefix">
+                            <string></string>
+                        </property>
+                        <property name="minValue">
+                            <number>5</number>
+                        </property>
+                        <property name="value">
+                            <number>20</number>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Height of the title par (independend to border width)</string>
                         </property>
                     </widget>
                 </grid>
@@ -540,7 +551,7 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>20</height>
+                                <height>0</height>
                             </size>
                         </property>
                     </spacer>
@@ -734,7 +745,7 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>40</height>
+                                <height>0</height>
                             </size>
                         </property>
                     </spacer>

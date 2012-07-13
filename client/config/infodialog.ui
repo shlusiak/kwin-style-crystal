@@ -12,7 +12,7 @@
             <x>0</x>
             <y>0</y>
             <width>365</width>
-            <height>280</height>
+            <height>343</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -272,7 +272,8 @@
                 <string>&lt;p&gt;&lt;u&gt;Besides default features of most window decorations:&lt;/u&gt;&lt;br&gt;
 - Doubleclick the systemmenu button closes the window&lt;br&gt;
 - Middleclick on the minimize button sends it below all windows&lt;br&gt;
-- Rightclick the minimize button shades the window</string>
+- Rightclick the minimize button shades the window
+- Scrolling the mouse wheel on the title bar, activates the next/prev visible window on the current desktop (only if this feature is enabled)</string>
             </property>
         </widget>
     </grid>

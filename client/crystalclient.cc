@@ -7,6 +7,7 @@
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qmessagebox.h>
+#include <kwin.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
@@ -108,7 +109,7 @@ bool CrystalFactory::reset(unsigned long /*changed*/)
 	CreateButtonImages();
 	if (gl_font)delete gl_font;
 	gl_font=new GLFont(options()->font(false, false));
-	gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
+	gl_font->init(antialiaseCaption);
 
     return true;
 }
@@ -130,9 +131,9 @@ bool CrystalFactory::readConfig()
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
     textshadow=(bool)config.readBoolEntry("TextShadow",true);
-	antialiaseCaption=(bool)config.readBoolEntry("AntialiaseCaption",false);
+	antialiaseCaption=(bool)config.readBoolEntry("AntialiaseCaption",true);
     trackdesktop=(bool)config.readBoolEntry("TrackDesktop",true);
-    
+    scrollWindows=(bool)config.readBoolEntry("ScrollWindows",true);
     
     borderwidth=config.readNumEntry("Borderwidth",4);
     titlesize=config.readNumEntry("Titlebarheight",20);
@@ -330,7 +331,7 @@ bool CrystalFactory::setupGL(Window winId)
 	QFont font=options()->font(false, false);
 	gl_font=new GLFont(font);
 	
-	gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
+	gl_font->init(antialiaseCaption);
 	glInitialized=true;
 	
 	return true;
@@ -383,10 +384,12 @@ QImage CrystalFactory::convertToGLFormat( const QImage& img )
 CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
     : KDecoration(b,f)
 {
+	::factory->clients.append(this);
 }
 
 CrystalClient::~CrystalClient()
 {
+	::factory->clients.remove(this);
 	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
 	{
 		delete button[i];
@@ -707,7 +710,7 @@ void CrystalClient::desktopChange()
 void CrystalClient::iconChange()
 {
     if (button[ButtonMenu]) {
-        button[ButtonMenu]->setBitmap(0);
+        button[ButtonMenu]->setBitmap(NULL);
     }
 }
 
@@ -964,14 +967,60 @@ void CrystalClient::mouseDoubleClickEvent(QMouseEvent *e)
 	}
 }
 
-void CrystalClient::mouseWheelEvent(QWheelEvent *)
-{ }
+void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
+{
+	Window root=0,parent=0,*children=NULL;
+	uint numc;
+	// Our Deco is the child of a frame, get our parent
+	XQueryTree(qt_xdisplay(),widget()->winId(),&root,frame,&children,&numc);
+	if (children!=NULL)XFree(children);
+	
+	// frame has two children, us and a wrapper, get the wrapper
+	XQueryTree(qt_xdisplay(),*frame,&root,&parent,&children,&numc);	
+	for (uint i=0;i<numc;i++)
+	{
+//		printf("Child of frame[%d]=%d\n",i,children[i]);
+		if (children[i]!=widget()->winId())*wrapper=children[i];
+	}
+	XFree(children);
+	
+	// wrapper has only one child, which is the client. We want this!!
+	XQueryTree(qt_xdisplay(),*wrapper,&root,&parent,&children,&numc);
+	if (numc==1)*client=children[0];	
+	if (children!=NULL)XFree(children);
+}
 
-//////////////////////////////////////////////////////////////////////////////
-// paintEvent()
-// ------------
-// Repaint the window
-
+void CrystalClient::mouseWheelEvent(QWheelEvent *e)
+{ 
+	if (!::factory->scrollWindows)return;
+	if (titlebar_->geometry().contains(e->pos()))
+	{
+		QPtrList <CrystalClient> *l=&(::factory->clients);
+		
+		if (l->current()==NULL) for (unsigned int i=0;i<l->count();i++) if ((l->at(i))->isActive()) break;
+		
+		CrystalClient *n=this;
+		Window client,frame,wrapper;
+		
+		do
+		{
+			if(e->delta()>0)
+			{
+				n=l->next();
+				if (n==NULL)n=l->first();
+			}else{
+				n=l->prev();
+				if (n==NULL)n=l->last();
+			}
+			
+			n->ClientWindows(&frame,&wrapper,&client);
+			KWin::WindowInfo info=KWin::windowInfo(client);
+			if (n->desktop()==desktop() && !info.isMinimized())break;
+		}while(n!=this);
+			
+		KWin::activateWindow(client);
+	}
+}
 
 
 //////////////////////////////////////////////////////////////////////////////

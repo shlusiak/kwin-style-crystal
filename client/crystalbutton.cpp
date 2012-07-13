@@ -95,6 +95,7 @@ void ButtonImage::drawHovered(QRect r,double alpha)
 {
 	if (t_hovered)glBindTexture(GL_TEXTURE_2D, t_hovered);
 		else glBindTexture(GL_TEXTURE_2D,t_normal);
+		
 	glColorQ(color_hovered,alpha);
 	draw(r);
 }
@@ -151,6 +152,7 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
 	
 	if (image==NULL)
 	{
+		::factory->makeCurrent();
 		image=&menuimage;
 		menuimage.SetNormal(client_->icon().pixmap(QIconSet::Small,QIconSet::Normal).convertToImage());
 	}

@@ -6,6 +6,7 @@
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 #include <qtimer.h>
+#include <qptrlist.h>
 
 
 class QSpacerItem;
@@ -30,7 +31,7 @@ extern CrystalFactory *factory;
 
 
 inline void glColorQ(const QColor x,const double alpha=1.0) 
-{ glColor4b(x.red()/2,x.green()/2,x.blue()/2,(unsigned char)(alpha*127.0)); }
+{ glColor4ub(x.red(),x.green(),x.blue(),(unsigned char)(alpha*255.0)); }
 
 
 
@@ -93,6 +94,7 @@ public:
 	QColor closeColorNormal,closeColorHovered,closeColorPressed;
 	int borderwidth;
 	bool textshadow,antialiaseCaption;
+	bool scrollWindows;
 	bool trackdesktop;
 	int roundCorners;
 	int repaintMode,repaintTime;
@@ -105,7 +107,7 @@ public:
 	GLXContext glxcontext;
 
 	ButtonImage *buttonImages[ButtonImageCount];
-// 	QPtrList <CrystalClient> clients;
+	QPtrList <CrystalClient> clients;
 	
 	static QImage convertToGLFormat(const QImage &);
 private:
@@ -158,8 +160,11 @@ private:
     void moveEvent(QMoveEvent *);
     void showEvent(QShowEvent *);
 	void mouseWheelEvent(QWheelEvent *e);
+
+	void ClientWindows(Window* frame,Window* wrapper,Window *client);
 	
-	void renderLighting();
+	void renderSide(const int bt,const int bl, const int bb, const int br,const double ior,const int side);
+	void renderLighting(const bool top,const bool left,const bool bottom,const bool right);
 public slots:
 	void Repaint();
 private slots:
