@@ -258,39 +258,41 @@ SUBDIRS = config
 
 KDE_CXXFLAGS = -DQT_PLUGIN
 
-INCLUDES = $(all_includes) -I$(kde_includes)/kwin
+INCLUDES = -I/usr/include/freetype2 $(all_includes) -I$(kde_includes)/kwin
 
 kwindir = $(kde_datadir)/kwin/
-kwin_DATA = crystal.desktop
+kwin_DATA = crystalgl.desktop
 
-noinst_HEADERS = crystalclient.h crystalbutton.h imageholder.h
+noinst_HEADERS = crystalclient.h crystalbutton.h imageholder.h glfont.h
 
-kde_module_LTLIBRARIES = kwin3_crystal.la
-kwin3_crystal_la_SOURCES = crystalclient.cc myrootpixmap.cc crystalbutton.cpp \
-	imageholder.cpp
+kde_module_LTLIBRARIES = kwin3_crystalgl.la
+kwin3_crystalgl_la_SOURCES = crystalclient.cc myrootpixmap.cc crystalbutton.cpp \
+	imageholder.cpp glfont.cpp
 
-kwin3_crystal_la_LIBADD = $(kde_libraries)/libkdecorations.la
-kwin3_crystal_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdecore -lkdeui
-#>- kwin3_crystal_la_METASOURCES = AUTO
+kwin3_crystalgl_la_LIBADD = $(kde_libraries)/libkdecorations.la
+kwin3_crystalgl_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdecore \
+	-lkdeui -lGL -lGLU
 
-DISTCLEANFILES = $(kwin3_crystal_la_METASOURCES)
+#>- kwin3_crystalgl_la_METASOURCES = AUTO
+
+DISTCLEANFILES = $(kwin3_crystalgl_la_METASOURCES)
 subdir = client
 mkinstalldirs = $(SHELL) $(top_srcdir)/admin/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(kde_module_LTLIBRARIES)
 
-kwin3_crystal_la_DEPENDENCIES = $(kde_libraries)/libkdecorations.la
-am_kwin3_crystal_la_OBJECTS = crystalclient.lo myrootpixmap.lo \
-	crystalbutton.lo imageholder.lo
-#>- kwin3_crystal_la_OBJECTS = $(am_kwin3_crystal_la_OBJECTS)
+kwin3_crystalgl_la_DEPENDENCIES = $(kde_libraries)/libkdecorations.la
+am_kwin3_crystalgl_la_OBJECTS = crystalclient.lo myrootpixmap.lo \
+	crystalbutton.lo imageholder.lo glfont.lo
+#>- kwin3_crystalgl_la_OBJECTS = $(am_kwin3_crystalgl_la_OBJECTS)
 #>+ 6
-kwin3_crystal_la_final_OBJECTS = kwin3_crystal_la.all_cc.lo kwin3_crystal_la.all_cpp.lo 
-kwin3_crystal_la_nofinal_OBJECTS = crystalclient.lo myrootpixmap.lo \
-	crystalbutton.lo imageholder.lo\
-myrootpixmap.moc.lo imageholder.moc.lo 
-@KDE_USE_FINAL_FALSE@kwin3_crystal_la_OBJECTS = $(kwin3_crystal_la_nofinal_OBJECTS)
-@KDE_USE_FINAL_TRUE@kwin3_crystal_la_OBJECTS = $(kwin3_crystal_la_final_OBJECTS)
+kwin3_crystalgl_la_final_OBJECTS = kwin3_crystalgl_la.all_cc.lo kwin3_crystalgl_la.all_cpp.lo 
+kwin3_crystalgl_la_nofinal_OBJECTS = crystalclient.lo myrootpixmap.lo \
+	crystalbutton.lo imageholder.lo glfont.lo\
+crystalbutton.moc.lo myrootpixmap.moc.lo imageholder.moc.lo 
+@KDE_USE_FINAL_FALSE@kwin3_crystalgl_la_OBJECTS = $(kwin3_crystalgl_la_nofinal_OBJECTS)
+@KDE_USE_FINAL_TRUE@kwin3_crystalgl_la_OBJECTS = $(kwin3_crystalgl_la_final_OBJECTS)
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -301,16 +303,16 @@ depcomp = $(SHELL) $(top_srcdir)/admin/depcomp
 am__depfiles_maybe = depfiles
 #>- @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/crystalbutton.Plo \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/crystalclient.Plo \
-#>- @AMDEP_TRUE@	./$(DEPDIR)/imageholder.Plo \
+#>- @AMDEP_TRUE@	./$(DEPDIR)/glfont.Plo ./$(DEPDIR)/imageholder.Plo \
 #>- @AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
 #>+ 9
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P  $(DEPDIR)/kwin3_crystal_la.all_cc.P $(DEPDIR)/kwin3_crystal_la.all_cpp.P  ./$(DEPDIR)/crystalbutton.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@DEP_FILES =  $(DEPDIR)/crystalbutton.moc.P $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P  $(DEPDIR)/kwin3_crystalgl_la.all_cc.P $(DEPDIR)/kwin3_crystalgl_la.all_cpp.P  ./$(DEPDIR)/crystalbutton.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/crystalclient.Plo \
-@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/imageholder.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/glfont.Plo ./$(DEPDIR)/imageholder.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_TRUE@	@AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P  ./$(DEPDIR)/crystalbutton.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@DEP_FILES =  $(DEPDIR)/crystalbutton.moc.P $(DEPDIR)/myrootpixmap.moc.P $(DEPDIR)/imageholder.moc.P  ./$(DEPDIR)/crystalbutton.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/crystalclient.Plo \
-@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/imageholder.Plo \
+@AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/glfont.Plo ./$(DEPDIR)/imageholder.Plo \
 @AMDEP_TRUE@@KDE_USE_FINAL_FALSE@	@AMDEP_TRUE@	./$(DEPDIR)/myrootpixmap.Plo
 
 #>- CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -340,7 +342,7 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(kwin3_crystal_la_SOURCES)
+DIST_SOURCES = $(kwin3_crystalgl_la_SOURCES)
 DATA = $(kwin_DATA)
 
 HEADERS = $(noinst_HEADERS)
@@ -362,7 +364,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-recursive check-recursive installcheck-recursive nmcheck-recursive bcheck-recursive
 DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(kwin3_crystal_la_SOURCES)
+SOURCES = $(kwin3_crystalgl_la_SOURCES)
 
 #>- all: all-recursive
 #>+ 1
@@ -407,11 +409,11 @@ clean-kde_moduleLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-#>- kwin3_crystal.la: $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_DEPENDENCIES) 
+#>- kwin3_crystalgl.la: $(kwin3_crystalgl_la_OBJECTS) $(kwin3_crystalgl_la_DEPENDENCIES) 
 #>+ 2
-@KDE_USE_CLOSURE_TRUE@kwin3_crystal.la: kwin3_crystal.la.closure $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_DEPENDENCIES) 
-@KDE_USE_CLOSURE_FALSE@kwin3_crystal.la: $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(kde_moduledir) $(kwin3_crystal_la_LDFLAGS) $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_LIBADD) $(LIBS)
+@KDE_USE_CLOSURE_TRUE@kwin3_crystalgl.la: kwin3_crystalgl.la.closure $(kwin3_crystalgl_la_OBJECTS) $(kwin3_crystalgl_la_DEPENDENCIES) 
+@KDE_USE_CLOSURE_FALSE@kwin3_crystalgl.la: $(kwin3_crystalgl_la_OBJECTS) $(kwin3_crystalgl_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(kde_moduledir) $(kwin3_crystalgl_la_LDFLAGS) $(kwin3_crystalgl_la_OBJECTS) $(kwin3_crystalgl_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -421,6 +423,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crystalbutton.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crystalclient.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/glfont.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imageholder.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/myrootpixmap.Plo@am__quote@
 
@@ -589,7 +592,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=crystal.desktop myrootpixmap.h tiles.h 
+KDE_DIST=myrootpixmap.h tiles.h crystalgl.desktop 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -737,14 +740,20 @@ uninstall-info: uninstall-info-recursive
 .NOEXPORT:
 
 #>+ 8
-kwin3_crystal.la.closure: $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_DEPENDENCIES)
-	@echo "int main() {return 0;}" > kwin3_crystal_la_closure.cc
-	@$(LTCXXCOMPILE) -c kwin3_crystal_la_closure.cc
-	$(CXXLINK) kwin3_crystal_la_closure.lo $(kwin3_crystal_la_LDFLAGS) $(kwin3_crystal_la_OBJECTS) $(kwin3_crystal_la_LIBADD) $(LIBS)
-	@rm -f kwin3_crystal_la_closure.* kwin3_crystal.la.closure
-	@echo "timestamp" > kwin3_crystal.la.closure
+kwin3_crystalgl.la.closure: $(kwin3_crystalgl_la_OBJECTS) $(kwin3_crystalgl_la_DEPENDENCIES)
+	@echo "int main() {return 0;}" > kwin3_crystalgl_la_closure.cc
+	@$(LTCXXCOMPILE) -c kwin3_crystalgl_la_closure.cc
+	$(CXXLINK) kwin3_crystalgl_la_closure.lo $(kwin3_crystalgl_la_LDFLAGS) $(kwin3_crystalgl_la_OBJECTS) $(kwin3_crystalgl_la_LIBADD) $(LIBS)
+	@rm -f kwin3_crystalgl_la_closure.* kwin3_crystalgl.la.closure
+	@echo "timestamp" > kwin3_crystalgl.la.closure
 
 
+#>+ 3
+crystalbutton.moc.cc: $(srcdir)/crystalbutton.h
+	$(MOC) $(srcdir)/crystalbutton.h -o crystalbutton.moc.cc
+
+#>+ 1
+mocs: crystalbutton.moc.cc
 #>+ 3
 myrootpixmap.moc.cc: $(srcdir)/myrootpixmap.h
 	$(MOC) $(srcdir)/myrootpixmap.h -o myrootpixmap.moc.cc
@@ -765,11 +774,11 @@ imageholder.moc.cc: $(srcdir)/imageholder.h
 mocs: imageholder.moc.cc
 #>+ 3
 clean-metasources:
-	-rm -f  myrootpixmap.moc.cc crystalclient.moc imageholder.moc.cc
+	-rm -f  crystalbutton.moc.cc myrootpixmap.moc.cc crystalclient.moc imageholder.moc.cc
 
 #>+ 3
 clean-closures:
-	-rm -f  kwin3_crystal.la.closure
+	-rm -f  kwin3_crystalgl.la.closure
 
 #>+ 2
 docs-am:
@@ -803,45 +812,45 @@ bcheck-am:
 
 
 #>+ 11
-kwin3_crystal_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc myrootpixmap.moc.cc imageholder.moc.cc  crystalclient.moc
-	@echo 'creating kwin3_crystal_la.all_cc.cc ...'; \
-	rm -f kwin3_crystal_la.all_cc.files kwin3_crystal_la.all_cc.final; \
-	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cc.final; \
-	for file in crystalclient.cc myrootpixmap.cc myrootpixmap.moc.cc imageholder.moc.cc ; do \
-	  echo "#include \"$$file\"" >> kwin3_crystal_la.all_cc.files; \
-	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin3_crystal_la.all_cc.final; \
+kwin3_crystalgl_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalclient.cc $(srcdir)/myrootpixmap.cc crystalbutton.moc.cc myrootpixmap.moc.cc imageholder.moc.cc  crystalclient.moc
+	@echo 'creating kwin3_crystalgl_la.all_cc.cc ...'; \
+	rm -f kwin3_crystalgl_la.all_cc.files kwin3_crystalgl_la.all_cc.final; \
+	echo "#define KDE_USE_FINAL 1" >> kwin3_crystalgl_la.all_cc.final; \
+	for file in crystalclient.cc myrootpixmap.cc crystalbutton.moc.cc myrootpixmap.moc.cc imageholder.moc.cc ; do \
+	  echo "#include \"$$file\"" >> kwin3_crystalgl_la.all_cc.files; \
+	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin3_crystalgl_la.all_cc.final; \
 	done; \
-	cat kwin3_crystal_la.all_cc.final kwin3_crystal_la.all_cc.files > kwin3_crystal_la.all_cc.cc; \
-	rm -f kwin3_crystal_la.all_cc.final kwin3_crystal_la.all_cc.files
+	cat kwin3_crystalgl_la.all_cc.final kwin3_crystalgl_la.all_cc.files > kwin3_crystalgl_la.all_cc.cc; \
+	rm -f kwin3_crystalgl_la.all_cc.final kwin3_crystalgl_la.all_cc.files
 
 #>+ 11
-kwin3_crystal_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/crystalbutton.cpp $(srcdir)/imageholder.cpp  crystalclient.moc
-	@echo 'creating kwin3_crystal_la.all_cpp.cpp ...'; \
-	rm -f kwin3_crystal_la.all_cpp.files kwin3_crystal_la.all_cpp.final; \
-	echo "#define KDE_USE_FINAL 1" >> kwin3_crystal_la.all_cpp.final; \
-	for file in crystalbutton.cpp imageholder.cpp ; do \
-	  echo "#include \"$$file\"" >> kwin3_crystal_la.all_cpp.files; \
-	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin3_crystal_la.all_cpp.final; \
+kwin3_crystalgl_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/crystalbutton.cpp $(srcdir)/imageholder.cpp $(srcdir)/glfont.cpp  crystalclient.moc
+	@echo 'creating kwin3_crystalgl_la.all_cpp.cpp ...'; \
+	rm -f kwin3_crystalgl_la.all_cpp.files kwin3_crystalgl_la.all_cpp.final; \
+	echo "#define KDE_USE_FINAL 1" >> kwin3_crystalgl_la.all_cpp.final; \
+	for file in crystalbutton.cpp imageholder.cpp glfont.cpp ; do \
+	  echo "#include \"$$file\"" >> kwin3_crystalgl_la.all_cpp.files; \
+	  test ! -f $(srcdir)/$$file || egrep '^#pragma +implementation' $(srcdir)/$$file >> kwin3_crystalgl_la.all_cpp.final; \
 	done; \
-	cat kwin3_crystal_la.all_cpp.final kwin3_crystal_la.all_cpp.files > kwin3_crystal_la.all_cpp.cpp; \
-	rm -f kwin3_crystal_la.all_cpp.final kwin3_crystal_la.all_cpp.files
+	cat kwin3_crystalgl_la.all_cpp.final kwin3_crystalgl_la.all_cpp.files > kwin3_crystalgl_la.all_cpp.cpp; \
+	rm -f kwin3_crystalgl_la.all_cpp.final kwin3_crystalgl_la.all_cpp.files
 
 #>+ 3
 clean-final:
-	-rm -f kwin3_crystal_la.all_cc.cc kwin3_crystal_la.all_cpp.cpp
+	-rm -f kwin3_crystalgl_la.all_cc.cc kwin3_crystalgl_la.all_cpp.cpp
 
 #>+ 2
 final:
-	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_final_OBJECTS)" all-am
+	$(MAKE) kwin3_crystalgl_la_OBJECTS="$(kwin3_crystalgl_la_final_OBJECTS)" all-am
 #>+ 2
 final-install:
-	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_final_OBJECTS)" install-am
+	$(MAKE) kwin3_crystalgl_la_OBJECTS="$(kwin3_crystalgl_la_final_OBJECTS)" install-am
 #>+ 2
 no-final:
-	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_nofinal_OBJECTS)" all-am
+	$(MAKE) kwin3_crystalgl_la_OBJECTS="$(kwin3_crystalgl_la_nofinal_OBJECTS)" all-am
 #>+ 2
 no-final-install:
-	$(MAKE) kwin3_crystal_la_OBJECTS="$(kwin3_crystal_la_nofinal_OBJECTS)" install-am
+	$(MAKE) kwin3_crystalgl_la_OBJECTS="$(kwin3_crystalgl_la_nofinal_OBJECTS)" install-am
 #>+ 3
 cvs-clean:
 	$(MAKE) admindir=$(top_srcdir)/admin -f $(top_srcdir)/admin/Makefile.common cvs-clean

@@ -1,39 +1,13 @@
-//////////////////////////////////////////////////////////////////////////////
-// exampleclient.h
-// -------------------
-// Example window decoration for KDE
-// -------------------
-// Copyright (c) 2003, 2004 David Johnson <david@usermode.org>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-//////////////////////////////////////////////////////////////////////////////
-
-#ifndef EXAMPLECLIENT_H
-#define EXAMPLECLIENT_H
+#ifndef CRYSTALCLIENT_H
+#define CRYSTALCLIENT_H
 
 #include <qlayout.h>
+#include <GL/glx.h>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 #include <qtimer.h>
 #include <qptrlist.h>
 #include <X11/Xlib.h>
-
 
 class QSpacerItem;
 class QPoint;
@@ -44,19 +18,17 @@ class CrystalButton;
 class QImageHolder;
 
 class ButtonImage;
+class GLFont;
 
 extern CrystalFactory *factory;
 
 
+#define TOP_LEFT 1
+#define TOP_RIGHT 2
+#define BOT_LEFT 4
+#define BOT_RIGHT 8
 
-struct WND_CONFIG
-{
-	int mode;	// The mode (fade, emboss, ...)
-	
-	double amount;
-	bool frame;
-	QColor frameColor;
-};
+
 
 
 enum ButtonType {
@@ -104,28 +76,34 @@ public:
 
     static bool initialized() { return initialized_; }
     static Qt::AlignmentFlags titleAlign() { return titlealign_; }
+	
+	void initGL();
 public:
 	QImageHolder *image_holder;
+	GLFont *gl_font;
+	GLXContext glxcontext;
 	
 	int titlesize;
-	bool hovereffect;
+	bool hovereffect,tintButtons,fadeButtons;
+	QColor buttonColor;
 	int borderwidth;
 	bool textshadow;
 	bool trackdesktop;
-	bool roundCorners;
-	QColor buttonColor;
+	int roundCorners;
 	int repaintMode,repaintTime;
-	WND_CONFIG active,inactive;
-	
+	bool useRefraction,useLighting,animateActivate;
+	double iorActive,iorInactive;
 	
 	ButtonImage *buttonImages[ButtonImageCount];
 	QPtrList <CrystalClient> clients;
 	
+	static QImage convertToGLFormat(const QImage &);
 private:
     bool readConfig();
 	void CreateButtonImages();
 private:
     static bool initialized_;
+	bool glInitialized;
     static Qt::AlignmentFlags titlealign_;
 };
 
@@ -153,7 +131,8 @@ public:
     virtual void resize(const QSize &size);
     virtual QSize minimumSize() const;
     virtual Position mousePosition(const QPoint &point) const;
-
+	
+	void renderText(QString str);
 private:
     CrystalButton* addButtons(QBoxLayout* layout, const QString& buttons);
     void updateMask();
@@ -168,10 +147,10 @@ private:
     void showEvent(QShowEvent *);
 	void mouseWheelEvent(QWheelEvent *e);
 	
-	void ShowTabMenu(QMouseEvent *e);
 	void ClientWindows(Window* frame,Window* wrapper,Window* client);
+public slots:
+	void Repaint();
 private slots:
-    void Repaint();
     void maxButtonPressed();
     void minButtonPressed();
     void shadeButtonPressed();
@@ -182,11 +161,15 @@ private slots:
 	void keepAboveChange( bool );
 	void keepBelowChange( bool );
 	void menuPopUp();
+	void animate();
 private:
     CrystalButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
 	QGridLayout *mainlayout;
     QTimer timer;
+	
+	QTimer animationtimer;
+	double animation;
 	
 public:
 	bool FullMax;

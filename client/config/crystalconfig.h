@@ -29,6 +29,11 @@
 
 #include <qobject.h>
 
+#define TOP_LEFT 1
+#define TOP_RIGHT 2
+#define BOT_LEFT 4
+#define BOT_RIGHT 8
+
 class KConfig;
 class ConfigDialog;
 
@@ -46,7 +51,6 @@ public slots:
     void load(KConfig*);
     void save(KConfig*);
     void defaults();
-    void updateStack(QWidgetStack* stack,int selected);
 	void infoDialog();
 
 protected slots:

@@ -36,7 +36,7 @@
         </size>
     </property>
     <property name="caption">
-        <string>Info about Crystal...</string>
+        <string>Info about Crystal-GL...</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>false</bool>
@@ -116,7 +116,7 @@
                 <enum>Plain</enum>
             </property>
             <property name="text">
-                <string>&lt;p&gt;&lt;b&gt;Crystal&lt;/b&gt; kwin decoration theme,&lt;br&gt;&lt;b&gt;Author:&lt;/b&gt; Sascha Hlusiak, 2004.&lt;br&gt;Email: &lt;a href="mailto:spam84@gmx.de"&gt;Spam84@gmx.de&lt;/a&gt;&lt;br&gt;&lt;i&gt;You may look for the most recent version at kde-look.org!&lt;/i&gt;&lt;/p&gt;</string>
+                <string>&lt;p&gt;&lt;b&gt;Crystal-GL&lt;/b&gt; kwin decoration theme,&lt;br&gt;&lt;b&gt;Author:&lt;/b&gt; Sascha Hlusiak, 2004.&lt;br&gt;Email: &lt;a href="mailto:spam84@gmx.de"&gt;Spam84@gmx.de&lt;/a&gt;&lt;br&gt;&lt;i&gt;You may look for the most recent version at kde-look.org!&lt;/i&gt;&lt;/p&gt;</string>
             </property>
             <property name="textFormat">
                 <enum>AutoText</enum>

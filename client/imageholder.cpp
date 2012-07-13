@@ -5,32 +5,30 @@
 #include "crystalclient.h"
 
 
-
 QImageHolder::QImageHolder()
-:img_active(NULL),img_inactive(NULL)
 {
 	rootpixmap=NULL;
+	mytexture=0;
+	vscreenwidth=vscreenheight=1.0;
 	initialized=false;
+	textureupdate=false;
 }
 
 QImageHolder::~QImageHolder()
 {
 	if (rootpixmap)delete rootpixmap;
-	if (img_active)delete img_active;
-	if (img_inactive)delete img_inactive;
+	if (mytexture)glDeleteTextures(1,&mytexture);
 }
 
 void QImageHolder::Init()
 {
 	if (initialized)return;
 	
-//	printf("Calling Init\n");	
-	
 	rootpixmap=new KMyRootPixmap(NULL/*,this*/);
-	rootpixmap->start();
-	rootpixmap->repaint(true);
 	connect( rootpixmap,SIGNAL(backgroundUpdated(const QImage*)),this, SLOT(BackgroundUpdated(const QImage*)));
 	connect(kapp, SIGNAL(backgroundChanged(int)),SLOT(handleDesktopChanged(int)));
+	rootpixmap->start();
+	rootpixmap->repaint(true);
 	
 	initialized=true;
 }
@@ -49,9 +47,8 @@ void QImageHolder::handleDesktopChanged(int)
 void QImageHolder::CheckSanity()
 {
 	if (!initialized)return;
-	if (img_active!=NULL)return;
-	if (img_inactive!=NULL)return;
-
+	if (texture())return;
+	
 //	printf("SanityCheck failed, uninitializing\n");	
 	delete rootpixmap;
 	rootpixmap=NULL;
@@ -60,62 +57,38 @@ void QImageHolder::CheckSanity()
 //	printf("Uninitialized.\n");	
 }
 
-QPixmap *ApplyEffect(QImage &src,WND_CONFIG* cfg,QColorGroup colorgroup)
-{
-	QImage dst;
-	
-	switch(cfg->mode)
-	{
-	case 0:	if (cfg->amount>0.99)return new QPixmap();
-		dst=KImageEffect::fade(src, cfg->amount, colorgroup.background());
-		break;
-	case 1:dst=KImageEffect::channelIntensity(src,cfg->amount,KImageEffect::All);
-		break;
-	case 2:dst=KImageEffect::intensity(src,cfg->amount);
-		break;
-	case 3:dst=KImageEffect::desaturate(src,cfg->amount);
-		break;
-	case 4: dst=src;
-		KImageEffect::solarize(dst,cfg->amount*100.0);
-		break;
-//	case 5:dst=KImageEffect::emboss(src);
-//		break;
-//	case 6:dst=KImageEffect::charcoal(src);
-//		break;
-
-	default:dst=src;
-		break;	
-	}
-	
-	return new QPixmap(dst);
-}
-
 void QImageHolder::BackgroundUpdated(const QImage *src)
 {
-	if (img_active)
-	{
-		delete img_active;
-		img_active=NULL;
-	}
-	if (img_inactive)
-	{
-		delete img_inactive;
-		img_inactive=NULL;
-	}
+	if (src==NULL)return;
+	if (src->isNull())return;
+	textureimg=CrystalFactory::convertToGLFormat(src->smoothScale(512,512));
+	vscreenwidth=src->width();
+	vscreenheight=src->height();
+	textureupdate=true;
 	
-	if (src && !src->isNull())
+	// Call to make at least one deco repaint, to create the texture (see function below)
+	emit repaintNeeded();
+}
+
+void QImageHolder::activateTexture()
+{
+	Init();
+	if (textureupdate)
 	{
-		src->scale(1024,768);
-		QImage tmp=src->copy();
-
-//		if (!img_active)img_active=new QImage;
-//		if (!img_inactive)img_inactive=new QImage;
-
-		img_inactive=ApplyEffect(tmp,&::factory->inactive,factory->options()->colorGroup(KDecoration::ColorTitleBar, false));
-		tmp=src->copy();
-		img_active=ApplyEffect(tmp,&::factory->active,factory->options()->colorGroup(KDecoration::ColorTitleBar, true));
-	}
+		textureupdate=false;
 	
-	emit repaintNeeded();	
+		if (mytexture==0)
+			glGenTextures(1,&mytexture);
+		glBindTexture(GL_TEXTURE_2D,mytexture);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		
+		glTexImage2D( GL_TEXTURE_2D, 0, 3, textureimg.width(), textureimg.height(), 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, textureimg.bits() );
+			
+		// Now that our texture is created, repaint again
+		emit repaintNeeded();
+	}
+	glBindTexture(GL_TEXTURE_2D,mytexture);
 }
 

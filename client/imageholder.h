@@ -5,6 +5,9 @@
 
 #include <kwinmodule.h>
 #include "myrootpixmap.h"
+#include <GL/glx.h>
+#include <qimage.h>
+
 
 class QImageHolder:public QObject
 {
@@ -14,19 +17,25 @@ public:
 	virtual ~QImageHolder();
 	
 	void Init();
-	QPixmap *image(bool active) { Init(); return active?img_active:img_inactive; }
 	void repaint(bool force);
-
+	GLuint texture() { return mytexture; }
+	void activateTexture();
+	
+	double screenwidth() { return vscreenwidth; }
+	double screenheight() { return vscreenheight; }
 private:
 	bool initialized;
 	KMyRootPixmap *rootpixmap;
-	QPixmap *img_active,*img_inactive;
+	QImage textureimg;
+	bool textureupdate;
+	double vscreenwidth,vscreenheight;
+	
+	GLuint mytexture;	
 	
 public slots:
 	void BackgroundUpdated(const QImage *);
 	void handleDesktopChanged(int desk);
 	void CheckSanity();
-	
 signals:
 	void repaintNeeded();
 };

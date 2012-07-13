@@ -3,7 +3,8 @@
 
 
 #include <qbutton.h>
-#include <qdragobject.h>
+#include "crystalclient.h"
+#include <GL/gl.h>
 
 
 
@@ -18,23 +19,30 @@ class ButtonImage
 {
 public:
 	QImage *normal,*hovered,*pressed;
+	GLuint t_normal,t_hovered,t_pressed;
 	
 	ButtonImage(const QRgb *d_normal=NULL,bool blend=true,QColor color=::factory->buttonColor);
 	~ButtonImage();
 	
+	void SetNormal(QImage image);
 	void SetNormal(const QRgb *d_normal,bool blend=true,QColor color=::factory->buttonColor);
 	void SetHovered(const QRgb *d_hovered=NULL,bool blend=true,QColor color=::factory->buttonColor);
 	void SetPressed(const QRgb *d_pressed=NULL,bool blend=true,QColor color=::factory->buttonColor);
 	void reset();
+	void resetTextures();
+	void check();
+	void activate(QImage *img,GLuint texture);
 	
 private:
 	QImage CreateImage(const QRgb *data,bool blend,QColor color);
+	GLuint CreateTexture(QImage *img);
 };
 
 
 
-class CrystalButton : public QButton
+class CrystalButton : public QObject,public QSpacerItem
 {
+	Q_OBJECT
 public:
     CrystalButton(CrystalClient *parent=0, const char *name=0,
                   const QString &tip=NULL,
@@ -43,28 +51,37 @@ public:
     ~CrystalButton();
 
     void setBitmap(ButtonImage *newimage);
-    QSize sizeHint() const;
     int lastMousePress() const { return lastmouse_; }
-    void reset() { repaint(false); }
-	void setFirstLast(bool vfirst,bool vlast) { first|=vfirst; last|=vlast; }
 	void resetSize(bool FullSize);
-private:
-    void enterEvent(QEvent *e);
-    void leaveEvent(QEvent *e);
-    void mousePressEvent(QMouseEvent *e);
+
+    void drawButton(double alpha);
+	
+	bool isInside(QPoint point);
+
+    void enterEvent();
+    void leaveEvent();
+    bool mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
-    void drawButton(QPainter *painter);
-    
+	void mouseMoveEvent(QMouseEvent *e);
+private:
     int buttonSizeH() const;
 	int buttonSizeV() const;
 
+	bool handleMouseButton(int button);
+	
+	void repaint();
 private:
-	bool first,last;
 	bool hover;
     CrystalClient *client_;
     ButtonType type_;
-    ButtonImage *image;
+    ButtonImage *image,menuimage;
+
     int lastmouse_;
+	
+	
+signals:
+	void clicked();
+	void pressed();
 };
 
 

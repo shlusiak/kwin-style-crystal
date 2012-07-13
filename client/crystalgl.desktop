@@ -1,5 +1,5 @@
 # KDE Desktop Entry
 [Desktop Entry]
 Encoding=UTF-8
-Name=Crystal
-X-KDE-Library=kwin3_crystal
+Name=Crystal-GL
+X-KDE-Library=kwin3_crystalgl
