@@ -13,7 +13,7 @@ noinst_HEADERS = crystalclient.h crystalbutton.h imageholder.h glfont.h
 
 kde_module_LTLIBRARIES = kwin3_crystalgl.la
 kwin3_crystalgl_la_SOURCES = crystalclient.cc myrootpixmap.cc crystalbutton.cpp \
-	imageholder.cpp glfont.cpp
+		imageholder.cpp glfont.cpp render.cpp
 kwin3_crystalgl_la_LIBADD = $(kde_libraries)/libkdecorations.la
 kwin3_crystalgl_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdecore \
 	-lkdeui -lGL -lGLU

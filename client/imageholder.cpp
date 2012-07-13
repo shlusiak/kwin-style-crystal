@@ -62,7 +62,8 @@ void QImageHolder::BackgroundUpdated(const QImage *src)
 	if (src==NULL)return;
 	if (src->isNull())return;
 	QImage img=*src;
-	img=KImageEffect::intensity(img,(float)(::factory->brightness-100)/100.0f);
+	if (::factory->brightness!=100)
+		img=KImageEffect::intensity(img,(float)(::factory->brightness-100)/100.0f);
 	img=img.smoothScale(::factory->textureSize,::factory->textureSize);
 	textureimg=CrystalFactory::convertToGLFormat(img);
 	vscreenwidth=src->width();

@@ -6,8 +6,7 @@
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 #include <qtimer.h>
-// #include <qptrlist.h>
-#include <X11/Xlib.h>
+
 
 class QSpacerItem;
 class QPoint;
@@ -79,6 +78,7 @@ public:
 	
 	bool initGL();
 	bool setupGL(Window winId);
+	bool releaseGL(Window winId);
 public:
 	QImageHolder *image_holder;
 	GLFont *gl_font;
@@ -152,7 +152,7 @@ private:
     void showEvent(QShowEvent *);
 	void mouseWheelEvent(QWheelEvent *e);
 	
-	void ClientWindows(Window* frame,Window* wrapper,Window* client);
+	void renderLighting();
 public slots:
 	void Repaint();
 private slots:
@@ -165,7 +165,6 @@ private slots:
 	
 	void keepAboveChange( bool );
 	void keepBelowChange( bool );
-	void menuPopUp();
 	void animate();
 private:
     CrystalButton *button[ButtonTypeCount];
@@ -175,6 +174,7 @@ private:
 	
 	QTimer animationtimer;
 	double animation;
+	int bl,bt,br,bb;
 	
 public:
 	bool FullMax;

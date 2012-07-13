@@ -111,7 +111,7 @@ void ButtonImage::SetPressed(const QRgb *d_pressed,bool blend,QColor color)
 	}
 }
 
-void ButtonImage::activate(QImage *img,GLuint texture)
+void ButtonImage::activate(QImage */*img*/,GLuint texture)
 {
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
@@ -265,6 +265,8 @@ void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 void CrystalButton::drawButton(double alpha)
 {
     if (!CrystalFactory::initialized()) return;
+	
+	if (type_==ButtonMenu)alpha*=0.75; // The menu image shall be at least a little trabslucent
 	
 	QRect r2=geometry();
 	int bla=buttonSizeV();

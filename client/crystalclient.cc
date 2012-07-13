@@ -6,29 +6,20 @@
 #include <kdebug.h>
 
 #include <qlabel.h>
-#include <qpainter.h>
 #include <qtooltip.h>
 #include <qapplication.h>
-#include <qimage.h>
-
-#include <math.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
 #include "imageholder.h"
 #include "glfont.h"
 
-// Our button images
+// The button themes
 #include "tiles.h"
 #include "aqua.h"
+#include "knifty.h"
 
 
-
-inline double max(double a,double b)
-{ return (a<b)?b:a; }
-
-inline double max(double a,double b,double c)
-{ return max(a,max(b,c)); }
 
 
 CrystalFactory* factory=NULL;
@@ -50,7 +41,6 @@ extern "C" KDecorationFactory* create_factory()
 
 CrystalFactory::CrystalFactory()
 {
-	// TODO: Move this stuff, where it is save and no longer locks the X-Server on certain machines!
 	glInitialized=false;
 	for (int i=0;i<ButtonImageCount;i++)
 		buttonImages[i]=NULL;
@@ -79,7 +69,13 @@ CrystalFactory::~CrystalFactory()
 		if (buttonImages[i])delete buttonImages[i];
 		buttonImages[i]=NULL;
 	}
-	if (glxcontext)glXDestroyContext(qt_xdisplay(),glxcontext);
+
+	if (glxcontext)
+	{
+		glXMakeCurrent(qt_xdisplay(),None,NULL);
+		glXDestroyContext(qt_xdisplay(),glxcontext);
+		glxcontext=NULL;
+	}
 }
 
 KDecoration* CrystalFactory::createDecoration(KDecorationBridge* b)
@@ -173,8 +169,10 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[i]=new ButtonImage;
 	}
 
-	if (buttontheme==0)
-	{	// Crystal default
+	switch(buttontheme)
+	{
+	default:	// whee, seems to work. ;)
+	case 0:	// Crystal default
 		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,tintButtons);
 		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,tintButtons);
 		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,tintButtons);
@@ -188,8 +186,8 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
 		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,tintButtons);
 		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
-	}else if (buttontheme==1)
-	{
+		break;
+	case 1: // Aqua buttons
 		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,tintButtons);
 		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,tintButtons);
 		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,tintButtons);
@@ -214,7 +212,23 @@ void CrystalFactory::CreateButtonImages()
 		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data,tintButtons);
 		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data,tintButtons);
 		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data,tintButtons);
-	}
+		break;
+	case 2: // Knifty buttons
+		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data,tintButtons);
+		buttonImages[ButtonImageMax]->SetNormal(knifty_max_data,tintButtons);
+		buttonImages[ButtonImageRestore]->SetNormal(knifty_restore_data,tintButtons);
+		buttonImages[ButtonImageMin]->SetNormal(knifty_min_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetNormal(knifty_close_data,tintButtons);
+		buttonImages[ButtonImageSticky]->SetNormal(knifty_sticky_data,tintButtons);
+		buttonImages[ButtonImageUnSticky]->SetNormal(knifty_un_sticky_data,tintButtons);
+		buttonImages[ButtonImageShade]->SetNormal(knifty_shade_data,tintButtons);
+        
+		buttonImages[ButtonImageAbove]->SetNormal(knifty_above_data,tintButtons);
+		buttonImages[ButtonImageUnAbove]->SetNormal(knifty_unabove_data,tintButtons);
+		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data,tintButtons);
+		buttonImages[ButtonImageUnBelow]->SetNormal(knifty_unbelow_data,tintButtons);
+		break;
+	}	
 }
 
 bool CrystalFactory::initGL()
@@ -225,8 +239,7 @@ bool CrystalFactory::initGL()
         GLX_GREEN_SIZE, 1,
         GLX_BLUE_SIZE, 1,
         GLX_DOUBLEBUFFER,
-        GLX_DEPTH_SIZE, 1,
-// 		GLX_STENCIL_SIZE,1,
+        GLX_DEPTH_SIZE, 1,		// This NEEDS to be present! o_O
         None };
    int scrnum;
    XVisualInfo *visinfo;
@@ -279,7 +292,7 @@ bool CrystalFactory::setupGL(Window winId)
 
 
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
-	glClearStencil(0);
+// 	glClearStencil(0);
 
 	QFont font=options()->font(false, false);
 	gl_font=new GLFont(font);
@@ -287,6 +300,18 @@ bool CrystalFactory::setupGL(Window winId)
 	gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
 	glInitialized=true;
 	
+	return true;
+}
+
+bool CrystalFactory::releaseGL(Window winId)
+{
+	// We need to set the GLXContext to a save window, otherwise a
+	// garbage collector might free it. This could cause X to lock
+	// So let's associate the GLXContext to the window's root window. 
+	XWindowAttributes attr;
+	
+	XGetWindowAttributes(qt_xdisplay(), winId,&attr);
+	if (!glXMakeCurrent(qt_xdisplay(),attr.root,glxcontext))return false;
 	return true;
 }
 
@@ -829,6 +854,12 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 		  	button[i]->mouseMoveEvent(static_cast<QMouseEvent *>(e));
 	      return true;
 	  }
+	  case QEvent::Leave:
+	  {
+	  	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
+			button[i]->leaveEvent();
+	  	return false;
+	  }
       case QEvent::Paint: {
           paintEvent(static_cast<QPaintEvent *>(e));
           return true;
@@ -858,29 +889,6 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
     return false;
 }
 
-void CrystalClient::ClientWindows(Window* frame,Window* wrapper,Window *client)
-{
-	Window root=0,parent=0,*children=NULL;
-	uint numc;
-	// Our Deco is the child of a frame, get our parent
-	XQueryTree(qt_xdisplay(),widget()->winId(),&root,frame,&children,&numc);
-	if (children!=NULL)XFree(children);
-	
-	// frame has two children, us and a wrapper, get the wrapper
-	XQueryTree(qt_xdisplay(),*frame,&root,&parent,&children,&numc);	
-	for (uint i=0;i<numc;i++)
-	{
-//		printf("Child of frame[%d]=%d\n",i,children[i]);
-		if (children[i]!=widget()->winId())*wrapper=children[i];
-	}
-	XFree(children);
-	
-	// wrapper has only one child, which is the client. We want this!!
-	XQueryTree(qt_xdisplay(),*wrapper,&root,&parent,&children,&numc);
-	if (numc==1)*client=children[0];	
-	if (children!=NULL)XFree(children);
-}
-
 //////////////////////////////////////////////////////////////////////////////
 // mouseDoubleClickEvent()
 // -----------------------
@@ -904,318 +912,6 @@ void CrystalClient::mouseWheelEvent(QWheelEvent *)
 // ------------
 // Repaint the window
 
-void drawBar(double x,double y,double w,double h)
-{
-	glBegin(GL_QUADS);
-	glNormal3f( 0,0,-1);
-    glTexCoord2f(x,y+h);		glVertex3f(x,y+h,   0);		// Bottom left
-    glTexCoord2f(x+w,y+h);	glVertex3f(x+w,y+h, 0);		// Bottom right
-    glTexCoord2f(x+w,y);		glVertex3f(x+w,y,   0);		// Top right
-    glTexCoord2f(x,y);		glVertex3f(x,y,     0);		// Top left
-	glEnd();
-}
-
-inline QColor blendColor(QColor color1,QColor color2,double balance)
-{
-	return QColor(color1.red()+(int)(balance*(color2.red()-color1.red())),
-		color1.green()+(int)(balance*(color2.green()-color1.green())),
-		color1.blue()+(int)(balance*(color2.blue()-color1.blue())));
-}
-
-void renderGlassVertex(double tx,double ty,const double x,const double y,const double z,const double angx,const double angy,const double ior)
-//	ang: 0 is front side
-{
-	if (angx!=0.0)tx-=tan(angx-angx/ior)*(z);
-	if (angy!=0.0)ty-=tan(angy-angy/ior)*(z);
-		
-	glTexCoord2f(tx,ty);		glVertex3f(x,y,0.0);
-}
-
-void renderGlassRect(const double x,const double y,const double w,const double h,const double ior,const double tesselation,const bool horizontal)
-{
-	const double width=horizontal?h:w;
-	double x1,z1,ang;
-	glBegin(GL_QUAD_STRIP);
-	for (int i=0;i<=tesselation;i++)
-	{
-		ang=(double)i*M_PI/(double)tesselation-M_PI/2.0;
-		x1=sin(ang)/2.0*width+width/2.0;
-		z1=cos(ang)*width/2.0;
-		
-		if (horizontal)
-		{
-			renderGlassVertex(x,y+x1, 		x,y+x1,z1, 		0,ang,  ior);
-			renderGlassVertex(x+w,y+x1,		x+w,y+x1,z1,	0,ang,  ior);
-		}else{
-			renderGlassVertex(x+x1,y, 		x+x1,y,z1, 		ang,0,  ior);
-			renderGlassVertex(x+x1,y+h,		x+x1,y+h,z1,	ang,0,  ior);
-		}
-	}
-	glEnd();
-}
-
-void CrystalClient::paintEvent(QPaintEvent*)
-{
-#define glColorQ(x) glColor3b(x.red()/2,x.green()/2,x.blue()/2)
-#define glColorQ4(x,a) glColor4b(x.red()/2,x.green()/2,x.blue()/2,(unsigned char)((a)*127.0))
-	if (!CrystalFactory::initialized()) return;
-
-	// This sets up the rendering state, if not already done, and attaches the glxcontext to the winId
-	if (!::factory->setupGL(widget()->winId()))return;
-
-	if (::factory->trackdesktop)
-	::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
-
-	glViewport(0,0,(GLint)width(),(GLint)height());
-
-	QPoint tl=widget()->mapToGlobal(QPoint(0,0));
-	
-	// Translate model matrix so that it fits to screen coordinates
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glOrtho(0,width(),height(),0,-1,1);
-
-	// Translates texture coordinates to fit the screen coordinates
-	glMatrixMode(GL_TEXTURE);
-	glPushMatrix();
-	glLoadIdentity();
-	glScaled(1.0/::factory->image_holder->screenwidth(),-1.0/::factory->image_holder->screenheight(),0);
-	glTranslated(tl.x(),tl.y(),0);
-	
-	glClear(GL_COLOR_BUFFER_BIT);	// For debugging
-	
-	glEnable(GL_TEXTURE_2D);
-	::factory->image_holder->activateTexture();
-
-	
-	QRect r=titlebar_->geometry();
-
-//	double myanimation=sin(animation*M_PI/2.0);
-	double myanimation=animation;
-	
-	QColor color=blendColor(::factory->inactiveColor,::factory->activeColor,myanimation);
-	
-	
-	int bl,bt,br,bb;
-	borders(bl,br,bt,bb);
-
-	
-	// tint the title bar
-	glColorQ(color);
-	
-	if (::factory->useRefraction)
-	{
-		const double ior=(::factory->iorActive-::factory->iorInactive)*myanimation+(::factory->iorInactive);
-		// Top
-		renderGlassRect(0,0,width(),bt,ior,7,true);
-		// Left
-		renderGlassRect(0,bt,bl,height()-bb-bt,ior/1.2,5,false);
-		// Right
-		renderGlassRect(width()-br,bt,br,height()-bb-bt,ior/1.2,5,false);
-		// Bottom
-		renderGlassRect(0,height()-bb,width(),bb,ior/1.2,5,true);
-	}else{
-		drawBar(0,0,width(),bt);
-		// Left
-		drawBar(0,bt,bl,height()-bb-bt);
-		// Right
-		drawBar(width()-br,bt,br,height()-bb-bt);
-		// Bottom
-		drawBar(0,height()-bb,width(),bb);
-	}
-
-	
-	glDisable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,0);
-	
-	if (::factory->useLighting)
-	{
-		const double light=1.0;
-		const double lightalpha=0.18;
-		const double dark=0.0;
-		const double darkalpha=0.42;
-		
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	
-		glBegin(GL_QUADS);
-		// Lighten top 
-		glColor4f(light,light,light,lightalpha);	
-    	glVertex3f(width(),0,   0);		// Top right
-    	glVertex3f(0,0,     0);			// Top left
-
-		glColor4f(light,light,light,0.00);	
-    	glVertex3f(isShade()?0:bl/2.0,bt/2.0,  0);		// Bottom left
-		glVertex3f(width()-(isShade()?0:br/2.0),bt/2.0, 0);		// Bottom right
-
-		glColor4f(dark,dark,dark,0.00);	
-    	glVertex3f(width()-(isShade()?0:br/2.0),bt/2.0, 0);		// Bottom right
-		glVertex3f(isShade()?0:bl/2.0,bt/2.0,  0);		// Bottom left
-	
-		glColor4f(dark,dark,dark,darkalpha);	
-    	glVertex3f(isShade()?0:bl,bt,  0);		// Bottom left
-		glVertex3f(width()-(isShade()?0:br),bt, 0);		// Bottom right
-		glEnd();
-    
-
-		if (!isShade())
-		{
-			// Lighten bottom
-			glBegin(GL_QUADS);
-			glColor4f(light,light,light,lightalpha);
-    		glVertex3f(width()-br,height()-bb,   0);
-    		glVertex3f(bl,height()-bb,     0);
-
-			glColor4f(light,light,light,0.00);
-    		glVertex3f(bl/2.0,height()-bb/2.0,  0);
-			glVertex3f(width()-br/2.0,height()-bb/2.0, 0);
-
-			glColor4f(dark,dark,dark,0.00);
-    		glVertex3f(width()-br/2.0,height()-bb/2.0, 0);
-			glVertex3f(bl/2.0,height()-bb/2.0,  0);
-	
-			glColor4f(dark,dark,dark,darkalpha);
-    		glVertex3f(0,height(),  0);
-			glVertex3f(width(),height(), 0);
-			
-			
-			// Enlighten left side
-			glColor4f(light,light,light,lightalpha);	
-    		glVertex3f(0,0,   0);
-    		glVertex3f(0,height(),     0);
-
-			glColor4f(light,light,light,0.00);	
-    		glVertex3f(bl/2.0,height()-bb/2.0,  0);
-			glVertex3f(bl/2.0,bt/2.0, 0);
-
-			glColor4f(dark,dark,dark,0.00);	
-    		glVertex3f(bl/2.0,bt/2.0, 0);
-			glVertex3f(bl/2.0,height()-bb/2.0,  0);
-	
-			glColor4f(dark,dark,dark,darkalpha);	
-    		glVertex3f(bl,height()-bb,  0);
-			glVertex3f(bl,bt, 0);
-			
-			
-			// Enlighten right side
-			glColor4f(light,light,light,lightalpha);
-    		glVertex3f(width()-br,bt,   0);
-    		glVertex3f(width()-br,height()-bb,     0);
-
-			glColor4f(light,light,light,0.0);	
-    		glVertex3f(width()-br/2.0,height()-bb/2.0,  0);
-			glVertex3f(width()-br/2.0,bt/2.0, 0);
-
-			glColor4f(dark,dark,dark,0.00);	
-    		glVertex3f(width()-br/2.0,bt/2.0, 0);
-			glVertex3f(width()-br/2.0,height()-bb/2.0,  0);
-	
-			glColor4f(dark,dark,dark,darkalpha);	
-    		glVertex3f(width(),height(),  0);
-			glVertex3f(width(),0, 0);
-			glEnd();
-		}
-	}
-	
-	glMatrixMode(GL_TEXTURE);
-	glPopMatrix();	
-	
-	if (!caption().isNull())
-	{   // Render caption 
-		QRect r=titlebar_->geometry();
-//		glClear(GL_STENCIL_BUFFER_BIT);	// Clear stencil
-//		glEnable(GL_STENCIL_TEST);		// Enable stencil and write everything with 1 to the stencil
-//		glStencilFunc (GL_ALWAYS, 0x1, 0x1);
-//		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-//		glEnable(GL_DEPTH_TEST);	// Set up depth test and let it fail always, so no pixels are actually drawn
-//		glDepthFunc(GL_NEVER);
-//		glEnable(GL_ALPHA_TEST);	// Alpha test is neccessary, because the font has alpha channel
-//		glAlphaFunc (GL_GREATER,0.0f);
-
-		glEnable(GL_SCISSOR_TEST);
-		glScissor(r.left(),height()-bt,r.width(),bt);
-
-		r.moveBy(-1,-1);
-		QColor color1=options()->color(KDecoration::ColorFont, false);
-		QColor color2=options()->color(KDecoration::ColorFont, true);
-		QColor color=blendColor(color1,color2,myanimation);
-
-
-		if (::factory->textshadow)
-		{	// First draw shadow
-			if (max(color.red(),color.green(),color.blue())>75)
-			{	// Only if color is bright enough draw a dark shadow to improve readability
-//				glColor3f(1.0,1.0,1.0);
-				glColor4f(0.0,0.0,0.0,0.5);
-				r.moveBy(1,1);
-				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption());
-				r.moveBy(-2,0);
-				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption());
-				r.moveBy(1,-1);
-
-				/*
-				glDepthFunc(GL_ALWAYS);
-				glDisable(GL_DEPTH_TEST);
-		
-				glStencilFunc (GL_EQUAL, 0x1, 0x1);
-				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-
-				glDisable(GL_ALPHA_TEST);
-		
-				glColor4f(0.0,0.0,0.0,0.5);
-				glBegin(GL_QUADS);
-				glVertex3f(r.left(),r.top(),0.0);
-				glVertex3f(r.right(),r.top(),0.0);
-				glVertex3f(r.right(),r.bottom(),0.0);
-				glVertex3f(r.left(),r.bottom(),0.0);
-				glEnd();
-
-				glDepthFunc(GL_NEVER);
-				glEnable(GL_DEPTH_TEST);
-		
-				glStencilFunc (GL_ALWAYS, 0x1, 0x1);
-				glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-
-				glEnable(GL_ALPHA_TEST);
-						
-				glClear(GL_STENCIL_BUFFER_BIT);	// Clear stencil*/
-			}
-		}
-
-		
-//		glColor3f(1.0,1.0,1.0);
-		glColorQ(color);
-		::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption());
-		
-/*		glDepthFunc(GL_ALWAYS);
-		glDisable(GL_DEPTH_TEST);
-		
-		glStencilFunc (GL_EQUAL, 0x1, 0x1);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-
-		glDisable(GL_ALPHA_TEST);
-		
-		glColorQ(color);
-		
-		glBegin(GL_QUADS);
-		glVertex3f(r.left(),r.top(),0.0);
-		glVertex3f(r.right(),r.top(),0.0);
-		glVertex3f(r.right(),r.bottom(),0.0);
-		glVertex3f(r.left(),r.bottom(),0.0);
-		glEnd();
-		
-		glDisable(GL_STENCIL_TEST);*/
-		glDisable(GL_SCISSOR_TEST);
-	}
-
-	double buttonFade=(::factory->fadeButtons?0.5+0.5*myanimation:1.0);
-	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
-		button[i]->drawButton(buttonFade);
-	
-	
-	// Swap buffers and be happy
-	glXSwapBuffers( qt_xdisplay(),widget()->winId() );
-}
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1377,15 +1073,6 @@ void CrystalClient::menuButtonPressed()
 	showWindowMenu(widget()->mapToGlobal(p));
 	if (!f->exists(this)) return; // decoration was destroyed
 
-}
-
-void CrystalClient::menuPopUp()
-{
-	QPoint p(button[ButtonMenu]->geometry().bottomLeft().x(),
-                 button[ButtonMenu]->geometry().bottomLeft().y());
-	KDecorationFactory* f = factory();
-	showWindowMenu(widget()->mapToGlobal(p));
-	if (!f->exists(this)) return; // decoration was destroyed
 }
 
 void CrystalClient::animate()
