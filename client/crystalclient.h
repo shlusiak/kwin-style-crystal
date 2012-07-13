@@ -87,7 +87,7 @@ public:
 	bool hovereffect,tintButtons,fadeButtons;
 	QColor buttonColor;
 	int borderwidth;
-	bool textshadow;
+	bool textshadow,antialiaseCaption;
 	bool trackdesktop;
 	int roundCorners;
 	int repaintMode,repaintTime;

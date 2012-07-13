@@ -449,7 +449,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 4
-KDE_DIST=configdialog.ui.h infodialog.ui configdialog.ui 
+KDE_DIST=configdialog.ui.h kwin_crystalgl_config.la.closure infodialog.ui configdialog.ui infodialog.h configdialog.h 
 
 DISTFILES= $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
 
@@ -666,7 +666,7 @@ bcheck-am:
 
 
 #>+ 11
-kwin_crystalgl_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc configdialog.cc infodialog.cc  crystalconfig.moc
+kwin_crystalgl_config_la.all_cc.cc: $(srcdir)/Makefile.in $(srcdir)/crystalconfig.cc $(srcdir)/configdialog.cc $(srcdir)/infodialog.cc  crystalconfig.moc
 	@echo 'creating kwin_crystalgl_config_la.all_cc.cc ...'; \
 	rm -f kwin_crystalgl_config_la.all_cc.files kwin_crystalgl_config_la.all_cc.final; \
 	echo "#define KDE_USE_FINAL 1" >> kwin_crystalgl_config_la.all_cc.final; \

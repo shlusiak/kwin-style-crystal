@@ -20,3 +20,5 @@ kwin3_crystalgl_la_LDFLAGS = -module $(all_libraries) $(KDE_PLUGIN) -lkdecore \
 kwin3_crystalgl_la_METASOURCES = AUTO
 
 DISTCLEANFILES = $(kwin3_crystalgl_la_METASOURCES)
+
+AM_CXXFLAGS = -DQT_CLEAN_NAMESPACE

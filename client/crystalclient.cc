@@ -22,6 +22,12 @@
 #include "tiles.h"
 
 
+inline double max(double a,double b)
+{ return (a<b)?b:a; }
+
+inline double max(double a,double b,double c)
+{ return max(a,max(b,c)); }
+
 
 CrystalFactory* factory=NULL;
 
@@ -96,7 +102,10 @@ bool CrystalFactory::reset(unsigned long /*changed*/)
 
     image_holder->repaint(true);
 	CreateButtonImages();
-	
+
+	if (gl_font)delete gl_font;
+	gl_font=NULL;
+		
     return true;
 }
 
@@ -117,6 +126,7 @@ bool CrystalFactory::readConfig()
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
     textshadow=(bool)config.readBoolEntry("TextShadow",true);
+	antialiaseCaption=(bool)config.readBoolEntry("AntialiaseCaption",false);
     trackdesktop=(bool)config.readBoolEntry("TrackDesktop",true);
     
     
@@ -177,6 +187,11 @@ bool CrystalFactory::initGL(Window winId)
 	if (glInitialized)
 	{
 		if (!glXMakeCurrent(qt_xdisplay(),winId,glxcontext))return false;
+		if (!gl_font)
+		{
+			gl_font=new GLFont(options()->font(false, false));
+			gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
+		}
 		return true;
 	}
 	
@@ -186,7 +201,7 @@ bool CrystalFactory::initGL(Window winId)
         GLX_GREEN_SIZE, 1,
         GLX_BLUE_SIZE, 1,
         GLX_DOUBLEBUFFER,
-        GLX_DEPTH_SIZE, 0,
+        GLX_DEPTH_SIZE, 1,
         None };
    int scrnum;
    XVisualInfo *visinfo;
@@ -233,7 +248,7 @@ bool CrystalFactory::initGL(Window winId)
 	QFont font=options()->font(false, false);
 	gl_font=new GLFont(font);
 	
-	gl_font->init();
+	gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
 	glInitialized=true;
 	
 	return true;
@@ -908,6 +923,7 @@ void renderGlassRect(const double x,const double y,const double w,const double h
 void CrystalClient::paintEvent(QPaintEvent*)
 {
 #define glColorQ(x) glColor3b(x.red()/2,x.green()/2,x.blue()/2)
+#define glColorQ4(x,a) glColor4b(x.red()/2,x.green()/2,x.blue()/2,(unsigned char)((a)*127.0))
 	if (!CrystalFactory::initialized()) return;
 
 	// This sets up the rendering state, if not already done, and attaches the glxcontext to the winId
@@ -977,10 +993,9 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	if (::factory->useLighting)
 	{
 		const double light=1.0;
-		const double lightalpha=0.15;
+		const double lightalpha=0.18;
 		const double dark=0.0;
-		const double darkalpha=0.3;
-		
+		const double darkalpha=0.42;
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -1062,7 +1077,6 @@ void CrystalClient::paintEvent(QPaintEvent*)
 			glVertex3f(width(),0, 0);
 			glEnd();
 		}
-   
 	}
 	
 	glMatrixMode(GL_TEXTURE);
@@ -1071,18 +1085,31 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	if (!caption().isNull())
 	{   // Render caption 
 		QRect r=titlebar_->geometry();
+		// Clip text, if outside our scissor box (the titlebar)
+		// Some terminals cause the clip to rum amok, add 100px, just to be safe...
+		glEnable(GL_SCISSOR_TEST);
+		glScissor(r.left(),0,r.width(),widget()->height()+100);
+		
 		r.moveBy(-1,-1);
 		QColor color1=options()->color(KDecoration::ColorFont, false);
 		QColor color2=options()->color(KDecoration::ColorFont, true);
+		QColor color=blendColor(color1,color2,myanimation);
 		if (::factory->textshadow)
 		{	// First draw shadow
-			r.moveBy(1,1);
-			glColorQ(blendColor(color1.dark(300),color2.dark(300),myanimation));
-			::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
-			r.moveBy(-1,-1);
+			if (max(color.red(),color.green(),color.blue())>75)
+			{	// If color is bright enough draw a dark shadow to improve readability
+				r.moveBy(1,1);
+				glColor4f(0.0,0.0,0.0,0.5);
+				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
+				r.moveBy(-2,0);
+				::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
+				r.moveBy(1,-1);
+			}
 		}
-		glColorQ(blendColor(color1,color2,myanimation));
+		glColorQ(color);
+		
 		::factory->gl_font->renderText(r,CrystalFactory::titleAlign(),caption().ascii());
+		glDisable(GL_SCISSOR_TEST);
 	}
 
 	double buttonFade=(::factory->fadeButtons?0.5+0.5*myanimation:1.0);

@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>446</width>
+            <width>455</width>
             <height>313</height>
         </rect>
     </property>
@@ -444,6 +444,17 @@
                             <string>Width of the borders</string>
                         </property>
                     </widget>
+                    <widget class="QCheckBox" row="1" column="2" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>antialiaseCaption</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Render anti&amp;aliased caption</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+A</string>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -737,7 +748,7 @@
                             <cstring>textLabel2_3</cstring>
                         </property>
                         <property name="text">
-                            <string>Tint inactive window</string>
+                            <string>Tint inactive window:</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="3" column="2">

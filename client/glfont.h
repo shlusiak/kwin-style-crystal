@@ -15,7 +15,7 @@ public:
 	GLFont(QFont vfont);
 	~GLFont();
 
-	void init();
+	void init(GLint mappingmode);
 	void renderChar(double x,double y,int chr);
 	void renderText(double x,double y,const char *text);
 	void renderText(QRect r,Qt::AlignmentFlags align,const char *text);

@@ -20,6 +20,7 @@ GLFont::GLFont(QFont vfont)
 	:font(vfont),metrics(vfont)
 {
 	height=metrics.height();
+	list_base=0;
 }
 
 GLFont::~GLFont()
@@ -28,12 +29,12 @@ GLFont::~GLFont()
     glDeleteTextures(255,&textures[0]);
 }
 
-void GLFont::init()
+void GLFont::init(GLint mappingmode)
 {
-	QPixmap pix(1,next_p2(height));
+	QPixmap pix(1,next_p2(height),-1);
 	QPainter painter;
 	QImage img;
-	QBitmap mask;
+	QBitmap mask(1,next_p2(height));
 	char text[2]={'-','\0'};
 
 	list_base=glGenLists(255);
@@ -45,22 +46,28 @@ void GLFont::init()
 		text[0]=i;
 		int w=metrics.width(text);
 		int tw=next_p2(w);
-		if (tw!=pix.width()) pix.resize(tw,th);
-		pix.fill(Qt::black);
+		if (tw!=pix.width()) 
+		{
+			pix.resize(tw,th);
+			pix.fill(Qt::white);		// Fill pixmap with white
+			mask.resize(tw,th);
+		}
+		mask.fill(Qt::color0);			// Fill mask bitmap with 0 (transparent)
 		
-		painter.begin(&pix);
+		painter.begin(&mask);
 		painter.setFont(font);
-		painter.setPen(Qt::white);
+		painter.setPen(Qt::color1);		// And write our char as color 1 (opaq)
 		painter.drawText(0,metrics.ascent(),text,1);
 		painter.end();
 		
-		mask=pix;
-		pix.setMask(mask);
+		pix.setMask(mask);				// Assign the mask to our fully white pixmap
+		img=pix.convertToImage();
 		
-		img=CrystalFactory::convertToGLFormat(pix.convertToImage());
+		img=CrystalFactory::convertToGLFormat(img);
+		
 		glBindTexture(GL_TEXTURE_2D, textures[i]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mappingmode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mappingmode);
 		glTexImage2D( GL_TEXTURE_2D, 0, 4, img.width(), img.height(), 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, img.bits() );
 		
@@ -110,7 +117,7 @@ void GLFont::renderText(double x,double y,const char* str)
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);      
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);      
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
@@ -130,6 +137,7 @@ void GLFont::renderText(QRect r,Qt::AlignmentFlags align,const char *text)
 	if (align==Qt::AlignLeft)x=r.left();
 	if (align==Qt::AlignRight)x=r.right()-metrics.width(text);
 	if (align==Qt::AlignHCenter)x=(double)(r.left()+r.right()-metrics.width(text))/2.0;	
+	if (x<(double)r.left())x=(double)r.left();
 	
 	renderText(x,y,text);
 }
