@@ -29,6 +29,10 @@ extern CrystalFactory *factory;
 
 
 
+inline void glColorQ(const QColor x,const double alpha=1.0) 
+{ glColor4b(x.red()/2,x.green()/2,x.blue()/2,(unsigned char)(alpha*127.0)); }
+
+
 
 enum ButtonType {
     ButtonHelp=0,
@@ -78,27 +82,28 @@ public:
 	
 	bool initGL();
 	bool setupGL(Window winId);
-	bool releaseGL(Window winId);
+	bool makeCurrent(Window winId=0);
 public:
 	QImageHolder *image_holder;
 	GLFont *gl_font;
-	GLXContext glxcontext;
 	
 	int titlesize;
-	bool hovereffect,tintButtons,fadeButtons;
-	QColor buttonColor;
+	bool hovereffect,fadeInactiveButtons,animateHover;
+	QColor normalColorNormal,normalColorHovered,normalColorPressed;
+	QColor closeColorNormal,closeColorHovered,closeColorPressed;
 	int borderwidth;
 	bool textshadow,antialiaseCaption;
 	bool trackdesktop;
 	int roundCorners;
 	int repaintMode,repaintTime;
-	bool useRefraction,useLighting,animateActivate;
+	bool useRefraction,useLighting,animateActivate,useTransparency;
 	double iorActive,iorInactive;
 	int textureSize;
 	int buttontheme;
 	int brightness;
 	QColor activeColor,inactiveColor;
-	
+	GLXContext glxcontext;
+
 	ButtonImage *buttonImages[ButtonImageCount];
 // 	QPtrList <CrystalClient> clients;
 	
@@ -110,6 +115,7 @@ private:
     static bool initialized_;
 	bool glInitialized;
     static Qt::AlignmentFlags titlealign_;
+	Window dummyWindow;
 };
 
 
@@ -138,6 +144,7 @@ public:
     virtual Position mousePosition(const QPoint &point) const;
 	
 	void renderText(QString str);
+	void startAnimation();
 private:
     void addButtons(QBoxLayout* layout, const QString& buttons);
     void updateMask();

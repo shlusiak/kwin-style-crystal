@@ -3,7 +3,7 @@
 
 
 
-#include <kwinmodule.h>
+// #include <kwinmodule.h>
 #include "myrootpixmap.h"
 #include <GL/glx.h>
 #include <qimage.h>
@@ -26,8 +26,6 @@ public:
 private:
 	bool initialized;
 	KMyRootPixmap *rootpixmap;
-	QImage textureimg;
-	bool textureupdate;
 	double vscreenwidth,vscreenheight;
 	
 	GLuint mytexture;	

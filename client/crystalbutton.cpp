@@ -1,7 +1,6 @@
 #include <qimage.h>
 // #include <qtooltip.h>
 #include <qpainter.h>
-#include <kimageeffect.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
@@ -11,11 +10,10 @@
 
 
 
-ButtonImage::ButtonImage(const QRgb *d_normal,bool blend,QColor color)
+ButtonImage::ButtonImage()
 { 
-	normal=hovered=pressed=NULL;
 	t_normal=t_hovered=t_pressed=0;
-	if (d_normal)SetNormal(d_normal,blend,color);
+	color_normal=color_hovered=color_pressed=Qt::white;
 }
 
 ButtonImage::~ButtonImage()
@@ -23,45 +21,29 @@ ButtonImage::~ButtonImage()
 	reset();
 }
 
-QImage ButtonImage::CreateImage(const QRgb *data,bool blend,QColor color)
+QImage ButtonImage::CreateImage(const QRgb *data)
 {
 	QImage img=QImage((uchar*)data,DECOSIZE,DECOSIZE,32,NULL,0,QImage::LittleEndian),img2;
 	img.setAlphaBuffer(true);
 
-	if (blend)
-	{
-		img2=img.copy();
-		img=KImageEffect::blend(color,img2,1.0f);
-	}
 	return CrystalFactory::convertToGLFormat(img.smoothScale(32,32));
 }
 
-GLuint ButtonImage::CreateTexture(QImage *img)
+GLuint ButtonImage::CreateTexture(QImage img)
 {	
 	GLuint texture;
 	glGenTextures(1,&texture);
 	
 	glBindTexture(GL_TEXTURE_2D, texture);
-	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D( GL_TEXTURE_2D, 0, 4, img->width(), img->height(), 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, img->bits() );
-	
+	glTexImage2D( GL_TEXTURE_2D, 0, 4, img.width(), img.height(), 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, img.bits() );
 	
 	return texture;
 }
 
 void ButtonImage::reset()
-{
-	if (normal)delete normal;
-	if (hovered)delete hovered;
-	if (pressed)delete pressed;
-	normal=hovered=pressed=NULL;
-	resetTextures();
-}
-
-void ButtonImage::resetTextures()
 {
 	if (t_normal)glDeleteTextures(1,&t_normal);
 	if (t_hovered)glDeleteTextures(1,&t_hovered);
@@ -71,60 +53,84 @@ void ButtonImage::resetTextures()
 
 void ButtonImage::SetNormal(QImage image)
 {
-	if (normal)delete normal;
 	if (t_normal)glDeleteTextures(1,&t_normal);
-	t_normal=0;	
-	normal=new QImage(CrystalFactory::convertToGLFormat(image.smoothScale(32,32)));
+	t_normal=0;
+	t_normal=CreateTexture(CrystalFactory::convertToGLFormat(image.smoothScale(32,32)));
+	color_normal=color_hovered=color_pressed=Qt::white;
 }
 
-void ButtonImage::SetNormal(const QRgb *d_normal,bool blend,QColor color)
+void ButtonImage::SetNormal(const QRgb *d_normal,QColor colornormal,QColor colorhovered,QColor colorpressed)
 {
-	if (normal)delete normal;
 	if (t_normal)glDeleteTextures(1,&t_normal);
-	t_normal=0;	
-	normal=new QImage(CreateImage(d_normal,blend,color));
+	t_normal=CreateTexture(CreateImage(d_normal));
+	color_normal=colornormal;
+	color_hovered=colorhovered;
+	color_pressed=colorpressed;
 }
 
-void ButtonImage::SetHovered(const QRgb *d_hovered,bool blend,QColor color)
+void ButtonImage::SetHovered(const QRgb *d_hovered,QColor color)
 {
-	if (hovered)delete hovered;
 	if (t_hovered)glDeleteTextures(1,&t_hovered);
-	t_hovered=0;
-	if (d_hovered)
-	{
-		hovered=new QImage(CreateImage(d_hovered,blend,color));
-	}else{
-		hovered=NULL;
-	}
+	if (d_hovered)t_hovered=CreateTexture(CreateImage(d_hovered));
+		else t_hovered=0;
+	color_hovered=color;
 }
 
-void ButtonImage::SetPressed(const QRgb *d_pressed,bool blend,QColor color)
+void ButtonImage::SetPressed(const QRgb *d_pressed,QColor color)
 {
-	if (pressed)delete pressed;
 	if (t_pressed)glDeleteTextures(1,&t_pressed);
-	t_pressed=0;
-	if (d_pressed)
+	if (d_pressed)t_pressed=CreateTexture(CreateImage(d_pressed));
+		else t_pressed=0;
+	color_pressed=color;
+}
+
+void ButtonImage::drawNormal(QRect r,double alpha)
+{
+	glBindTexture(GL_TEXTURE_2D, t_normal);
+	glColorQ(color_normal,alpha);
+	draw(r);
+}
+
+void ButtonImage::drawHovered(QRect r,double alpha)
+{
+	if (t_hovered)glBindTexture(GL_TEXTURE_2D, t_hovered);
+		else glBindTexture(GL_TEXTURE_2D,t_normal);
+	glColorQ(color_hovered,alpha);
+	draw(r);
+}
+
+void ButtonImage::drawPressed(QRect r,double alpha)
+{
+	glColorQ(color_pressed,alpha);
+	
+	if (t_pressed)
 	{
-		pressed=new QImage(CreateImage(d_pressed,blend,color));
+		glBindTexture(GL_TEXTURE_2D, t_pressed);
+		draw(r);
+	}else if (t_hovered)
+	{
+		glBindTexture(GL_TEXTURE_2D,t_hovered);
+		draw(r);
+		draw(r);
 	}else{
-		pressed=NULL;
+		glBindTexture(GL_TEXTURE_2D,t_normal);
+		draw(r);
+		draw(r);
+		draw(r);
 	}
 }
 
-void ButtonImage::activate(QImage */*img*/,GLuint texture)
+void ButtonImage::draw(QRect r)
 {
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0,0);	glVertex3f(r.left(),r.bottom(),   0);		// Bottom left
+	glTexCoord2f(1,0);	glVertex3f(r.right(),r.bottom(), 0);		// Bottom right
+	glTexCoord2f(1,1);	glVertex3f(r.right(),r.top(), 0);		// Top right
+	glTexCoord2f(0,1);	glVertex3f(r.left(),r.top(), 0);		// Top left		
+	glEnd();
 }
 
-void ButtonImage::check()
-{
-	if (normal && !t_normal)
-		t_normal=CreateTexture(normal);
-	if (hovered && !t_hovered)
-		t_hovered=CreateTexture(hovered);
-	if (pressed && !t_pressed)
-		t_pressed=CreateTexture(pressed);
-}
+
 
 
 
@@ -138,6 +144,7 @@ CrystalButton::CrystalButton(CrystalClient *parent, const char *name,
 {
 //    QToolTip::add(this, tip);
 	hover=false;
+	animation=0.0;
 	lastmouse=_lastmouse=NoButton;
 	
 	spacer=new QSpacerItem(buttonSizeH(),buttonSizeV());
@@ -165,6 +172,7 @@ void CrystalButton::setBitmap(ButtonImage *newimage)
 	image=newimage;
 	if (image==NULL)
 	{
+		::factory->makeCurrent();
 		image=&menuimage;
 		menuimage.SetNormal(client_->icon().pixmap(QIconSet::Small,QIconSet::Normal).convertToImage());
 	}
@@ -196,14 +204,23 @@ void CrystalButton::enterEvent()
 {
 	if (hover)return;
 	hover=true;
-	if (factory->hovereffect)repaint();
+	if (factory->hovereffect)
+	{
+		if (animate())client_->startAnimation();
+		repaint();
+	}
 }
 
 void CrystalButton::leaveEvent()
 {
 	if (!hover)return;
 	hover=false;
-	if (factory->hovereffect)repaint();
+	
+	if (factory->hovereffect)
+	{
+		if (animate())client_->startAnimation();
+		repaint();
+	}
 }
 
 void CrystalButton::mouseMoveEvent(QMouseEvent* e)
@@ -257,6 +274,26 @@ void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 	emit clicked();
 }
 
+bool CrystalButton::animate()
+{
+	if (!::factory->animateHover)
+	{
+		if (hover)animation=1.0; else animation=0.0;
+		return false;
+	}
+	if (hover)
+	{
+		animation+=0.25;
+		if (animation>1.0)animation=1.0;
+		else return true;	// Finished this animation
+	}else{
+		animation-=0.12;
+		if (animation<0.0)animation=0.0;
+		else return true;	// Finished this animation
+	}
+	return false;	// Do not proceed animating this button
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // drawButton()
 // ------------
@@ -265,8 +302,9 @@ void CrystalButton::mouseReleaseEvent(QMouseEvent* e)
 void CrystalButton::drawButton(double alpha)
 {
     if (!CrystalFactory::initialized()) return;
+	if (!image)return;
 	
-	if (type_==ButtonMenu)alpha*=0.75; // The menu image shall be at least a little trabslucent
+	if (type_==ButtonMenu)alpha*=0.8; // The menu image shall be at least a little translucent
 	
 	QRect r2=geometry();
 	int bla=buttonSizeV();
@@ -277,49 +315,25 @@ void CrystalButton::drawButton(double alpha)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-	int count=1;
-	if (image)
-	{
-		image->check();
-		image->activate(image->normal,image->t_normal);
-		
-		if (hover && ::factory->hovereffect)
-		{
-			count=1;
-			if (image->hovered)
-				image->activate(image->hovered,image->t_hovered);
-				else count=2;
-		}
-		if (_lastmouse!=NoButton && hover)
-		{
-			if (image->pressed)
-				image->activate(image->pressed,image->t_pressed);
-				else count=3;
-		}
-	}else{
-		
-	
-	}
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
-	
-	glBegin(GL_QUADS);
-	
-	
-	glColor4f(1,1,1,alpha);
-	
-	for (int i=0;i<count;i++)
-	{
-		glTexCoord2f(0,0);	glVertex3f(r.left(),r.bottom(),   0);		// Bottom left
-		glTexCoord2f(1,0);	glVertex3f(r.right(),r.bottom(), 0);		// Bottom right
-		glTexCoord2f(1,1);	glVertex3f(r.right(),r.top(), 0);		// Top right
-		glTexCoord2f(0,1);	glVertex3f(r.left(),r.top(), 0);		// Top left		
-	}	
-	glEnd();
 
+	if (_lastmouse!=NoButton && hover)
+		image->drawPressed(r,alpha);
+	else {
+		if (image->hasHovered() && ::factory->hovereffect){
+			image->drawNormal(r,alpha*(1.0-animation));
+			image->drawHovered(r,alpha*animation);
+		}else{
+			if (::factory->hovereffect)
+			{
+				image->drawNormal(r,alpha*(1.0-animation));
+				image->drawHovered(r,alpha*animation);
+				image->drawHovered(r,alpha*animation);
+			}else image->drawNormal(r,alpha);
+		}
+	}
+	
 	glDisable(GL_BLEND);
-
 	glBindTexture(GL_TEXTURE_2D,0);
 }
-
-

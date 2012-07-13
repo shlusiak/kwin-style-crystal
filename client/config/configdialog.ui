@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>456</width>
-            <height>277</height>
+            <width>477</width>
+            <height>304</height>
         </rect>
     </property>
     <property name="caption">
@@ -468,29 +468,7 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
-                        <property name="name">
-                            <cstring>hover</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Hover effect</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+H</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Provides a mouse-over effect for the title bar buttons.</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="1" column="0">
-                        <property name="name">
-                            <cstring>textLabel1</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Button color:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
                         <property name="name">
                             <cstring>textLabel1_3</cstring>
                         </property>
@@ -498,7 +476,7 @@
                             <string>Button theme:</string>
                         </property>
                     </widget>
-                    <widget class="QComboBox" row="0" column="1" rowspan="1" colspan="2">
+                    <widget class="QComboBox" row="0" column="3" rowspan="1" colspan="2">
                         <item>
                             <property name="text">
                                 <string>Crystal Default</string>
@@ -523,6 +501,14 @@
                                 <pixmap>image2</pixmap>
                             </property>
                         </item>
+                        <item>
+                            <property name="text">
+                                <string>Handpainted</string>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image3</pixmap>
+                            </property>
+                        </item>
                         <property name="name">
                             <cstring>buttonTheme</cstring>
                         </property>
@@ -530,42 +516,18 @@
                             <string>Select your favourite button theme here</string>
                         </property>
                     </widget>
-                    <widget class="KColorButton" row="1" column="2">
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="5">
                         <property name="name">
-                            <cstring>buttonColor</cstring>
+                            <cstring>fadeButtons</cstring>
                         </property>
                         <property name="text">
-                            <string></string>
-                        </property>
-                        <property name="toggleButton">
-                            <bool>false</bool>
-                        </property>
-                        <property name="color">
-                            <color>
-                                <red>255</red>
-                                <green>255</green>
-                                <blue>255</blue>
-                            </color>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>The semi transparent buttons of the titlebar will be shaded in this color</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox" row="1" column="1">
-                        <property name="name">
-                            <cstring>tintButtons</cstring>
-                        </property>
-                        <property name="text">
-                            <string>&amp;Tint buttons</string>
+                            <string>&amp;Fade buttons of inactive window</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+T</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Tint the buttons in this color, or leave them with original colors (recommended for some themes)</string>
+                            <string>Alt+F</string>
                         </property>
                     </widget>
-                    <spacer row="4" column="1">
+                    <spacer row="4" column="2" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>spacer2</cstring>
                         </property>
@@ -578,19 +540,172 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>90</height>
+                                <height>20</height>
                             </size>
                         </property>
                     </spacer>
-                    <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
+                    <widget class="QGroupBox" row="3" column="0">
                         <property name="name">
-                            <cstring>fadeButtons</cstring>
+                            <cstring>groupBox2</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Other Buttons Color</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>textLabel4</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Normal:</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="0" column="1">
+                                <property name="name">
+                                    <cstring>normalColorNormal</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="1" column="1">
+                                <property name="name">
+                                    <cstring>normalColorHovered</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="2" column="1">
+                                <property name="name">
+                                    <cstring>normalColorPressed</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>textLabel6</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Pressed:</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>textLabel5</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Hovered:</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QGroupBox" row="3" column="1" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>groupBox2_2</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Close Button Color</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>textLabel4_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Normal:</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="0" column="1">
+                                <property name="name">
+                                    <cstring>closeColorNormal</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="1" column="1">
+                                <property name="name">
+                                    <cstring>closeColorHovered</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="2" column="1">
+                                <property name="name">
+                                    <cstring>closeColorPressed</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="2" column="0">
+                                <property name="name">
+                                    <cstring>textLabel6_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Pressed:</string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>textLabel5_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Hovered:</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <spacer row="3" column="4">
+                        <property name="name">
+                            <cstring>spacer8</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>40</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>hover</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Fade buttons of inactive window</string>
+                            <string>&amp;Hover effect</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+F</string>
+                            <string>Alt+H</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>Provides a mouse-over effect for the title bar buttons.</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="3" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>animateHover</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Animate hover effect</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+A</string>
                         </property>
                     </widget>
                 </grid>
@@ -606,7 +721,134 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="4">
+                    <spacer row="7" column="2">
+                        <property name="name">
+                            <cstring>spacer7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>40</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>useLighting</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Simulate &amp;Lighting</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+L</string>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>You do *not* want to disable this</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="3">
+                        <property name="name">
+                            <cstring>textLabel1_6</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Image brightness:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="3">
+                        <property name="name">
+                            <cstring>textLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>IOR inactive:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="3">
+                        <property name="name">
+                            <cstring>textLabel2_3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Tint inactive window:</string>
+                        </property>
+                    </widget>
+                    <widget class="KDoubleSpinBox" row="3" column="4">
+                        <property name="name">
+                            <cstring>iorInactive</cstring>
+                        </property>
+                        <property name="maxValue">
+                            <number>5</number>
+                        </property>
+                        <property name="minValue">
+                            <number>0.5</number>
+                        </property>
+                        <property name="lineStep">
+                            <number>0.1</number>
+                        </property>
+                        <property name="value">
+                            <number>1.5</number>
+                        </property>
+                    </widget>
+                    <widget class="QSpinBox" row="5" column="4">
+                        <property name="name">
+                            <cstring>brightness</cstring>
+                        </property>
+                        <property name="suffix">
+                            <string> %</string>
+                        </property>
+                        <property name="maxValue">
+                            <number>500</number>
+                        </property>
+                        <property name="minValue">
+                            <number>10</number>
+                        </property>
+                        <property name="lineStep">
+                            <number>5</number>
+                        </property>
+                        <property name="value">
+                            <number>100</number>
+                        </property>
+                    </widget>
+                    <widget class="KColorButton" row="4" column="4">
+                        <property name="name">
+                            <cstring>colorInactive</cstring>
+                        </property>
+                        <property name="text">
+                            <string></string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="6" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>animateActivate</cstring>
+                        </property>
+                        <property name="text">
+                            <string>&amp;Animate activation/deactivation of windows</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+A</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>IOR active:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_5</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Tint active window:</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="5">
                         <property name="name">
                             <cstring>trackdesktop</cstring>
                         </property>
@@ -623,21 +865,7 @@
                             <string>Check, if you have different wallpapers set on multiple desktops. Uncheck, when you just have one wallpaper for all desktops.</string>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="4">
-                        <property name="name">
-                            <cstring>useRefraction</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Simulate &amp;Refraction</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+R</string>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Causes only very little overhead</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="1" column="0">
+                    <widget class="QLabel" row="1" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>textLabel1_4</cstring>
                         </property>
@@ -645,7 +873,7 @@
                             <string>Background texture size:</string>
                         </property>
                     </widget>
-                    <widget class="QComboBox" row="1" column="2" rowspan="1" colspan="2">
+                    <widget class="QComboBox" row="1" column="3" rowspan="1" colspan="2">
                         <item>
                             <property name="text">
                                 <string>128x128</string>
@@ -676,75 +904,18 @@
                             <number>2</number>
                         </property>
                     </widget>
-                    <widget class="QCheckBox" row="6" column="0" rowspan="1" colspan="4">
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>animateActivate</cstring>
+                            <cstring>useTransparency</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Animate activation/deactivation of windows</string>
+                            <string>Simulate transparency</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+A</string>
-                        </property>
-                    </widget>
-                    <widget class="KColorButton" row="4" column="3">
-                        <property name="name">
-                            <cstring>colorInactive</cstring>
-                        </property>
-                        <property name="text">
-                            <string></string>
+                        <property name="toolTip" stdset="0">
+                            <string>HOW DARE YOU DISABLING THIS...</string>
                         </property>
                     </widget>
-                    <widget class="KDoubleSpinBox" row="3" column="3">
-                        <property name="name">
-                            <cstring>iorInactive</cstring>
-                        </property>
-                        <property name="maxValue">
-                            <number>5</number>
-                        </property>
-                        <property name="minValue">
-                            <number>0.5</number>
-                        </property>
-                        <property name="lineStep">
-                            <number>0.1</number>
-                        </property>
-                        <property name="value">
-                            <number>1.5</number>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="4" column="0">
-                        <property name="name">
-                            <cstring>textLabel1_5</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Tint active window:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="3" column="0">
-                        <property name="name">
-                            <cstring>textLabel1_2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>IOR active:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="4" column="2">
-                        <property name="name">
-                            <cstring>textLabel2_3</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Tint inactive window:</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="3" column="2">
-                        <property name="name">
-                            <cstring>textLabel2</cstring>
-                        </property>
-                        <property name="text">
-                            <string>IOR inactive:</string>
-                        </property>
-                    </widget>
-                    <widget class="KDoubleSpinBox" row="3" column="1">
+                    <widget class="KDoubleSpinBox" row="3" column="1" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>iorActive</cstring>
                         </property>
@@ -761,7 +932,7 @@
                             <number>1.5</number>
                         </property>
                     </widget>
-                    <widget class="KColorButton" row="4" column="1">
+                    <widget class="KColorButton" row="4" column="1" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>colorActive</cstring>
                         </property>
@@ -769,63 +940,18 @@
                             <string></string>
                         </property>
                     </widget>
-                    <spacer row="7" column="1">
+                    <widget class="QCheckBox" row="2" column="3" rowspan="1" colspan="2">
                         <property name="name">
-                            <cstring>spacer7</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>30</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>useLighting</cstring>
+                            <cstring>useRefraction</cstring>
                         </property>
                         <property name="text">
-                            <string>Simulate &amp;Lighting</string>
+                            <string>Simulate &amp;Refraction</string>
                         </property>
                         <property name="accel">
-                            <string>Alt+L</string>
+                            <string>Alt+R</string>
                         </property>
                         <property name="toolTip" stdset="0">
-                            <string>You do *not* want to disable this</string>
-                        </property>
-                    </widget>
-                    <widget class="QLabel" row="5" column="2">
-                        <property name="name">
-                            <cstring>textLabel1_6</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Image brightness:</string>
-                        </property>
-                    </widget>
-                    <widget class="QSpinBox" row="5" column="3">
-                        <property name="name">
-                            <cstring>brightness</cstring>
-                        </property>
-                        <property name="suffix">
-                            <string> %</string>
-                        </property>
-                        <property name="maxValue">
-                            <number>500</number>
-                        </property>
-                        <property name="minValue">
-                            <number>10</number>
-                        </property>
-                        <property name="lineStep">
-                            <number>5</number>
-                        </property>
-                        <property name="value">
-                            <number>100</number>
+                            <string>Causes only very little overhead</string>
                         </property>
                     </widget>
                 </grid>
@@ -843,6 +969,9 @@
     <image name="image2">
         <data format="PNG" length="150">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd10000005d494441542891b590d10900310843d3ee72b3752667eb30b99f0a45524ee42a081a7c10d348a252bd44fd0d5a468ba00178c2a1d2d044387e38d7eef3f80277180a5256d3750ac7ed4d88ff14b84363b58649c6b68c760aa7f4e35df005934d4725fb29cab20000000049454e44ae426082</data>
     </image>
+    <image name="image3">
+        <data format="PNG" length="379">89504e470d0a1a0a0000000d494844520000000e0000000e08060000001f482dd1000001424944415428918dd23d6bd45114c4e1e76ed6c8a21859115111b1b0b45414829d5ada08010b4b3bedd2881fc25a10ac830492caca42d14a2c52c44210822f08a649086e216452e46cf2cf6a9103b71a66ee9ddf3dcd2127c9148e630a9bad23f471a6c46f18b5d652da342ee336b6b0d8eb840ef108cf700b8324bd2443cce2291ee204d2ef1837f00e77305fc99f710f77cbf002afb0d17d6ac3b17ace3c7ee3136ee21796f106ebadb5edff411826799264adcec724f793cc5438e84f987a98c1796c23785b1536c7b00e182bed14e60ac612cee20acee14705812ed571bf397cc0732c16ed1b76bfc901639223b886c7f88997f88255ace12a4eff63ac4e0f30b08b7ca5b5f617eb1570a1baef1b0bc8255cc76bbc6fad8d4aff83ef989ea8b507670b5fb150b78c67547dfb05677f92b4248324176b2727b5a3494ed692efcd0e39498a772d97fea40000000049454e44ae426082</data>
+    </image>
 </images>
 <tabstops>
     <tabstop>tabWidget2</tabstop>
@@ -859,8 +988,6 @@
     <tabstop>brc</tabstop>
     <tabstop>infoButton</tabstop>
     <tabstop>buttonTheme</tabstop>
-    <tabstop>tintButtons</tabstop>
-    <tabstop>buttonColor</tabstop>
     <tabstop>hover</tabstop>
     <tabstop>fadeButtons</tabstop>
     <tabstop>trackdesktop</tabstop>
@@ -880,7 +1007,12 @@
 <includehints>
     <includehint>kcolorbutton.h</includehint>
     <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
     <includehint>knuminput.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>kcolorbutton.h</includehint>
 </includehints>

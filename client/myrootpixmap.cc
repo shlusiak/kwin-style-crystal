@@ -19,10 +19,8 @@
 
 #ifndef Q_WS_QWS //FIXME
 #include <kapplication.h>
-#include <kimageeffect.h>
 #include <kpixmapio.h>
 #include <kwinmodule.h>
-#include <kdebug.h>
 #include <netwm.h>
 #include <dcopclient.h>
 #include <qpainter.h>

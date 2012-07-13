@@ -1,6 +1,4 @@
-// #define QT_CLEAN_NAMESPACE
 #include <kconfig.h>
-//#include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -8,6 +6,7 @@
 #include <qlabel.h>
 #include <qtooltip.h>
 #include <qapplication.h>
+#include <qmessagebox.h>
 
 #include "crystalclient.h"
 #include "crystalbutton.h"
@@ -18,6 +17,7 @@
 #include "tiles.h"
 #include "aqua.h"
 #include "knifty.h"
+#include "handpainted.h"
 
 
 
@@ -53,27 +53,31 @@ CrystalFactory::CrystalFactory()
 	gl_font=NULL;
 	
     glxcontext=NULL;
+	dummyWindow=0;
 
+	if (!initGL())printf("initGL failed\n");
+	if (!setupGL(dummyWindow))printf("setupGL failed\n");
 	CreateButtonImages();
-	initGL();
 }
 
 CrystalFactory::~CrystalFactory() 
-{ 
+{
+	makeCurrent(0);
 	initialized_ = false; 
 	if (image_holder)delete image_holder;
 	if (gl_font)delete gl_font;
-	::factory=NULL;
 	for (int i=0;i<ButtonImageCount;i++)
 	{
 		if (buttonImages[i])delete buttonImages[i];
 		buttonImages[i]=NULL;
 	}
+	::factory=NULL;
 
 	if (glxcontext)
 	{
 		glXMakeCurrent(qt_xdisplay(),None,NULL);
 		glXDestroyContext(qt_xdisplay(),glxcontext);
+		XDestroyWindow(qt_xdisplay(),dummyWindow);
 		glxcontext=NULL;
 	}
 }
@@ -99,12 +103,13 @@ bool CrystalFactory::reset(unsigned long /*changed*/)
 
     initialized_ = true;
 
-    image_holder->repaint(true);
+	makeCurrent();
+    if (useTransparency)image_holder->repaint(true);
 	CreateButtonImages();
-
 	if (gl_font)delete gl_font;
-	gl_font=NULL;
-		
+	gl_font=new GLFont(options()->font(false, false));
+	gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
+
     return true;
 }
 
@@ -132,18 +137,26 @@ bool CrystalFactory::readConfig()
     borderwidth=config.readNumEntry("Borderwidth",4);
     titlesize=config.readNumEntry("Titlebarheight",20);
  
-	buttonColor=QColor(255,255,255);
-    buttonColor=config.readColorEntry("ButtonColor",&buttonColor);
+	normalColorNormal=QColor(255,255,255);
+    normalColorNormal=config.readColorEntry("ButtonColor",&normalColorNormal);
+    normalColorHovered=config.readColorEntry("ButtonHoveredColor",&normalColorNormal);
+    normalColorPressed=config.readColorEntry("ButtonPressedColor",&normalColorNormal);
+    closeColorNormal=config.readColorEntry("CloseColor",&normalColorNormal);
+    closeColorHovered=config.readColorEntry("CloseHoveredColor",&normalColorNormal);
+    closeColorPressed=config.readColorEntry("ClosePressedColor",&normalColorNormal);
+	
     roundCorners=config.readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT);
 
 	hovereffect=config.readBoolEntry("HoverEffect",true);
-	tintButtons=config.readBoolEntry("TintButtons",buttonColor!=QColor(255,255,255));
 	repaintMode=config.readNumEntry("RepaintMode",1);
 	repaintTime=config.readNumEntry("RepaintTime",200);
 	
-	fadeButtons=config.readBoolEntry("FadeButtons",true);
+	fadeInactiveButtons=config.readBoolEntry("FadeButtons",true);
+	animateHover=config.readBoolEntry("AnimateHover",true);
+	
 	textureSize=1<<(config.readNumEntry("TextureSize",2)+7);
-	useRefraction=config.readBoolEntry("SimulateRefraction",true);
+	useTransparency=config.readBoolEntry("Transparency",true);
+	useRefraction=config.readBoolEntry("SimulateRefraction",true) && useTransparency;
 	useLighting=config.readBoolEntry("SimulateLighting",true);
 	animateActivate=config.readBoolEntry("AnimateActivate",true);
     iorActive=(double)config.readDoubleNumEntry("IORActive",2.4);
@@ -157,12 +170,13 @@ bool CrystalFactory::readConfig()
 		
 	buttontheme=config.readNumEntry("ButtonTheme",0);
 
-       
     return true;
 }
 
+
 void CrystalFactory::CreateButtonImages()
 {
+	makeCurrent();
 	for (int i=0;i<ButtonImageCount;i++)
 	{
 		if (buttonImages[i])buttonImages[i]->reset(); else
@@ -171,64 +185,80 @@ void CrystalFactory::CreateButtonImages()
 
 	switch(buttontheme)
 	{
-	default:	// whee, seems to work. ;)
+	default:
 	case 0:	// Crystal default
-		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(crystal_min_data,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(crystal_help_data);
+		buttonImages[ButtonImageMax]->SetNormal(crystal_max_data);
+		buttonImages[ButtonImageRestore]->SetNormal(crystal_restore_data);
+		buttonImages[ButtonImageMin]->SetNormal(crystal_min_data);
+		buttonImages[ButtonImageClose]->SetNormal(crystal_close_data,closeColorNormal,closeColorHovered,closeColorPressed);
+		buttonImages[ButtonImageSticky]->SetNormal(crystal_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(crystal_un_sticky_data);
+		buttonImages[ButtonImageShade]->SetNormal(crystal_shade_data);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data);
+		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data);
 		break;
 	case 1: // Aqua buttons
-		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageMax]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageRestore]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageMin]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageClose]->SetNormal(aqua_default_data,closeColorNormal);
+		buttonImages[ButtonImageSticky]->SetNormal(aqua_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageShade]->SetNormal(aqua_default_data);
 	
-		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(aqua_above_data);
+		buttonImages[ButtonImageBelow]->SetNormal(aqua_default_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(aqua_below_data);
 		
 		
-		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data,tintButtons);
-		buttonImages[ButtonImageMax]->SetHovered(aqua_maximize_data,tintButtons);
-		buttonImages[ButtonImageMin]->SetHovered(aqua_minimize_data,tintButtons);
-		buttonImages[ButtonImageRestore]->SetHovered(aqua_maximize_data,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data,tintButtons);
-		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data,tintButtons);
-		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data,tintButtons);
-		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data,tintButtons);
-		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data,tintButtons);
+		buttonImages[ButtonImageClose]->SetHovered(aqua_close_data,closeColorHovered);
+		buttonImages[ButtonImageClose]->SetPressed(NULL,closeColorPressed);
+		buttonImages[ButtonImageMax]->SetHovered(aqua_maximize_data);
+		buttonImages[ButtonImageMin]->SetHovered(aqua_minimize_data);
+		buttonImages[ButtonImageRestore]->SetHovered(aqua_maximize_data);
+		buttonImages[ButtonImageUnSticky]->SetHovered(aqua_un_sticky_data);
+		buttonImages[ButtonImageHelp]->SetHovered(aqua_help_data);
+		buttonImages[ButtonImageAbove]->SetHovered(aqua_above_data);
+		buttonImages[ButtonImageBelow]->SetHovered(aqua_below_data);
+		buttonImages[ButtonImageShade]->SetHovered(aqua_shade_data);
 		break;
 	case 2: // Knifty buttons
-		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data,tintButtons);
-		buttonImages[ButtonImageMax]->SetNormal(knifty_max_data,tintButtons);
-		buttonImages[ButtonImageRestore]->SetNormal(knifty_restore_data,tintButtons);
-		buttonImages[ButtonImageMin]->SetNormal(knifty_min_data,tintButtons);
-		buttonImages[ButtonImageClose]->SetNormal(knifty_close_data,tintButtons);
-		buttonImages[ButtonImageSticky]->SetNormal(knifty_sticky_data,tintButtons);
-		buttonImages[ButtonImageUnSticky]->SetNormal(knifty_un_sticky_data,tintButtons);
-		buttonImages[ButtonImageShade]->SetNormal(knifty_shade_data,tintButtons);
+		buttonImages[ButtonImageHelp]->SetNormal(knifty_help_data);
+		buttonImages[ButtonImageMax]->SetNormal(knifty_max_data);
+		buttonImages[ButtonImageRestore]->SetNormal(knifty_restore_data);
+		buttonImages[ButtonImageMin]->SetNormal(knifty_min_data);
+		buttonImages[ButtonImageClose]->SetNormal(knifty_close_data,closeColorNormal,closeColorHovered,closeColorPressed);
+		buttonImages[ButtonImageSticky]->SetNormal(knifty_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(knifty_un_sticky_data);
+		buttonImages[ButtonImageShade]->SetNormal(knifty_shade_data);
         
-		buttonImages[ButtonImageAbove]->SetNormal(knifty_above_data,tintButtons);
-		buttonImages[ButtonImageUnAbove]->SetNormal(knifty_unabove_data,tintButtons);
-		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data,tintButtons);
-		buttonImages[ButtonImageUnBelow]->SetNormal(knifty_unbelow_data,tintButtons);
+		buttonImages[ButtonImageAbove]->SetNormal(knifty_above_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(knifty_unabove_data);
+		buttonImages[ButtonImageBelow]->SetNormal(knifty_below_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(knifty_unbelow_data);
 		break;
-	}	
+	case 3:	// Handpainted
+		buttonImages[ButtonImageHelp]->SetNormal(handpainted_help_data);
+		buttonImages[ButtonImageMax]->SetNormal(handpainted_max_data);
+		buttonImages[ButtonImageRestore]->SetNormal(handpainted_restore_data);
+		buttonImages[ButtonImageMin]->SetNormal(handpainted_min_data);
+		buttonImages[ButtonImageClose]->SetNormal(handpainted_close_data,closeColorNormal,closeColorHovered,closeColorPressed);
+		buttonImages[ButtonImageSticky]->SetNormal(handpainted_sticky_data);
+		buttonImages[ButtonImageUnSticky]->SetNormal(handpainted_un_sticky_data);
+		buttonImages[ButtonImageShade]->SetNormal(handpainted_shade_data);
+	
+		buttonImages[ButtonImageAbove]->SetNormal(crystal_above_data);
+		buttonImages[ButtonImageUnAbove]->SetNormal(crystal_unabove_data);
+		buttonImages[ButtonImageBelow]->SetNormal(crystal_below_data);
+		buttonImages[ButtonImageUnBelow]->SetNormal(crystal_unbelow_data);
+		break;
+	}
 }
 
 bool CrystalFactory::initGL()
@@ -239,7 +269,7 @@ bool CrystalFactory::initGL()
         GLX_GREEN_SIZE, 1,
         GLX_BLUE_SIZE, 1,
         GLX_DOUBLEBUFFER,
-        GLX_DEPTH_SIZE, 1,		// This NEEDS to be present! o_O
+        GLX_DEPTH_SIZE, 1,		// This NEEDS to be present, otherwise it fails on some nvidia boxes! o_O
         None };
    int scrnum;
    XVisualInfo *visinfo;
@@ -251,15 +281,27 @@ bool CrystalFactory::initGL()
       printf("Error: couldn't get an RGB, Double-buffered visual\n");
       return false;
    }
+   
+	XSetWindowAttributes attr;
+	attr.background_pixel=0;
+	attr.event_mask=StructureNotifyMask|ExposureMask;
+	attr.colormap=XCreateColormap(dpy,RootWindow(dpy,scrnum),visinfo->visual,AllocNone);
+	dummyWindow=XCreateWindow(dpy,RootWindow(dpy,scrnum),0,0,100,100,0,visinfo->depth,InputOutput,visinfo->visual,CWBackPixel|CWEventMask|CWColormap,&attr);
+	if (dummyWindow==0)
+	{
+		printf("Could not create dummywindow\n");
+		XFree(visinfo);
+		return false;
+	}
 
    glxcontext = glXCreateContext( dpy, visinfo, NULL, True );
    if (!glxcontext) {
       printf("Error: glXCreateContext failed\n");
 	  XFree(visinfo);
 	  return false;
-      
    }
-   XFree(visinfo);	
+   XFree(visinfo);
+   
    return true;
 }
 
@@ -267,15 +309,6 @@ bool CrystalFactory::setupGL(Window winId)
 {
 	if (!glxcontext)return false;
 	if (!glXMakeCurrent(qt_xdisplay(),winId,glxcontext))return false;
-	if (glInitialized)
-	{
-		if (!gl_font)
-		{
-			gl_font=new GLFont(options()->font(false, false));
-			gl_font->init(antialiaseCaption?GL_LINEAR:GL_NEAREST);
-		}
-		return true;
-	}
   
     glDisable( GL_CULL_FACE );
     glDisable( GL_LIGHTING );
@@ -303,15 +336,13 @@ bool CrystalFactory::setupGL(Window winId)
 	return true;
 }
 
-bool CrystalFactory::releaseGL(Window winId)
+bool CrystalFactory::makeCurrent(Window winId)
 {
-	// We need to set the GLXContext to a save window, otherwise a
-	// garbage collector might free it. This could cause X to lock
-	// So let's associate the GLXContext to the window's root window. 
-	XWindowAttributes attr;
+	if (!glxcontext)return false;
+	if (!glInitialized)return false;
+	if (winId==0)winId=dummyWindow;
+	if (!glXMakeCurrent(qt_xdisplay(),winId,glxcontext))return false;
 	
-	XGetWindowAttributes(qt_xdisplay(), winId,&attr);
-	if (!glXMakeCurrent(qt_xdisplay(),attr.root,glxcontext))return false;
 	return true;
 }
 
@@ -352,7 +383,6 @@ QImage CrystalFactory::convertToGLFormat( const QImage& img )
 CrystalClient::CrystalClient(KDecorationBridge *b,CrystalFactory *f)
     : KDecoration(b,f)
 {
-// 	::factory->clients.append(this);
 }
 
 CrystalClient::~CrystalClient()
@@ -362,8 +392,6 @@ CrystalClient::~CrystalClient()
 		delete button[i];
 		button[i]=NULL;
 	}
-    glXMakeCurrent(qt_xdisplay(),None,NULL);	// release glXContext
-// 	::factory->clients.remove(this);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -397,10 +425,20 @@ void CrystalClient::init()
 
     mainlayout->addLayout(titlelayout, 1, 1);
     if (isPreview()) {
+		QString s;
         mainlayout->addItem(new QSpacerItem(1, 1,QSizePolicy::Expanding,QSizePolicy::Fixed), 0, 1);
         mainlayout->addItem(new QSpacerItem(1, ::factory->borderwidth,QSizePolicy::Expanding,QSizePolicy::Expanding), 3, 1);
-      mainlayout->addWidget(
-        new QLabel(i18n("<b><center>Preview</center></b>"),widget()), 2, 1);
+
+		if (::factory->glxcontext!=0)
+		{
+            int major,minor;
+            glXQueryVersion( qt_xdisplay(), &major, &minor );
+            s.sprintf("<p align=\"center\"><b>Crystal-GL<br></b>GLX Version: %i.%i<br>Direct Rendering: %s</p>",
+                  major,minor,
+                  glXIsDirect( qt_xdisplay(), ::factory->glxcontext ) ? "Yes" : "No");
+				  
+			mainlayout->addWidget(new QLabel(i18n(s),widget()), 2, 1);
+		}else mainlayout->addWidget(new QLabel(i18n("<p align=\"center\"><b>Crystal-GL</b><br><font color=\"#FF0000\">No OpenGL available!</font></p>"),widget()), 2, 1);
     } else {
         mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
     }
@@ -428,7 +466,8 @@ void CrystalClient::init()
 
 	animation=isActive()?1.0:0.0;
 
-	::factory->image_holder->Init();
+	if (::factory->useTransparency)
+		::factory->image_holder->Init();
 }
 
 void CrystalClient::updateMask()
@@ -621,11 +660,16 @@ void CrystalClient::activeChange()
 {
 	if (::factory->animateActivate)
 	{
-		if (!animationtimer.isActive())animationtimer.start(80);
+		startAnimation();	
 	}else{
 		animation=isActive()?1.0:0.0;
 		Repaint();
 	}
+}
+
+void CrystalClient::startAnimation()
+{
+	if (!animationtimer.isActive())animationtimer.start(80);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -834,8 +878,24 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 		return true;
       }
       case QEvent::MouseButtonPress: {
+	  	  const int mask=ShiftButton|ControlButton|AltButton;
 	  	  QMouseEvent *me=static_cast<QMouseEvent *>(e);
 		  bool handled=false;
+		  if (me->button()==RightButton && ((me->state()&mask)==mask))
+		  {	// Secret Area found... This is a benchmark. :)
+		  	QTime time;
+			QString s;
+			int count=0;
+			time.start();
+			do
+			{
+				Repaint();
+				count++;
+			}while (time.elapsed()<1000);
+			s.sprintf("Frames rendered in one second: %d",count);
+		  	QMessageBox::information(widget(),"Benchmark",s);
+		  	return true;
+		  }
 		  for (int i=0;i<ButtonTypeCount;i++) if (button[i])
 		  	handled|=button[i]->mousePressEvent(me);
 		  
@@ -1077,22 +1137,22 @@ void CrystalClient::menuButtonPressed()
 
 void CrystalClient::animate()
 {
+	bool proceed=false;
 	if (isActive())
 	{
 		animation+=0.3;
-		if (animation>1.0)
-		{
-			animation=1.0;
-			animationtimer.stop();
-		}
+		if (animation>1.0)animation=1.0;
+			else proceed=true;
 	}else{
 		animation-=0.3;
-		if (animation<0.0)
-		{
-			animation=0.0;
-			animationtimer.stop();
-		}
+		if (animation<0.0)animation=0.0;
+			else proceed=true;
 	}
+	
+	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
+		proceed|=button[i]->animate();
+	
+	if (!proceed)animationtimer.stop();
 	Repaint();
 }
 

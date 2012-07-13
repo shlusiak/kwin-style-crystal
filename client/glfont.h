@@ -24,7 +24,7 @@ public:
 private:
 	QFont font;
 	QFontMetrics metrics;
-	GLuint textures[65535];		// Damn unicode
+	GLuint textures[65536];		// Damn unicode
 	GLuint list_base;
 	GLint mappingmode;
 		

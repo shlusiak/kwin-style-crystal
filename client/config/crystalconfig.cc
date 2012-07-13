@@ -64,15 +64,22 @@ ExampleConfig::ExampleConfig(KConfig*, QWidget* parent)
     connect(dialog_->trc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->blc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->brc, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
-    connect(dialog_->buttonColor, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+    
+	connect(dialog_->normalColorNormal, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->normalColorHovered, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->normalColorPressed, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->closeColorNormal, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->closeColorHovered, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
+	connect(dialog_->closeColorPressed, SIGNAL(changed(const QColor&)),this,SLOT(colorChanged(const QColor&)));
 
-    connect(dialog_->hover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->hover, SIGNAL(stateChanged(int)),this,SLOT(hoverChanged(int)));
 	connect(dialog_->buttonTheme, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
-    connect(dialog_->tintButtons, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
     connect(dialog_->fadeButtons, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+    connect(dialog_->animateHover, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 
 	connect(dialog_->textureSize, SIGNAL(activated(int)),this,SLOT(selectionChanged(int)));
-    connect(dialog_->useRefraction, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
+	connect(dialog_->useTransparency, SIGNAL(stateChanged(int)),this,SLOT(transparencyChanged(int)));
+    connect(dialog_->useRefraction, SIGNAL(stateChanged(int)),this,SLOT(refractionChanged(int)));
     connect(dialog_->useLighting, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
 
     connect(dialog_->animateActivate, SIGNAL(stateChanged(int)),this,SLOT(selectionChanged(int)));
@@ -110,6 +117,32 @@ ExampleConfig::~ExampleConfig()
 // ------------------
 // Selection has changed
 
+void ExampleConfig::hoverChanged(int bla)
+{
+	dialog_->animateHover->setEnabled(bla==QButton::On);
+	emit changed();
+}
+
+void ExampleConfig::transparencyChanged(int bla)
+{
+	bool e=(bla==QButton::On);
+	bool f=dialog_->useRefraction->isChecked();
+	dialog_->useRefraction->setEnabled(e);
+	dialog_->iorActive->setEnabled(e && f);
+	dialog_->iorInactive->setEnabled(e && f);
+	emit changed();
+}
+
+void ExampleConfig::refractionChanged(int bla)
+{
+	bool e=(bla==QButton::On);
+	
+	dialog_->iorActive->setEnabled(e);
+	dialog_->iorInactive->setEnabled(e);
+	
+	emit changed();
+}
+
 
 void ExampleConfig::selectionChanged(int)
 {
@@ -129,6 +162,7 @@ void ExampleConfig::selectionChanged(double)
 void ExampleConfig::load(KConfig*)
 {
     QColor color(255,255,255);
+	bool b1,b2;
     
 	config_->setGroup("CrystalGL");
     
@@ -145,15 +179,23 @@ void ExampleConfig::load(KConfig*)
     dialog_->titlebarheight->setValue(config_->readNumEntry("Titlebarheight",20));
     
 	color=QColor(255,255,255);
-    dialog_->buttonColor->setColor(config_->readColorEntry("ButtonColor",&color));
+    dialog_->normalColorNormal->setColor(config_->readColorEntry("ButtonColor",&color));
+    dialog_->normalColorHovered->setColor(config_->readColorEntry("ButtonHoveredColor",&color));
+    dialog_->normalColorPressed->setColor(config_->readColorEntry("ButtonPressedColor",&color));
+    dialog_->closeColorNormal->setColor(config_->readColorEntry("CloseColor",&color));
+    dialog_->closeColorHovered->setColor(config_->readColorEntry("CloseHoveredColor",&color));
+    dialog_->closeColorPressed->setColor(config_->readColorEntry("ClosePressedColor",&color));
+	
     int cornersFlag = config_->readNumEntry("RoundCorners",TOP_LEFT & TOP_RIGHT );
     dialog_->tlc->setChecked( cornersFlag & TOP_LEFT );
     dialog_->trc->setChecked( cornersFlag & TOP_RIGHT );
     dialog_->blc->setChecked( cornersFlag & BOT_LEFT );
     dialog_->brc->setChecked( cornersFlag & BOT_RIGHT );
 	
-	dialog_->hover->setChecked(config_->readBoolEntry("HoverEffect",true));
-	dialog_->tintButtons->setChecked(config_->readBoolEntry("TintButtons",dialog_->buttonColor->color()!=QColor(255,255,255)));
+	dialog_->hover->setChecked(b1=config_->readBoolEntry("HoverEffect",true));
+	dialog_->animateHover->setEnabled(b1);
+
+	dialog_->animateHover->setChecked(config_->readBoolEntry("AnimateHover",true));
 	
 	dialog_->buttonTheme->setCurrentItem(config_->readNumEntry("ButtonTheme",0));
 	
@@ -163,12 +205,16 @@ void ExampleConfig::load(KConfig*)
 
 	dialog_->fadeButtons->setChecked(config_->readBoolEntry("FadeButtons",true));
 	dialog_->textureSize->setCurrentItem(config_->readNumEntry("TextureSize",2));
-	dialog_->useRefraction->setChecked(config_->readBoolEntry("SimulateRefraction",true));
+	dialog_->useTransparency->setChecked(b1=config_->readBoolEntry("Transparency",true));
+	dialog_->useRefraction->setEnabled(b1);
+	dialog_->useRefraction->setChecked(b2=config_->readBoolEntry("SimulateRefraction",true));
 	dialog_->useLighting->setChecked(config_->readBoolEntry("SimulateLighting",true));
 
 	dialog_->animateActivate->setChecked(config_->readBoolEntry("AnimateActivate",true));
     dialog_->iorActive->setValue(config_->readDoubleNumEntry("IORActive",2.4));
     dialog_->iorInactive->setValue(config_->readDoubleNumEntry("IORInactive",1.2));
+	dialog_->iorActive->setEnabled(b1 && b2);
+	dialog_->iorInactive->setEnabled(b1 && b2);	
 	
 	color=QColor(150,160,255);
     dialog_->colorActive->setColor(config_->readColorEntry("ActiveColor",&color));
@@ -195,7 +241,12 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("Borderwidth",dialog_->borderwidth->value());
     config_->writeEntry("Titlebarheight",dialog_->titlebarheight->value());
     
-	config_->writeEntry("ButtonColor",dialog_->buttonColor->color());
+	config_->writeEntry("ButtonColor",dialog_->normalColorNormal->color());
+	config_->writeEntry("ButtonHoveredColor",dialog_->normalColorHovered->color());
+	config_->writeEntry("ButtonPressedColor",dialog_->normalColorPressed->color());
+	config_->writeEntry("CloseColor",dialog_->closeColorNormal->color());
+	config_->writeEntry("CloseHoveredColor",dialog_->closeColorHovered->color());
+	config_->writeEntry("ClosePressedColor",dialog_->closeColorPressed->color());
 	
     int cornersFlag = 0;
     if(dialog_->tlc->isChecked()) cornersFlag += TOP_LEFT;
@@ -205,8 +256,8 @@ void ExampleConfig::save(KConfig*)
     config_->writeEntry("RoundCorners", cornersFlag );
 	
 	config_->writeEntry("HoverEffect",dialog_->hover->isChecked());
-	config_->writeEntry("TintButtons",dialog_->tintButtons->isChecked());
 	config_->writeEntry("FadeButtons",dialog_->fadeButtons->isChecked());
+	config_->writeEntry("AnimateHover",dialog_->animateHover->isChecked());
 	
 	config_->writeEntry("ButtonTheme",dialog_->buttonTheme->currentItem());
 	config_->writeEntry("RepaintMode",dialog_->repaintMode->selectedId());
@@ -214,10 +265,10 @@ void ExampleConfig::save(KConfig*)
         
 	
 	config_->writeEntry("TextureSize",dialog_->textureSize->currentItem());
+	config_->writeEntry("Transparency",dialog_->useTransparency->isChecked());
 	config_->writeEntry("SimulateRefraction",dialog_->useRefraction->isChecked());
 	config_->writeEntry("SimulateLighting",dialog_->useLighting->isChecked());
 	config_->writeEntry("AnimateActivate",dialog_->animateActivate->isChecked());
-	config_->writeEntry("TintButtons",dialog_->tintButtons->isChecked());
     config_->writeEntry("IORActive",dialog_->iorActive->value());
     config_->writeEntry("IORInactive",dialog_->iorInactive->value());
 	

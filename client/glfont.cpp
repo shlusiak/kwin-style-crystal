@@ -19,24 +19,24 @@ inline int next_p2 ( int a )
 GLFont::GLFont(QFont vfont)
 	:font(vfont),metrics(vfont)
 {
-	for (int i=0;i<65535;i++)textures[i]=0;
+	for (int i=0;i<65536;i++)textures[i]=0;
 	height=metrics.height();
 	list_base=0;
 }
 
 GLFont::~GLFont()
 {
-	glDeleteLists(list_base,65535);
-    for (int i=0;i<65535;i++)
+	glDeleteLists(list_base,65536);
+    for (int i=0;i<65536;i++)
 		if (textures[i])glDeleteTextures(1,&textures[i]);
 }
 
 void GLFont::init(GLint mappingmode)
 {
-	list_base=glGenLists(65535);
+	list_base=glGenLists(65536);
 	this->mappingmode=mappingmode;
 	
-    for (int i=0;i<65535;i++)
+    for (int i=0;i<65536;i++)
 		if (textures[i])glDeleteTextures(1,&textures[i]);
 }
 

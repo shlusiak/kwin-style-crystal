@@ -20,8 +20,6 @@ inline const double abs(const double x)
 inline const double sqr(const double x)
 { return x*x; }
 
-inline void glColorQ(const QColor x,const double alpha=1.0) 
-{ glColor4b(x.red()/2,x.green()/2,x.blue()/2,(unsigned char)(alpha*127.0)); }
 
 
 void drawBar(double x,double y,double w,double h)
@@ -243,10 +241,11 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	if (!CrystalFactory::initialized()) return;
 
 	// This sets up the rendering state, if not already done, and attaches the glxcontext to the winId
-	if (!::factory->setupGL(widget()->winId()))return;
+	if (!::factory->makeCurrent(widget()->winId()))return;
 
 	if (::factory->trackdesktop)
-	::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
+	if (::factory->useTransparency)
+		::factory->image_holder->repaint(false); // If other desktop than the last, regrab the root image
 
 	glViewport(0,0,(GLint)width(),(GLint)height());
 
@@ -261,15 +260,17 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	glMatrixMode(GL_TEXTURE);
 	glPushMatrix();
 	glLoadIdentity();
-	glScaled(1.0/::factory->image_holder->screenwidth(),-1.0/::factory->image_holder->screenheight(),0);
-	glTranslated(tl.x(),tl.y(),0);
-	
-	glClear(GL_COLOR_BUFFER_BIT);	// For debugging
-	
-	glEnable(GL_TEXTURE_2D);
-	::factory->image_holder->activateTexture();
+	if (::factory->useTransparency)
+	{
+		glScaled(1.0/::factory->image_holder->screenwidth(),-1.0/::factory->image_holder->screenheight(),1);
+		glTranslated(tl.x(),tl.y(),0);
 
-	
+		glEnable(GL_TEXTURE_2D);
+		::factory->image_holder->activateTexture();
+	}
+	glMatrixMode(GL_MODELVIEW);
+// 	glClear(GL_COLOR_BUFFER_BIT);	// For debugging
+
 	QRect r=titlebar_->geometry();
 
 //	double myanimation=sin(animation*M_PI/2.0);
@@ -320,7 +321,7 @@ void CrystalClient::paintEvent(QPaintEvent*)
 	glMatrixMode(GL_TEXTURE);
 	glPopMatrix();	
 	
-	if (!caption().isNull())
+	if (!caption().isNull() && ::factory->gl_font)
 	{   // Render caption 
 		QRect r=titlebar_->geometry();
 
@@ -331,7 +332,6 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		QColor color1=options()->color(KDecoration::ColorFont, false);
 		QColor color2=options()->color(KDecoration::ColorFont, true);
 		QColor color=blendColor(color1,color2,myanimation);
-
 
 		if (::factory->textshadow)
 		{	// First draw shadow
@@ -351,13 +351,13 @@ void CrystalClient::paintEvent(QPaintEvent*)
 		glDisable(GL_SCISSOR_TEST);
 	}
 
-	double buttonFade=(::factory->fadeButtons?0.5+0.5*myanimation:1.0);
+	double buttonFade=(::factory->fadeInactiveButtons?0.4+0.6*myanimation:1.0);
 	for (int i=0;i<ButtonTypeCount;i++)if (button[i])
 		button[i]->drawButton(buttonFade);
 	
-	
+// 	glXWaitGL();
 	// Swap buffers and be happy
 	glXSwapBuffers( qt_xdisplay(),widget()->winId() );
-	::factory->releaseGL(widget()->winId());
+	::factory->makeCurrent(0);
 }
 

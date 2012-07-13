@@ -11,7 +11,6 @@ QImageHolder::QImageHolder()
 	mytexture=0;
 	vscreenwidth=vscreenheight=1.0;
 	initialized=false;
-	textureupdate=false;
 }
 
 QImageHolder::~QImageHolder()
@@ -61,35 +60,31 @@ void QImageHolder::BackgroundUpdated(const QImage *src)
 {
 	if (src==NULL)return;
 	if (src->isNull())return;
-	QImage img=*src;
+	QImage img=*src,img2;
 	if (::factory->brightness!=100)
 		img=KImageEffect::intensity(img,(float)(::factory->brightness-100)/100.0f);
 	img=img.smoothScale(::factory->textureSize,::factory->textureSize);
-	textureimg=CrystalFactory::convertToGLFormat(img);
+	img2=CrystalFactory::convertToGLFormat(img);
 	vscreenwidth=src->width();
 	vscreenheight=src->height();
-	textureupdate=true;
+
+	::factory->makeCurrent();
+	if (mytexture==0)
+		glGenTextures(1,&mytexture);
+
+	glBindTexture(GL_TEXTURE_2D,mytexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	
-	// Call to make at least one deco repaint, to create the texture (see function below)
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, img2.width(), img2.height(), 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, img2.bits() );
+	
 	emit repaintNeeded();
 }
 
 void QImageHolder::activateTexture()
 {
 	Init();
-	if (textureupdate)
-	{
-		textureupdate=false;
-	
-		if (mytexture==0)
-			glGenTextures(1,&mytexture);
-		glBindTexture(GL_TEXTURE_2D,mytexture);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-		
-		glTexImage2D( GL_TEXTURE_2D, 0, 3, textureimg.width(), textureimg.height(), 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, textureimg.bits() );
-	}
 	glBindTexture(GL_TEXTURE_2D,mytexture);
 }
 

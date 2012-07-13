@@ -2,7 +2,6 @@
 #define _CRYSTALBUTTON_INCLUDED_
 
 
-#include <qbutton.h>
 #include "crystalclient.h"
 #include <GL/gl.h>
 
@@ -15,27 +14,35 @@
 class CrystalClient;
 
 
+enum BUTTONIMAGETYPE
+{ ButtonNormal,ButtonHovered,ButtonPressed };
+
 class ButtonImage
 {
 public:
-	QImage *normal,*hovered,*pressed;
-	GLuint t_normal,t_hovered,t_pressed;
-	
-	ButtonImage(const QRgb *d_normal=NULL,bool blend=true,QColor color=::factory->buttonColor);
+	ButtonImage();
 	~ButtonImage();
 	
 	void SetNormal(QImage image);
-	void SetNormal(const QRgb *d_normal,bool blend=true,QColor color=::factory->buttonColor);
-	void SetHovered(const QRgb *d_hovered=NULL,bool blend=true,QColor color=::factory->buttonColor);
-	void SetPressed(const QRgb *d_pressed=NULL,bool blend=true,QColor color=::factory->buttonColor);
+	void SetNormal(const QRgb *d_normal,QColor colornormal=::factory->normalColorNormal,QColor colorhovered=::factory->normalColorHovered,QColor colorpressed=::factory->normalColorPressed);
+	void SetHovered(const QRgb *d_hovered=NULL,QColor color=::factory->normalColorHovered);
+	void SetPressed(const QRgb *d_pressed=NULL,QColor color=::factory->normalColorHovered);
 	void reset();
-	void resetTextures();
-	void check();
-	void activate(QImage *img,GLuint texture);
+	
+	void drawNormal(QRect r,double alpha);
+	void drawHovered(QRect r,double alpha);
+	void drawPressed(QRect r,double alpha);
+	bool hasNormal() { return (t_normal!=0); }
+	bool hasHovered() { return (t_hovered!=0); }
+	bool hasPressed() { return (t_pressed!=0); }
 	
 private:
-	QImage CreateImage(const QRgb *data,bool blend,QColor color);
-	GLuint CreateTexture(QImage *img);
+	QColor color_normal,color_hovered,color_pressed;
+	GLuint t_normal,t_hovered,t_pressed;
+	
+	void draw(QRect r);
+	QImage CreateImage(const QRgb *data);
+	GLuint CreateTexture(QImage img);
 };
 
 
@@ -60,7 +67,8 @@ public:
 	
 	bool isInside(QPoint point);
 	bool isHover() { return hover; }
-
+	bool animate();
+	
     void enterEvent();
     void leaveEvent();
     bool mousePressEvent(QMouseEvent *e);
@@ -79,6 +87,7 @@ private:
     CrystalClient *client_;
     ButtonType type_;
     ButtonImage *image,menuimage;
+	double animation;
 
     int _lastmouse,lastmouse;
 	
