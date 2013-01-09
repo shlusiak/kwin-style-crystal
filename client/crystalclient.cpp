@@ -518,7 +518,7 @@ bool CrystalClient::eventFilter(QObject *obj, QEvent *e)
 
 bool CrystalClient::mousePressEvent(QMouseEvent *e)
 {
-	int item = itemClicked( widget()->mapToParent( e->pos() ) );
+	int item = itemClicked( e->pos() );
 	if( item >= 0 && (buttonToWindowOperation( e->button() ) != OperationsOp) )
 	{
 		click_in_progress = true;
@@ -1274,7 +1274,6 @@ bool CrystalClient::dragEnterEvent( QDragEnterEvent* e )
 
 bool CrystalClient::dropEvent( QDropEvent* e )
 {
-	QPoint point = widget()->mapToParent( e->pos() );
 	drag_in_progress = false;
 // 	int tabClick = itemClicked( point );
 	/* Dropping on border space will append tab at the end */
@@ -1286,7 +1285,7 @@ bool CrystalClient::dropEvent( QDropEvent* e )
 			if( widget() == e->source() )
 			{
 				int from = sourceTab;
-				int item = itemClicked( point, false );
+				int item = itemClicked( e->pos(), false );
 				if (from < item)
 					item++;
 				if (item == tabCount())
@@ -1296,7 +1295,7 @@ bool CrystalClient::dropEvent( QDropEvent* e )
 			}
 			else
 			{
-				int item = itemClicked( point, true );
+				int item = itemClicked( e->pos(), true );
 				long source = QString( group_data->data( tabDragMimeType() ) ).toLong();
 				if (item == -1) {					
 					tab_A_behind_B( source, tabId(tabCount() -1) );
@@ -1316,13 +1315,12 @@ bool CrystalClient::dragMoveEvent( QDragMoveEvent* e)
 	if( !e->mimeData()->hasFormat( tabDragMimeType() ) ) return false;
 	if (!drag_in_progress) return false;
 	
-	QPoint point = widget()->mapToParent( e->pos() );
 
 	if (e->source() == widget()) { /* same window, rearrange tab */
 		if (tabCount() <= 1)
 			targetTab = -1;
 		else 
-			targetTab = itemClicked( point, false );
+			targetTab = itemClicked( e->pos(), false );
 		
 		if (sourceTab != targetTab && targetTab >= 0 && sourceTab >= 0)
 		{
@@ -1338,7 +1336,7 @@ bool CrystalClient::dragMoveEvent( QDragMoveEvent* e)
 		}
 	} else {
 		sourceTab = -1;
-		targetTab = itemClicked( point, true );
+		targetTab = itemClicked( e->pos(), true );
 		if (targetTab == -1)
 			targetTab = tabCount();
 		widget()->update();
