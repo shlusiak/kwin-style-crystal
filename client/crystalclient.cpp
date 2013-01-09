@@ -1,7 +1,7 @@
 /***************************************************************************
  *   crystalclient.cpp                                                     *
  *   -----------------------                                               *
- *   Copyright (C) 2006-2011 by Sascha Hlusiak                             *
+ *   Copyright (C) 2006-2013 by Sascha Hlusiak                             *
  *   Spam84@gmx.de                                                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
