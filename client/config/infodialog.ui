@@ -60,26 +60,6 @@ You may look for the most recent version at kde-look.org:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="KUrlLabel" name="URL_Crystal_1">
-        <property name="text">
-         <string>KDE 3: www.kde-look.org/content/show.php?content=13969</string>
-        </property>
-        <property name="url">
-         <string>http://www.kde-look.org/content/show.php?content=13969</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="KUrlLabel" name="URL_Crystal_2">
-        <property name="text">
-         <string>KDE 4: www.kde-look.org/content/show.php?content=75140</string>
-        </property>
-        <property name="url">
-         <string>http://www.kde-look.org/content/show.php/Crystal?content=75140</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QLabel" name="label">
         <property name="enabled">
@@ -105,6 +85,39 @@ You may look for the most recent version at kde-look.org:</string>
         </property>
         <property name="openExternalLinks">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="KUrlLabel" name="URL_Crystal_2">
+        <property name="text">
+         <string>KDE 4: www.kde-look.org/content/show.php?content=75140</string>
+        </property>
+        <property name="url">
+         <string>http://www.kde-look.org/content/show.php/Crystal?content=75140</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="KUrlLabel" name="URL_Crystal_1">
+        <property name="text">
+         <string>KDE 3: www.kde-look.org/content/show.php?content=13969</string>
+        </property>
+        <property name="url">
+         <string>http://www.kde-look.org/content/show.php?content=13969</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="KUrlLabel" name="URL_Crystal_3">
+        <property name="text">
+         <string>GitHub: https://github.com/shlusiak/kwin-style-crystal</string>
+        </property>
+        <property name="url">
+         <string>https://github.com/shlusiak/kwin-style-crystal</string>
+        </property>
+        <property name="tipText">
+         <string>https://github.com/shlusiak/kwin-style-crystal</string>
         </property>
        </widget>
       </item>
