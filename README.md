@@ -22,11 +22,11 @@ INSTALLATION
 
 Basic Installation (from the console):
 - Step 1 (as user)
-$ cd build
-$ cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-$ make
+  - $ cd build
+  - $ cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  - $ make
 - Step 3 (as root)
-# make install
+  - # make install
 
 If you installed crystal while it was running, you would need to restart kwin for the changes to take effect: kwin --replace
 
